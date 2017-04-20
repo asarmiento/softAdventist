@@ -9,10 +9,8 @@
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
-        <link href="{{asset('css/app.css')}}" rel="stylesheet" >
         <!-- Latest compiled and minified CSS -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-        <!-- Styles -->
+         <!-- Styles -->
         <style>
             html, body {
                 background-color: #fff;
@@ -47,11 +45,9 @@
                 text-align: center;
             }
 
-            .baner {
-                float: left;
+            .btn-button {
                 font-size: 84px;
-                height: 800px;
-                width: 400px;
+                color: #000;
             }
 
             .links > a {
@@ -85,7 +81,7 @@
             <div class="content">
 
 
-                <div class="">
+                <div class="btn-button">
                     <a href="{{ url('/register') }}" class="content-box-green">INSCRIBETE</a>
                     <a href="" class="content-box-blue">INFORMACION</a>
                 </div>
