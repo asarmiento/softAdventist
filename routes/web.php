@@ -14,8 +14,9 @@
 Route::get('/', function () {
     return view('welcome');
 });
-
+Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index');
 Route::get('/confirmation/{token}', ['uses'=>'RegisterController@confirmation','as'=>'confirmation']);
+Route::get('/activation/{email}', ['uses'=>'RegisterController@activation','as'=>'activation']);
