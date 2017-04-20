@@ -74,7 +74,15 @@ class RegisterController extends Controller
         $user->save();
 
         Mail::send('auth/registration',compact('user'),function ($e) use ($user){
+                $e->from('jaacscr@contadventista.org','Departamento de Jovenes ACSCR');
+                $e->subject('Activa tu Cuenta de JA!');
+                $e->to($user->email,$user->name);
+        });
 
+        Mail::send('auth/activation',compact('user'),function ($e) use ($user){
+            $e->from('jaacscr@contadventista.org','Departamento de Jovenes ACSCR');
+            $e->subject('Activa tu Cuenta!');
+            $e->to('jaacscr@contadventista.org',$user->name);
         });
         return $user;
 
