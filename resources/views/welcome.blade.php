@@ -20,11 +20,9 @@
                 height: 100vh;
                 margin: 0;
             }
-
             .full-height {
                 height: 100vh;
             }
-
             .flex-center {
                 align-items: center;
                 display: flex;
@@ -42,12 +40,16 @@
             }
 
             .content {
+                float: left;
+                height: 200px;
                 text-align: center;
+                width: 100%;
             }
 
             .btn-button {
                 font-size: 84px;
                 color: #000;
+                width: 100%;
             }
 
             .links > a {
@@ -59,9 +61,37 @@
                 text-decoration: none;
                 text-transform: uppercase;
             }
+            .logo-text{
+                float: left;
 
-            .m-b-md {
-                margin-bottom: 30px;
+            }
+            .logo-baner{
+                float: left;
+
+            }
+            .text-color{
+                color: #000;
+                font-size: 16px;
+                text-align: center;
+                text-decoration-line: none;
+            }
+            .content-box-blue,
+            .content-box-green,{
+                margin: 0 0 25px;
+                overflow: hidden;
+                padding: 20px;
+            }
+
+            .content-box-blue {
+                background-color: #d8ecf7;
+                border: 1px solid #afcde3;
+                text-decoration-line: none;
+            }
+
+            .content-box-green {
+                background-color: #d9edc2;
+                border: 1px solid #b2ce96;
+                text-decoration-line: none;
             }
         </style>
     </head>
@@ -78,15 +108,23 @@
                     @endif
                 </div>
             @endif
-
+                <div class="logo-baner">
+                    <img src="/img/baner.jpeg" height="700" width="400">
+                </div>
             <div class="content">
-
-
                 <div class="btn-button">
                     <a href="{{ url('/register') }}" class="content-box-green">INSCRIBETE</a>
                     <a href="" class="content-box-blue">INFORMACION</a>
                 </div>
             </div>
+            <div class="logo-text">
+                <img src="/img/logo-ja.jpg" height="250" width="300">
+            </div>
         </div>
+    <nav class=" ">
+        <div class=" " style="background-color: #f7f7f7; text-align: center;">
+           <a href="http://friendlypos.net" class="text-color"> Elaborado por Sistemas Amigables de Costa Rica SAOR S.A</a>
+        </div>
+    </nav>
     </body>
 </html>

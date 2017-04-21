@@ -102,6 +102,7 @@ return [
     'custom' => [
         'attribute-name' => [
             'rule-name' => 'custom-message',
+
         ],
     ],
 
@@ -116,6 +117,15 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'amount' => 'Monto',
+        'address' => 'Dirección',
+        'age' => 'Edad',
+        'church' => 'Iglesia',
+        'gender' => 'Genero',
+        'voucher' => 'Comprobante',
+        'payment_method' => 'Metodo de Pago',
+        'bank' => 'Banco',
+    ],
 
 ];

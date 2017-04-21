@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
+<div class="float-div">
+    <div class="content-container">
+        <div class="col-md-10 ">
             <div class="panel panel-default">
                 <div class="panel-heading">Registrate</div>
                 <div class="panel-body">

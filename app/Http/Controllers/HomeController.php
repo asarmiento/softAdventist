@@ -73,7 +73,8 @@ class HomeController extends Controller
                 return redirect()->route('create-inscription')->with('alert', 'Se Registro Con exito');
             endif;
         endif;
-        return redirect()->back()->with('error', 'Tenemos un error')->withInput();
+        return redirect()->back()->with('error', 'Tenemos un error')->withInput($request->input())
+            ->withErrors($youngBoy->errors, $this->errorBag());
     }
 
     public function registered(Request $request)

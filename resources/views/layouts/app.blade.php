@@ -78,8 +78,21 @@
                 </div>
             </div>
         </nav>
-
+        <div class="content-all">
+        <div class="logo-baner">
+            <img src="/img/baner.jpeg" height="100%" width="100%">
+        </div>
         @yield('content')
+        <div class="logo-text">
+            <img src="/img/logo-ja.jpg" height="250" width="400">
+        </div>
+
+        </div>
+        <nav class="footer ">
+            <div class=" " style="background-color: #f7f7f7; text-align: center;">
+                <a href="http://friendlypos.net" class="text-color"> Elaborado por Sistemas Amigables de Costa Rica SAOR S.A</a>
+            </div>
+        </nav>
     </div>
 
     <!-- Scripts -->
