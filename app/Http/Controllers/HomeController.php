@@ -29,17 +29,20 @@ class HomeController extends Controller
     {
         $youngBoy = new YoungBoy();
         $year = Carbon::now();
+
         if($youngBoy->first()==null):
             $code = $year->format('Y').'-1';
         else:
-            $code = $year->format('Y').'-'.$youngBoy->orderBy('code','DESC')->first()->code+1;
+            $separar = explode('-',$youngBoy->orderBy('code','DESC')->first()->code);
+            $numeration = $separar[1]+1;
+            $code = $year->format('Y').'-'.$numeration;
         endif;
-
+        $saldo = 38500;
        if( $youngBoy->where('user_id',currentUser()->id)->count() ==0):
-            return view('home',compact('youngBoy','code'));
+            return view('home',compact('youngBoy','code','saldo'));
        else:
            $youngBoy = $youngBoy->where('user_id',currentUser()->id)->first();
-            $saldo = 38500-$youngBoy->retirements()->sum('amount');
+            $saldo = $saldo-$youngBoy->retirements()->sum('amount');
             return view('registered',compact('youngBoy','saldo'));
        endif;
     }

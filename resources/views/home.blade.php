@@ -21,6 +21,7 @@
                             <div class="content-box-blue col-md-12">
                                 <div class="col-md-3  text-center form-group"><label>Codigo: </label>
                                     <input type="text" name="code" readonly="readonly"  class="form-control" value="{{ $code}}">
+                                    <input type="hidden" name="code" readonly="readonly"  class="form-control" value="{{ $code}}">
                                 </div>
                                 <div class="col-md-3  text-center form-group"><label>Edad: </label>
                                     <input type="text" name="age"  class="form-control"  value="{{old('age')}}"  placeholder="16">
@@ -33,8 +34,8 @@
                                 <div class="col-md-3  text-center form-group"><label>Genero: </label>
                                     <select name="gender" class="form-control">
                                         <option value="">Seleccione un Genero</option>
-                                        <option value="woman" @if (Input::old('gender') == 'woman') selected="selected" @endif>Mujer</option>
-                                        <option value="man" @if (Input::old('gender') == 'man') selected="selected" @endif>Hombre</option>
+                                        <option value="woman" @if (\Illuminate\Support\Facades\Input::old('gender') == 'woman') selected="selected" @endif>Mujer</option>
+                                        <option value="man" @if (\Illuminate\Support\Facades\Input::old('gender') == 'man') selected="selected" @endif>Hombre</option>
                                     </select>
                                     @if ($errors->has('gender'))
                                         <span class="help-block  alert-danger">
@@ -55,14 +56,14 @@
                                     <label>Talla de Camiseta: </label>
                                     <select name="shirt_size" class="form-control">
                                         <option value="">Seleccione una Talla</option>
-                                        <option value="14" @if (Input::old('shirt_size') == '14') selected="selected" @endif>14</option>
-                                        <option value="16" @if (Input::old('shirt_size') == '16') selected="selected" @endif>16</option>
-                                        <option value="XS" @if (Input::old('shirt_size') == 'XS') selected="selected" @endif>XS</option>
-                                        <option value="S" @if (Input::old('shirt_size') == 'S') selected="selected" @endif>S</option>
-                                        <option value="M" @if (Input::old('shirt_size') == 'M') selected="selected" @endif>M</option>
-                                        <option value="L" @if (Input::old('shirt_size') == 'L') selected="selected" @endif>L</option>
-                                        <option value="XL" @if (Input::old('shirt_size') == 'XL') selected="selected" @endif>XL</option>
-                                        <option value="XXL" @if (Input::old('shirt_size') == 'XXL') selected="selected" @endif>XXL</option>
+                                        <option value="14" @if (\Illuminate\Support\Facades\Input::old('shirt_size') == '14') selected="selected" @endif>14</option>
+                                        <option value="16" @if (\Illuminate\Support\Facades\Input::old('shirt_size') == '16') selected="selected" @endif>16</option>
+                                        <option value="XS" @if (\Illuminate\Support\Facades\Input::old('shirt_size') == 'XS') selected="selected" @endif>XS</option>
+                                        <option value="S" @if (\Illuminate\Support\Facades\Input::old('shirt_size') == 'S') selected="selected" @endif>S</option>
+                                        <option value="M" @if (\Illuminate\Support\Facades\Input::old('shirt_size') == 'M') selected="selected" @endif>M</option>
+                                        <option value="L" @if (\Illuminate\Support\Facades\Input::old('shirt_size') == 'L') selected="selected" @endif>L</option>
+                                        <option value="XL" @if (\Illuminate\Support\Facades\Input::old('shirt_size') == 'XL') selected="selected" @endif>XL</option>
+                                        <option value="XXL" @if (\Illuminate\Support\Facades\Input::old('shirt_size') == 'XXL') selected="selected" @endif>XXL</option>
                                     </select>
                                     @if ($errors->has('shirt_size'))
                                         <span class="help-block  alert-danger">
@@ -83,9 +84,9 @@
                                     <label>Metodo de Pago: </label>
                                     <select name="payment_method" class="form-control">
                                         <option value="">Seleccione Un Metodo</option>
-                                        <option value="Transferencia" @if (Input::old('payment_method') == 'Transferencia') selected="selected" @endif>Transferencia</option>
-                                        <option value="Deposito" @if (Input::old('payment_method') == 'Deposito') selected="selected" @endif>Deposito</option>
-                                        <option value="Caja ACSCR" @if (Input::old('payment_method') == 'Caja ACSCR') selected="selected" @endif>Caja ACSCR</option>
+                                        <option value="Transferencia" @if (\Illuminate\Support\Facades\Input::old('payment_method') == 'Transferencia') selected="selected" @endif>Transferencia</option>
+                                        <option value="Deposito" @if (\Illuminate\Support\Facades\Input::old('payment_method') == 'Deposito') selected="selected" @endif>Deposito</option>
+                                        <option value="Caja ACSCR" @if (\Illuminate\Support\Facades\Input::old('payment_method') == 'Caja ACSCR') selected="selected" @endif>Caja ACSCR</option>
                                     </select>
                                     @if ($errors->has('payment_method'))
                                         <span class="help-block  alert-danger">
@@ -122,7 +123,7 @@
                                 </div>
                                 <div class="col-md-3  text-center form-group">
                                     <label>Saldo: </label>
-                                    <input type="text" name=""  value="38,500.00" readonly class="form-control">
+                                    <input type="text" name=""  value="{{number_format($saldo,2)}}" readonly class="form-control">
                                 </div>
                                 <div class="col-md-12   ">
                                     <input type="submit" value="Guardar" class="btn btn-default">

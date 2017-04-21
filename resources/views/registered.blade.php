@@ -69,7 +69,7 @@
                                     </div>
                                     <div class="col-md-3  text-center form-group">
                                         <label>Saldo: </label>
-                                        <input type="text" name=""  value="{{number_format($saldo)}}" readonly class="form-control">
+                                        <input type="text" name=""  value="{{number_format($saldo,2)}}" readonly class="form-control">
                                    </div>
                                     <div class="col-md-12   ">
                                         <input type="submit" value="Guardar" class="btn btn-default">
