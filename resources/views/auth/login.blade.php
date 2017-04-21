@@ -7,6 +7,9 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Iniciar Sesión</div>
                 <div class="panel-body">
+                    @if(session('alert'))
+                        <p class="alert alert-success">{{session('alert')}}</p>
+                    @endif
                     <form class="form-horizontal" role="form" method="POST" action="{{ route('login') }}">
                         {{ csrf_field() }}
 

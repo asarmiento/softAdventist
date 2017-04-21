@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\User;
+use App\Entities\User;
 use App\Http\Controllers\Controller;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -82,16 +84,48 @@ class RegisterController extends Controller
 
         Mail::send('auth/registration',compact('user','url'),function ($e) use ($user){
                 $e->from('jaacscr@contadventista.org','Departamento de Jovenes ACSCR');
-                $e->subject('Activa tu Cuenta de JA!');
-                $e->to($user->email,$user->name);
+                $e->to($user->email,$user->name)->subject('Activa tu Cuenta de JA!');
         });
 
-        Mail::send('auth/activation',compact('user','urlActive'),function ($e) use ($user){
-            $e->from('jaacscr@contadventista.org','Departamento de Jovenes ACSCR');
-            $e->subject('Activa tu Cuenta!');
-            $e->to('jaacscr@contadventista.org',$user->name);
+        Mail::send('auth/activation',compact('user','urlActive'),function ($j) use ($user){
+            $j->from('jaacscr@contadventista.org','Departamento de Jovenes ACSCR');
+            $j->to('jaacscr@contadventista.org',$user->name)->subject('Activa tu Cuenta!');
         });
         return $user;
 
+    }
+
+    public function register(Request $request)
+    {
+        $this->validator($request->all())->validate();
+
+        event(new Registered($user = $this->create($request->all())));
+
+        return redirect()->route('login')->with('alert','Por favor confirma tu email: '.$user->email);
+    }
+
+
+    /**
+     * ---------------------------------------------------------------------
+     * @Author     : Anwar Sarmiento "asarmiento@sistemasamigables.com"
+     * @Date       Create: 2017-04-20
+     * @Time       Create: 4:52 pm
+     * @Date       Update: 0000-00-00
+     * ---------------------------------------------------------------------
+     * @Description:
+     * @Pasos      :
+     *
+     * @param $token
+     * ----------------------------------------------------------------------
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     * ----------------------------------------------------------------------
+     */
+    public function confirmation($token)
+    {
+        $user = User::where('registration_token',$token)->firstOrFail();
+        $user->registration_token= null;
+        $user->save();
+        return redirect()->route('login')->with('alert','Email confirmado, puede Iniciar Sesión!');
     }
 }
