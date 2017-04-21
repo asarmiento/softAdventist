@@ -10,15 +10,22 @@ namespace App\Entities;
 
 class YoungBoy extends Entity
 {
-    protected $fillable = ['code'];
+    protected $fillable = ['code','church','age','address','gender','user_id'];
+
+
     public function getRules()
     {
-        // TODO: Implement getRules() method.
+        return ['code'=>'required',
+            'church'=>'required',
+            'age'=>'required',
+            'address'=>'required',
+            'gender'=>'required',
+            'user_id'=>'required'];// TODO: Implement getRules() method.
     }
 
 
     public function getUnique($rules, $datos)
     {
-        // TODO: Implement getUnique() method.
+        return $rules;// TODO: Implement getUnique() method.
     }
 }

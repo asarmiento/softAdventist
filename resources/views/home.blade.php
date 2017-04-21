@@ -5,11 +5,17 @@
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default">
-                <div class="panel-heading">Dashboard</div>
+                <div class="panel-heading">Formulario de Inscripcion</div>
 
                 <div class="panel-body">
-                    <form action="" method="post">
-                        <div class="row text-center">
+                    @if(session('alert'))
+                            <p class="alert alert-success">{{session('alert')}}</p>
+                    @endif
+                    @if(session('error'))
+                            <p class="alert alert-danger">{{session('error')}}</p>
+                    @endif
+                    <form action="{{route('save-inscription')}}" method="post">
+                        <div class="row text-center"> {{csrf_field()}}
                             <div class="col-md-10  text-center"><h1>Hola: {{currentUser()->nameComplete()}}</h1></div>
                             <div class="col-md-10  text-center"><h1>Tu Cédula es: {{currentUser()->identification_card}}</h1></div>
                             <div class="content-box-blue col-md-12">

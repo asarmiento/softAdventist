@@ -17,6 +17,12 @@ Route::get('/', function () {
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 Auth::routes();
 
-Route::get('/home', 'HomeController@index');
 Route::get('/confirmation/{token}', ['uses'=>'Auth\RegisterController@confirmation','as'=>'confirmation']);
 Route::get('/activation/{email}', ['uses'=>'Auth\RegisterController@activation','as'=>'activation']);
+
+Route::group(['prefix'=>'registrado','middleware'=>'auth'],function (){
+
+    Route::get('inscription', ['uses'=>'HomeController@create','as'=>'create-inscription']);
+    Route::post('inscription', ['uses'=>'HomeController@store','as'=>'save-inscription']);
+
+});
