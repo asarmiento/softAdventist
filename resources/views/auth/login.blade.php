@@ -65,6 +65,9 @@
                     </form>
                 </div>
             </div>
+                <div class="text-center">
+                    <video src="/videos/promo.mp4" autoplay loop controls width="500" height="400"></video>
+                </div>
         </div>
     </div>
 </div>

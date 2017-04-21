@@ -116,6 +116,9 @@
                     <a href="{{ url('/register') }}" class="content-box-green">INSCRIBETE</a>
                     <a href="" class="content-box-blue">INFORMACION</a>
                 </div>
+                <div>
+                    <video src="/videos/promo.mp4" autoplay loop controls width="500" height="400"></video>
+                </div>
             </div>
             <div class="logo-text">
                 <img src="/img/logo-ja.jpg" height="250" width="300">
