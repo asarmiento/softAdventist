@@ -28,7 +28,20 @@ class HomeController extends Controller
     public function create()
     {
         $youngBoy = new YoungBoy();
-        return view('home',compact('youngBoy'));
+        $year = Carbon::now();
+        if($youngBoy->first()==null):
+            $code = $year->format('Y').'-1';
+        else:
+            $code = $year->format('Y').'-'.$youngBoy->orderBy('code','DESC')->first()->code+1;
+        endif;
+
+       if( $youngBoy->where('user_id',currentUser()->id)->count() ==0):
+            return view('home',compact('youngBoy','code'));
+       else:
+           $youngBoy = $youngBoy->where('user_id',currentUser()->id)->first();
+            $saldo = 38500-$youngBoy->retirements()->sum('amount');
+            return view('registered',compact('youngBoy','saldo'));
+       endif;
     }
 
 
@@ -38,13 +51,9 @@ class HomeController extends Controller
          $data = $request->all();
 
         $youngBoy = new YoungBoy();
-        $data['code'] =1;
         $data['user_id'] =currentUser()->id;
         $data['date'] =Carbon::now()->format('Y-m-d');
 
-        if($youngBoy->first()):
-            $data['code'] = $youngBoy->first()->code + 1;
-        endif;
 
         if($youngBoy->isValid($data)):
             $youngBoy->fill($data);
@@ -64,4 +73,25 @@ class HomeController extends Controller
         return redirect()->back()->with('error', 'Tenemos un error')->withInput();
     }
 
+    public function registered(Request $request)
+    {
+        $data = $request->all();
+        $data['young_boy_id'] =currentUser()->youngBoy->id;
+        $data['date'] =Carbon::now()->format('Y-m-d');
+        $data['shirt_size'] =currentUser()->youngBoy->retirements[0]->shirt_size;
+        $retirement =  new Retirement();
+        if($retirement->isValid($data)):
+            $retirement->fill($data);
+            $retirement->save();
+            $youngBoy = new YoungBoy();
+            Mail::send('youngBoys/registered',compact('data','youngBoy'),function ($e) use ($data){
+                $e->from('jaacscr@contadventista.org','Departamento de Jovenes ACSCR');
+                $e->to(currentUser()->email,currentUser()->nameComplete())->subject('Inscripcion Retiro!');
+            });
+            return redirect()->route('create-inscription')->with('alert', 'Se Registro Con exito');
+        endif;
+
+        return redirect()->back()->withInput($request->input())
+            ->withErrors($retirement->errors, $this->errorBag())->with('error', 'Tenemos un error');
+    }
 }

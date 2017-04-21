@@ -27,6 +27,10 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    public function youngBoy()
+    {
+        return $this->hasOne(YoungBoy::getClass());
+    }
     public function nameComplete()
     {
         return $this->name.' '.$this->last_name;

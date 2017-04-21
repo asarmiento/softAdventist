@@ -28,4 +28,9 @@ class YoungBoy extends Entity
     {
         return $rules;// TODO: Implement getUnique() method.
     }
+
+    public function retirements()
+    {
+        return $this->hasMany(Retirement::getClass());
+    }
 }
