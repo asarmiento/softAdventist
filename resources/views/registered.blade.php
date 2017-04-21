@@ -11,7 +11,7 @@
         <div class="content-container">
             <div class="col-md-10 ">
                 <div class="panel panel-default">
-                    <div class="panel-heading">Formulario de Inscripcion</div>
+                    <div class="panel-heading">Formulario de Inscripción</div>
                     <div class="panel-body">
                         @if(session('alert'))
                             <p class="alert alert-success">{{session('alert')}}</p>
@@ -21,7 +21,7 @@
                         @endif
                         <div class="col-md-12  text-center"><h1>Hola: {{currentUser()->nameComplete()}}</h1></div>
                         <div class="col-md-12  text-center"><h1>Tu Cédula es: {{currentUser()->identification_card}}</h1></div>
-                        <div class="col-md-12  text-center"><h1>Codigo: {{$youngBoy->code}}</h1></div>
+                        <div class="col-md-12  text-center"><h1>Código: {{$youngBoy->code}}</h1></div>
                         <form action="{{route('save-registered')}}" method="post">
                             <div class="row text-center"> {{csrf_field()}}
                                 <div class="content-box-blue col-md-12">

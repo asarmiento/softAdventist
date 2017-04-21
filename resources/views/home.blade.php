@@ -5,7 +5,7 @@
         <div class="content-container">
             <div class="col-md-10 ">
                 <div class="panel panel-default">
-                <div class="panel-heading">Formulario de Inscripcion</div>
+                <div class="panel-heading">Formulario de Inscripción</div>
 
                 <div class="panel-body">
                     @if(session('alert'))
@@ -19,7 +19,7 @@
                     <form action="{{route('save-inscription')}}" method="post">
                         <div class="row text-center"> {{csrf_field()}}
                             <div class="content-box-blue col-md-12">
-                                <div class="col-md-3  text-center form-group"><label>Codigo: </label>
+                                <div class="col-md-3  text-center form-group"><label>Código: </label>
                                     <input type="text" name="code" readonly="readonly"  class="form-control" value="{{ $code}}">
                                     <input type="hidden" name="code" readonly="readonly"  class="form-control" value="{{ $code}}">
                                 </div>

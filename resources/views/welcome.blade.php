@@ -115,7 +115,7 @@
             <div class="content">
                 <div class="btn-button">
                     <a href="{{ url('/register') }}" class="content-box-green">INSCRIBETE</a>
-                    <a href="" class="content-box-blue">INFORMACION</a>
+                    <a href="" class="content-box-blue">INFORMACIÓN</a>
                 </div>
                 <div>
                     <video src="/videos/promo.mp4" autoplay loop controls width="500" height="400"></video>

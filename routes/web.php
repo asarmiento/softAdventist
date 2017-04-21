@@ -19,6 +19,7 @@ Auth::routes();
 
 Route::get('/confirmation/{token}', ['uses'=>'Auth\RegisterController@confirmation','as'=>'confirmation']);
 Route::get('/activation/{email}', ['uses'=>'Auth\RegisterController@activation','as'=>'activation']);
+Route::get('iglesia', ['uses'=>'Church\ChurchController@create','as'=>'create-church']);
 
 Route::group(['prefix'=>'registrado','middleware'=>'auth'],function (){
 
