@@ -28,7 +28,7 @@
     <li>Metodo de Pago: <strong><a>{{$data['payment_method']}}</a></strong></li>
     <li>Numero Comprobante: <strong><a>{{$data['voucher']}}</a></strong></li>
     <li>Monto: <strong><a>{{number_format($data['amount'],2)}}</a></strong></li>
-    <li>Saldo pendiente: <strong><a>{{number_format(38500-,2)}}</a></strong></li>
+    <li>Saldo pendiente: <strong><a>{{number_format(38500-\App\Entities\Retirement::where('young_boy_id',$youngBoy->id)->sum('amount'),2)}}</a></strong></li>
 </ul>
 <p>
     Recuerda que la fecha limite de pago es ...., preparate para disfrutar de una aventura junto a muchos jovenes mas.

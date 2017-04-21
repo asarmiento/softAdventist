@@ -54,7 +54,7 @@ class HomeController extends Controller
             if($retirement->isValid($data)):
                 $retirement->fill($data);
                 $retirement->save();
-                Mail::send('youngBoys/emailInscription',compact('data'),function ($e) use ($data){
+                Mail::send('youngBoys/emailInscription',compact('data','youngBoy'),function ($e) use ($data){
                     $e->from('jaacscr@contadventista.org','Departamento de Jovenes ACSCR');
                     $e->to(currentUser()->email,currentUser()->nameComplete())->subject('Inscripcion Retiro!');
                 });
