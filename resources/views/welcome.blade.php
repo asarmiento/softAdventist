@@ -96,6 +96,7 @@
         </style>
     </head>
     <body>
+    <?php \App\Entities\Visitor::create(['ip'=>\Illuminate\Support\Facades\Request::ip(),'date'=>\Carbon\Carbon::now()->format('Y-m-d')]); ?>
     <!--div class="baner ">
         <IMG src="img/baner.jpeg" width="400" height="600"/>
     </div-->
@@ -130,4 +131,5 @@
         </div>
     </nav>
     </body>
+
 </html>
