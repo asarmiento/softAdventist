@@ -5,7 +5,7 @@
  * Date: 20/4/17
  * Time: 09:51
 -->
-<h1>Bienvenido: {{$user->nameComplete()}} </h1>
+<h1>Bienvenido(a): {{$user->nameComplete()}} </h1>
 <h2>Sistema de Control Departamento de Jovenes ACSCR</h2>
 
 <p>

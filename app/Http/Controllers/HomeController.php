@@ -6,6 +6,7 @@ use App\Entities\Retirement;
 use App\Entities\YoungBoy;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
 class HomeController extends Controller
@@ -52,29 +53,41 @@ class HomeController extends Controller
     public function store(Request $request)
     {
          $data = $request->all();
+        try {
+            DB::beginTransaction();
+            $youngBoy = new YoungBoy();
+            $data['user_id'] = currentUser()->id;
+            $data['date'] = Carbon::now()->format('Y-m-d');
 
-        $youngBoy = new YoungBoy();
-        $data['user_id'] =currentUser()->id;
-        $data['date'] =Carbon::now()->format('Y-m-d');
 
-
-        if($youngBoy->isValid($data)):
-            $youngBoy->fill($data);
-            $youngBoy->save();
-            $data['young_boy_id'] =$youngBoy->id;
-            $retirement =  new Retirement();
-            if($retirement->isValid($data)):
-                $retirement->fill($data);
-                $retirement->save();
-                Mail::send('youngBoys/emailInscription',compact('data','youngBoy'),function ($e) use ($data){
-                    $e->from('jaacscr@contadventista.org','Departamento de Jovenes ACSCR');
-                    $e->to(currentUser()->email,currentUser()->nameComplete())->subject('Inscripcion Retiro!');
-                });
-                return redirect()->route('create-inscription')->with('alert', 'Se Registro Con exito');
+            if ($youngBoy->isValid($data)):
+                $youngBoy->fill($data);
+                $youngBoy->save();
+                $data['young_boy_id'] = $youngBoy->id;
+                if($youngBoy->count()>0):
+                    $retirement = new Retirement();
+                    if ($retirement->isValid($data)):
+                        $retirement->fill($data);
+                        $retirement->save();
+                        Mail::send('youngBoys/emailInscription', compact('data', 'youngBoy'), function ($e) use ($data) {
+                            $e->from('jaacscr@contadventista.org', 'Departamento de Jovenes ACSCR');
+                            $e->to(currentUser()->email, currentUser()->nameComplete())->subject('Inscripcion Retiro!');
+                        });
+                        DB::commit();
+                        return redirect()->route('create-inscription')->with('alert', 'Se Registro Con exito');
+                    endif;
+                    DB::rollback();
+                    return redirect()->back()->with('error', 'Tenemos un error')->withInput($request->input())
+                        ->withErrors($retirement->errors, $this->errorBag());
+                endif;
             endif;
-        endif;
-        return redirect()->back()->with('error', 'Tenemos un error')->withInput($request->input())
-            ->withErrors($youngBoy->errors, $this->errorBag());
+            DB::rollback();
+            return redirect()->back()->with('error', 'Tenemos un error')->withInput($request->input())
+                ->withErrors($youngBoy->errors, $this->errorBag());
+        }catch (Exception $e) {
+            \Log::error($e);
+            return redirect()->back()->with('error', 'Verificar la información del asiento, sino contactarse con soporte de la applicación');
+        }
     }
 
     public function registered(Request $request)

@@ -127,6 +127,7 @@
                                 </div>
                                 <div class="col-md-12   ">
                                     <input type="submit" value="Guardar" class="btn btn-default">
+
                                 </div>
                             </div>
                         </div>
@@ -135,7 +136,10 @@
                 </div>
             </div>
                 <div class="text-center">
+                    <a>Si tienes algun problema con la inscripción escribenos a: jaacscr@contadventista.org</a>
+
                     <video src="/videos/promo.mp4" autoplay loop controls width="500" height="400"></video>
+
                 </div>
         </div>
     </div>

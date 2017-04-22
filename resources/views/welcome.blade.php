@@ -120,13 +120,14 @@
                 <div>
                     <video src="/videos/promo.mp4" autoplay loop controls width="500" height="400"></video>
                 </div>
+                <a>Si tienes algun problema con la inscripción escribenos a: jaacscr@contadventista.org</a>
             </div>
             <div class="logo-text">
                 <img src="/img/logo-ja.jpg" height="250" width="300">
             </div>
         </div>
     <nav class=" ">
-        <div class=" " style="background-color: #f7f7f7; text-align: center;">
+        <div class=" footer" style="background-color: #f7f7f7; text-align: center;">
            <a href="http://friendlypos.net" class="text-color"> Elaborado por Sistemas Amigables de Costa Rica SAOR S.A</a>
         </div>
     </nav>

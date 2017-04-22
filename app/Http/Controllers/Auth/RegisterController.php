@@ -51,7 +51,7 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'identification_card' => 'required|max:255',
+            'identification_card' => 'required|max:255|unique:users',
             'name' => 'required|max:255',
             'last_name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
@@ -101,7 +101,7 @@ class RegisterController extends Controller
 
         event(new Registered($user = $this->create($request->all())));
 
-        return redirect()->route('login')->with('alert','Por favor confirma tu email: '.$user->email);
+        return redirect()->route('login')->with('alert','Te hemos enviado un correo, Por favor confirma tu email: '.$user->email);
     }
 
 
