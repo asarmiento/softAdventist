@@ -65,16 +65,22 @@ class HomeController extends Controller
                 $youngBoy->save();
                 $data['young_boy_id'] = $youngBoy->id;
                 if($youngBoy->count()>0):
-                    $retirement = new Retirement();
-                    if ($retirement->isValid($data)):
-                        $retirement->fill($data);
-                        $retirement->save();
-                        Mail::send('youngBoys/emailInscription', compact('data', 'youngBoy'), function ($e) use ($data) {
-                            $e->from('jaacscr@contadventista.org', 'Departamento de Jovenes ACSCR');
-                            $e->to(currentUser()->email, currentUser()->nameComplete())->subject('Inscripcion Retiro!');
-                        });
-                        DB::commit();
-                        return redirect()->route('create-inscription')->with('alert', 'Se Registro Con exito');
+                    $buscando = Retirement::where('young_boy_id',$youngBoy->id)->where('voucher',$data['voucher'])
+                        ->count();
+                    if($buscando>0):
+                        return redirect()->back()->with('error', 'Tenemos un error, Ya existe ese Numero de Deposito');
+                    else:
+                        $retirement = new Retirement();
+                        if ($retirement->isValid($data)):
+                            $retirement->fill($data);
+                            $retirement->save();
+                            Mail::send('youngBoys/emailInscription', compact('data', 'youngBoy'), function ($e) use ($data) {
+                                $e->from('jaacscr@contadventista.org', 'Departamento de Jovenes ACSCR');
+                                $e->to(currentUser()->email, currentUser()->nameComplete())->subject('Inscripcion Retiro!');
+                            });
+                            DB::commit();
+                            return redirect()->route('create-inscription')->with('alert', 'Se Registro Con exito');
+                        endif;
                     endif;
                     DB::rollback();
                     return redirect()->back()->with('error', 'Tenemos un error')->withInput($request->input())
@@ -96,16 +102,22 @@ class HomeController extends Controller
         $data['young_boy_id'] =currentUser()->youngBoy->id;
         $data['date'] =Carbon::now()->format('Y-m-d');
         $data['shirt_size'] =currentUser()->youngBoy->retirements[0]->shirt_size;
-        $retirement =  new Retirement();
-        if($retirement->isValid($data)):
-            $retirement->fill($data);
-            $retirement->save();
-            $youngBoy = new YoungBoy();
-            Mail::send('youngBoys/registered',compact('data','youngBoy'),function ($e) use ($data){
-                $e->from('jaacscr@contadventista.org','Departamento de Jovenes ACSCR');
-                $e->to(currentUser()->email,currentUser()->nameComplete())->subject('Inscripcion Retiro!');
-            });
-            return redirect()->route('create-inscription')->with('alert', 'Se Registro Con exito');
+        $buscando = Retirement::where('young_boy_id',currentUser()->youngBoy->id)->where('voucher',$data['voucher'])
+            ->count();
+        if($buscando>0):
+            return redirect()->back()->with('error', 'Tenemos un error, Ya existe ese Numero de Deposito');
+        else:
+            $retirement =  new Retirement();
+            if($retirement->isValid($data)):
+                $retirement->fill($data);
+                $retirement->save();
+                $youngBoy = new YoungBoy();
+                Mail::send('youngBoys/registered',compact('data','youngBoy'),function ($e) use ($data){
+                    $e->from('jaacscr@contadventista.org','Departamento de Jovenes ACSCR');
+                    $e->to(currentUser()->email,currentUser()->nameComplete())->subject('Inscripcion Retiro!');
+                });
+                return redirect()->route('create-inscription')->with('alert', 'Se Registro Con exito');
+            endif;
         endif;
 
         return redirect()->back()->withInput($request->input())
