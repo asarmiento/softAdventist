@@ -58,33 +58,36 @@ class HomeController extends Controller
             $youngBoy = new YoungBoy();
             $data['user_id'] = currentUser()->id;
             $data['date'] = Carbon::now()->format('Y-m-d');
-
-
-            if ($youngBoy->isValid($data)):
-                $youngBoy->fill($data);
-                $youngBoy->save();
-                $data['young_boy_id'] = $youngBoy->id;
-                if($youngBoy->count()>0):
-                    $buscando = Retirement::where('young_boy_id',$youngBoy->id)->where('voucher',$data['voucher'])
-                        ->count();
-                    if($buscando>0):
-                        return redirect()->back()->with('error', 'Tenemos un error, Ya existe ese Numero de Deposito');
-                    else:
-                        $retirement = new Retirement();
-                        if ($retirement->isValid($data)):
-                            $retirement->fill($data);
-                            $retirement->save();
-                            Mail::send('youngBoys/emailInscription', compact('data', 'youngBoy'), function ($e) use ($data) {
-                                $e->from('jaacscr@contadventista.org', 'Departamento de Jovenes ACSCR');
-                                $e->to(currentUser()->email, currentUser()->nameComplete())->subject('Inscripcion Retiro!');
-                            });
-                            DB::commit();
-                            return redirect()->route('create-inscription')->with('alert', 'Se Registro Con exito');
+            $buscando = YoungBoy::where('user_id',currentUser()->id)->count();
+            if($buscando>0):
+                return redirect()->back()->with('error', 'Tenemos un error, Ya se Registro una vez');
+            else:
+                if ($youngBoy->isValid($data)):
+                    $youngBoy->fill($data);
+                    $youngBoy->save();
+                    $data['young_boy_id'] = $youngBoy->id;
+                    if($youngBoy->count()>0):
+                        $buscando = Retirement::where('young_boy_id',$youngBoy->id)->where('voucher',$data['voucher'])
+                            ->count();
+                        if($buscando>0):
+                            return redirect()->back()->with('error', 'Tenemos un error, Ya existe ese Numero de Deposito');
+                        else:
+                            $retirement = new Retirement();
+                            if ($retirement->isValid($data)):
+                                $retirement->fill($data);
+                                $retirement->save();
+                                Mail::send('youngBoys/emailInscription', compact('data', 'youngBoy'), function ($e) use ($data) {
+                                    $e->from('jaacscr@contadventista.org', 'Departamento de Jovenes ACSCR');
+                                    $e->to(currentUser()->email, currentUser()->nameComplete())->subject('Inscripcion Retiro!');
+                                });
+                                DB::commit();
+                                return redirect()->route('create-inscription')->with('alert', 'Se Registro Con exito');
+                            endif;
                         endif;
+                        DB::rollback();
+                        return redirect()->back()->with('error', 'Tenemos un error')->withInput($request->input())
+                            ->withErrors($retirement->errors, $this->errorBag());
                     endif;
-                    DB::rollback();
-                    return redirect()->back()->with('error', 'Tenemos un error')->withInput($request->input())
-                        ->withErrors($retirement->errors, $this->errorBag());
                 endif;
             endif;
             DB::rollback();
