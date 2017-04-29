@@ -177,6 +177,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
+        Yajra\Datatables\DatatablesServiceProvider::class,
       //  GeneaLabs\Phpgmaps\PhpgmapsServiceProvider::class,
 
     ],

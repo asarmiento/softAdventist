@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Entities\Retirement;
+use App\Entities\User;
 use App\Entities\YoungBoy;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -125,5 +126,15 @@ class HomeController extends Controller
 
         return redirect()->back()->withInput($request->input())
             ->withErrors($retirement->errors, $this->errorBag())->with('error', 'Tenemos un error');
+    }
+
+    public function lists()
+    {
+        $users = User::whereHas('youngBoy',function ($q){
+            $q->whereHas('retirements',function ($r){
+                $r->where('date','>','2017-01-01');
+            });
+        })->where('type_user','joven')->get();
+        return view('youngBoys.listYoungBoys',compact('users'));
     }
 }

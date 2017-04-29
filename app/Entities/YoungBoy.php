@@ -10,14 +10,14 @@ namespace App\Entities;
 
 class YoungBoy extends Entity
 {
-    protected $fillable = ['code','church','age','address','gender','user_id'];
+    protected $fillable = ['code','church','age','birthdate','address','gender','user_id'];
 
 
     public function getRules()
     {
         return ['code'=>'required',
             'church'=>'required',
-            'age'=>'required',
+            'birthdate'=>'required',
             'address'=>'required',
             'gender'=>'required',
             'user_id'=>'required'];// TODO: Implement getRules() method.

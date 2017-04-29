@@ -19,19 +19,19 @@
                     <form action="{{route('save-inscription')}}" method="post">
                         <div class="row text-center"> {{csrf_field()}}
                             <div class="content-box-blue col-md-12">
-                                <div class="col-md-3  text-center form-group"><label>Código: </label>
+                                <div class="col-md-4  text-center form-group"><label>Código: </label>
                                     <input type="text" name="code" readonly="readonly"  class="form-control" value="{{ $code}}">
                                     <input type="hidden" name="code" readonly="readonly"  class="form-control" value="{{ $code}}">
                                 </div>
-                                <div class="col-md-3  text-center form-group"><label>Edad: </label>
-                                    <input type="text" name="age"  class="form-control"  value="{{old('age')}}"  placeholder="16">
-                                    @if ($errors->has('age'))
+                                <div class="col-md-4  text-center form-group"><label>Fecha de Nacimiento: </label>
+                                    <input type="date" name="birthdate"  class="form-control"  value="{{old('birthdate')}}"  placeholder="0000-00-00">
+                                    @if ($errors->has('birthdate'))
                                         <span class="help-block  alert-danger">
-                                        <strong>{{ $errors->first('age') }}</strong>
+                                        <strong>{{ $errors->first('birthdate') }}</strong>
                                     </span>
                                     @endif
                                 </div>
-                                <div class="col-md-3  text-center form-group"><label>Genero: </label>
+                                <div class="col-md-4  text-center form-group"><label>Genero: </label>
                                     <select name="gender" class="form-control">
                                         <option value="">Seleccione un Genero</option>
                                         <option value="woman" @if (\Illuminate\Support\Facades\Input::old('gender') == 'woman') selected="selected" @endif>Mujer</option>
@@ -43,7 +43,7 @@
                                     </span>
                                     @endif
                                 </div>
-                                <div class="col-md-3  text-center form-group">
+                                <div class="col-md-5  text-center form-group">
                                     <label>Iglesia a la que pertenece: </label>
                                     <input type="text" name="church" class="form-control"  value="{{old('amount')}}"  placeholder="Quepos">
                                     @if ($errors->has('church'))
@@ -52,7 +52,7 @@
                                     </span>
                                     @endif
                                 </div>
-                                <div class="col-md-3  text-center form-group">
+                                <div class="col-md-5  text-center form-group">
                                     <label>Talla de Camiseta: </label>
                                     <select name="shirt_size" class="form-control">
                                         <option value="">Seleccione una Talla</option>
@@ -71,7 +71,7 @@
                                     </span>
                                     @endif
                                 </div>
-                                <div class="col-md-9  text-center form-group">
+                                <div class="col-md-12  text-center form-group">
                                    <label>Lugar de Residencia: </label>
                                    <input type="text" name="address"  class="form-control"  value="{{old('address')}}"  placeholder="Barrio San Martin, 500 metros sur del Aeropuerto la Managua, Quepos">
                                     @if ($errors->has('address'))
@@ -80,7 +80,7 @@
                                     </span>
                                     @endif
                                </div>
-                                <div class="col-md-3  text-center form-group">
+                                <div class="col-md-4  text-center form-group">
                                     <label>Metodo de Pago: </label>
                                     <select name="payment_method" class="form-control">
                                         <option value="">Seleccione Un Metodo</option>
@@ -94,7 +94,7 @@
                                     </span>
                                     @endif
                                 </div>
-                                <div class="col-md-3  text-center form-group">
+                                <div class="col-md-4  text-center form-group">
                                     <label>Monto Abonado: </label>
                                     <input type="text" name="amount"  class="form-control" max="{{$saldo}}" value="{{old('amount')}}" placeholder="0.00">
                                     @if ($errors->has('amount'))
@@ -103,7 +103,7 @@
                                     </span>
                                     @endif
                                 </div>
-                                <div class="col-md-3  text-center form-group">
+                                <div class="col-md-4  text-center form-group">
                                     <label>N° Comprobante: </label>
                                     <input type="text" name="voucher"  {{old('voucher')}} class="form-control" placeholder="144657">
                                     @if ($errors->has('voucher'))
@@ -112,7 +112,7 @@
                                     </span>
                                     @endif
                                 </div>
-                                <div class="col-md-3  text-center form-group">
+                                <div class="col-md-4  text-center form-group">
                                     <label>Banco: </label>
                                     <input type="text" name="bank" {{old('bank')}}  value="Banco Nacional"  class="form-control">
                                     @if ($errors->has('bank'))
@@ -121,7 +121,7 @@
                                             </span>
                                     @endif
                                 </div>
-                                <div class="col-md-3  text-center form-group">
+                                <div class="col-md-4  text-center form-group">
                                     <label>Saldo: </label>
                                     <input type="text" name=""  value="{{number_format($saldo,2)}}" readonly class="form-control">
                                 </div>

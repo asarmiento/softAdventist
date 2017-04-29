@@ -19,7 +19,7 @@
 </p>
 <ul>
     <li>Email: <strong><a>{{currentUser()->email}}</a></strong></li>
-    <li>Edad: <strong><a>{{$youngBoy->age}}</a></strong></li>
+    <li>Fecha Nacimiento: <strong><a>{{$youngBoy->birthdate}}</a></strong></li>
     <li>Iglesia: <strong><a>{{$youngBoy->church}}</a></strong></li>
     <li>Dirección: <strong><a>{{$youngBoy->address}}</a></strong></li>
     <li>Talla: <strong><a>{{$data['shirt_size']}}</a></strong></li>

@@ -46,6 +46,7 @@ Route::get('/gmaps1', function(){
 Route::group(['prefix'=>'registrado','middleware'=>'auth'],function (){
 
     Route::get('inscription', ['uses'=>'HomeController@create','as'=>'create-inscription']);
+    Route::get('lista-de-inscriptos', ['uses'=>'HomeController@lists','as'=>'lists-inscription']);
     Route::post('inscription', ['uses'=>'HomeController@store','as'=>'save-inscription']);
     Route::post('registered', ['uses'=>'HomeController@registered','as'=>'save-registered']);
 

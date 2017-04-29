@@ -15,7 +15,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name','last_name','identification_card', 'email', 'password',
+        'name','last_name','identification_card', 'email', 'password','type_user'
     ];
 
     /**
@@ -31,6 +31,12 @@ class User extends Authenticatable
     {
         return $this->hasOne(YoungBoy::getClass());
     }
+
+    public function countYoungBoy()
+    {
+        return $this->hasOne(YoungBoy::getClass())->count();
+    }
+
     public function nameComplete()
     {
         return $this->name.' '.$this->last_name;
