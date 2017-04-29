@@ -34,7 +34,7 @@ class HomeController extends Controller
         if($youngBoy->first()==null):
             $code = $year->format('Y').'-1';
         else:
-            $separar = explode('-',$youngBoy->orderBy('code','DESC')->first()->code);
+            $separar = explode('-',$youngBoy->orderBy('id','DESC')->first()->code);
             $numeration = $separar[1]+1;
             $code = $year->format('Y').'-'.$numeration;
         endif;
