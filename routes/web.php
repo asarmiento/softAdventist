@@ -20,6 +20,28 @@ Auth::routes();
 Route::get('/confirmation/{token}', ['uses'=>'Auth\RegisterController@confirmation','as'=>'confirmation']);
 Route::get('/activation/{email}', ['uses'=>'Auth\RegisterController@activation','as'=>'activation']);
 Route::get('iglesia', ['uses'=>'Church\ChurchController@create','as'=>'create-church']);
+Route::get('/gmaps', ['as ' => 'gmaps', 'uses' => 'GmapsController@index']);
+Route::get('/gmaps1', function(){
+    $config = array();
+    $config['center'] = 'auto';
+    $config['onboundschanged'] = 'if (!centreGot) {
+            var mapCentre = map.getCenter();
+            marker_0.setOptions({
+                position: new google.maps.LatLng(mapCentre.lat(), mapCentre.lng())
+            });
+        }
+        centreGot = true;';
+
+    Gmaps::initialize($config);
+
+    // set up the marker ready for positioning
+    // once we know the users location
+    $marker = array();
+    Gmaps::add_marker($marker);
+
+    $map = Gmaps::create_map();
+    echo "<html><head><script type='text/javascript'>var centreGot = false;</script>".$map['js']."</head><body>".$map['html']."</body></html>";
+});
 
 Route::group(['prefix'=>'registrado','middleware'=>'auth'],function (){
 

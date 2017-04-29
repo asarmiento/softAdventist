@@ -1,7 +1,9 @@
 <?php
 namespace App\Http\Controllers\Church;
 
+use App\Entities\Church;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
 /**
  * Created by PhpStorm.
@@ -15,5 +17,13 @@ class ChurchController extends Controller
     public function create()
     {
         return view('church.create');
+    }
+
+
+    public function store(Request $request)
+    {
+        $data = $request->all();
+
+        Church::create([]);
     }
 }
