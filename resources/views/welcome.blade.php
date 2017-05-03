@@ -96,11 +96,17 @@
         </style>
     </head>
     <body>
+    <div id="app">
     <?php \App\Entities\Visitor::create(['ip'=>\Illuminate\Support\Facades\Request::ip(),'date'=>\Carbon\Carbon::now()->format('Y-m-d')]); ?>
     <!--div class="baner ">
         <IMG src="img/baner.jpeg" width="400" height="600"/>
     </div-->
         <div class="flex-center position-ref full-height">
+            <div class="top-right links">
+                @if (Auth::guest())
+                    <a href="{{ route('login') }}">Iniciar Sesión</a>
+                @endif
+            </div>
             @if (Route::has('login'))
                 <div class="top-right links">
                     @if (Auth::check())
@@ -109,6 +115,7 @@
                     @endif
                 </div>
             @endif
+
                 <div class="logo-baner">
                     <img src="/img/baner.jpeg" height="700" width="400">
                 </div>
@@ -120,17 +127,21 @@
                 <div>
                     <video src="/videos/promo.mp4" autoplay loop controls width="500" height="400"></video>
                 </div>
-                <a>Si tienes algun problema con la inscripción escribenos a: jaacscr@contadventista.org</a>
+                <div class="content-box-green"><a>Si tienes algun problema con la inscripción escribenos a: jaacscr@contadventista.org</a>
+                </div>
+                <div class="footer" style="background-color: #f7f7f7; text-align: center; ">
+                    <a href="http://friendlypos.net" class="text-color"> Elaborado por Sistemas Amigables de Costa Rica SAOR S.A</a>
+                </div>
             </div>
             <div class="logo-text">
                 <img src="/img/logo-ja.jpg" height="250" width="300">
             </div>
+
+
         </div>
-    <nav class=" ">
-        <div class=" footer" style="background-color: #f7f7f7; text-align: center;">
-           <a href="http://friendlypos.net" class="text-color"> Elaborado por Sistemas Amigables de Costa Rica SAOR S.A</a>
-        </div>
-    </nav>
+
+
+    </div>
     </body>
 
 </html>

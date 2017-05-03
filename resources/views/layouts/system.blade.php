@@ -13,6 +13,7 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.15/datatables.min.css"/>
 
     <!-- Scripts -->
     <script>
@@ -54,41 +55,36 @@
                             <li><a href="{{ route('login') }}">Iniciar Sesión</a></li>
                             <li><a href="{{ route('register') }}">Registrar</a></li>
                         @else
-                            @if(currentUser()->type_user=='admin')
-                            <li>Lista de Inscriptos</li>
-                            @endif
-                            <li class="dropdown">
+                        @if(currentUser()->type_user=='admin')
+                            <li class="dropdown"> <a href="{{ route('login') }}">Lista de Inscriptos</a></li>
+                        @endif
+                        <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                    {{ Auth::user()->name }} <span class="caret"></span>
+                                    {{ Auth::user()->nameComplete() }}</a></li>
+                            <li>
+                                <a href="{{ route('logout') }}"
+                                   onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                                    Salir
                                 </a>
 
-                                <ul class="dropdown-menu" role="menu">
-                                    <li>
-                                        <a href="{{ route('logout') }}"
-                                            onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                            Salir
-                                        </a>
-
-                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                            {{ csrf_field() }}
-                                        </form>
-                                    </li>
-                                </ul>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                    {{ csrf_field() }}
+                                </form>
                             </li>
                         @endif
                     </ul>
                 </div>
             </div>
         </nav>
-        <div class="content-all">
-        <div class="logo-baner">
+        <div class="content">
+            <div class="logo-baner">
 
-        </div>
-        @yield('content')
-        <div class="logo-text">
+            </div>
+            @yield('content')
+            <div class="logo-text">
 
-        </div>
+            </div>
 
         </div>
         <nav class="footer ">
@@ -99,6 +95,9 @@
     </div>
 
     <!-- Scripts -->
+    @yield('scripts')
     <script src="{{ asset('js/app.js') }}"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.15/datatables.min.js"></script>
+
 </body>
 </html>

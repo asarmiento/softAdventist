@@ -59,6 +59,8 @@ class HomeController extends Controller
             $youngBoy = new YoungBoy();
             $data['user_id'] = currentUser()->id;
             $data['date'] = Carbon::now()->format('Y-m-d');
+            $date = explode('-',$data['birthdate']);
+            $data['age'] =Carbon::createFromDate($date[0],$date[1],$date[2])->age;
             $buscando = YoungBoy::where('user_id',currentUser()->id)->count();
             if($buscando>0):
                 return redirect()->back()->with('error', 'Tenemos un error, Ya se Registro una vez');
@@ -106,6 +108,7 @@ class HomeController extends Controller
         $data['young_boy_id'] =currentUser()->youngBoy->id;
         $data['date'] =Carbon::now()->format('Y-m-d');
         $data['shirt_size'] =currentUser()->youngBoy->retirements[0]->shirt_size;
+
         $buscando = Retirement::where('young_boy_id',currentUser()->youngBoy->id)->where('voucher',$data['voucher'])
             ->count();
         if($buscando>0):
@@ -113,6 +116,7 @@ class HomeController extends Controller
         else:
             $retirement =  new Retirement();
             if($retirement->isValid($data)):
+
                 $retirement->fill($data);
                 $retirement->save();
                 $youngBoy = new YoungBoy();

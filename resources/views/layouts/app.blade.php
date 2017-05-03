@@ -13,7 +13,6 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.15/datatables.min.css"/>
 
     <!-- Scripts -->
     <script>
@@ -90,9 +89,7 @@
             <img src="/img/baner.jpeg" height="100%" width="100%">
         </div>
         @yield('content')
-        <div class="logo-text">
-            <img src="/img/logo-ja.jpg" height="250" width="400">
-        </div>
+
 
         </div>
         <nav class="footer ">
@@ -103,9 +100,7 @@
     </div>
 
     <!-- Scripts -->
-    @yield('scripts')
     <script src="{{ asset('js/app.js') }}"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.15/datatables.min.js"></script>
 
 </body>
 </html>

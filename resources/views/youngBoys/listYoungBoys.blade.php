@@ -5,16 +5,15 @@
  * Date: 28/4/17
  * Time: 20:06
  -->
-@extends('layouts.app')
+@extends('layouts.system')
 
 @section('content')
-    <div class="float-div">
-        <div class="content-container">
-            <div class="col-md-10 ">
+    <div class="container">
+        <div class="">
+            <div class="col-md-12 ">
                 <div class="panel panel-default">
                     <div class="panel-heading">Formulario de Inscripción</div>
-
-                    <div class="panel-body">
+                        <div class="panel-body">
                         <table id="lists-youngBoys" class="table table-bordered">
                             <thead>
                                 <th>#</th>
