@@ -5,7 +5,7 @@
     <div class="content-container">
         <div class="col-md-10 ">
             <div class="panel panel-default">
-                <div class="panel-heading">Regístrate</div>
+                <div class="panel-heading">Regístrate: <strong>En este paso solo estas creando un usuario para poder ingresar al sistema, debes verificar tu email despues de registrarte, buscalo en la Bandeja de entrada o en Spam(correos no deseados)</strong></div>
                 <div class="panel-body">
                     <form class="form-horizontal" role="form" method="POST" action="{{ route('register') }}">
                         {{ csrf_field() }}

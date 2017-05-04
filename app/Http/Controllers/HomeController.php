@@ -39,13 +39,16 @@ class HomeController extends Controller
             $numeration = $separar[1]+1;
             $code = $year->format('Y').'-'.$numeration;
         endif;
+        $registros = Retirement::whereHas('youngBoy',function ($q){
+            $q->where('user_id',currentUser()->id);
+        })->get();
         $saldo = 38500;
        if( $youngBoy->where('user_id',currentUser()->id)->count() ==0):
-            return view('home',compact('youngBoy','code','saldo'));
+            return view('home',compact('youngBoy','code','saldo','registros'));
        else:
            $youngBoy = $youngBoy->where('user_id',currentUser()->id)->first();
             $saldo = $saldo-$youngBoy->retirements()->sum('amount');
-            return view('registered',compact('youngBoy','saldo'));
+            return view('registered',compact('youngBoy','saldo','registros'));
        endif;
     }
 
@@ -69,12 +72,20 @@ class HomeController extends Controller
                     $youngBoy->fill($data);
                     $youngBoy->save();
                     $data['young_boy_id'] = $youngBoy->id;
+
                     if($youngBoy->count()>0):
                         $buscando = Retirement::where('young_boy_id',$youngBoy->id)->where('voucher',$data['voucher'])
                             ->count();
                         if($buscando>0):
                             return redirect()->back()->with('error', 'Tenemos un error, Ya existe ese Numero de Deposito');
                         else:
+                            $file = $request->file('file');
+                            //obtenemos el nombre del archivo
+                            $nombre = currentUser()->email.'-'.$data['voucher'].'.'.$file->getClientOriginalExtension();
+                            $data['file'] = $file->getClientOriginalExtension();
+                            //indicamos que queremos guardar un nuevo archivo en el disco local
+                            \Storage::disk('local')->put($nombre,  \File::get($file));
+
                             $retirement = new Retirement();
                             if ($retirement->isValid($data)):
                                 $retirement->fill($data);
@@ -114,6 +125,13 @@ class HomeController extends Controller
         if($buscando>0):
             return redirect()->back()->with('error', 'Tenemos un error, Ya existe ese Numero de Deposito');
         else:
+            $file = $request->file('file');
+            //obtenemos el nombre del archivo
+            $nombre = currentUser()->email.'-'.$data['voucher'].'.'.$file->getClientOriginalExtension();
+            $data['file'] = $file->getClientOriginalExtension();
+            //indicamos que queremos guardar un nuevo archivo en el disco local
+            \Storage::disk('local')->put($nombre,  \File::get($file));
+
             $retirement =  new Retirement();
             if($retirement->isValid($data)):
 

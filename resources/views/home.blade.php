@@ -5,7 +5,7 @@
         <div class="content-container">
             <div class="col-md-10 ">
                 <div class="panel panel-default">
-                <div class="panel-heading">Formulario de Inscripción</div>
+                <div class="panel-heading">Formulario de Inscripción: Este paso registraras el primer abono para la inscripcion y tus datos generales.</div>
 
                 <div class="panel-body">
                     @if(session('alert'))
@@ -16,7 +16,7 @@
                     @endif
                         <div class="col-md-12  text-center"><h1>Hola: {{currentUser()->nameComplete()}}</h1></div>
                         <div class="col-md-12  text-center"><h1>Tu Cédula es: {{currentUser()->identification_card}}</h1></div>
-                    <form action="{{route('save-inscription')}}" method="post">
+                    <form action="{{route('save-inscription')}}" method="post" accept-charset="UTF-8" enctype="multipart/form-data">
                         <div class="row text-center"> {{csrf_field()}}
                             <div class="content-box-blue col-md-12">
                                 <div class="col-md-4  text-center form-group"><label>Código: </label>
@@ -125,6 +125,12 @@
                                     <label>Saldo: </label>
                                     <input type="text" name=""  value="{{number_format($saldo,2)}}" readonly class="form-control">
                                 </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Imagen del Deposito</label>
+                                    <div class="col-md-6">
+                                        <input type="file" class="form-control" name="file" >
+                                    </div>
+                                </div>
                                 <div class="col-md-12   ">
                                     <input type="submit" value="Guardar" class="btn btn-default">
 
@@ -132,7 +138,24 @@
                             </div>
                         </div>
                     </form>
-
+                    <div>
+                        <table class="table tab-content">
+                            <thead>
+                            <th>Comprobante</th>
+                            <th>fecha</th>
+                            <th>Monto</th>
+                            </thead>
+                            <tbody>
+                            @foreach($registros AS $registro)
+                                <tr>
+                                    <td>{{$registro->voucher}}</td>
+                                    <td>{{$registro->date}}</td>
+                                    <td>{{$registro->amount}}</td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
                 <div class="text-center">

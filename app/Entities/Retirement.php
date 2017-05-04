@@ -12,7 +12,7 @@ namespace App\Entities;
 
 class Retirement extends Entity
 {
-    protected $fillable = ['date','shirt_size','payment_method','amount','voucher','bank','young_boy_id'];
+    protected $fillable = ['date','shirt_size','payment_method','amount','voucher','bank','young_boy_id','file'];
 
 
     public function getRules()
@@ -21,6 +21,7 @@ class Retirement extends Entity
             'shirt_size'=>'required',
             'payment_method'=>'required',
             'amount'=>'required',
+            'file'=>'required',
             'voucher'=>'required',
             'young_boy_id'=>'required',
             'bank'=>'required'];// TODO: Implement getRules() method.
@@ -30,5 +31,10 @@ class Retirement extends Entity
     public function getUnique($rules, $datos)
     {
         return $rules;// TODO: Implement getUnique() method.
+    }
+
+    public function youngBoy()
+    {
+        return $this->belongsTo(YoungBoy::getClass());
     }
 }

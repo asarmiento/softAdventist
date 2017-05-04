@@ -58,7 +58,7 @@
                         @if(currentUser()->type_user=='admin')
                             <li class="dropdown"> <a href="{{ route('login') }}">Lista de Inscriptos</a></li>
                         @endif
-                        <li class="dropdown">
+                        <li >
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                     {{ Auth::user()->nameComplete() }}</a></li>
                             <li>

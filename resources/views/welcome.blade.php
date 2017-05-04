@@ -121,6 +121,13 @@
                 </div>
             <div class="content">
                 <div class="btn-button">
+                    <ul style="font-size: 14px; list-style: none; color: #000; font-family: 'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;
+                    text-align: left">Pasos a Seguir
+                        <li>1. Registrarse como Usuario</li>
+                        <li>2. Verificar su Email (Usted recibira un email para comprobacion, si no esta en la Bandeja de entrada busquedlo en spam)</li>
+                        <li>3. Inicie sesion</li>
+                        <li>4. Inscribase llenando todos los datos y subiendo una imagen del deposito</li>
+                    </ul>
                     <a href="{{ url('/register') }}" class="content-box-green">INSCRIBETE</a>
                     <a href="" class="content-box-blue">INFORMACIÓN</a>
                 </div>
@@ -132,9 +139,6 @@
                 <div class="footer" style="background-color: #f7f7f7; text-align: center; ">
                     <a href="http://friendlypos.net" class="text-color"> Elaborado por Sistemas Amigables de Costa Rica SAOR S.A</a>
                 </div>
-            </div>
-            <div class="logo-text">
-                <img src="/img/logo-ja.jpg" height="250" width="300">
             </div>
 
 
