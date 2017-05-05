@@ -126,6 +126,8 @@ return [
         'voucher' => 'Comprobante',
         'payment_method' => 'Metodo de Pago',
         'bank' => 'Banco',
+        'Hello!' => 'Hola!',
+        'Hello' => 'Hola',
     ],
 
 ];
