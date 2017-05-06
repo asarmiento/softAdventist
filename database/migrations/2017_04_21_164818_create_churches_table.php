@@ -19,9 +19,9 @@ class CreateChurchesTable extends Migration
             $table->string('address');
             $table->decimal('longitud',20,6);
             $table->decimal('latitud',20,6);
-            $table->integer('mission_or_association_id')->unsigned()->index();
-            $table->foreign('mission_or_association_id')->references('id')->on('mission_or_associations')->onDelete('no action');
             $table->timestamps();
+            $table->engine = 'InnoDB';
+
         });
     }
 

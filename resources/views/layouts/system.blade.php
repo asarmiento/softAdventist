@@ -55,9 +55,13 @@
                             <li><a href="{{ route('login') }}">Iniciar Sesión</a></li>
                             <li><a href="{{ route('register') }}">Registrar</a></li>
                         @else
+                            @if(currentUser()->type_user=='cont')
+                                <li class="dropdown"> <a href="{{ route('login') }}">Lista de Miembros</a></li>
+                            @endif
                         @if(currentUser()->type_user=='admin')
                             <li class="dropdown"> <a href="{{ route('login') }}">Lista de Inscriptos</a></li>
                         @endif
+
                         <li >
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                     {{ Auth::user()->nameComplete() }}</a></li>

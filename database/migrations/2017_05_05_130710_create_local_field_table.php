@@ -4,19 +4,21 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateMissionOrAssociationsTable extends Migration
+class CreateLocalFieldTable extends Migration
 {
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up()
-    {
-        Schema::create('mission_or_associations', function (Blueprint $table) {
+    public function up() {
+        Schema::create('local_fields', function(Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->string('token');
+            $table->engine = 'InnoDB';
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -25,8 +27,7 @@ class CreateMissionOrAssociationsTable extends Migration
      *
      * @return void
      */
-    public function down()
-    {
-        Schema::dropIfExists('mission_or_associations');
+    public function down() {
+        Schema::drop('local_fields');
     }
 }

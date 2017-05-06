@@ -1,9 +1,9 @@
-@extends('layouts.app')
+@extends('layouts.system')
 
 @section('content')
-    <div class="float-div">
+    <div class="container">
         <div class="content-container">
-            <div class="col-md-10 ">
+            <div class="col-md-12 ">
             <div class="panel panel-default">
                 <div class="panel-heading">Iniciar Sesión</div>
                 <div class="panel-body">
@@ -66,10 +66,7 @@
                 </div>
             </div>
                 <div class="text-center">
-                    <a>Si tienes algun problema con la inscripción escribenos a: jaacscr@contadventista.org</a>
-
-                    <video src="/videos/promo.mp4" autoplay loop controls width="500" height="400"></video>
-                </div>
+               </div>
         </div>
     </div>
 </div>
