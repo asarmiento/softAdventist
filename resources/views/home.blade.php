@@ -96,7 +96,7 @@
                                 </div>
                                 <div class="col-md-4  text-center form-group">
                                     <label>Monto Abonado: </label>
-                                    <input type="text" name="amount"  class="form-control" max="{{$saldo}}" value="{{old('amount')}}" placeholder="0.00">
+                                    <input type="number" name="amount"  class="form-control" max="{{$saldo}}" value="{{old('amount')}}" placeholder="0.00">
                                     @if ($errors->has('amount'))
                                         <span class="help-block  alert-danger">
                                         <strong>{{ $errors->first('amount') }}</strong>
