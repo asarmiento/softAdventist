@@ -19,8 +19,10 @@
                                 <tr>
                                     <td>{{$key+1}}</td>
                                     <td>{{$member->nameComplete()}}</td>
-                                    <td>{{$member-}}</td>
+                                    <td>{{$member->birthdate}}</td>
+                                    <td>{{$member->due}}</td>
                                 </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>

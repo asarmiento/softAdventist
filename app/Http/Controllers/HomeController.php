@@ -32,10 +32,10 @@ class HomeController extends Controller
         $youngBoy = new YoungBoy();
         $year = Carbon::now();
 
-        if($youngBoy->first()==null):
+        if($youngBoy->OrderBy('code','DESC')->first()==null):
             $code = $year->format('Y').'-1';
         else:
-            $separar = explode('-',$youngBoy->orderBy('id','DESC')->first()->code);
+            $separar = explode('-',$youngBoy->orderBy('code','DESC')->first()->code);
             $numeration = $separar[1]+1;
             $code = $year->format('Y').'-'.$numeration;
         endif;
@@ -60,11 +60,17 @@ class HomeController extends Controller
         try {
             DB::beginTransaction();
             $youngBoy = new YoungBoy();
+            $year = Carbon::now();
             $data['user_id'] = currentUser()->id;
             $data['date'] = Carbon::now()->format('Y-m-d');
             $date = explode('-',$data['birthdate']);
             $data['age'] =Carbon::createFromDate($date[0],$date[1],$date[2])->age;
             $buscando = YoungBoy::where('user_id',currentUser()->id)->count();
+            $separar = explode('-',$youngBoy->orderBy('code','DESC')->first()->code);
+            $numeration = $separar[1]+1;
+            $code = $year->format('Y').'-'.$numeration;
+            $data['code'] = $code;
+
             if($buscando>0):
                 return redirect()->back()->with('error', 'Tenemos un error, Ya se Registro una vez');
             else:
@@ -77,9 +83,15 @@ class HomeController extends Controller
                         $buscando = Retirement::where('young_boy_id',$youngBoy->id)->where('voucher',$data['voucher'])
                             ->count();
                         if($buscando>0):
+                            DB::rollback();
                             return redirect()->back()->with('error', 'Tenemos un error, Ya existe ese Numero de Deposito');
                         else:
+                            if($request->has('file')):
+                                return redirect()->back()->with('error', 'La imagen del deposito es obligatoria');
+
+                            endif;
                             $file = $request->file('file');
+
                             //obtenemos el nombre del archivo
                             $nombre = currentUser()->email.'-'.$data['voucher'].'.'.$file->getClientOriginalExtension();
                             $data['file'] = $file->getClientOriginalExtension();
@@ -125,6 +137,10 @@ class HomeController extends Controller
         if($buscando>0):
             return redirect()->back()->with('error', 'Tenemos un error, Ya existe ese Numero de Deposito');
         else:
+            if(!$request->file('file')):
+                return redirect()->back()->with('error', 'La imagen del deposito es obligatoria');
+
+            endif;
             $file = $request->file('file');
             //obtenemos el nombre del archivo
             $nombre = currentUser()->email.'-'.$data['voucher'].'.'.$file->getClientOriginalExtension();

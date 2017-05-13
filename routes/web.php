@@ -45,9 +45,12 @@ Route::get('/gmaps1', function(){
 
 Route::group(['prefix'=>'registrado','middleware'=>'auth'],function (){
 
+    Route::get('test/index', ['uses'=>'TestController@index','as'=>'test']);
+    Route::get('lista-miembros', ['uses'=>'MemberController@index','as'=>'list-members']);
     Route::get('inscription', ['uses'=>'HomeController@create','as'=>'create-inscription']);
     Route::get('lista-de-inscriptos', ['uses'=>'HomeController@lists','as'=>'lists-inscription']);
     Route::post('inscription', ['uses'=>'HomeController@store','as'=>'save-inscription']);
     Route::post('registered', ['uses'=>'HomeController@registered','as'=>'save-registered']);
+
 
 });

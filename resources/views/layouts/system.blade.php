@@ -56,7 +56,7 @@
                             <li><a href="{{ route('register') }}">Registrar</a></li>
                         @else
                             @if(currentUser()->type_user=='cont')
-                                <li class="dropdown"> <a href="{{ route('login') }}">Lista de Miembros</a></li>
+                                <li class="dropdown"> <a href="{{ route('list-members') }}">Lista de Miembros</a></li>
                             @endif
                         @if(currentUser()->type_user=='admin')
                             <li class="dropdown"> <a href="{{ route('login') }}">Lista de Inscriptos</a></li>

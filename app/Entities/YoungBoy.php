@@ -33,4 +33,9 @@ class YoungBoy extends Entity
     {
         return $this->hasMany(Retirement::getClass());
     }
+
+    public function user()
+    {
+        return $this->belongsTo('App\Entities\User');
+    }
 }

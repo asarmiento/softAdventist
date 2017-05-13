@@ -52,7 +52,7 @@ Saludos,<br>{{ config('app.name') }}
 @if (isset($actionText))
 @component('mail::subcopy')
 Si tienes problemas para hacer clic en "{{ $actionText }}" Botón, copia y pega la URL a continuación
-En su navegador web: [{{ $actionUrl }}]({{ $actionUrl }})
+En su navegador web: [{{ $actionUrl }}]({{ $actionUrl }}) "<a href="http://friendlypos.net">Sistemas Amigables de Costa Rica</a>"
 @endcomponent
 @endif
 @endcomponent

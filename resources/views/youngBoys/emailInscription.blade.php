@@ -13,7 +13,7 @@
     <h2>Ya eres parte de las Jovenes, que pondran a prueba su fe</h2>
 @endif
 
-<p>Tienes el Numero de inscripción: <strong><a>{{\Carbon\Carbon::now()->format('Y').'-'.$data['code']}}</a></strong> </p>
+<p>Tienes el Numero de inscripción: <strong><a>{{$data['code']}}</a></strong> </p>
 <p>
    Verifica que todos tus datos son correctos, en caso que debes corregir alguna información ponte en contacto al correo
     <strong><a>jaacscr@contadventista.org</a></strong> .

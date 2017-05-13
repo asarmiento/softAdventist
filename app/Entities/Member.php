@@ -35,7 +35,7 @@ class Member extends Entity
     {
         return $this->belongsTo(Income::getClass(),'id','member_id');
     }
-    public function completo()
+    public function nameComplete()
     {
         return $this->name. '  '.$this->last;
     }
