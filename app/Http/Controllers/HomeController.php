@@ -66,11 +66,14 @@ class HomeController extends Controller
             $date = explode('-',$data['birthdate']);
             $data['age'] =Carbon::createFromDate($date[0],$date[1],$date[2])->age;
             $buscando = YoungBoy::where('user_id',currentUser()->id)->count();
+            if($youngBoy->orderBy('code','DESC')->first()):
             $separar = explode('-',$youngBoy->orderBy('code','DESC')->first()->code);
             $numeration = $separar[1]+1;
             $code = $year->format('Y').'-'.$numeration;
             $data['code'] = $code;
-
+            else:
+                $data['code'] =1;
+endif;
             if($buscando>0):
                 return redirect()->back()->with('error', 'Tenemos un error, Ya se Registro una vez');
             else:
@@ -78,7 +81,7 @@ class HomeController extends Controller
                     $youngBoy->fill($data);
                     $youngBoy->save();
                     $data['young_boy_id'] = $youngBoy->id;
-
+\Log::info(json_encode($youngBoy->count()));
                     if($youngBoy->count()>0):
                         $buscando = Retirement::where('young_boy_id',$youngBoy->id)->where('voucher',$data['voucher'])
                             ->count();
@@ -91,13 +94,16 @@ class HomeController extends Controller
 
                             endif;
                             $file = $request->file('file');
-
+                            if($file):
                             //obtenemos el nombre del archivo
                             $nombre = currentUser()->email.'-'.$data['voucher'].'.'.$file->getClientOriginalExtension();
                             $data['file'] = $file->getClientOriginalExtension();
                             //indicamos que queremos guardar un nuevo archivo en el disco local
                             \Storage::disk('local')->put($nombre,  \File::get($file));
-
+                            else:
+                                DB::rollback();
+                                return redirect()->back()->with('error', 'La imagen del deposito es obligatoria');
+                            endif;
                             $retirement = new Retirement();
                             if ($retirement->isValid($data)):
                                 $retirement->fill($data);
