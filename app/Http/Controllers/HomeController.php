@@ -35,8 +35,8 @@ class HomeController extends Controller
         if($youngBoy->OrderBy('code','DESC')->first()==null):
             $code = $year->format('Y').'-1';
         else:
-            $separar = explode('-',$youngBoy->orderBy('code','DESC')->first()->code);
-            $numeration = $separar[1]+1;
+            $separar = explode('-',$youngBoy->orderBy('updated_at','DESC')->first()->code);
+            $numeration = $separar[1] + 1;
             $code = $year->format('Y').'-'.$numeration;
         endif;
         $registros = Retirement::whereHas('youngBoy',function ($q){
