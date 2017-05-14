@@ -67,7 +67,7 @@ class HomeController extends Controller
             $data['age'] =Carbon::createFromDate($date[0],$date[1],$date[2])->age;
             $buscando = YoungBoy::where('user_id',currentUser()->id)->count();
             if($youngBoy->orderBy('code','DESC')->first()):
-            $separar = explode('-',$youngBoy->orderBy('code','DESC')->first()->code);
+            $separar = explode('-',$youngBoy->orderBy('updated_at','DESC')->first()->code);
             $numeration = $separar[1]+1;
             $code = $year->format('Y').'-'.$numeration;
             $data['code'] = $code;
