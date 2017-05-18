@@ -73,7 +73,7 @@ class HomeController extends Controller
             $data['code'] = $code;
             else:
                 $data['code'] =1;
-endif;
+            endif;
             if($buscando>0):
                 return redirect()->back()->with('error', 'Tenemos un error, Ya se Registro una vez');
             else:
@@ -81,7 +81,7 @@ endif;
                     $youngBoy->fill($data);
                     $youngBoy->save();
                     $data['young_boy_id'] = $youngBoy->id;
-\Log::info(json_encode($youngBoy->count()));
+                    \Log::info(json_encode($youngBoy->count()));
                     if($youngBoy->count()>0):
                         $buscando = Retirement::where('young_boy_id',$youngBoy->id)->where('voucher',$data['voucher'])
                             ->count();
@@ -136,8 +136,9 @@ endif;
         $data = $request->all();
         $data['young_boy_id'] =currentUser()->youngBoy->id;
         $data['date'] =Carbon::now()->format('Y-m-d');
+        if($data['shirt_size']== ""):
         $data['shirt_size'] =currentUser()->youngBoy->retirements[0]->shirt_size;
-
+        endif;
         $buscando = Retirement::where('young_boy_id',currentUser()->youngBoy->id)->where('voucher',$data['voucher'])
             ->count();
         if($buscando>0):
