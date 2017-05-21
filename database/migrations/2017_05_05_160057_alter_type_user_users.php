@@ -26,8 +26,8 @@ class AlterTypeUserUsers extends Migration
      */
     public function down()
     {
-        Schema::table('payment_due_suppliers', function($table) {
-            $table->decimal('amount',20,2)->change();
+        Schema::table('users', function($table) {
+            $table->decimal('type_user',20,2)->change();
         });
     }
 }

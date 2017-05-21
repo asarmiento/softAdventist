@@ -1,13 +1,20 @@
-@extends('layouts.app')
+@extends('layouts.system')
 
 @section('content')
-    <div class="float-div">
-        <div class="content-container">
-            <div class="col-md-12 ">
+    <div class="container">
+        <div class="">
+            <div class="">
                 <div class="panel panel-default">
-                <div class="panel-heading">Lista de Miembros</div>
+                <div class="panel-heading">
+                    <div class="text-center left col-md-10 col-lg-10" >
+                       <h3 style="font-size:38px; margin: 2px">Lista de Miembros</h3>
+                    </div>
+                    <div style="height: 40px">
+                        <a href="{{route('new-member')}}" class="btn btn-success right col-md-2 col-lg-2 text-color">Nuevo Miembro</a>
+                    </div>
+                </div>
                 <div class="panel-body">
-                    <table class="table tab-content">
+                    <table id="members" class="table table-success">
                         <thead>
                             <th>N°</th>
                             <th>Nombre Completo</th>
@@ -30,4 +37,11 @@
         </div>
     </div>
 </div>
+@endsection
+@section('scripts')
+    <script>
+        $(document).ready(function () {
+            $('#members').DataTable();
+        });
+    </script>
 @endsection

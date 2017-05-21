@@ -11,6 +11,10 @@ class MemberController extends Controller
     {
         $members = Member::all();
      return view('members.index',compact('members'));
-}
+    }
 
+    public function create()
+    {
+        return view('members.create');
+    }
 }
