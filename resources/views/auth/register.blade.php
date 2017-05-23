@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="float-div">
-    <div class="content-container">
-        <div class="col-md-10 ">
-            <div class="panel panel-default">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10 ">
+                <div class="panel panel-default">
                 <div class="panel-heading">Regístrate: <strong>En este paso solo estas creando un usuario para poder ingresar al sistema, debes verificar tu email despues de registrarte, buscalo en la Bandeja de entrada o en Spam(correos no deseados)</strong></div>
                 <div class="panel-body">
                     <form class="form-horizontal" role="form" method="POST" action="{{ route('register') }}">
@@ -99,7 +99,7 @@
             <div class="text-center">
                 <a>Si tienes algun problema con la inscripción escribenos a: jaacscr@contadventista.org</a>
     
-                <video src="/videos/promo.mp4" autoplay loop controls width="500" height="400"></video>
+                <!--video src="/videos/promo.mp4" autoplay loop controls width="500" height="400"></video-->
             </div>
         </div>
     </div>

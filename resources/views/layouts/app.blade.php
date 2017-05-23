@@ -84,10 +84,11 @@
         </nav>
         <div class="content-all">
         <div class="logo-baner">
-            <img src="/img/baner.jpeg" height="100%" width="100%">
         </div>
         @yield('content')
+            <div class="logo-baner">
 
+            </div>
 
         </div>
         <nav class="footer ">
