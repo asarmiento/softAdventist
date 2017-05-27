@@ -128,8 +128,10 @@
 
 
 
-            @if(\Carbon\Carbon::now()->format('Y-m-d')=='2017-05-29 ')
-                    <div><h1>Hemos Cerrado la Inscripción</h1></div>
+            @if(\Carbon\Carbon::now()->format('Y-m-d') >='2017-05-30')
+                    <div><h1>Hemos Cerrado la Inscripción</h1>
+                    <h2><a href="{{ route('login') }}">Iniciar Sesión</a></h2>
+                    </div>
                     @else
 
 

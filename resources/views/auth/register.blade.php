@@ -7,6 +7,11 @@
                 <div class="panel panel-default">
                 <div class="panel-heading">Regístrate: <strong>En este paso solo estas creando un usuario para poder ingresar al sistema, debes verificar tu email despues de registrarte, buscalo en la Bandeja de entrada o en Spam(correos no deseados)</strong></div>
                 <div class="panel-body">
+                    @if(\Carbon\Carbon::now()->format('Y-m-d') >='2017-05-30')
+                        <div><h1>Hemos Cerrado la Inscripción</h1>
+                            <h2><a href="{{ route('login') }}">Iniciar Sesión</a></h2>
+                        </div>
+                    @else
                     <form class="form-horizontal" role="form" method="POST" action="{{ route('register') }}">
                         {{ csrf_field() }}
 
@@ -94,6 +99,7 @@
                             </div>
                         </div>
                     </form>
+                    @endif
                 </div>
             </div>
             <div class="text-center">
