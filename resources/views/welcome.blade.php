@@ -6,11 +6,17 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <title>JA ACSCR</title>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
         <!-- Latest compiled and minified CSS -->
-         <!-- Styles -->
+        <link rel="stylesheet" href="css/reset.css" />
+
+        <link rel="stylesheet" href="css/styles.css" />
+
+        <!-- Styles -->
         <style>
             html, body {
                 background-color: #fff;
@@ -116,34 +122,79 @@
                 </div>
             @endif
 
-                <div class="logo-baner">
-                    <img src="/img/baner.jpeg" height="700" width="400">
-                </div>
+
+
             <div class="content">
-                <div class="btn-button">
-                    <ul style="font-size: 14px; list-style: none; color: #000; font-family: 'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;
+
+
+
+            @if(\Carbon\Carbon::now()->format('Y-m-d')=='2017-05-29 ')
+                    <div><h1>Hemos Cerrado la Inscripción</h1></div>
+                    @else
+
+
+                    <div class="content-box-green "  style="margin: 0 auto; text-align: center; width: 70%; align-content: center">
+                        <h1>No te lo Puedes perder, Yo sé en Quien he Creído</h1>
+                        <ul style="font-size: 14px; list-style: none; color: #000; font-family: 'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;
                     text-align: left">Pasos a Seguir
                         <li>1. Registrarse como Usuario</li>
                         <li>2. Verificar su Email (Usted recibira un email para comprobacion, si no esta en la Bandeja de entrada busquedlo en spam)</li>
                         <li>3. Inicie sesion</li>
                         <li>4. Inscribase llenando todos los datos y subiendo una imagen del deposito</li>
                     </ul>
-                    <a href="{{ url('/register') }}" class="content-box-green">INSCRIBETE</a>
-                    <a href="" class="content-box-blue">INFORMACIÓN</a>
+                    </div>
+                    <div class="btn-button"  style="margin: 15px">   <a href="{{ url('/register') }}" class="content-box-green">INSCRIBETE</a>
+
+
                 </div>
-                <div>
-                    <video src="/videos/promo.mp4" autoplay loop controls width="500" height="400"></video>
-                </div>
-                <div class="content-box-green"><a>Si tienes algun problema con la inscripción escribenos a: jaacscr@contadventista.org</a>
-                </div>
-                <div class="footer" style="background-color: #f7f7f7; text-align: center; ">
+                    <div class="timer-area">
+                        <ul id="countdown">
+                            <li> <span class="days">00</span>
+                                <p class="timeRefDays">Dias</p>
+                            </li>
+                            <li> <span class="hours">00</span>
+                                <p class="timeRefHours">Horas</p>
+                            </li>
+                            <li> <span class="minutes">00</span>
+                                <p class="timeRefMinutes">Minutos</p>
+                            </li>
+                            <li> <span class="seconds">00</span>
+                                <p class="timeRefSeconds">Segundos</p>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="footer" style="background-color: #f7f7f7; text-align: center; ">
                     <a href="http://friendlypos.net" class="text-color"> Elaborado por Sistemas Amigables de Costa Rica SAOR S.A</a>
                 </div>
-            </div>
 
+            </div>
+@endif
 
         </div>
+        <script
+                src="https://code.jquery.com/jquery-3.2.1.js"
+                integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+                crossorigin="anonymous"></script>
+        <script src="http://code.jquery.com/jquery-latest.js"></script>
 
+
+            <script src="js/countdown.js"></script>
+        <script>
+
+            $(document).ready(function(){
+                $("#countdown").countdown({
+                        date: "29 may 2017 23:00:00",
+                        format: "on"
+                    },
+
+                    function() {
+// callback function
+                    });
+            });
+
+
+        </script>
 
     </div>
     </body>

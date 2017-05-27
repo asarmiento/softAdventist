@@ -38,4 +38,24 @@ class TestController extends Controller
         die;
     }
 
+
+    public function message()
+    {
+        $boys = YoungBoy::all();
+
+        foreach ($boys AS $boy):
+
+            if($boy->retirements()->count()>0):
+
+                Mail::send('vendor/notifications/emailInvitacion', compact('boy'), function ($e) use ($boy) {
+                    $e->from('jaacscr@contadventista.org', 'Departamento de Jovenes ACSCR');
+                    $e->to($boy->user->email, $boy->user->nameComplete())->subject('Revisión');
+                });
+                \Log::info("emailError".$boy->user->email);
+
+            endif;
+        endforeach;
+        die;
+    }
+
 }

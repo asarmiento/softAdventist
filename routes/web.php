@@ -46,6 +46,7 @@ Route::get('/gmaps1', function(){
 Route::group(['prefix'=>'registrado','middleware'=>'auth'],function (){
 
     Route::get('test/index', ['uses'=>'TestController@index','as'=>'test']);
+    Route::get('test/mensaje', ['uses'=>'TestController@message','as'=>'test-mensaje']);
     Route::get('nuevo-miembros', ['uses'=>'MemberController@create','as'=>'new-member']);
     Route::get('lista-miembros', ['uses'=>'MemberController@index','as'=>'list-members']);
     Route::get('inscription', ['uses'=>'HomeController@create','as'=>'create-inscription']);

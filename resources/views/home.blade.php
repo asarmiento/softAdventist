@@ -3,8 +3,8 @@
 @section('content')
     <div class="float-div">
         <div class="content-container">
-            <div class="col-md-10 ">
-                <div class="panel panel-default">
+            <div class="col-md-12 ">
+                <div class=" panel-default">
                 <div class="panel-heading">Formulario de Inscripción: Este paso registraras el primer abono para la inscripcion y tus datos generales.</div>
 
                 <div class="panel-body">
@@ -96,7 +96,7 @@
                                 </div>
                                 <div class="col-md-4  text-center form-group">
                                     <label>Monto Abonado: </label>
-                                    <input type="number" name="amount"  class="form-control" max="{{$saldo}}" value="{{old('amount')}}" placeholder="0.00">
+                                    <input type="number" name="amount"  class="form-control" max="{{$saldo}}" value="{{old('amount')}}" placeholder="8500">
                                     @if ($errors->has('amount'))
                                         <span class="help-block  alert-danger">
                                         <strong>{{ $errors->first('amount') }}</strong>
