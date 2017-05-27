@@ -136,7 +136,7 @@
 
 
                     <div class="content-box-green "  style="margin: 0 auto; text-align: center; width: 70%; align-content: center">
-                        <h1>No te lo Puedes perder, Yo sé en Quien he Creído</h1>
+                        <h1>Yo sé en Quien he Creído</h1>
                         <ul style="font-size: 14px; list-style: none; color: #000; font-family: 'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;
                     text-align: left">Pasos a Seguir
                         <li>1. Registrarse como Usuario</li>
