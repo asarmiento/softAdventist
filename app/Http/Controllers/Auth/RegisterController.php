@@ -124,8 +124,10 @@ class RegisterController extends Controller
     public function confirmation($token)
     {
         $user = User::where('registration_token',$token)->first();
+        if($user):
         $user->registration_token= null;
         $user->save();
+        endif;
         return redirect()->route('login')->with('alert','Email confirmado, puede Iniciar Sesión!');
     }
 }
