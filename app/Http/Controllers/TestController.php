@@ -10,6 +10,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Entities\User;
 use App\Entities\YoungBoy;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Mail;
@@ -41,19 +42,19 @@ class TestController extends Controller
 
     public function message()
     {
-        $boys = YoungBoy::all();
+        $users = User::all();
 
-        foreach ($boys AS $boy):
+        foreach ($users AS $user):
 
-            if($boy->retirements()->count()>0):
 
-                Mail::send('vendor/notifications/emailInvitacion', compact('boy'), function ($e) use ($boy) {
+
+                Mail::send('vendor/notifications/emailInvitacion', compact('user'), function ($e) use ($user) {
                     $e->from('jaacscr@contadventista.org', 'Departamento de Jovenes ACSCR');
-                    $e->to($boy->user->email, $boy->user->nameComplete())->subject('Revisión');
+                    $e->to($user->email, $user->nameComplete())->subject('Revisión');
                 });
-                \Log::info("emailError".$boy->user->email);
+                \Log::info("emailError".$user->email);
 
-            endif;
+
         endforeach;
         die;
     }

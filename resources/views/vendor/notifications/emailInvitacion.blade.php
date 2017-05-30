@@ -5,22 +5,27 @@
  * Date: 20/4/17
  * Time: 09:51
 -->
-<h1> Hola {{$boy->user->nameComplete()}} </h1>
+<h1> Hola {{$user->nameComplete()}} </h1>
 <h1>El Departamento de Jovenes de la Asociación Central Sur de Costa Rica</h1>
 
 
-
-<p>Tienes el Numero de inscripción: <strong><a>{{$boy->code}}</a></strong> </p>
+@if($user->youngBoy()->count() > 0)
+<p>Tienes el Numero de inscripción: <strong><a>{{$user->boy->code}}</a></strong> </p>
+@else
+  <p>No tenemos numero de inscripcion de usted.</p>
+@endif
 <p>
     Te Felicitamos por haberte inscripto, para el gran retiro de jóvenes del 30 junio al 2 Julio.
 </p>
 <p>
-    Nos gustaría que le informes al director(a) de jóvenes de tu Iglesia que si nos podría enviar un correo electrónico a jaacscr@contadventista.org para poder reconocerlo como director, ya que le estaremos enviando la lista de jóvenes de su iglesia para que verifiquemos que todos están inscriptos correctamente.
+    Disculpas las molestias si tuviste problema al registrarte si este email no lleva tu numero de registro es por que todavía no estas inscrito,
+    favor iniciar sesión con este email y la contraseña que hayas registrado. Si no la recuerdas restablécela.
+    Si al ingresar en la parte de abajo no te sale los depósitos que hayas hecho entonces favor registrarlo.
+    Cualquier ayuda que ocupes contactarnos al correo jaacscr@contadventista.org con tus datos.
 
-    Recuerda invitar aquellos jóvenes que todavía no sean inscritos para que lo hagan antes de media noche del este lunes ya que el sistema cerrara la opción de inscribirse.
 </p>
 <p>
-    Que tengas un Feliz Sábado.
+    Que tengas un Feliz dia.
 
 </p>
 <p>
