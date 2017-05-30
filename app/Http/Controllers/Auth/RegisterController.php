@@ -76,10 +76,10 @@ class RegisterController extends Controller
         ]);
 
         $user->status = 'inactivo';
-        $user->registration_token = str_random(40);
+        $token = str_random(40);
+        $user->registration_token = $token;
         $user->save();
-        $token = $user->registration_token;
-         $url = route('confirmation',$token);
+        $url = route('confirmation',$token);
          $urlActive = route('activation',['email'=>$user->registration_token]);
 
         Mail::send('auth/registration',compact('user','url'),function ($e) use ($user){
@@ -123,7 +123,7 @@ class RegisterController extends Controller
      */
     public function confirmation($token)
     {
-        $user = User::where('registration_token',$token)->firstOrFail();
+        $user = User::where('registration_token',$token)->first();
         $user->registration_token= null;
         $user->save();
         return redirect()->route('login')->with('alert','Email confirmado, puede Iniciar Sesión!');
