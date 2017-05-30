@@ -87,7 +87,7 @@ class RegisterController extends Controller
                 $e->to($user->email,$user->name)->subject('Activa tu Cuenta de JA!');
         });
 
-        Mail::send('auth/activation',compact('user','urlActive'),function ($j) use ($user){
+        Mail::send('auth/registration',compact('user','urlActive'),function ($j) use ($user){
             $j->from('jaacscr@contadventista.org','Departamento de Jovenes ACSCR');
             $j->to('jaacscr@contadventista.org',$user->name)->subject('Activa tu Cuenta!');
         });
