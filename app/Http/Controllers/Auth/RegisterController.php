@@ -78,8 +78,8 @@ class RegisterController extends Controller
         $user->status = 'inactivo';
         $user->registration_token = str_random(40);
         $user->save();
-
-         $url = route('confirmation',['token'=>$user->registration_token]);
+        $token = $user->registration_token;
+         $url = route('confirmation',$token);
          $urlActive = route('activation',['email'=>$user->registration_token]);
 
         Mail::send('auth/registration',compact('user','url'),function ($e) use ($user){
@@ -87,7 +87,7 @@ class RegisterController extends Controller
                 $e->to($user->email,$user->name)->subject('Activa tu Cuenta de JA!');
         });
 
-        Mail::send('auth/registration',compact('user','urlActive'),function ($j) use ($user){
+        Mail::send('auth/registration',compact('user','url'),function ($j) use ($user){
             $j->from('jaacscr@contadventista.org','Departamento de Jovenes ACSCR');
             $j->to('jaacscr@contadventista.org',$user->name)->subject('Activa tu Cuenta!');
         });
