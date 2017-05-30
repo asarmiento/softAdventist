@@ -186,7 +186,7 @@
 
             $(document).ready(function(){
                 $("#countdown").countdown({
-                        date: "29 may 2017 23:00:00",
+                        date: "30 may 2017 23:00:00",
                         format: "on"
                     },
 
