@@ -10,7 +10,7 @@
 
 
 @if($user->youngBoy()->count() > 0)
-<p>Tienes el Numero de inscripción: <strong><a>{{$user->boy->code}}</a></strong> </p>
+<p>Tienes el Numero de inscripción: <strong><a>{{$user->youngBoy->code}}</a></strong> </p>
 @else
   <p>No tenemos numero de inscripcion de usted.</p>
 @endif
