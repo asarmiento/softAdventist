@@ -59,4 +59,10 @@ class TestController extends Controller
         die;
     }
 
+    public function ver()
+    {
+        $boy = YoungBoy::find(12);
+        return view('vendor.notifications.emailerror',compact('boy'));
+    }
+
 }

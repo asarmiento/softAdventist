@@ -305,7 +305,8 @@ module.exports = {
 
 
 /***/ }),
-/* 1 */
+/* 1 */,
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -403,10 +404,9 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 
 module.exports = defaults;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
-/* 2 */,
 /* 3 */,
 /* 4 */,
 /* 5 */
@@ -591,7 +591,7 @@ module.exports = function xhrAdapter(config) {
   });
 };
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
 /* 6 */
@@ -678,14 +678,14 @@ module.exports = function bind(fn, thisArg) {
 /* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
-
+/* WEBPACK VAR INJECTION */(function($) {
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-__webpack_require__(32);
+__webpack_require__(33);
 
 /**
  *
@@ -694,16 +694,101 @@ __webpack_require__(32);
  * or customize the JavaScript scaffolding to fit your unique needs.
  *
  */
-/*
-Vue.component('example', require('./components/Example.vue'));
 
-const app = new Vue({
-    el: '#app',
+$(document).ready(function () {
+    var server = "/";
 
-    data: {
-        name:''
-    }
-});*/
+    var ajaxForm = function ajaxForm(url, type, data, msg, school) {
+        var message;
+        var path = server + url;
+        if (msg) {
+            message = msg;
+        } else {
+            if (type == 'post') {
+                message = 'Registrando Datos';
+            } else {
+                message = 'Actualizando Registros';
+            }
+        }
+        if (school) {
+            path = server + window.location.pathname.split('/')[1] + '/' + window.location.pathname.split('/')[2] + '/' + url;
+        }
+        return $.ajax({
+            url: path,
+            type: type,
+            data: { data: JSON.stringify(data) },
+            datatype: 'json',
+            beforeSend: function beforeSend() {
+                loadingUI(message, 'img');
+            },
+            error: function error(xhr, status, _error) {
+                $.unblockUI();
+                if (xhr.status == 401) {
+                    bootbox.alert("<p class='red'>No estas registrado en la aplicación.</p>", function (response) {
+                        location.reload();
+                    });
+                } else {
+                    bootbox.alert("<p class='red'>No se pueden grabar los datos.</p>");
+                }
+            }
+        });
+    };
+
+    var loadingUI = function loadingUI(message, img) {
+        if (img) {
+            var msg = '<h2><img style="margin-right: 30px" src="aacscr.contadventista.org/public/images/spiffygif.gif" >' + message + '</h2>';
+        } else {
+            var msg = '<h2>' + message + '</h2>';
+        }
+        $.blockUI({
+            css: {
+                border: 'none',
+                padding: '15px',
+                backgroundColor: '#000',
+                '-webkit-border-radius': '10px',
+                '-moz-border-radius': '10px',
+                opacity: 0.5,
+                color: '#fff'
+            }, message: msg
+        });
+    };
+    var box;
+    //retornamos mensajes de exito por ajax
+    var messageAjax = function messageAjax(data, no_bootbox) {
+        //console.log(data.errors);
+        $.unblockUI();
+        if (data.success) {
+            if (data.message.redirect) {
+                window.location.href = data.message.href;
+            } else {
+                if (!no_bootbox) {
+                    bootbox.alert('<p class="success-ajax">' + data.message + '</p>', function () {
+                        location.reload();
+                    });
+                }
+            }
+        } else {
+            messageErrorAjax(data);
+        }
+    };
+    //retornamos mensajes de error por ajax
+    var messageErrorAjax = function messageErrorAjax(data) {
+        $.unblockUI();
+        var errors = data.errors;
+        var error = "";
+        if ($.type(errors) === 'string') {
+            error = data.errors;
+        } else {
+            for (var element in errors) {
+                if (errors.hasOwnProperty(element)) {
+                    error += errors[element] + '<br>';
+                }
+            }
+        }
+        bootbox.alert('<p class="error-ajax">' + error + '</p>');
+    };
+});
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }),
 /* 12 */,
@@ -728,7 +813,7 @@ module.exports = __webpack_require__(15);
 var utils = __webpack_require__(0);
 var bind = __webpack_require__(9);
 var Axios = __webpack_require__(17);
-var defaults = __webpack_require__(1);
+var defaults = __webpack_require__(2);
 
 /**
  * Create an instance of Axios
@@ -848,7 +933,7 @@ module.exports = CancelToken;
 "use strict";
 
 
-var defaults = __webpack_require__(1);
+var defaults = __webpack_require__(2);
 var utils = __webpack_require__(0);
 var InterceptorManager = __webpack_require__(18);
 var dispatchRequest = __webpack_require__(19);
@@ -1002,7 +1087,7 @@ module.exports = InterceptorManager;
 var utils = __webpack_require__(0);
 var transformData = __webpack_require__(22);
 var isCancel = __webpack_require__(7);
-var defaults = __webpack_require__(1);
+var defaults = __webpack_require__(2);
 
 /**
  * Throws a `Cancel` if cancellation has been requested.
@@ -1554,11 +1639,12 @@ module.exports = function spread(callback) {
 
 
 /***/ }),
-/* 32 */
+/* 32 */,
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-window._ = __webpack_require__(33);
+window._ = __webpack_require__(34);
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
@@ -1566,7 +1652,7 @@ window._ = __webpack_require__(33);
  * code may be modified to fit the specific needs of your application.
  */
 
-window.$ = window.jQuery = __webpack_require__(3);
+window.$ = window.jQuery = __webpack_require__(1);
 //window.$       = require( 'jquery' );
 //window.dt      = require( 'datatables.net' )();
 //window.buttons = require( 'datatables.net-buttons' )();
@@ -1608,7 +1694,7 @@ window.axios.defaults.headers.common = {
 // });
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, module) {var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -18697,10 +18783,13 @@ window.axios.defaults.headers.common = {
   }
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10), __webpack_require__(34)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10), __webpack_require__(38)(module)))
 
 /***/ }),
-/* 34 */
+/* 35 */,
+/* 36 */,
+/* 37 */,
+/* 38 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -18728,7 +18817,7 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 35 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(11);
@@ -18736,4 +18825,4 @@ module.exports = __webpack_require__(13);
 
 
 /***/ })
-],[35]);
+],[39]);

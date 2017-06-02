@@ -11,13 +11,9 @@
     <h2>Te desea un Feliz Sábado</h2>
 
 
-<p>Tienes el Numero de inscripción: <strong><a>{{$boy->code}}</a></strong> </p>
+<p>Tienes el Numero de inscripción: <strong><a>{{$boy->code}}</a></strong> Su saldo pendiente es: {{number_format($boy->retirements()->sum('amount'),2)}}</p>
 <p>
-    Hemos tenido un problema con algunos jóvenes como tu, estamos solicitándole poder ingresar nuevamente al sistema y puedan registrar
-    otra vez el deposito que ya habían registrado.
-
-
-    Agradecemos su ayuda.
+    <img src="{{asset('img/publi.jpeg')}}" width="528" height="680">
 </p>
 
 
