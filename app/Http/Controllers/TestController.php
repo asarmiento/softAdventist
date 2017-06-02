@@ -31,6 +31,10 @@ class TestController extends Controller
             else:
                 Mail::send('vendor/notifications/emailerror', compact('boy'), function ($e) use ($boy) {
                     $e->from('jaacscr@contadventista.org', 'Departamento de Jovenes ACSCR');
+                    $e->attach(asset('img/AUTORIZACION.pdf'));
+                    $e->attach(asset('img/MI_MALETA.pdf'));
+                    $e->attach(asset('img/POLIZA.pdf'));
+                    $e->attach(asset('img/REGLAMENTO.pdf'));
                     $e->to($boy->user->email, $boy->user->nameComplete())->subject('Ayuda');
                 });
         \Log::info("emailError".$boy->user->email);
