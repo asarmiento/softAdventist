@@ -16,7 +16,7 @@
                                 <label>Cedula</label>
                                 <div class="input-group" >
                                     <span class="input-group-addon"><i class="fa fa-archive"></i></span>
-                                    <input type="text" name="charter" class="form-control" >
+                                    <input type="text" id="charter" class="form-control" >
                                 </div>
                             </div>
                         </div>
@@ -25,7 +25,7 @@
                                 <label>Nombres</label>
                                 <div class="input-group" >
                                     <span class="input-group-addon"><i class="fa fa-user"></i></span>
-                                    <input type="text" name="name" class="form-control" >
+                                    <input type="text" id="name" class="form-control" >
                                 </div>
                             </div>
                         </div>
@@ -34,7 +34,7 @@
                                 <label>Apellidos</label>
                                 <div class="input-group" >
                                     <span class="input-group-addon"><i class="fa fa-user-circle"></i></span>
-                                    <input type="text" name="last" class="form-control" >
+                                    <input type="text" id="last" class="form-control" >
                                 </div>
                             </div>
                         </div>
@@ -43,7 +43,7 @@
                                 <label>Fecha Bautizmo</label>
                                 <div class="input-group" >
                                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                    <input type="date" name="bautizmoDate" class="form-control" >
+                                    <input type="date" id="bautizmoDate" class="form-control" >
                                 </div>
                             </div>
                         </div>
@@ -52,7 +52,7 @@
                                 <label>Fecha Nacimiento</label>
                                 <div class="input-group" >
                                     <span class="input-group-addon"><i class="fa fa-calendar-o"></i></span>
-                                    <input type="date" name="birthdate" class="form-control" >
+                                    <input type="date" id="birthdate" class="form-control" >
                                 </div>
                             </div>
                         </div>
@@ -61,7 +61,7 @@
                                 <label>Telefono</label>
                                 <div class="input-group" >
                                     <span class="input-group-addon"><i class="fa fa-phone"></i></span>
-                                    <input type="text" name="phone" class="form-control" >
+                                    <input type="text" id="phone" class="form-control" >
                                 </div>
                             </div>
                         </div>
@@ -70,7 +70,7 @@
                                 <label>Celular</label>
                                 <div class="input-group" >
                                     <span class="input-group-addon"><i class="fa fa-phone-square"></i></span>
-                                    <input type="text" name="cell" class="form-control" >
+                                    <input type="text" id="cell" class="form-control" >
                                 </div>
                             </div>
                         </div>
@@ -79,13 +79,13 @@
                                 <label>Email</label>
                                 <div class="input-group" >
                                     <span class="input-group-addon"><i class="fa fa-send"></i></span>
-                                    <input type="text" name="email" class="form-control" >
+                                    <input type="text" id="email" class="form-control" >
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-12 col-md-12  text-center">
                             <div class="btn">
-                                <input type="submit" value="Guardar" class="btn btn-success">
+                                <input type="submit" id="saveMembers" data-url="miembros" data-auth="{{Auth::user()->name}}" value="Guardar" class="btn btn-success">
                             </div>
                         </div>
                     </div>
@@ -95,5 +95,6 @@
     </div>
 @endsection
 @section('scripts')
+<script src="{{mix('js/global.js')}}" ></script>
 <script src="{{mix('js/members.js')}}" ></script>
 @endsection

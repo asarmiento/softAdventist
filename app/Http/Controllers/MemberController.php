@@ -17,4 +17,12 @@ class MemberController extends Controller
     {
         return view('members.create');
     }
+
+    public function store()
+    {
+            $data = $this->convertionObjeto();
+
+        echo json_encode($data);
+        die;
+    }
 }

@@ -103,6 +103,7 @@
     <script src="{{ mix('js/vendor.js') }}"></script>
     <script src="{{ mix('js/app.js') }}"></script>
     <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.js"></script>
+    <script src="http://malsup.github.io/jquery.blockUI.js"></script>
     @yield('scripts')
 
 </body>

@@ -48,12 +48,19 @@ Route::group(['prefix'=>'registrado','middleware'=>'auth'],function (){
     Route::get('test/index', ['uses'=>'TestController@index','as'=>'test']);
     Route::get('test/ver', ['uses'=>'TestController@ver','as'=>'test']);
     Route::get('test/mensaje', ['uses'=>'TestController@message','as'=>'test-mensaje']);
-    Route::get('nuevo-miembros', ['uses'=>'MemberController@create','as'=>'new-member']);
-    Route::get('lista-miembros', ['uses'=>'MemberController@index','as'=>'list-members']);
     Route::get('inscription', ['uses'=>'HomeController@create','as'=>'create-inscription']);
     Route::get('lista-de-inscriptos', ['uses'=>'HomeController@lists','as'=>'lists-inscription']);
     Route::post('inscription', ['uses'=>'HomeController@store','as'=>'save-inscription']);
     Route::post('registered', ['uses'=>'HomeController@registered','as'=>'save-registered']);
+
+
+});
+
+    Route::group(['prefix'=>'tesoreria','middleware'=>'auth'],function (){
+    //miembros
+    Route::get('nuevo-miembros', ['uses'=>'MemberController@create','as'=>'new-member']);
+    Route::post('save-miembros', 'MemberController@store');
+    Route::get('lista-miembros', ['uses'=>'MemberController@index','as'=>'list-members']);
 
 
 });
