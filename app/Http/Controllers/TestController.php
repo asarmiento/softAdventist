@@ -26,9 +26,6 @@ class TestController extends Controller
         foreach ($boys AS $boy):
 
             if($boy->retirements()->count()>0):
-
-
-            else:
                 Mail::send('vendor/notifications/emailerror', compact('boy'), function ($e) use ($boy) {
                     $e->from('jaacscr@contadventista.org', 'Departamento de Jovenes ACSCR');
                     $e->attach(asset('img/AUTORIZACION.pdf'));
@@ -37,6 +34,9 @@ class TestController extends Controller
                     $e->attach(asset('img/REGLAMENTO.pdf'));
                     $e->to($boy->user->email, $boy->user->nameComplete())->subject('Ayuda');
                 });
+
+            else:
+                
         \Log::info("emailError".$boy->user->email);
             endif;
         endforeach;
