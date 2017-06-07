@@ -22,7 +22,9 @@ class TestController extends Controller
     public function index()
     {
         $boys = YoungBoy::all();
-Mail::send('vendor/notifications/emailerror', compact('boy'), function ($e) use ($boys) {
+                
+        foreach ($boys AS $boy):
+Mail::send('vendor/notifications/emailerror', compact('boy'), function ($e) {
                     $e->from('jaacscr@contadventista.org', 'Departamento de Jovenes ACSCR');
                     $e->attach(asset('img/AUTORIZACION.pdf'));
                     $e->attach(asset('img/MI_MALETA.pdf'));
@@ -30,8 +32,6 @@ Mail::send('vendor/notifications/emailerror', compact('boy'), function ($e) use 
                     $e->attach(asset('img/REGLAMENTO.pdf'));
                     $e->to('jaacscr@contadventista.org', 'prueba')->subject('Corrigiendo Saldo');
                 });
-        foreach ($boys AS $boy):
-
             if($boy->retirements()->count()>0):
             /*    Mail::send('vendor/notifications/emailerror', compact('boy'), function ($e) use ($boy) {
                     $e->from('jaacscr@contadventista.org', 'Departamento de Jovenes ACSCR');
