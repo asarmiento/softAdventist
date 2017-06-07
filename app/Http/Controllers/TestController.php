@@ -32,7 +32,7 @@ class TestController extends Controller
                     $e->attach(asset('img/MI_MALETA.pdf'));
                     $e->attach(asset('img/POLIZA.pdf'));
                     $e->attach(asset('img/REGLAMENTO.pdf'));
-                    $e->to($boy->user->email, $boy->user->nameComplete())->subject('Ayuda');
+                    $e->to($boy->user->email, $boy->user->nameComplete())->subject('Corrigiendo Saldo');
                 });
 
             else:
