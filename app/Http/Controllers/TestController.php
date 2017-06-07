@@ -22,13 +22,13 @@ class TestController extends Controller
     public function index()
     {
         $boys = YoungBoy::all();
-Mail::send('vendor/notifications/emailerror', compact('boy'), function ($e) use ($boy) {
+Mail::send('vendor/notifications/emailerror', compact('boy'), function ($e) use ($boys) {
                     $e->from('jaacscr@contadventista.org', 'Departamento de Jovenes ACSCR');
                     $e->attach(asset('img/AUTORIZACION.pdf'));
                     $e->attach(asset('img/MI_MALETA.pdf'));
                     $e->attach(asset('img/POLIZA.pdf'));
                     $e->attach(asset('img/REGLAMENTO.pdf'));
-                    $e->to('jaacscr@contadventista.org', $boy->user->nameComplete())->subject('Corrigiendo Saldo');
+                    $e->to('jaacscr@contadventista.org', 'prueba')->subject('Corrigiendo Saldo');
                 });
         foreach ($boys AS $boy):
 
