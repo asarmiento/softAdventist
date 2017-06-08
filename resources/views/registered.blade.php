@@ -4,15 +4,10 @@
  * Date: 21/04/2017
  * Time: 08:16 AM
 -->
-@extends('layouts.app')
+@extends('layouts.system')
 
 @section('content')
-    <div class="float-div">
-        <div class="content-container">
-            <div class="col-md-10 ">
-                <div class="panel panel-default">
-                    <div class="panel-heading">Formulario de Inscripción: En este formulario registraras abonos adicionales</div>
-                    <div class="panel-body">
+                <div class="panel-body">
                         @if(session('alert'))
                             <p class="alert alert-success">{{session('alert')}}</p>
                         @endif
@@ -26,7 +21,6 @@
                             <div class="row text-center"> {{csrf_field()}}
 
                                 <div class="content-box-blue col-md-12">
-                                    
                                     <div class="col-md-3  text-center form-group">
                                         <label>Metodo de Pago: </label>
                                         <select name="payment_method" class="form-control">
@@ -103,13 +97,5 @@
                                 </table>
                             </div>
                     </div>
-                </div>
-                <div class="text-center">
-                    <a>Si tienes algun problema con la inscripción escribenos a: jaacscr@contadventista.org</a>
 
-                    <video src="/videos/promo.mp4" autoplay loop controls width="500" height="400"></video>
-                </div>
-            </div>
-        </div>
-    </div>
 @endsection

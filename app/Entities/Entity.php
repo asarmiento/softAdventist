@@ -18,5 +18,16 @@ abstract class Entity extends Model
         return get_class(new static);
     }
 
-
+    public function isValid($data) {
+        $rules  = $this->getRules();
+        if ($this->exists) {
+            $rules  =  $this->getUnique($rules,$data);
+        }
+        $validator = \Validator::make($data, $rules);
+        if ($validator->passes()) {
+            return true;
+        }
+        $this->errors = $validator->errors();
+        return false;
+    }
 }

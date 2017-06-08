@@ -33,27 +33,27 @@
 <body>
 <div id="container" class="effect mainnav-sm">
     <!-- NAVBAR -->
-        @include('layouts.component.navBar')
+        @include('layouts.partials.navBar')
     <!-- END NAVBAR -->
     <div class="boxed">
 
         <!--CONTENT CONTAINER-->
-            @include('layouts.component.contentContantainer')
+            @include('layouts.partials.contentContantainer')
         <!--END CONTENT CONTAINER-->
 
 
         <!--MAIN NAVIGATION-->
-            @include('layouts.component.mainNavigation')
+            @include('layouts.partials.mainNavigation')
         <!--END MAIN NAVIGATION-->
 
 
         <!--ASIDE-->
-            @include('layouts.component.aside')
+            @include('layouts.partials.aside')
         <!--END ASIDE-->
 
     </div>
 
-        @include('layouts.component.footer')
+        @include('layouts.partials.footer')
 
 
     <!-- SCROLL PAGE BUTTON -->

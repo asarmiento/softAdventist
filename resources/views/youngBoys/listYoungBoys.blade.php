@@ -6,7 +6,10 @@
  * Time: 20:06
  -->
 @extends('layouts.system')
+@section('style')
+    <link href="{{asset('plugins/datatables/css/dataTables.bootstrap.css')}}" rel="stylesheet">
 
+@endsection
 @section('content')
     <div class="container">
         <div class="">
@@ -14,7 +17,8 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">Lista de Jovenes de Inscriptos</div>
                         <div class="panel-body">
-                        <table id="lists-youngBoys" class="table table-bordered">
+
+                        <table id="lista-inscritos" class="table toggle-arrow-tiny" data-page-size="5">
                             <thead>
                                 <th>#</th>
                                 <th>Nombre</th>
@@ -40,6 +44,7 @@
                             @endforeach
                             </tbody>
                         </table>
+
                     </div>
                 </div>
 
@@ -48,9 +53,9 @@
     </div>
 @endsection
 @section('scripts')
+
+
     <script>
-        $(document).ready(function () {
-            $('#lists-youngBoys').DataTable();
-        });
+        $("#lista-inscritos").dataTable();
     </script>
     @endsection

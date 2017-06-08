@@ -113,7 +113,7 @@ class HomeController extends Controller
                                     $e->to(currentUser()->email, currentUser()->nameComplete())->subject('Inscripcion Retiro!');
                                 });
                                 DB::commit();
-                                return redirect()->route('create-inscription')->with('alert', 'Se Registro Con exito');
+                                return redirect()->route('home')->with('alert', 'Se Registro Con exito');
                             endif;
                         endif;
                         DB::rollback();
@@ -163,7 +163,7 @@ class HomeController extends Controller
                     $e->from('jaacscr@contadventista.org','Departamento de Jovenes ACSCR');
                     $e->to(currentUser()->email,currentUser()->nameComplete())->subject('Inscripcion Retiro!');
                 });
-                return redirect()->route('create-inscription')->with('alert', 'Se Registro Con exito');
+                return redirect()->route('home')->with('alert', 'Se Registro Con exito');
             endif;
         endif;
 
