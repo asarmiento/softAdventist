@@ -26,27 +26,7 @@
                             <div class="row text-center"> {{csrf_field()}}
 
                                 <div class="content-box-blue col-md-12">
-                                    @if(emptyString($registros))
-                                        <div class="col-md-5  text-center form-group">
-                                            <label>Talla de Camiseta: </label>
-                                            <select name="shirt_size" class="form-control">
-                                                <option value="">Seleccione una Talla</option>
-                                                <option value="14" @if (\Illuminate\Support\Facades\Input::old('shirt_size') == '14') selected="selected" @endif>14</option>
-                                                <option value="16" @if (\Illuminate\Support\Facades\Input::old('shirt_size') == '16') selected="selected" @endif>16</option>
-                                                <option value="XS" @if (\Illuminate\Support\Facades\Input::old('shirt_size') == 'XS') selected="selected" @endif>XS</option>
-                                                <option value="S" @if (\Illuminate\Support\Facades\Input::old('shirt_size') == 'S') selected="selected" @endif>S</option>
-                                                <option value="M" @if (\Illuminate\Support\Facades\Input::old('shirt_size') == 'M') selected="selected" @endif>M</option>
-                                                <option value="L" @if (\Illuminate\Support\Facades\Input::old('shirt_size') == 'L') selected="selected" @endif>L</option>
-                                                <option value="XL" @if (\Illuminate\Support\Facades\Input::old('shirt_size') == 'XL') selected="selected" @endif>XL</option>
-                                                <option value="XXL" @if (\Illuminate\Support\Facades\Input::old('shirt_size') == 'XXL') selected="selected" @endif>XXL</option>
-                                            </select>
-                                            @if ($errors->has('shirt_size'))
-                                                <span class="help-block  alert-danger">
-                                        <strong>{{ $errors->first('shirt_size') }}</strong>
-                                    </span>
-                                            @endif
-                                        </div>
-                                    @endif
+                                    
                                     <div class="col-md-3  text-center form-group">
                                         <label>Metodo de Pago: </label>
                                         <select name="payment_method" class="form-control">

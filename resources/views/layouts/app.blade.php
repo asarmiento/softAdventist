@@ -8,12 +8,21 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'JA ACSCR') }}</title>
+    <title>{{ config('app.name', 'Tesoreria') }}</title>
 
+    <!-- Font -->
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&amp;subset=latin" rel="stylesheet">
     <!-- Styles -->
-    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/nifty.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/pace.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/magic-check.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/line-icons/premium-line-icons.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/solid-icons/premium-solid-icons.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/reset.css') }}" />
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
+    @yield('style')
     <!-- Scripts -->
     <script>
         window.Laravel = {!! json_encode([
@@ -22,86 +31,17 @@
     </script>
 </head>
 <body>
-    <div id="app">
-        <nav class="navbar navbar-default navbar-static-top">
-            <div class="container">
-                <div class="navbar-header">
 
-                    <!-- Collapsed Hamburger -->
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
-                        <span class="sr-only">Toggle Navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
+@yield('content')
 
-                    <!-- Branding Image -->
-                    <a class="navbar-brand" href="{{ url('/') }}">
-                        {{ config('app.name', 'JA ACSCR') }}
-                    </a>
-                </div>
 
-                <div class="collapse navbar-collapse" id="app-navbar-collapse">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="nav navbar-nav">
-                        &nbsp;
-                    </ul>
 
-                    <!-- Right Side Of Navbar -->
-                    <ul class="nav navbar-nav navbar-right">
-                        <!-- Authentication Links -->
-                        @if (Auth::guest())
-                            <li><a href="{{ route('login') }}">Iniciar Sesión</a></li>
-                            <li><a href="{{ route('register') }}">Registrar</a></li>
-                        @else
-                            @if(currentUser()->type_user=='cont')
-                                <li class="dropdown"> <a href="{{ route('list-members') }}">Lista de Miembros</a></li>
-                            @endif
-                            @if(currentUser()->type_user=='admin')
-                                <li class="dropdown"><a href="{{route('lists-inscription')}}" class="dropdown-toggle"  >
-                                        Lista de Inscritos
-                                    </a></li>
-                            @endif
-
-                                <li >
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                        {{ Auth::user()->nameComplete() }}</a></li>
-                                <li>
-                                    <a href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        Salir
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                        {{ csrf_field() }}
-                                    </form>
-                                </li>
-                        @endif
-                    </ul>
-                </div>
-            </div>
-        </nav>
-        <div class="content-all">
-        <div class="logo-baner">
-        </div>
-        @yield('content')
-            <div class="logo-baner">
-
-            </div>
-
-        </div>
-        <nav class="footer ">
-            <div class=" " style="background-color: #f7f7f7; text-align: center;">
-                <a href="http://friendlypos.net" class="text-color"> Elaborado por Sistemas Amigables de Costa Rica SAOR S.A</a>
-            </div>
-        </nav>
-    </div>
 
     <!-- Scripts -->
-    <script src="{{ mix('js/manifest.js') }}"></script>
-    <script src="{{ mix('js/vendor.js') }}"></script>
-    <script src="{{ mix('js/app.js') }}"></script>
-
+    <script src="{{ asset('js/manifest.js') }}"></script>
+    <script src="{{ asset('js/vendor.js') }}"></script>
+    <script src="{{ asset('js/app.js') }}"></script>
+    <script src="{{ asset('js/nifty.min.js') }}"></script>
+    <script src="{{ asset('js/pace.min.js') }}"></script>
 </body>
 </html>

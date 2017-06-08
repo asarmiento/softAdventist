@@ -136,9 +136,7 @@ class HomeController extends Controller
         $data = $request->all();
         $data['young_boy_id'] =currentUser()->youngBoy->id;
         $data['date'] =Carbon::now()->format('Y-m-d');
-        if($data['shirt_size']== ""):
         $data['shirt_size'] =currentUser()->youngBoy->retirements[0]->shirt_size;
-        endif;
         $buscando = Retirement::where('young_boy_id',currentUser()->youngBoy->id)->where('voucher',$data['voucher'])
             ->count();
         if($buscando>0):

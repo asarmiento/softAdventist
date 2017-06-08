@@ -15,3 +15,8 @@ require('./bootstrap');
  *
  */
 
+//Vue.component('createMember', require('./components/CreateMember.vue'));
+
+const app = new Vue({
+        el: '#app'
+});

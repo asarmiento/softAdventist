@@ -7,10 +7,7 @@ window._ = require('lodash');
  * code may be modified to fit the specific needs of your application.
  */
 
-window.$ = window.jQuery = require('jquery');
-//window.$       = require( 'jquery' );
-//window.dt      = require( 'datatables.net' )();
-//window.buttons = require( 'datatables.net-buttons' )();
+//window.$ = window.jQuery = require('jquery');
 
 /**
  * Vue is a modern JavaScript library for building interactive web interfaces

@@ -43,7 +43,7 @@ $(document).ready(function() {
 
     var loadingUI = function (message, img) {
         if (img) {
-            var msg = '<h2><img style="margin-right: 30px" src="http://jaacscr.contadventista.org/public/images/spiffygif.gif" >' + message + '</h2>';
+            var msg = '<h2><img style="margin-right: 30px" src="' + server + 'images/spiffygif.gif" >' + message + '</h2>';
         } else {
             var msg = '<h2>' + message + '</h2>';
         }
@@ -118,6 +118,7 @@ $(document).ready(function() {
         data.phone          = $('#phone').val();
         data.cell           = $('#cell').val();
         data.email          = $('#email').val();
+        data.church_id      = 1;
 
         ajaxForm(url,'post',data)
             .done( function (data) {

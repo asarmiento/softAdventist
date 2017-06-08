@@ -1,73 +1,83 @@
 @extends('layouts.app')
-
+@section('style')
+    <style>
+        .demo-my-bg{
+            background-image : url("img/balloon.jpg");
+        }
+    </style>
+@endsection
 @section('content')
-    <div class="container">
-        <div class="content-container">
-            <div class="col-md-12 ">
-            <div class="panel panel-default">
-                <div class="panel-heading">Iniciar Sesión</div>
+    <div id="container" class="cls-container">
+
+        <!-- BACKGROUND IMAGE -->
+        <!--===================================================-->
+        <div id="bg-overlay" class="bg-img" style="background-image: url(img/bg-img-3.jpg)"></div>
+
+
+        <!-- LOGIN FORM -->
+        <!--===================================================-->
+        <div class="cls-content">
+            <div class="cls-content-sm panel">
                 <div class="panel-body">
+                    <div class="mar-ver pad-btm">
+                        <h3 class="h4 mar-no">Iniciar Sesion</h3>
+                        <p class="text-muted">Inicie Sesion con su Cuenta</p>
+                    </div>
                     @if(session('alert'))
                         <p class="alert alert-success">{{session('alert')}}</p>
                     @endif
-                    <form class="form-horizontal" role="form" method="POST" action="{{ route('login') }}">
+                    <form  role="form" method="POST" action="{{ route('login') }}">
                         {{ csrf_field() }}
-
-                        <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                            <label for="email" class="col-md-4 control-label">Correo Electrónico</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required autofocus>
-
-                                @if ($errors->has('email'))
-                                    <span class="help-block">
+                        <div class="form-group {{ $errors->has('email') ? ' has-error' : '' }}">
+                            <input type="text" class="form-control" name="email" value="{{ old('email') }}" placeholder="Email" autofocus>
+                            @if ($errors->has('email'))
+                                <span class="help-block">
                                         <strong>{{ $errors->first('email') }}</strong>
                                     </span>
-                                @endif
-                            </div>
+                            @endif
                         </div>
-
-                        <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-                            <label for="password" class="col-md-4 control-label">Contraseña</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control" name="password" required>
-
-                                @if ($errors->has('password'))
-                                    <span class="help-block">
+                        <div class="form-group {{ $errors->has('password') ? ' has-error' : '' }}">
+                            <input type="password" class="form-control" placeholder="Password" name="password">
+                            @if ($errors->has('password'))
+                                <span class="help-block">
                                         <strong>{{ $errors->first('password') }}</strong>
                                     </span>
-                                @endif
-                            </div>
+                            @endif
                         </div>
-
-                        <div class="form-group">
-                            <div class="col-md-6 col-md-offset-4">
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> Remember Me
-                                    </label>
-                                </div>
-                            </div>
+                        <div class="checkbox pad-btm text-left">
+                            <input id="demo-form-checkbox" name="remember"  {{ old('remember') ? 'checked' : '' }} class="magic-checkbox" type="checkbox">
+                            <label for="demo-form-checkbox" >Remember me</label>
                         </div>
-
-                        <div class="form-group">
-                            <div class="col-md-8 col-md-offset-4">
-                                <button type="submit" class="btn btn-primary">
-                                    Iniciar Sesión
-                                </button>
-
-                                <a class="btn btn-link" href="{{ route('password.request') }}">
-                                    Restablecer mi Contraseña!
-                                </a>
-                            </div>
-                        </div>
+                        <button class="btn btn-primary btn-lg btn-block" type="submit">Iniciar Sesion</button>
                     </form>
                 </div>
+
+                <div class="pad-all">
+                    <a class="btn-link mar-rgt" href="{{ route('password.request') }}">
+                        Restablecer mi Contraseña!
+                    </a>
+                    <a href="#" class="btn-link mar-lft"></a>
+
+                    <div class="media pad-top bord-top">
+                        <div class="pull-right">
+                            <a href="#" class="pad-rgt"><i class="ti-facebook icon-lg text-primary"></i></a>
+                            <a href="#" class="pad-rgt"><i class="ti-twitter-alt icon-lg text-info"></i></a>
+                            <a href="#" class="pad-rgt"><i class="ti-google icon-lg text-danger"></i></a>
+                        </div>
+                        <div class=" text-center">
+                            Elaborado por Sistemas Amigables de Costa Rica SAOR S.A.
+                        </div>
+                    </div>
+                </div>
             </div>
-                <div class="text-center">
-               </div>
         </div>
+        <!--===================================================-->
+
+
+
     </div>
-</div>
+    <!--===================================================-->
+    <!-- END OF CONTAINER -->
+
+
 @endsection

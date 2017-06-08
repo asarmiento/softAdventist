@@ -12,7 +12,7 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 Auth::routes();
@@ -48,7 +48,7 @@ Route::group(['prefix'=>'registrado','middleware'=>'auth'],function (){
     Route::get('test/index', ['uses'=>'TestController@index','as'=>'test']);
     Route::get('test/ver', ['uses'=>'TestController@ver','as'=>'test']);
     Route::get('test/mensaje', ['uses'=>'TestController@message','as'=>'test-mensaje']);
-    Route::get('inscription', ['uses'=>'HomeController@create','as'=>'create-inscription']);
+    Route::get('inscription', ['uses'=>'HomeController@create','as'=>'home']);
     Route::get('lista-de-inscriptos', ['uses'=>'HomeController@lists','as'=>'lists-inscription']);
     Route::post('inscription', ['uses'=>'HomeController@store','as'=>'save-inscription']);
     Route::post('registered', ['uses'=>'HomeController@registered','as'=>'save-registered']);
