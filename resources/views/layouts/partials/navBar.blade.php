@@ -267,20 +267,28 @@
                 <li class="dropdown">
                     <a class="lang-selector dropdown-toggle" href="#" data-toggle="dropdown">
                                 <span class="lang-selected">
-                                    <img class="lang-flag" src="{{asset('img/flags/united-kingdom.png')}}" alt="English">
-                                    <span class="lang-id">EN</span>
-                                    <span class="lang-name">English</span>
+                                    <img class="lang-flag" src="{{asset('img/flags/spain.png')}}" alt="Spain">
+                                    <span class="lang-id">ES</span>
+                                    <span class="lang-name">Español</span>
                                 </span>
                     </a>
 
                     <!--Language selector menu-->
                     <ul class="head-list dropdown-menu">
                         <li>
+                            <!--Spain-->
+                            <a href="#">
+                                <img class="lang-flag" src="{{asset('img/flags/spain.png')}}" alt="Spain">
+                                <span class="lang-id">ES</span>
+                                <span class="lang-name">Espa&ntilde;ol</span>
+                            </a>
+                        </li>
+                        <li>
                             <!--English-->
                             <a href="#" class="active">
                                 <img class="lang-flag" src="{{asset('img/flags/united-kingdom.png')}}" alt="English">
                                 <span class="lang-id">EN</span>
-                                <span class="lang-name">English</span>
+                                <span class="lang-name">Ingles</span>
                             </a>
                         </li>
                         <li>
@@ -288,7 +296,7 @@
                             <a href="#">
                                 <img class="lang-flag" src="{{asset('img/flags/france.png')}}" alt="France">
                                 <span class="lang-id">FR</span>
-                                <span class="lang-name">Fran&ccedil;ais</span>
+                                <span class="lang-name">Frances</span>
                             </a>
                         </li>
                         <li>
@@ -296,7 +304,7 @@
                             <a href="#">
                                 <img class="lang-flag" src="{{asset('img/flags/germany.png')}}" alt="Germany">
                                 <span class="lang-id">DE</span>
-                                <span class="lang-name">Deutsch</span>
+                                <span class="lang-name">Aleman</span>
                             </a>
                         </li>
                         <li>
@@ -307,14 +315,7 @@
                                 <span class="lang-name">Italiano</span>
                             </a>
                         </li>
-                        <li>
-                            <!--Spain-->
-                                <a href="#">
-                                    <img class="lang-flag" src="{{asset('img/flags/spain.png')}}" alt="Spain">
-                                    <span class="lang-id">ES</span>
-                                    <span class="lang-name">Espa&ntilde;ol</span>
-                                </a>
-                        </li>
+
                     </ul>
                 </li>
                 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
@@ -339,10 +340,10 @@
 
                         <!-- Dropdown heading  -->
                         <div class="pad-all bord-btm">
-                            <p class="text-main mar-btm"><span class="text-bold">750GB</span> of 1,000GB Used</p>
+                            <p class="text-main mar-btm"><span class="text-bold">{{currentUser()->youngBoy->retirements()->sum('amount')}}</span> de {{number_format(38500,2)}} Pagado el {{number_format((currentUser()->youngBoy->retirements()->sum('amount')/38500)*100,2)}}%</p>
                             <div class="progress progress-sm">
-                                <div class="progress-bar" style="width: 70%;">
-                                    <span class="sr-only">70%</span>
+                                <div class="progress-bar" style="width: {{((currentUser()->youngBoy->retirements()->sum('amount')/38500)*100)}}%;">
+                                    <span class="sr-only">{{number_format((currentUser()->youngBoy->retirements()->sum('amount')/38500)*100,2)}}%</span>
                                 </div>
                             </div>
                         </div>
@@ -351,8 +352,8 @@
                         <!-- User dropdown menu -->
                         <ul class="head-list">
                             <li>
-                                <a href="#">
-                                    <i class="pli-male icon-fw icon-lg"></i> Profile
+                                <a href="{{route('profile')}}">
+                                    <i class="pli-male icon-fw icon-lg"></i> Perfil
                                 </a>
                             </li>
                             <li>
@@ -371,12 +372,18 @@
 
                         <!-- Dropdown footer -->
                         <div class="pad-all text-right">
-                            <a href="pages-login.html" class="btn btn-primary">
-                                <i class="pli-unlock icon-fw"></i> Logout
+                            <a href="{{ route('logout') }}" onclick="event.preventDefault();
+                                                      document.getElementById('logout-form').submit();"
+                               class="btn btn-primary">
+                                <i class="pli-unlock icon-fw"></i> Cerrar Sesion
                             </a>
                         </div>
                     </div>
                 </li>
+
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    {{ csrf_field() }}
+                </form>
                 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                 <!--End user dropdown-->
 

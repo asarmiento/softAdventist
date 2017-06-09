@@ -1,10 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
-        <div class="row">
-            <div class="col-md-10 ">
-                <div class="panel panel-default">
+
                 <div class="panel-heading">Regístrate: <strong>En este paso solo estas creando un usuario para poder ingresar al sistema, debes verificar tu email despues de registrarte, buscalo en la Bandeja de entrada o en Spam(correos no deseados)</strong></div>
                 <div class="panel-body">
                     
@@ -103,7 +100,5 @@
     
                 <!--video src="/videos/promo.mp4" autoplay loop controls width="500" height="400"></video-->
             </div>
-        </div>
-    </div>
-</div>
+
 @endsection

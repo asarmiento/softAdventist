@@ -180,4 +180,25 @@ class HomeController extends Controller
         })->where('type_user','joven')->get();
         return view('youngBoys.listYoungBoys',compact('users'));
     }
+
+    /*******************************************************
+     * @Author     : Anwar Sarmiento Ramos
+     * @Email      : asarmiento@sistemasamigables.com
+     * @Create     : ${DATE}
+     * @Update     : 0000-00-00
+     ********************************************************
+     * @Description:
+     *
+     *
+     *
+     * @Pasos      :
+     *
+     *
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     ********************************************************/
+    public function profile()
+    {
+        return view('youngBoys.profile');
+    }
 }

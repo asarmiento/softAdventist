@@ -49,6 +49,7 @@ Route::group(['prefix'=>'registrado','middleware'=>'auth'],function (){
     Route::get('test/ver', ['uses'=>'TestController@ver','as'=>'test']);
     Route::get('test/mensaje', ['uses'=>'TestController@message','as'=>'test-mensaje']);
     Route::get('inscription', ['uses'=>'HomeController@create','as'=>'home']);
+    Route::get('perfil', ['uses'=>'HomeController@profile','as'=>'profile']);
     Route::get('lista-de-inscriptos', ['uses'=>'HomeController@lists','as'=>'lists-inscription']);
     Route::post('inscription', ['uses'=>'HomeController@store','as'=>'save-inscription']);
     Route::post('registered', ['uses'=>'HomeController@registered','as'=>'save-registered']);

@@ -19,9 +19,6 @@
     <link href="{{ asset('css/magic-check.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/line-icons/premium-line-icons.css') }}" rel="stylesheet">
     <link href="{{ asset('css/solid-icons/premium-solid-icons.min.css') }}" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('css/reset.css') }}" />
-    <link rel="stylesheet" href="{{ asset('css/styles.css') }}" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     @yield('style')
     <!-- Scripts -->
     <script>
@@ -38,10 +35,10 @@
 
 
     <!-- Scripts -->
-    <script src="{{ asset('js/manifest.js') }}"></script>
-    <script src="{{ asset('js/vendor.js') }}"></script>
-    <script src="{{ asset('js/app.js') }}"></script>
-    <script src="{{ asset('js/nifty.min.js') }}"></script>
-    <script src="{{ asset('js/pace.min.js') }}"></script>
+
+<script src="{{ asset('js/pace.min.js') }}"></script>
+<script src="{{ asset('js/jquery.min.js') }}"></script>
+<script src="{{ asset('js/bootstrap.min.js') }}"></script>
+<script src="{{ asset('js/nifty.min.js') }}"></script>
 </body>
 </html>
