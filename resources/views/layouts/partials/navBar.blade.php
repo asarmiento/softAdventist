@@ -337,7 +337,7 @@
 
 
                     <div class="dropdown-menu dropdown-menu-md dropdown-menu-right panel-default">
-                        @if(currentUser()->youngBoy->retirements()->count()>0)
+                        @if(currentUser()->youngBoy()->count()>0)
                         <!-- Dropdown heading  -->
                         <div class="pad-all bord-btm">
                             <p class="text-main mar-btm"><span class="text-bold">{{currentUser()->youngBoy->retirements()->sum('amount')}}</span> de {{number_format(38500,2)}} Pagado el {{number_format((currentUser()->youngBoy->retirements()->sum('amount')/38500)*100,2)}}%</p>
