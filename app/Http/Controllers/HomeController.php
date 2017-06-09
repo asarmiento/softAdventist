@@ -6,6 +6,7 @@ use App\Entities\Retirement;
 use App\Entities\User;
 use App\Entities\YoungBoy;
 use Carbon\Carbon;
+use Codedge\Fpdf\Facades\Fpdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -200,5 +201,49 @@ class HomeController extends Controller
     public function profile()
     {
         return view('youngBoys.profile');
+    }
+
+    public function pdf()
+    {
+        Fpdf::AddPage('letter');
+        Fpdf::SetFont('Courier', 'B', 18);
+        Fpdf::Cell(0, 25, 'Lista de Jovenes Inscritos',0,1,'C');
+
+
+        Fpdf::SetFont('Courier', 'B', 18);
+        Fpdf::Cell(10, 10, 'N',1,0,'C');
+        Fpdf::Cell(30, 10, 'Cedula',1,0,'C');
+        Fpdf::Cell(90, 10, 'Nombre',1,0,'C');
+        Fpdf::Cell(17, 10, 'Edad',1,0,'C');
+        Fpdf::Cell(10, 10, 'T.',1,0,'C');
+        Fpdf::Cell(25, 10, 'Genero',1,0,'C');
+        Fpdf::Cell(60, 10, 'Iglesia',1,0,'C');
+        Fpdf::Cell(40, 10, 'T. Pagado',1,1,'C');
+        $users = User::whereHas('youngBoy',function ($q){
+            $q->whereHas('retirements',function ($r){
+                $r->where('date','>','2016-01-01')->orderBy('shirt_size','ASC');
+            });
+        })->orderBy('name','ASC')->get();
+        $i=0;
+        foreach ($users AS $user): $i++;
+            Fpdf::SetFont('Courier', 'B', 10);
+
+            Fpdf::Cell(10, 5, $i,1,0,'C');
+            Fpdf::Cell(30, 5, $user->identification_card,1,0,'C');
+            Fpdf::Cell(90, 5, utf8_decode(ucwords(strtolower($user->nameComplete()))),1,0,'L');
+            Fpdf::Cell(17, 5, $user->youngBoy->age,1,0,'C');
+            Fpdf::Cell(10, 5, $user->youngBoy->retirements[0]->shirt_size,1,0,'C');
+            if($user->youngBoy->gender == 'man'):
+            Fpdf::Cell(25, 5, 'Hombre',1,0,'C');
+            else:
+            Fpdf::Cell(25, 5, 'Mujer',1,0,'C');
+            endif;
+            Fpdf::Cell(60, 5, substr(utf8_decode(ucwords(strtolower($user->youngBoy->church))),0,27),1,0,'C');
+            Fpdf::Cell(40, 5, number_format($user->youngBoy->retirements()->sum('amount')),1,1,'C');
+
+        endforeach;
+
+        Fpdf::Output();
+        exit;
     }
 }

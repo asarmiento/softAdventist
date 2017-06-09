@@ -179,6 +179,7 @@ return [
         Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
         Yajra\Datatables\DatatablesServiceProvider::class,
         DaveJamesMiller\Breadcrumbs\ServiceProvider::class,
+        Codedge\Fpdf\FpdfServiceProvider::class,
       //  GeneaLabs\Phpgmaps\PhpgmapsServiceProvider::class,
 
     ],
@@ -230,6 +231,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Breadcrumbs' => DaveJamesMiller\Breadcrumbs\Facade::class,
+        'Fpdf' => Codedge\Fpdf\Facades\Fpdf::class,
         //'Gmaps' => GeneaLabs\Phpgmaps\Facades\PhpgmapsFacade::class,
 
     ],
