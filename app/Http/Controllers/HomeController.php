@@ -159,10 +159,10 @@ class HomeController extends Controller
 
                 $retirement->fill($data);
                 $retirement->save();
-                $youngBoy = new YoungBoy();
+                $youngBoy = YoungBoy::find($retirement->young_boy_id);
                 Mail::send('youngBoys/registered',compact('data','youngBoy'),function ($e) use ($data){
                     $e->from('jaacscr@contadventista.org','Departamento de Jovenes ACSCR');
-                    $e->to(currentUser()->email,currentUser()->nameComplete())->subject('Inscripcion Retiro!');
+                    $e->to(currentUser()->email,currentUser()->nameComplete())->subject('Abono para el Retiro!');
                 });
                 return redirect()->route('home')->with('alert', 'Se Registro Con exito');
             endif;
