@@ -86,6 +86,16 @@
 								</span>
                             </a>
                         </li>
+                            <!--Menu list item-->
+                            <li>
+                                <a href="{{route('pendiente')}}">
+                                    <i class="psi-gamepad-2"></i>
+                                    <span class="menu-title">
+												Envio de Email Saldo Pendiente
+												<span class="label label-success pull-right">New</span>
+											</span>
+                                </a>
+                            </li>
 			@else
 			<li>
                             <a href="">
@@ -95,18 +105,17 @@
 								</span>
                             </a>
                         </li>
-			@endif
-
-                        <!--Menu list item-->
-                        <li>
-                            <a href="#">
-                                <i class="psi-gamepad-2"></i>
-                                <span class="menu-title">
+                            <li>
+                                <a href="#">
+                                    <i class="psi-gamepad-2"></i>
+                                    <span class="menu-title">
 												With label
 												<span class="label label-success pull-right">New</span>
 											</span>
-                            </a>
-                        </li>
+                                </a>
+                            </li>
+			@endif
+
 
                         <!--Menu list item-->
                         <li>

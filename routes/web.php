@@ -46,6 +46,7 @@ Route::get('/gmaps1', function(){
 Route::group(['prefix'=>'registrado','middleware'=>'auth'],function (){
 
     Route::get('test/index', ['uses'=>'TestController@index','as'=>'test']);
+    Route::get('test/pendiente', ['uses'=>'TestController@pendiente','as'=>'pendiente']);
     Route::get('test/ver', ['uses'=>'TestController@ver','as'=>'test']);
     Route::get('test/mensaje', ['uses'=>'TestController@message','as'=>'test-mensaje']);
     Route::get('inscription', ['uses'=>'HomeController@create','as'=>'home']);
@@ -64,6 +65,13 @@ Route::group(['prefix'=>'registrado','middleware'=>'auth'],function (){
     Route::get('cobro-a-miembros', ['uses'=>'MemberController@charge','as'=>'charge-members']);
     Route::post('save-miembros', 'MemberController@store');
     Route::get('lista-miembros', ['uses'=>'MemberController@index','as'=>'list-members']);
+    Route::get('lista-miembro1s', ['uses'=>'MemberController@index','as'=>'charge-members']);
+    Route::get('lista-miembros1', ['uses'=>'MemberController@index','as'=>'list-departament']);
+    Route::get('lista-miembros11', ['uses'=>'MemberController@index','as'=>'change-status']);
+    Route::get('lista-miembro3s', ['uses'=>'MemberController@index','as'=>'create-cta-ing']);
+    Route::get('lista-miembro4s', ['uses'=>'MemberController@index','as'=>'list-cta-gto']);
+    Route::get('lista-miembro5s', ['uses'=>'MemberController@index','as'=>'list-info-month']);
+    Route::get('lista-miembro6s', ['uses'=>'MemberController@index','as'=>'list-info-week']);
 
 
 });
