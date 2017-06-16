@@ -2,7 +2,7 @@
 @section('style')
     <style>
         .demo-my-bg{
-            background-image : url("img/balloon.jpg");
+            background-image : url("img/1.jpg");
         }
     </style>
 @endsection
@@ -11,7 +11,7 @@
 
         <!-- BACKGROUND IMAGE -->
         <!--===================================================-->
-        <div id="bg-overlay" class="bg-img" style="background-image: url(img/bg-img-3.jpg)"></div>
+        <div id="bg-overlay" class="bg-img" ></div>
 
 
         <!-- LOGIN FORM -->
@@ -80,4 +80,38 @@
     <!-- END OF CONTAINER -->
 
 
+@endsection
+@section('scripts')
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#bg-overlay").onmousemove(function () {
+                alert('hola');
+            });
+            /*function imagen() {
+                var imagen = document.getElementById('');
+
+                var misimagenes=['img/bg-img/bg-img-1.jpg',
+                    'img/bg-img/bg-img-2.jpg',
+                    'img/bg-img/bg-img-3.jpg',
+                    'img/bg-img/bg-img-4.jpg',
+                    'img/bg-img/bg-img-5.jpg',
+                    'img/bg-img/bg-img-6.jpg',
+                    'img/bg-img/bg-img-7.jpg',
+                ];
+
+                for (i=0;i< misimagenes.length;i++){
+
+                    var rango_superior = 1;
+                    var rango_inferior = 5;
+                    var aleatorio = Math.floor(Math.random()*(rango_superior-(rango_inferior-1))) + rango_inferior;
+                    imagen.appendChild(document.write('style="background-image: url('+misimagenes[aleatorio]+')"'));
+
+                    //  document.getElementById("#bg-overlay").write("'")
+
+                }
+            }*/
+        })
+
+    </script>
 @endsection

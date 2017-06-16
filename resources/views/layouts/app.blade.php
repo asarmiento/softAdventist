@@ -40,5 +40,6 @@
 <script src="{{ asset('js/jquery.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.min.js') }}"></script>
 <script src="{{ asset('js/nifty.min.js') }}"></script>
+@yield('scripts')
 </body>
 </html>
