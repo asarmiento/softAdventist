@@ -1,9 +1,10 @@
 @extends('layouts.system')
 
 @section('content')
-
+<div id="app">
+    <create-member :member="{{json_encode($member)}}"></create-member>
+</div>
 @endsection
 @section('scripts')
-<script src="{{mix('js/global.js')}}" ></script>
-<script src="{{mix('js/members.js')}}" ></script>
+    <script src="{{asset('js/app.js')}}"></script>
 @endsection

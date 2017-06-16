@@ -3,20 +3,21 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Input;
 
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    public function convertionObjeto()
+    public function convertionObjeto($request)
     {
-        $datos = Input::get('data');
-        $DatosController = json_decode($datos);
+        $DatosController = json_encode($request['data']);
         /** @var TYPE_NAME $DatosController */
         return $DatosController;
     }
@@ -25,10 +26,10 @@ class Controller extends BaseController
 
     public function exito($data)
     {
-        return Response::json([
+        return [
             'success' => true,
             'message' => $data,
-        ]);
+        ];
     }
 
     /* Con estos methodos enviamos los mensajes de error en cualquier controlador */
@@ -44,11 +45,8 @@ class Controller extends BaseController
     public function CreacionArray($data, $delimiter, $md5 = false)
     {
         foreach ($data AS $key => $value):
-            $newKey = explode($delimiter, $key);
-            $keyNew = ($newKey[0]);
-            $newArreglo[$keyNew] = ($value);
+            $newArreglo[$key] = ($value);
         endforeach;
-         $newArreglo['user_id'] = currentUser()->id;
         if (empty($newArreglo['token'])):
 
             if (isset($newArreglo['name'])):

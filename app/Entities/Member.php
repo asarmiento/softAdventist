@@ -16,7 +16,7 @@ class Member extends Entity
 {
     protected $timestamp;
 
-    protected $fillable= ['name','last','bautizmoDate','birthdate','phone','cell','email','church_id','token'];
+    protected $fillable= ['charter','name','last','bautizmoDate','birthdate','phone','cell','email','church_id','token','user_id'];
 
 
     public function incomes()
@@ -33,8 +33,12 @@ class Member extends Entity
     }
 
 
-    public function getUnique($rules, $datos)
+    public function getRules()
     {
-        // TODO: Implement getUnique() method.
+        return [
+            'charter'    =>'required',
+            'name'    =>'required',
+            'last'      =>'required'
+        ];
     }
 }

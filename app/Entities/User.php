@@ -41,4 +41,9 @@ class User extends Authenticatable
     {
         return $this->name.' '.$this->last_name;
     }
+
+    public function member()
+    {
+        return $this->hasOne(Member::getClass());
+    }
 }

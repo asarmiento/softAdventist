@@ -9,7 +9,7 @@
             <a href="index.html" class="navbar-brand">
                 <img src="{{asset('img/logo.png')}}" alt="Nifty Logo" class="brand-icon">
                 <div class="brand-title">
-                    <span class="brand-text">Nifty</span>
+                    <span class="brand-text">Soft-Adventist</span>
                 </div>
             </a>
         </div>
@@ -34,144 +34,7 @@
 
 
 
-                <!--Notification dropdown-->
-                <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-                <li class="dropdown">
-                    <a href="#" data-toggle="dropdown" class="dropdown-toggle">
-                        <i class="pli-bell icon-lg"></i>
-                        <span class="badge badge-header badge-danger"></span>
-                    </a>
-
-                    <!--Notification dropdown menu-->
-                    <div class="dropdown-menu dropdown-menu-md">
-                        <div class="pad-all bord-btm">
-                            <p class="text-semibold text-main mar-no">You have 3 notifications.</p>
-                        </div>
-                        <div class="nano scrollable">
-                            <div class="nano-content">
-                                <ul class="head-list">
-
-                                    <!-- Dropdown list-->
-                                    <li>
-                                        <a href="#">
-                                            <div class="clearfix">
-                                                <p class="pull-left">Progressbar</p>
-                                                <p class="pull-right">70%</p>
-                                            </div>
-                                            <div class="progress progress-sm">
-                                                <div style="width: 70%;" class="progress-bar">
-                                                    <span class="sr-only">70% Complete</span>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </li>
-
-                                    <!-- Dropdown list-->
-                                    <li>
-                                        <a href="#" class="media">
-                                            <div class="media-left">
-                                                <i class="pli-hd icon-2x icon-lg"></i>
-                                            </div>
-                                            <div class="media-body">
-                                                <div class="text-nowrap">With Icon</div>
-                                                <small class="text-muted">15 minutes ago</small>
-                                            </div>
-                                        </a>
-                                    </li>
-
-                                    <!-- Dropdown list-->
-                                    <li>
-                                        <a href="#" class="media">
-                                            <div class="media-left">
-                                                <i class="pli-power-cable icon-2x icon-lg"></i>
-                                            </div>
-                                            <div class="media-body">
-                                                <div class="text-nowrap">With Icon</div>
-                                                <small class="text-muted">15 minutes ago</small>
-                                            </div>
-                                        </a>
-                                    </li>
-
-                                    <!-- Dropdown list-->
-                                    <li>
-                                        <a href="#" class="media">
-                                            <div class="media-left">
-
-									<span class="icon-wrap icon-circle bg-primary">
-									    <i class="pli-disk icon-lg icon-lg"></i>
-									</span>
-                                            </div>
-                                            <div class="media-body">
-                                                <div class="text-nowrap">Circle Icon</div>
-                                                <small class="text-muted">15 minutes ago</small>
-                                            </div>
-                                        </a>
-                                    </li>
-
-                                    <!-- Dropdown list-->
-                                    <li>
-                                        <a href="#" class="media">
-                                            <span class="badge badge-success pull-right">90%</span>
-                                            <div class="media-left">
-
-									<span class="icon-wrap icon-circle bg-danger">
-									    <i class="pli-mail-open icon-lg icon-lg"></i>
-									</span>
-                                            </div>
-                                            <div class="media-body">
-                                                <div class="text-nowrap">Circle icon with badge</div>
-                                                <small class="text-muted">50 minutes ago</small>
-                                            </div>
-                                        </a>
-                                    </li>
-
-                                    <!-- Dropdown list-->
-                                    <li>
-                                        <a href="#" class="media">
-                                            <div class="media-left">
-
-									<span class="icon-wrap bg-info">
-									    <i class="pli-monitor-3 icon-lg icon-lg"></i>
-									</span>
-                                            </div>
-                                            <div class="media-body">
-                                                <div class="text-nowrap">Square icon</div>
-                                                <small class="text-muted">Last Update 8 hours ago</small>
-                                            </div>
-                                        </a>
-                                    </li>
-
-                                    <!-- Dropdown list-->
-                                    <li>
-                                        <a href="#" class="media">
-                                            <span class="label label-danger pull-right">New</span>
-                                            <div class="media-left">
-
-									<span class="icon-wrap bg-purple">
-									    <i class="pli-paintbrush icon-lg icon-lg"></i>
-									</span>
-                                            </div>
-                                            <div class="media-body">
-                                                <div class="text-nowrap">Square icon with label</div>
-                                                <small class="text-muted">Last Update 8 hours ago</small>
-                                            </div>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <!--Dropdown footer-->
-                        <div class="pad-all bord-top">
-                            <a href="#" class="btn-link text-dark box-block">
-                                <i class="pli-arrow-right-2 pull-right"></i>Show All Notifications
-                            </a>
-                        </div>
-                    </div>
-                </li>
-                <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-                <!--End notifications dropdown-->
-
+               @include('layouts.partials.notification')
 
 
                 <!--Mega dropdown-->
@@ -203,11 +66,11 @@
 
                                 <!--Mega menu list-->
                                 <ul class="list-unstyled">
-                                    <li class="dropdown-header">Pages</li>
-                                    <li><a href="#">Profile</a></li>
-                                    <li><a href="#">Search Result</a></li>
-                                    <li><a href="#">FAQ</a></li>
-                                    <li><a href="#">Sreen Lock</a></li>
+                                    <li class="dropdown-header">Miembros</li>
+                                    <li><a href="{{route('profile')}}">Mi Perfil</a></li>
+                                    <li><a href="{{route('new-member')}}">Agregar Miembros</a></li>
+                                    <li><a href="{{route('list-members')}}">Lista Miembros</a></li>
+                                    <li><a href="{{route('charge-members')}}">Cobro a Miembros</a></li>
                                     <li><a href="#" class="disabled">Disabled</a></li>
                                     <li class="divider"></li>
                                     <li class="dropdown-header">Icons</li>
@@ -220,16 +83,17 @@
 
                                 <!--Mega menu list-->
                                 <ul class="list-unstyled">
-                                    <li class="dropdown-header">Mailbox</li>
-                                    <li><a href="#"><span class="pull-right label label-danger">Hot</span>Indox</a></li>
-                                    <li><a href="#">Read Message</a></li>
-                                    <li><a href="#">Compose</a></li>
+                                    <li class="dropdown-header">Departamentos</li>
+                                    <li><a href="{{route('list-departament')}}"><span class="pull-right label label-danger"></span>Lista de Departamentos</a></li>
+                                    <li><a href="{{route('change-status')}}">Activar o Desactivar Departamento</a></li>
+                                    <li><a href="{{route('create-cta-ing')}}">Cuentas de Ingresos</a></li>
+                                    <li><a href="{{route('list-cta-gto')}}">Cuentas de Gastos</a></li>
                                     <li class="divider"></li>
-                                    <li class="dropdown-header">Featured</li>
-                                    <li><a href="#">Smart navigation</a></li>
-                                    <li><a href="#"><span class="pull-right badge badge-success">6</span>Exclusive plugins</a></li>
-                                    <li><a href="#">Lot of themes</a></li>
-                                    <li><a href="#">Transition effects</a></li>
+                                    <li class="dropdown-header">Informes</li>
+                                    <li><a href="{{route('list-info-month')}}">Informe Mensual</a></li>
+                                    <li><a href="{{route('list-info-week')}}"><span class="pull-right badge badge-success"></span>Informe Semanal</a></li>
+                                    <li><a href="#">Saldos por Departamentos</a></li>
+                                    <li><a href="#">Saldo por Cuentas</a></li>
                                 </ul>
 
                             </div>
@@ -237,9 +101,11 @@
 
                                 <!--Mega menu list-->
                                 <ul class="list-unstyled">
-                                    <li class="dropdown-header">Components</li>
-                                    <li><a href="#">Tables</a></li>
-                                    <li><a href="#">Charts</a></li>
+                                    <li class="dropdown-header">Registros</li>
+                                    <li><a href="#">Registro de Ingresos</a></li>
+                                    <li><a href="#">Traspaso entre Cuentas</a></li>
+                                    <li><a href="#">Registro de Cheques</a></li>
+                                    <li><a href="#">Registro de Caja Chica</a></li>
                                     <li><a href="#">Forms</a></li>
                                     <li class="divider"></li>
                                     <li>
@@ -267,7 +133,7 @@
                 <li class="dropdown">
                     <a class="lang-selector dropdown-toggle" href="#" data-toggle="dropdown">
                                 <span class="lang-selected">
-                                    <img class="lang-flag" src="{{asset('img/flags/spain.png')}}" alt="Spain">
+                                    <img class="lang-flag" src="{{asset('img/flags/CR.png')}}" alt="Spain">
                                     <span class="lang-id">ES</span>
                                     <span class="lang-name">Español</span>
                                 </span>
@@ -278,7 +144,7 @@
                         <li>
                             <!--Spain-->
                             <a href="#">
-                                <img class="lang-flag" src="{{asset('img/flags/spain.png')}}" alt="Spain">
+                                <img class="lang-flag" src="{{asset('img/flags/CR.png')}}" alt="Spain">
                                 <span class="lang-id">ES</span>
                                 <span class="lang-name">Espa&ntilde;ol</span>
                             </a>

@@ -58,9 +58,10 @@ Route::group(['prefix'=>'registrado','middleware'=>'auth'],function (){
 
 });
 
-    Route::group(['prefix'=>'tesoreria','middleware'=>'auth'],function (){
+    Route::group(['prefix'=>'tesoreria','middleware'=>['auth','cont']],function (){
     //miembros
     Route::get('nuevo-miembros', ['uses'=>'MemberController@create','as'=>'new-member']);
+    Route::get('cobro-a-miembros', ['uses'=>'MemberController@charge','as'=>'charge-members']);
     Route::post('save-miembros', 'MemberController@store');
     Route::get('lista-miembros', ['uses'=>'MemberController@index','as'=>'list-members']);
 

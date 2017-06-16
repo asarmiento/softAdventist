@@ -7,7 +7,7 @@ window._ = require('lodash');
  * code may be modified to fit the specific needs of your application.
  */
 
-//window.$ = window.jQuery = require('jquery');
+// window.$ = window.jQuery = require('jquery');
 
 /**
  * Vue is a modern JavaScript library for building interactive web interfaces
@@ -16,6 +16,8 @@ window._ = require('lodash');
  */
 
 window.Vue = require('vue');
+Vue.use(require('archer-vue-alert'));
+Vue.use(require('vue-resource'));
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
