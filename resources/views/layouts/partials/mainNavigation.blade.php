@@ -77,7 +77,8 @@
                         </li>
 
                         <!--Menu list item-->
-                        <li>
+                        @if(currentUser()->type_user == 'admin')
+			<li>
                             <a href="{{route('lists-inscription')}}">
                                 <i class="psi-mail-love"></i>
                                 <span class="menu-title">
@@ -85,6 +86,16 @@
 								</span>
                             </a>
                         </li>
+			@else
+			<li>
+                            <a href="">
+                                <i class="psi-mail-love"></i>
+                                <span class="menu-title">
+												<strong>Lista de Inscritos</strong>
+								</span>
+                            </a>
+                        </li>
+			@endif
 
                         <!--Menu list item-->
                         <li>
