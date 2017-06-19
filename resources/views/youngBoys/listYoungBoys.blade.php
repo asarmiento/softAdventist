@@ -19,6 +19,7 @@
                     </div>
                     <div class="col-lg-1 col-md-1">
                         <h1 class="text-right"><a href="{{route('pdf')}}" class="btn btn-danger"><span class="fa fa-file-pdf-o fa-3x"></span></a></h1>
+                        <h1 class="text-right"><a href="{{route('excelList')}}" class="btn btn-success"><span class="fa fa-file-excel-o fa-3x"></span></a></h1>
                     </div>
                         <div class="panel-body">
 

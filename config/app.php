@@ -173,6 +173,7 @@ return [
          */
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
@@ -232,6 +233,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Breadcrumbs' => DaveJamesMiller\Breadcrumbs\Facade::class,
         'Fpdf' => Codedge\Fpdf\Facades\Fpdf::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         //'Gmaps' => GeneaLabs\Phpgmaps\Facades\PhpgmapsFacade::class,
 
     ],

@@ -10,6 +10,7 @@ use Codedge\Fpdf\Facades\Fpdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Maatwebsite\Excel\Facades\Excel;
 
 class HomeController extends Controller
 {
@@ -245,5 +246,58 @@ class HomeController extends Controller
 
         Fpdf::Output();
         exit;
+    }
+
+    public function excelList()
+    {
+        $content = [];
+        $headerT =['Lista de Jovenes Inscritos' ];
+        array_push($content,$headerT);
+
+        $users = User::whereHas('youngBoy',function ($q){
+            $q->whereHas('retirements',function ($r){
+                $r->where('date','>','2016-01-01')->orderBy('shirt_size','ASC');
+            });
+        })->orderBy('name','ASC')->get();
+        $i=0;
+        $headerT =['#','Nombre','apellidos','iglesia',	'sexo','edad','talla','saldo pendiente' ];
+        array_push($content,$headerT);
+        foreach ($users AS $user): $i++;
+            if($user->youngBoy->gender == 'man'):
+                $gender = 'Hombre';
+            else:
+                $gender =  'Mujer';
+            endif;
+            if(38500-$user->youngBoy->retirements()->sum('amount')):
+                $saldo = number_format(38500-$user->youngBoy->retirements()->sum('amount'));
+            else:
+                $saldo = 'Pagado Todo';
+            endif;
+            $data = [ $i,
+                utf8_decode(ucwords(strtolower($user->name))),
+                utf8_decode(ucwords(strtolower($user->last_name))),
+                (utf8_decode(ucwords(strtolower($user->youngBoy->church)))),
+                $gender ,
+                $user->youngBoy->age,
+                $user->youngBoy->retirements[0]->shirt_size,
+                 $saldo
+            ];
+
+array_push($content,$data);
+        endforeach;
+        Excel::create('Lista de Jovenes Inscritos', function($excel) use ($content) {
+            $excel->sheet('Sheetname', function($sheet) use($content){
+                $sheet->cells('A1:H1', function($cells) {
+                    $cells->setAlignment('center');
+                });
+                $sheet->cells('A1:H2', function($cells) {
+                     $cells->setFontWeight('bold');
+                });
+                $sheet->mergeCells('A1:H1');
+                $sheet->fromArray($content, null, 'A1', false, false);
+
+            });
+
+        })->export('xlsx');
     }
 }
