@@ -2,7 +2,7 @@
 @section('style')
     <style>
         .demo-my-bg{
-            background-image : url("img/1.jpg");
+            background-image : url("img/bg-img/1.jpg");
         }
     </style>
 @endsection
@@ -11,7 +11,7 @@
 
         <!-- BACKGROUND IMAGE -->
         <!--===================================================-->
-        <div id="bg-overlay" class="bg-img" ></div>
+        <div id="bg-overlay" class="bg-img"  ></div>
 
 
         <!-- LOGIN FORM -->
@@ -84,34 +84,29 @@
 @section('scripts')
 
     <script type="text/javascript">
-        $(document).ready(function () {
-            $("#bg-overlay").onmousemove(function () {
-                alert('hola');
-            });
-            /*function imagen() {
-                var imagen = document.getElementById('');
+            function rand(n){
+// creamos un numero al azar entre 1 y 10 (o cual sea la cantidad de imágenes)
+                return(Math.floor(Math.random() * n + 1 ));
+            }
+//guardas imagenes en el array
+            var objetos = new Array(
+                "/img/bg-img/bg-img-1.jpg",
+                "/img/bg-img/bg-img-2.jpg",
+                "/img/bg-img/bg-img-3.jpg",
+                "/img/bg-img/bg-img-4.jpg",
+                "/img/bg-img/bg-img-5.jpg",
+                "/img/bg-img/bg-img-6.jpg",
+                "/img/bg-img/bg-img-7.jpg",
+                "/img/bg-img/1.jpg",
+                "/img/bg-img/2.jpg",
+                "/img/bg-img/3.jpg",
+                "/img/bg-img/4.jpg",
+                "/img/bg-img/5.jpg",
+                "/img/bg-img/6.jpg",
+                "/img/bg-img/7.jpg");
 
-                var misimagenes=['img/bg-img/bg-img-1.jpg',
-                    'img/bg-img/bg-img-2.jpg',
-                    'img/bg-img/bg-img-3.jpg',
-                    'img/bg-img/bg-img-4.jpg',
-                    'img/bg-img/bg-img-5.jpg',
-                    'img/bg-img/bg-img-6.jpg',
-                    'img/bg-img/bg-img-7.jpg',
-                ];
-
-                for (i=0;i< misimagenes.length;i++){
-
-                    var rango_superior = 1;
-                    var rango_inferior = 5;
-                    var aleatorio = Math.floor(Math.random()*(rango_superior-(rango_inferior-1))) + rango_inferior;
-                    imagen.appendChild(document.write('style="background-image: url('+misimagenes[aleatorio]+')"'));
-
-                    //  document.getElementById("#bg-overlay").write("'")
-
-                }
-            }*/
-        })
-
-    </script>
+            function cambiar(){
+                document.getElementById("bg-overlay").style.backgroundImage= "url("+objetos[rand(14)-1]+")";
+            }
+ </script>
 @endsection

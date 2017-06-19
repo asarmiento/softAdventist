@@ -27,7 +27,7 @@
         ]) !!};
     </script>
 </head>
-<body>
+<body onload="cambiar();">
 
 @yield('content')
 
