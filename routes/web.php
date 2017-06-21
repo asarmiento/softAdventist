@@ -53,6 +53,7 @@ Route::group(['prefix'=>'registrado','middleware'=>'auth'],function (){
     Route::get('perfil', ['uses'=>'HomeController@profile','as'=>'profile']);
     Route::get('pdf', ['uses'=>'HomeController@pdf','as'=>'pdf']);
     Route::get('excel', ['uses'=>'HomeController@excelList','as'=>'excelList']);
+    Route::get('status/{id}', ['uses'=>'HomeController@status','as'=>'status-change']);
     Route::get('lista-de-inscriptos', ['uses'=>'HomeController@lists','as'=>'lists-inscription']);
     Route::post('inscription', ['uses'=>'HomeController@store','as'=>'save-inscription']);
     Route::post('registered', ['uses'=>'HomeController@registered','as'=>'save-registered']);

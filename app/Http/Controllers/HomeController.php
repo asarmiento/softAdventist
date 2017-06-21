@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Codedge\Fpdf\Facades\Fpdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -262,7 +263,7 @@ class HomeController extends Controller
         $i=0;
         $headerT =['#','Nombre','apellidos','iglesia',	'sexo','edad','talla','saldo pendiente' ];
         array_push($content,$headerT);
-        foreach ($users AS $user): $i++;
+        foreach ($users AS $user):
             if($user->youngBoy->gender == 'man'):
                 $gender = 'Hombre';
             else:
@@ -273,17 +274,48 @@ class HomeController extends Controller
             else:
                 $saldo = 'Pagado Todo';
             endif;
-            $data = [ $i,
-                utf8_decode(ucwords(strtolower($user->name))),
-                utf8_decode(ucwords(strtolower($user->last_name))),
-                (utf8_decode(ucwords(strtolower($user->youngBoy->church)))),
-                $gender ,
-                $user->youngBoy->age,
-                $user->youngBoy->retirements[0]->shirt_size,
-                 $saldo
-            ];
+            if($user->youngBoy->status == 'activo'):
 
-array_push($content,$data);
+                $data = [ $i,
+                    (ucwords(($user->name))),
+                    (ucwords(($user->last_name))),
+                    ((ucwords(($user->youngBoy->church)))),
+                    $gender ,
+                    $user->youngBoy->age,
+                    $user->youngBoy->retirements[0]->shirt_size,
+                     $saldo
+                ];
+                array_push($content,$data);
+            endif;
+        endforeach;
+
+
+        $i=0;
+        $headerT =['#','Nombre','apellidos','iglesia',	'sexo','edad','talla','saldo pendiente' ];
+        array_push($content,$headerT);
+        $headerT =['Lista de Jovenes Eliminados' ];
+        array_push($content,$headerT);
+        foreach ($users AS $user):
+            if($user->youngBoy->gender == 'man'):
+                $gender = 'Hombre';
+            else:
+                $gender =  'Mujer';
+            endif;
+            $saldo = number_format($user->youngBoy->retirements()->sum('amount'));
+
+            if($user->youngBoy->status != 'activo'):
+                $i++;
+                $data = [ $i,
+                    (ucwords(($user->name))),
+                    (ucwords(($user->last_name))),
+                    ((ucwords(($user->youngBoy->church)))),
+                    $gender ,
+                    $user->youngBoy->age,
+                    $user->youngBoy->retirements[0]->shirt_size,
+                    $saldo
+                ];
+                array_push($content,$data);
+            endif;
         endforeach;
         Excel::create('Lista de Jovenes Inscritos', function($excel) use ($content) {
             $excel->sheet('Sheetname', function($sheet) use($content){
@@ -299,5 +331,20 @@ array_push($content,$data);
             });
 
         })->export('xlsx');
+    }
+
+    public function status($id)
+    {
+
+        $data = YoungBoy::find($id);
+
+        if($data->status == 'activo'):
+            YoungBoy::where('id',$id)->update(['status'=>'eliminado']);
+        else:
+            YoungBoy::where('id',$id)->update(['status'=>'activo']);
+        endif;
+
+        return redirect()->back();
+
     }
 }
