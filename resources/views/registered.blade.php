@@ -14,12 +14,14 @@
                         @if(session('error'))
                             <p class="alert alert-danger">{{session('error')}}</p>
                         @endif
-                        <div class="col-md-12  text-center"><h1>Hola: {{currentUser()->nameComplete()}}</h1></div>
+                        <div class="col-md-12  text-center"><h1>Hola: {{currentUser()->nameComplete()}}<span  class="pull-right label label-danger">Pendientes {{$i}}</span></h1></div>
 
 
                          @if(currentUser()->type_user=='admin')
+
                              @foreach($allYoungBoys AS $allYoungBoy)
                                  @if((38500-$allYoungBoy->retirements()->sum('amount')) > 0)
+
                                     <div class="col-md-12  text-center"><h3>Joven: {{$allYoungBoy->user->nameComplete()}}</h3></div>
 
                                 <form action="{{route('save-registered')}}" method="post"  accept-charset="UTF-8" enctype="multipart/form-data">

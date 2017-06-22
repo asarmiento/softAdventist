@@ -46,13 +46,18 @@ class HomeController extends Controller
             $q->where('user_id',currentUser()->id);
         })->get();
         $saldo = 38500;
-       $allYoungBoys = YoungBoy::all();
+       $allYoungBoys = YoungBoy::all(); $i=0;
+       foreach ($allYoungBoys AS $allYoungBoy):
+           if((38500-$allYoungBoy->retirements()->sum('amount')) > 0):
+               $i++;
+           endif;
+       endforeach;
        if( $youngBoy->where('user_id',currentUser()->id)->count() ==0):
-            return view('home',compact('youngBoy','code','saldo','registros','allYoungBoys'));
+            return view('home',compact('youngBoy','code','saldo','registros','allYoungBoys','i'));
        else:
            $youngBoy = $youngBoy->where('user_id',currentUser()->id)->first();
             $saldo = $saldo-$youngBoy->retirements()->sum('amount');
-            return view('registered',compact('youngBoy','saldo','registros','allYoungBoys'));
+            return view('registered',compact('youngBoy','saldo','registros','allYoungBoys','i'));
        endif;
     }
 
