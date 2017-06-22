@@ -67,6 +67,22 @@ Route::group(['prefix'=>'registrado','middleware'=>'auth'],function (){
     Route::get('cobro-a-miembros', ['uses'=>'MemberController@charge','as'=>'charge-members']);
     Route::post('save-miembros', 'MemberController@store');
     Route::get('lista-miembros', ['uses'=>'MemberController@index','as'=>'list-members']);
+        /**
+         * Departamentos
+         */
+        Route::get('crear-departamento', ['uses'=>'DepartamentController@create','as'=>'create-departament']);
+        Route::post('save-departament', 'DepartamentController@store');
+        /**
+         * Ingresos
+         */
+        Route::get('registrar-ingresos', ['uses'=>'IncomeAccountController@create','as'=>'create-incomes']);
+        Route::post('save-incomes', 'IncomeAccountController@store');
+        /**
+         * Gastos
+         */
+        Route::get('registrar-gastos', ['uses'=>'ExpenseAccountController@create','as'=>'create-expenses']);
+        Route::post('save-expense', 'ExpenseAccountController@store');
+
     Route::get('lista-miembro1s', ['uses'=>'MemberController@index','as'=>'charge-members']);
     Route::get('lista-miembros1', ['uses'=>'MemberController@index','as'=>'list-departament']);
     Route::get('lista-miembros11', ['uses'=>'MemberController@index','as'=>'change-status']);

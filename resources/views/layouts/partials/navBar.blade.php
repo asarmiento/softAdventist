@@ -71,11 +71,11 @@
                                     <li><a href="{{route('new-member')}}">Agregar Miembros</a></li>
                                     <li><a href="{{route('list-members')}}">Lista Miembros</a></li>
                                     <li><a href="{{route('charge-members')}}">Cobro a Miembros</a></li>
-                                    <li><a href="#" class="disabled">Disabled</a></li>
+                                    <li><a href="#" class="disabled"></a></li>
                                     <li class="divider"></li>
-                                    <li class="dropdown-header">Icons</li>
-                                    <li><a href="#"><span class="pull-right badge badge-purple">479</span> Font Awesome</a></li>
-                                    <li><a href="#">Skycons</a></li>
+                                    <li class="dropdown-header"></li>
+                                    <li><a href="#"><span class="pull-right badge badge-purple"></span> </a></li>
+                                    <li><a href="#"></a></li>
                                 </ul>
 
                             </div>
@@ -84,10 +84,11 @@
                                 <!--Mega menu list-->
                                 <ul class="list-unstyled">
                                     <li class="dropdown-header">Departamentos</li>
+                                    <li><a href="{{route('create-departament')}}"><span class="pull-right label label-danger"></span>Crear Departamentos</a></li>
                                     <li><a href="{{route('list-departament')}}"><span class="pull-right label label-danger"></span>Lista de Departamentos</a></li>
                                     <li><a href="{{route('change-status')}}">Activar o Desactivar Departamento</a></li>
-                                    <li><a href="{{route('create-cta-ing')}}">Cuentas de Ingresos</a></li>
-                                    <li><a href="{{route('list-cta-gto')}}">Cuentas de Gastos</a></li>
+                                    <li><a href="{{route('create-incomes')}}">Crear Cuentas de Ingresos</a></li>
+                                    <li><a href="{{route('create-expenses')}}">Crear Cuentas de Gastos</a></li>
                                     <li class="divider"></li>
                                     <li class="dropdown-header">Informes</li>
                                     <li><a href="{{route('list-info-month')}}">Informe Mensual</a></li>

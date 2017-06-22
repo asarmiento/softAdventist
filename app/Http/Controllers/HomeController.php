@@ -46,12 +46,13 @@ class HomeController extends Controller
             $q->where('user_id',currentUser()->id);
         })->get();
         $saldo = 38500;
+       $allYoungBoys = YoungBoy::all();
        if( $youngBoy->where('user_id',currentUser()->id)->count() ==0):
-            return view('home',compact('youngBoy','code','saldo','registros'));
+            return view('home',compact('youngBoy','code','saldo','registros','allYoungBoys'));
        else:
            $youngBoy = $youngBoy->where('user_id',currentUser()->id)->first();
             $saldo = $saldo-$youngBoy->retirements()->sum('amount');
-            return view('registered',compact('youngBoy','saldo','registros'));
+            return view('registered',compact('youngBoy','saldo','registros','allYoungBoys'));
        endif;
     }
 
@@ -137,21 +138,42 @@ class HomeController extends Controller
     public function registered(Request $request)
     {
         $data = $request->all();
-        $data['young_boy_id'] =currentUser()->youngBoy->id;
         $data['date'] =Carbon::now()->format('Y-m-d');
-        $data['shirt_size'] =currentUser()->youngBoy->retirements[0]->shirt_size;
-        $buscando = Retirement::where('young_boy_id',currentUser()->youngBoy->id)->where('voucher',$data['voucher'])
-            ->count();
-        if($buscando>0):
-            return redirect()->back()->with('error', 'Tenemos un error, Ya existe ese Numero de Deposito');
-        else:
-            if(!$request->file('file')):
-                return redirect()->back()->with('error', 'La imagen del deposito es obligatoria');
 
+        if($request->has('type')):
+            $youngBoy = YoungBoy::find($data['type']);
+
+            $data['young_boy_id'] =$youngBoy->id;
+            $data['shirt_size'] =$youngBoy->retirements[0]->shirt_size;
+            $buscando = Retirement::where('young_boy_id',$youngBoy->id)->where('voucher',$data['voucher'])
+                ->count();
+            if($buscando>0):
+                return redirect()->back()->with('error', 'Tenemos un error, Ya existe ese Numero de Deposito');
+            else:
+                if(!$request->file('file')):
+                    return redirect()->back()->with('error', 'La imagen del deposito es obligatoria');
+                endif;
+                $file = $request->file('file');
+                //obtenemos el nombre del archivo
+                $nombre = currentUser()->email.'-'.$data['voucher'].'.'.$file->getClientOriginalExtension();
             endif;
-            $file = $request->file('file');
-            //obtenemos el nombre del archivo
-            $nombre = currentUser()->email.'-'.$data['voucher'].'.'.$file->getClientOriginalExtension();
+
+        else:
+            $data['young_boy_id'] =currentUser()->youngBoy->id;
+            $data['shirt_size'] =currentUser()->youngBoy->retirements[0]->shirt_size;
+            $buscando = Retirement::where('young_boy_id',currentUser()->youngBoy->id)->where('voucher',$data['voucher'])
+                ->count();
+            if($buscando>0):
+                return redirect()->back()->with('error', 'Tenemos un error, Ya existe ese Numero de Deposito');
+            else:
+                if(!$request->file('file')):
+                    return redirect()->back()->with('error', 'La imagen del deposito es obligatoria');
+                endif;
+                $file = $request->file('file');
+                //obtenemos el nombre del archivo
+                $nombre = currentUser()->email.'-'.$data['voucher'].'.'.$file->getClientOriginalExtension();
+            endif;
+        endif;
             $data['file'] = $file->getClientOriginalExtension();
             //indicamos que queremos guardar un nuevo archivo en el disco local
             \Storage::disk('local')->put($nombre,  \File::get($file));
@@ -162,13 +184,15 @@ class HomeController extends Controller
                 $retirement->fill($data);
                 $retirement->save();
                 $youngBoy = YoungBoy::find($retirement->young_boy_id);
-                Mail::send('youngBoys/registered',compact('data','youngBoy'),function ($e) use ($data){
+
+                Mail::send('youngBoys/registered',compact('data','youngBoy'),function ($e) use ($data,$youngBoy){
                     $e->from('jaacscr@contadventista.org','Departamento de Jovenes ACSCR');
-                    $e->to(currentUser()->email,currentUser()->nameComplete())->subject('Abono para el Retiro!');
+                    $e->to($youngBoy->user->email,$youngBoy->user->nameComplete())->subject('Abono para el Retiro!');
                 });
+
                 return redirect()->route('home')->with('alert', 'Se Registro Con exito');
             endif;
-        endif;
+
 
         return redirect()->back()->withInput($request->input())
             ->withErrors($retirement->errors, $this->errorBag())->with('error', 'Tenemos un error');
