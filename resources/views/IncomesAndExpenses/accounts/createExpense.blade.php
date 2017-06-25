@@ -2,9 +2,10 @@
 
 @section('content')
 <div id="app">
-    <create-member></create-member>
+    <create-expenses title="Nuevo Gasto" url="save-expense"  ></create-expenses>
 </div>
 @endsection
 @section('scripts')
     <script src="{{asset('js/app.js')}}"></script>
+
 @endsection

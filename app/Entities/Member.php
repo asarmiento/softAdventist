@@ -33,12 +33,5 @@ class Member extends Entity
     }
 
 
-    public function getRules()
-    {
-        return [
-            'charter'    =>'required',
-            'name'    =>'required',
-            'last'      =>'required'
-        ];
-    }
+
 }

@@ -96,14 +96,12 @@
                                     <li><a href="#">Saldos por Departamentos</a></li>
                                     <li><a href="#">Saldo por Cuentas</a></li>
                                 </ul>
-
                             </div>
                             <div class="col-sm-4 col-md-3">
-
                                 <!--Mega menu list-->
                                 <ul class="list-unstyled">
                                     <li class="dropdown-header">Registros</li>
-                                    <li><a href="#">Registro de Ingresos</a></li>
+                                    <li><a href="{{route('create-internal-control')}}">Registro de Ingresos</a></li>
                                     <li><a href="#">Traspaso entre Cuentas</a></li>
                                     <li><a href="#">Registro de Cheques</a></li>
                                     <li><a href="#">Registro de Caja Chica</a></li>

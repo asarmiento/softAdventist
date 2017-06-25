@@ -96,47 +96,68 @@
 <script>
 
     export default {
-        props: ['member'],
-
             data () {
-             return   {
-                 data: {
-                      charter: '',
+                 return   {
+                     data: {
+                         charter: '',
                          name: '',
                          last: '',
-                 bautizmoDate: '',
-                    birthdate: '',
-                        phone: '',
+                         bautizmoDate: '',
+                         birthdate: '',
+                         phone: '',
                          cell: '',
-                        email: '',
-                }
-                }
-
+                         email: '',
+                     }
+                 }
             },
-
         methods: {
             send: function (event) {
-                axios.post('/tesoreria/save-miembros', {
-                    data: this.data
-                })
+                axios.post('/tesoreria/save-miembros', this.data)
                     .then(response => {
                         if(response.data.success = true){
-                    this.$alert({title: '<div class="mostrar">Se Guardo con Exito!!!</div>',
-                        message: response.data.message});
-
-                    this.data.charter= '';
-                    this.data.name= '';
-                    this.data.last= '';
-                    this.data.bautizmoDate= '';
-                    this.data.birthdate= '';
-                    this.data.phone= '';
-                    this.data.cell= '';
-                    this.data.email='';
+                            this.$alert({title: 'Se Guardo con Exito!!!',
+                            message: response.data.message});
+                            this.data.charter= '';
+                            this.data.name= '';
+                            this.data.last= '';
+                            this.data.bautizmoDate= '';
+                            this.data.birthdate= '';
+                            this.data.phone= '';
+                            this.data.cell= '';
+                            this.data.email='';
                         }
-
-                })
-                .catch(e => {
-                        this.errors.push(e)
+                    })
+                .catch(function (error) {
+                    if (error.response) {
+                        let data = error.response.data;
+                        if(error.response.status === 422)
+                        {
+                            for(var index in data)
+                            {
+                                var messages = '';
+                                data[index].forEach( function(item){ messages += item + ' '});
+                                self.errors[index] = messages;
+                            }
+                        }else if(error.response.status === 401){
+                            self.errors.response.invalid = true;
+                            self.errors.response.msg = data.msg.message;
+                        }else if(error.response.status === 500)
+                        {
+                            console.log(data);
+                            for(var index in data)
+                            {
+                                var messages = '';
+                                data[index].forEach( function(item){ messages += item + ' '});
+                                self.errors[index] = messages;
+                            }
+                        }
+                    } else if (error.request) {
+                        console.log(error.request);
+                        alert("Error empty");
+                    } else {
+                        console.log('Error', error.message);
+                        alert("Error");
+                    }
                 });
             }
         },

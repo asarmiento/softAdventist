@@ -2,9 +2,10 @@
 
 @section('content')
 <div id="app">
-    <create-member></create-member>
+    <create-internal-control title="Registro de Control Interno" url="save-internal-control"  ></create-internal-control>
 </div>
 @endsection
 @section('scripts')
     <script src="{{asset('js/app.js')}}"></script>
+
 @endsection

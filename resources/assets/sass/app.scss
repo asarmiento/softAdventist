@@ -88,3 +88,61 @@
   width: 100%;
 }
 
+// all boxes and radios have these parent wrappers
+.custom-checkbox, .custom-radio {
+  // easy inline labels
+  display: flex;
+  input[type=checkbox], input[type=radio], label {
+    // dont highlight text when double clicking
+    user-select: none;
+  }
+  input[type=checkbox], input[type=radio] {
+    position: relative;
+    border: 1px solid blue;
+    margin: 0 0.2em 0 0;
+    padding: 0;
+    text-align: center;
+    width: 1.3rem;
+    height: 1.3rem;
+    background: white;
+    -webkit-appearance: none;
+    -webkit-border-radius: 0;
+    border-radius: 0;
+    color: rgba(white, 0);
+    transition: all 0.2s ease;
+    // Better Font Rendering
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    &:before {
+      // checkmark
+      content: "✔";
+    }
+    &:focus {
+      outline: 0;
+      border: 1px solid darken(blue, 5%);
+    }
+    &:active {
+      outline: none;
+    }
+    &:hover {
+      outline: none;
+    }
+    &:checked {
+      background: blue;
+      // the color is what hides the checkmark
+      color: rgba(white, 1);
+    }
+  }
+  // an `inverted` class is there for making simple alternative styles
+  &.inverted {
+    input[type=checkbox], input[type=radio] {
+      border: 1px solid black;
+      &:focus {
+        border: 1px solid darken(black, 5%);
+      }
+      &:checked {
+        background: black;
+      }
+    }
+  }
+}

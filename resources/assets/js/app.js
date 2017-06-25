@@ -17,6 +17,8 @@ Vue.component('createMember', require('./components/CreateMember.vue'));
 Vue.component('editMember', require('./components/CreateMember.vue'));
 Vue.component('createDepartament', require('./components/CreateDepartament.vue'));
 Vue.component('createIncomes', require('./components/CreateAccounts.vue'));
+Vue.component('createInternalControl', require('./components/CreateInternalControl.vue'));
+Vue.component('createWeeklyIncomes', require('./components/CreateWeeklyIncomes.vue'));
 Vue.component('createExpenses', require('./components/CreateAccounts.vue'));
 
 

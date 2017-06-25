@@ -11435,3 +11435,100 @@ button.close {
   text-align: center;
   width: 100%;
 }
+
+.custom-checkbox,
+.custom-radio {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.custom-checkbox input[type=checkbox],
+.custom-checkbox input[type=radio],
+.custom-checkbox label,
+.custom-radio input[type=checkbox],
+.custom-radio input[type=radio],
+.custom-radio label {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+.custom-checkbox input[type=checkbox],
+.custom-checkbox input[type=radio],
+.custom-radio input[type=checkbox],
+.custom-radio input[type=radio] {
+  position: relative;
+  border: 1px solid blue;
+  margin: 0 0.2em 0 0;
+  padding: 0;
+  text-align: center;
+  width: 1.3rem;
+  height: 1.3rem;
+  background: white;
+  -webkit-appearance: none;
+  border-radius: 0;
+  color: rgba(255, 255, 255, 0);
+  transition: all 0.2s ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.custom-checkbox input[type=checkbox]:before,
+.custom-checkbox input[type=radio]:before,
+.custom-radio input[type=checkbox]:before,
+.custom-radio input[type=radio]:before {
+  content: "\2714";
+}
+
+.custom-checkbox input[type=checkbox]:focus,
+.custom-checkbox input[type=radio]:focus,
+.custom-radio input[type=checkbox]:focus,
+.custom-radio input[type=radio]:focus {
+  outline: 0;
+  border: 1px solid #0000e6;
+}
+
+.custom-checkbox input[type=checkbox]:active,
+.custom-checkbox input[type=radio]:active,
+.custom-radio input[type=checkbox]:active,
+.custom-radio input[type=radio]:active {
+  outline: none;
+}
+
+.custom-checkbox input[type=checkbox]:hover,
+.custom-checkbox input[type=radio]:hover,
+.custom-radio input[type=checkbox]:hover,
+.custom-radio input[type=radio]:hover {
+  outline: none;
+}
+
+.custom-checkbox input[type=checkbox]:checked,
+.custom-checkbox input[type=radio]:checked,
+.custom-radio input[type=checkbox]:checked,
+.custom-radio input[type=radio]:checked {
+  background: blue;
+  color: white;
+}
+
+.custom-checkbox.inverted input[type=checkbox],
+.custom-checkbox.inverted input[type=radio],
+.custom-radio.inverted input[type=checkbox],
+.custom-radio.inverted input[type=radio] {
+  border: 1px solid black;
+}
+
+.custom-checkbox.inverted input[type=checkbox]:focus,
+.custom-checkbox.inverted input[type=radio]:focus,
+.custom-radio.inverted input[type=checkbox]:focus,
+.custom-radio.inverted input[type=radio]:focus {
+  border: 1px solid black;
+}
+
+.custom-checkbox.inverted input[type=checkbox]:checked,
+.custom-checkbox.inverted input[type=radio]:checked,
+.custom-radio.inverted input[type=checkbox]:checked,
+.custom-radio.inverted input[type=radio]:checked {
+  background: black;
+}

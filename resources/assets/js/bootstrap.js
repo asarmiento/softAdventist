@@ -18,6 +18,7 @@ window._ = require('lodash');
 window.Vue = require('vue');
 Vue.use(require('archer-vue-alert'));
 Vue.use(require('vue-resource'));
+Vue.use(require('vue-radio-checkbox'));
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateIncomeAccountsTable extends Migration
+class CreateInternalControlsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,14 +12,15 @@ class CreateIncomeAccountsTable extends Migration
      * @return void
      */
     public function up() {
-        Schema::create('income_accounts', function(Blueprint $table) {
+        Schema::create('internal_controls', function(Blueprint $table) {
             $table->increments('id');
-            $table->string('name', 100);
+            $table->integer('number');
             $table->decimal('balance', 20,2);
-            $table->enum('type',['fix','temp'])->default('temp');
+            $table->string('number_of_envelopes');
+            $table->date('saturday');
             $table->string('token');
-            $table->integer('departament_id')->unsigned()->index();
-            $table->foreign('departament_id')->references('id')->on('departaments')->onDelete('no action');
+            $table->integer('church_id')->unsigned()->index();
+            $table->foreign('church_id')->references('id')->on('churches')->onDelete('no action');
             $table->engine = 'InnoDB';
             $table->timestamps();
         });
@@ -31,6 +32,6 @@ class CreateIncomeAccountsTable extends Migration
      * @return void
      */
     public function down() {
-        Schema::drop('income_accounts');
+        Schema::drop('internal_controls');
     }
 }

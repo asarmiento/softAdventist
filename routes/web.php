@@ -61,12 +61,12 @@ Route::group(['prefix'=>'registrado','middleware'=>'auth'],function (){
 
 });
 
-    Route::group(['prefix'=>'tesoreria','middleware'=>['auth','cont']],function (){
-    //miembros
-    Route::get('nuevo-miembros', ['uses'=>'MemberController@create','as'=>'new-member']);
-    Route::get('cobro-a-miembros', ['uses'=>'MemberController@charge','as'=>'charge-members']);
-    Route::post('save-miembros', 'MemberController@store');
-    Route::get('lista-miembros', ['uses'=>'MemberController@index','as'=>'list-members']);
+Route::group(['prefix'=>'tesoreria','middleware'=>['auth','cont']],function (){
+        //miembros
+        Route::get('nuevo-miembros', ['uses'=>'MemberController@create','as'=>'new-member']);
+        Route::get('cobro-a-miembros', ['uses'=>'MemberController@charge','as'=>'charge-members']);
+        Route::post('save-miembros', 'MemberController@store');
+        Route::get('lista-miembros', ['uses'=>'MemberController@index','as'=>'list-members']);
         /**
          * Departamentos
          */
@@ -77,7 +77,12 @@ Route::group(['prefix'=>'registrado','middleware'=>'auth'],function (){
          */
         Route::get('registrar-ingresos', ['uses'=>'IncomeAccountController@create','as'=>'create-incomes']);
         Route::post('save-incomes', 'IncomeAccountController@store');
-        /**
+        Route::get('registro-control-interno', ['uses'=>'InternalControlController@create','as'=>'create-internal-control']);
+        Route::post('save-internal-control', 'InternalControlController@store');
+        Route::get('registro-de-ingresos/{token}', ['uses'=>'WeeklyIncomeController@create','as'=>'registro-de-ingresos']);
+        Route::post('save-register-incomes', 'InternalControlController@store');
+
+    /**
          * Gastos
          */
         Route::get('registrar-gastos', ['uses'=>'ExpenseAccountController@create','as'=>'create-expenses']);
