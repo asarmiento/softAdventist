@@ -2,15 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Entities\IncomeAccount;
+use App\Entities\LocalFieldIncome;
+use App\Entities\LocalFieldIncomeAccount;
 use App\Entities\Member;
+use App\Entities\SummaryOfWeeklyEarnings;
+use App\Entities\TempIncomes;
+use App\Entities\TempLocalFieldIncome;
 use App\Entities\User;
+use App\Entities\WeeklyIncome;
 use App\Http\Requests\CreateMemberRequest;
+use App\Traits\ListInformMembersTraits;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
+use function Sodium\randombytes_random16;
 use Validator;
 
 class MemberController extends Controller
 {
+    use ListInformMembersTraits;
     public function index()
     {
         $members = Member::where('church_id',currentUser()->member->church_id)->get();
@@ -55,4 +65,12 @@ class MemberController extends Controller
         return $this->errores($member->errors);
 
     }
+
+    public function listMemberInfo()
+    {
+
+        return response()->json($this->listMemberInforme());
+    }
+
+
 }

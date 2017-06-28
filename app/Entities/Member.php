@@ -25,13 +25,25 @@ class Member extends Entity
     }
     public function nameComplete()
     {
-        return $this->name. '  '.$this->last;
+        return $this->name.'  '.$this->last;
     }
 
     public function member($date){
         return $this->belongsTo(Member::getClass(),'member_id','id')->where('date',$date);
     }
 
+    public function weeklyIncomes()
+    {
+        return $this->hasMany(WeeklyIncome::getClass());
+    }
 
+    public function incomesAccounts()
+    {
+        return $this->belongsToMany(IncomeAccount::getClass(),'weekly_incomes')->withPivot('envelope_number','balance','status');
+    }
 
+    public function localIncomesAccounts()
+    {
+        return $this->belongsToMany(LocalFieldIncomeAccount::getClass(),'local_field_incomes')->withPivot('envelope_number','balance','status');
+    }
 }

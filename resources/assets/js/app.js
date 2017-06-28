@@ -6,6 +6,7 @@
  */
 
 require('./bootstrap');
+
 /**
  *
  * Next, we will create a fresh Vue application instance and attach it to
@@ -13,6 +14,9 @@ require('./bootstrap');
  * or customize the JavaScript scaffolding to fit your unique needs.
  *
  */
+
+
+
 Vue.component('createMember', require('./components/CreateMember.vue'));
 Vue.component('editMember', require('./components/CreateMember.vue'));
 Vue.component('createDepartament', require('./components/CreateDepartament.vue'));
