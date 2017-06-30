@@ -81,6 +81,16 @@ Route::group(['prefix'=>'tesoreria','middleware'=>['auth','cont']],function (){
         Route::post('save-internal-control', 'InternalControlController@store');
         Route::get('registro-de-ingresos/{token}', ['uses'=>'WeeklyIncomeController@create','as'=>'registro-de-ingresos']);
         Route::post('save-register-incomes', 'InternalControlController@store');
+        Route::post('save-weekly-incomes', 'WeeklyIncomeController@store');
+        Route::post('finish-info-income', 'WeeklyIncomeController@finish');
+        Route::get('check-finish-info', 'WeeklyIncomeController@checkFinishInfo');
+        Route::get('list-member-weekly', 'MemberController@listMemberInfo');
+        //temporales
+        Route::post('save-campo-temp-income', 'TempLocalFieldIncomeController@store');
+        Route::post('remove-campo-temp-income', 'TempLocalFieldIncomeController@remove');
+        Route::post('save-iglesia-temp-income', 'TempIncomesController@store');
+        Route::post('remove-iglesia-temp-income', 'TempIncomesController@remove');
+        Route::post('remove-line-income', 'WeeklyIncomeController@removeLine');
 
     /**
          * Gastos

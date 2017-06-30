@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateLocalFieldIncomesTable extends Migration
+class CreateTempLocalFieldIncomeTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,16 +12,14 @@ class CreateLocalFieldIncomesTable extends Migration
      * @return void
      */
     public function up() {
-        Schema::create('local_field_incomes', function(Blueprint $table) {
+        Schema::create('temp_local_field_incomes', function(Blueprint $table) {
             $table->increments('id');
             $table->decimal('balance', 20,2);
-            $table->enum('status',['no aplicado','aplicado']);
-            $table->string('token');
             $table->integer('local_field_income_account_id')->unsigned()->index();
-            $table->integer('internal_control_id')->unsigned()->index();
+            $table->integer('user_id')->unsigned()->index();
             //relation
             $table->foreign('local_field_income_account_id')->references('id')->on('local_field_income_accounts')->onDelete('no action');
-            $table->foreign('internal_control_id')->references('id')->on('internal_controls')->onDelete('no action');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('no action');
             $table->engine = 'InnoDB';
             $table->timestamps();
         });
@@ -33,6 +31,6 @@ class CreateLocalFieldIncomesTable extends Migration
      * @return void
      */
     public function down() {
-        Schema::drop('local_field_incomes');
+        Schema::drop('temp_local_field_incomes');
     }
 }

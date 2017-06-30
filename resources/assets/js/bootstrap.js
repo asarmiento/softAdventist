@@ -19,7 +19,8 @@ window.Vue = require('vue');
 Vue.use(require('archer-vue-alert'));
 Vue.use(require('vue-resource'));
 Vue.use(require('vue-radio-checkbox'));
-
+Vue.use(require('numeral'));
+window.Money = require("js-money");
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
  * to our Laravel back-end. This library automatically handles sending the
