@@ -19,6 +19,7 @@ window.Vue = require('vue');
 Vue.use(require('archer-vue-alert'));
 Vue.use(require('vue-resource'));
 Vue.use(require('vue-radio-checkbox'));
+Vue.use(require('vuejs-paginator'));
 Vue.use(require('numeral'));
 window.Money = require("js-money");
 /**

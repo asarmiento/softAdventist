@@ -85,6 +85,7 @@ Route::group(['prefix'=>'tesoreria','middleware'=>['auth','cont']],function (){
         Route::post('finish-info-income', 'WeeklyIncomeController@finish');
         Route::get('check-finish-info', 'WeeklyIncomeController@checkFinishInfo');
         Route::get('list-member-weekly', 'MemberController@listMemberInfo');
+        Route::get('lista-de-informes', ['uses'=>'IncomeAccountController@index','as'=>'list-info-weekly']);
         //temporales
         Route::post('save-campo-temp-income', 'TempLocalFieldIncomeController@store');
         Route::post('remove-campo-temp-income', 'TempLocalFieldIncomeController@remove');
@@ -103,8 +104,9 @@ Route::group(['prefix'=>'tesoreria','middleware'=>['auth','cont']],function (){
     Route::get('lista-miembros11', ['uses'=>'MemberController@index','as'=>'change-status']);
     Route::get('lista-miembro3s', ['uses'=>'MemberController@index','as'=>'create-cta-ing']);
     Route::get('lista-miembro4s', ['uses'=>'MemberController@index','as'=>'list-cta-gto']);
-    Route::get('lista-miembro5s', ['uses'=>'MemberController@index','as'=>'list-info-month']);
     Route::get('lista-miembro6s', ['uses'=>'MemberController@index','as'=>'list-info-week']);
+    //Reportes
+    Route::get('reporte-semanal/{date}', ['uses'=>'ReportPdfController@infoSemanal','as'=>'reportWeekly']);
 
 
 });

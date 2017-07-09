@@ -91,8 +91,8 @@
                                     <li><a href="{{route('create-expenses')}}">Crear Cuentas de Gastos</a></li>
                                     <li class="divider"></li>
                                     <li class="dropdown-header">Informes</li>
-                                    <li><a href="{{route('list-info-month')}}">Informe Mensual</a></li>
-                                    <li><a href="{{route('list-info-week')}}"><span class="pull-right badge badge-success"></span>Informe Semanal</a></li>
+                                    <li><a href="">Informe Mensual</a></li>
+                                    <li><a href="{{route('list-info-weekly')}}">Informe Semanal</a></li>
                                     <li><a href="#">Saldos por Departamentos</a></li>
                                     <li><a href="#">Saldo por Cuentas</a></li>
                                 </ul>

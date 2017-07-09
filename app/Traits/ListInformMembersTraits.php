@@ -27,9 +27,15 @@ trait ListInformMembersTraits
          * usados en el informe semanal de ingresos
          */
         $envelopes = $this->countEnvelopeList();
-
+        if (count($envelopes[0])>count($envelopes[1])):
+            $envelopesCount = $envelopes[0];
+            $church = true;
+        else:
+            $envelopesCount = $envelopes[1];
+            $church = false;
+        endif;
         $data = [];
-        foreach ($envelopes[0] AS $envelope):
+        foreach ($envelopesCount AS $envelope):
 
             $tithes = LocalFieldIncomeAccount::join('local_field_incomes','local_field_incomes.local_field_income_account_id','=','local_field_income_accounts.id')
                 ->where('type','diez')->where('envelope_number',$envelope)->sum('local_field_incomes.balance');
@@ -38,10 +44,15 @@ trait ListInformMembersTraits
                     ->where('type','fix')->where('envelope_number',$envelope)->sum('weekly_incomes.balance')  +
                 LocalFieldIncomeAccount::join('local_field_incomes','local_field_incomes.local_field_income_account_id','=','local_field_income_accounts.id')
                     ->where('type','offren')->where('envelope_number',$envelope)->sum('local_field_incomes.balance')  ;
-
-            $member = Member::whereHas('weeklyIncomes',function ($q) use($envelope){
-                $q->where('envelope_number',$envelope);
-            })->first();
+            if($church):
+                $member = Member::whereHas('weeklyIncomes',function ($q) use($envelope){
+                    $q->where('envelope_number',$envelope);
+                })->first();
+            else:
+                $member = Member::whereHas('localFieldIncomes',function ($q) use($envelope){
+                    $q->where('envelope_number',$envelope);
+                })->first();
+            endif;
 
             $datos = [
                 'envelope'=>$envelope,
@@ -131,13 +142,11 @@ trait ListInformMembersTraits
      * ----------------------------------------------------------------------
      */
     private function countEnvelopeList()
-    {   $data1 = [];
-        $church  =  WeeklyIncome::where('status', 'no aplicado')->distinct('envelope_number')->pluck('envelope_number');
-        array_push($data1,$church);
+    {
+        $church[]  =  WeeklyIncome::where('status', 'no aplicado')->distinct('envelope_number')->pluck('envelope_number');
         $local =  LocalFieldIncome::where('status', 'no aplicado')->distinct('envelope_number')->pluck('envelope_number');
-        array_push($data1,$local);
-
-        return array_unique($data1);
+        array_push($church,$local);
+        return array_unique($church);
     }
     public function newMember($envelope)
     {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Entities\Departament;
 use App\Entities\ExpenseAccount;
 use App\Entities\IncomeAccount;
+use App\Entities\SummaryOfWeeklyEarnings;
 use App\Http\Requests\IncomeAccountCreateRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
@@ -12,7 +13,25 @@ use Illuminate\Support\Facades\Crypt;
 class IncomeAccountController extends Controller
 {
     //
+    public function index()
+    {
+        $incomesWeeklys = SummaryOfWeeklyEarnings::with('internal_control')->get();
+        return view('IncomesAndExpenses.infoWeekly',compact('incomesWeeklys'));
+    }
 
+    /**
+     * ---------------------------------------------------------------------
+     * @Author     : Anwar Sarmiento "asarmiento@sistemasamigables.com"
+     * @Date       Create: 2017-06-26
+     * @Time       Create: ${TIME}
+     * @Date       Update: 0000-00-00
+     * ---------------------------------------------------------------------
+     * @Description:
+     * @Pasos      :
+     * ----------------------------------------------------------------------
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * ----------------------------------------------------------------------
+     */
     public function create()
     {
         $contents = [];
@@ -25,6 +44,21 @@ class IncomeAccountController extends Controller
         return view('departament.accounts.createIncome',compact('contents'));
     }
 
+    /**
+     * ---------------------------------------------------------------------
+     * @Author     : Anwar Sarmiento "asarmiento@sistemasamigables.com"
+     * @Date       Create: 2017-06-23
+     * @Time       Create: ${TIME}
+     * @Date       Update: 0000-00-00
+     * ---------------------------------------------------------------------
+     * @Description:
+     * @Pasos      :
+     * @param IncomeAccountCreateRequest $request
+     * ----------------------------------------------------------------------
+     *
+     * @return \Illuminate\Http\JsonResponse
+     * ----------------------------------------------------------------------
+     */
     public function store(IncomeAccountCreateRequest $request)
     {
         $data = $request->all();

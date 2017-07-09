@@ -40,7 +40,7 @@
                                 <small class="help-block"  >{{errors.member_id}}</small>
                             </div>
                         </div>
-                        <div class=" col-lg-3 col-md-3  " :class="{'has-feedback has-error':errors.envelope_number.length > 0}">
+                        <div class=" col-lg-2 col-md-2  " :class="{'has-feedback has-error':errors.envelope_number.length > 0}">
                             <div class="panel-default ">
                                 <label>Numero de Sobre</label>
                                 <div class="input-group " >
@@ -51,7 +51,7 @@
                                 <small class="help-block"  >{{errors.envelope_number}}</small>
                             </div>
                         </div>
-                        <div class=" col-lg-3 col-md-3  " :class="{'has-feedback has-error':errors.tithes.length > 0}">
+                        <div class=" col-lg-2 col-md-2  " :class="{'has-feedback has-error':errors.tithes.length > 0}">
                             <div class="panel-default ">
                                 <label>Diezmos</label>
                                 <div class="input-group " >
@@ -61,7 +61,7 @@
                                 <small class="help-block"  >{{errors.tithes}}</small>
                             </div>
                         </div>
-                        <div class=" col-lg-3 col-md-3  " :class="{'has-feedback has-error':errors.offering.length > 0}">
+                        <div class=" col-lg-2 col-md-2  " :class="{'has-feedback has-error':errors.offering.length > 0}">
                             <div class="panel-default ">
                                 <label>Ofrendas</label>
                                 <div class="input-group " >
@@ -69,6 +69,16 @@
                                     <input type="number" v-model="data.offering"   class="form-control" >
                                 </div>
                                 <small class="help-block"  >{{errors.offering}}</small>
+                            </div>
+                        </div>
+                        <div class=" col-lg-2 col-md-2  " :class="{'has-feedback has-error':errors.background_inversion.length > 0}">
+                            <div class="panel-default ">
+                                <label>Fondo de Inversion</label>
+                                <div class="input-group " >
+                                    <span class="input-group-addon"><i class="fa fa-cog"></i></span>
+                                    <input type="number" v-model="data.background_inversion"   class="form-control" >
+                                </div>
+                                <small class="help-block"  >{{errors.background_inversion}}</small>
                             </div>
                         </div>
                         <div class="rows">
@@ -279,7 +289,7 @@
                 </div>
                 <div v-if="result" class="col-lg-12 col-md-12  text-center">
                     <div class="btn">
-                        <button   v-on:click="finish"  class="btn btn-success">Finalizar Informe</button>
+                        <button   v-on:click="finish(rows.saturday)"  class="btn btn-success">Finalizar Informe</button>
                     </div>
                 </div>
             </div>
@@ -306,6 +316,7 @@
                      envelope_number: '',
                      tithes: '',
                      offering: '',
+                     background_inversion: '',
                      internal_control_id: '',
                  },
                  campo:{
@@ -335,6 +346,7 @@
                      envelope_number: '',
                      tithes:'',
                      offering:'',
+                     background_inversion:'',
                  }
              }
          },
@@ -639,11 +651,13 @@
                    }
                });
            },
-           finish: function (line,index,event) {
+           finish: function (line,event) {
+
                var self = this;
                axios.post('/tesoreria/finish-info-income', line)
                    .then(response => {
-                       document.location = '/';
+                       //self.temp_incomes.splice(index, 1);
+                       document.location = '/tesoreria/reporte-semanal/'+line;
                    }).catch(function (error) {
                    if (error.response) {
                        let data = error.response.campo;

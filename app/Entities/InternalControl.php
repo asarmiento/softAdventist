@@ -14,4 +14,10 @@ class InternalControl extends Entity
         'token',
         'church_id'
     ];
+
+    public function localFieldIncomeAccounts()
+    {
+        return $this->belongsToMany(LocalFieldIncomeAccount::getClass(),'local_field_incomes')
+            ->withPivot('envelope_number','balance','status');
+    }
 }

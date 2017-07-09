@@ -63,12 +63,14 @@ class WeeklyIncomeController extends Controller
          * Aqui guardaremos los datos de 60% de la iglesia segun lo presupuestado
          */
           foreach ($dataLista['accountFix'] AS $accountFix):
-              $church = $dataLista['church'];
+               $church = $dataLista['church'];
                $church['balance'] = $dataLista['sixty'] * ($accountFix->departament->percent_of_budget/100);
                $church['income_account_id'] = $accountFix->id;
-              $weeklyIncome = new WeeklyIncome();
-              $weeklyIncome->fill($church);
-              $weeklyIncome->save();
+               if($church['balance']>0):
+                  $weeklyIncome = new WeeklyIncome();
+                  $weeklyIncome->fill($church);
+                  $weeklyIncome->save();
+               endif;
           endforeach;
         /**
          *  Aqui guardaremos los ingresos de las otras cuentas temporales
@@ -79,18 +81,22 @@ class WeeklyIncomeController extends Controller
             $church = $dataLista['church'];
             $church['balance'] = $accountTemp->balance;
             $church['income_account_id'] = $accountTemp->income_account_id;
-            $weeklyIncome = new WeeklyIncome();
-            $weeklyIncome->fill($church);
-            $weeklyIncome->save();
-           TempIncomes::find($accountTemp->id)->delete();
+            if($church['balance']>0):
+                $weeklyIncome = new WeeklyIncome();
+                $weeklyIncome->fill($church);
+                $weeklyIncome->save();
+                TempIncomes::find($accountTemp->id)->delete();
+            endif;
         endforeach;
         /**
          * Aqui guardaremos Diezmos y el 40% ofrenda de la parte de la asociacion
          */
         foreach ($dataLista['campo'] AS $localField):
-            $localFieldIncome = new LocalFieldIncome();
-            $localFieldIncome->fill($localField);
-            $localFieldIncome->save();
+            if($localField['balance']>0):
+                $localFieldIncome = new LocalFieldIncome();
+                $localFieldIncome->fill($localField);
+                $localFieldIncome->save();
+            endif;
         endforeach;
         /**
          * Aqui guardaremos los montos de las cuentas temporales de la
@@ -101,10 +107,12 @@ class WeeklyIncomeController extends Controller
             $campo = $dataLista['campoTemp'];
             $campo['balance'] = $localFieldTemp->balance;
             $campo['local_field_income_account_id'] = $localFieldTemp->local_field_income_account_id;
-            $localFieldIncome = new LocalFieldIncome();
-            $localFieldIncome->fill($campo);
-             $localFieldIncome->save();
-            TempLocalFieldIncome::find($localFieldTemp->id)->delete();
+            if($campo['balance']>0):
+                $localFieldIncome = new LocalFieldIncome();
+                $localFieldIncome->fill($campo);
+                $localFieldIncome->save();
+                TempLocalFieldIncome::find($localFieldTemp->id)->delete();
+            endif;
         endforeach;
         $datos = ($this->newMember($id));
         $result = $this->finishInfo();
