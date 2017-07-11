@@ -133,7 +133,7 @@ trait ListInformMembersTraits
                 if($list > 0):
                     $datos['datos'][] = number_format($list,2);
                 else:
-                    $datos['datos'][] = '';
+                    $datos['datos'][] =  number_format(0,2);
                 endif;
             endforeach;
             $incomeAccounts = IncomeAccount::whereHas('weeklyIncomes',function ($q) use($envelopes){
@@ -145,7 +145,7 @@ trait ListInformMembersTraits
                 if($list > 0):
                     $datos['datos'][] = number_format($list,2);
                 else:
-                    $datos['datos'][] = '';
+                    $datos['datos'][] = number_format(0,2);
                 endif;
             endforeach;
 
