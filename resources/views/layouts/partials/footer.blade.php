@@ -13,7 +13,7 @@
     <!-- Visible when footer positions are static -->
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <div class="hide-fixed pull-right pad-rgt">
-        14GB of <strong>512GB</strong> Free.
+       <strong>V3.0</strong>
     </div>
 
 
