@@ -16,7 +16,7 @@ class Tesoreria
     public function handle($request, Closure $next)
     {
         if (currentUser()->type_user =='cont') {
-            return redirect('/tesoreria');
+            return redirect('/tesoreria/home');
         }
         return $next($request);
     }
