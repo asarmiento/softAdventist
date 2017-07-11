@@ -26,7 +26,7 @@ class LoginController extends Controller
      * @var string
      */
 
-    protected $redirectTo = '/registrado/inscription';
+    protected $redirectTo = '/home';
 
     /**
      * Create a new controller instance.
@@ -43,7 +43,7 @@ class LoginController extends Controller
         return [
                 'email'=>$request->get('email'),
                 'password'=>$request->get('password'),
-                'registration_token'=>null
+                'status'=>'activo'
         ];
     }
 }

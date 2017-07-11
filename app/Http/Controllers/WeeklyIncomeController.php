@@ -140,8 +140,8 @@ class WeeklyIncomeController extends Controller
      */
     public function createArray($data)
     {
-        $forty= ($data['offering'] * 0.4);
-        $sixty= ($data['offering'] * 0.6);
+        $forty= (($data['offering']+$data['background_inversion']) * 0.4);
+        $sixty= (($data['offering']+$data['background_inversion']) * 0.6);
         $status = 'no aplicado';
         $member = Member::where('token',$data['member_id'])->first()->id;
         $accountFix = IncomeAccount::where('type','fix')->get();
@@ -215,7 +215,7 @@ class WeeklyIncomeController extends Controller
         })->where('status','no aplicado')->sum('balance')  ;
         $control = InternalControl::where('status','no aplicado')->first();
         $numeration = $this->numerationInfo();
-        $token = Crypt::encrypt($numeration.$control);
+        $token = Crypt::encrypt($numeration);
         $data = ['number'=>$numeration,
                 'token'=>$token,
                  'offering'=>($sixty+$forty),
@@ -239,13 +239,13 @@ class WeeklyIncomeController extends Controller
 
 
         InternalControl::where('status','no aplicado')->update(['status'=>'aplicado']);
-        $finish = WeeklyIncome::where('status','no aplicado')->update(['status'=>'aplicado']);
+        WeeklyIncome::where('status','no aplicado')->update(['status'=>'aplicado']);
          LocalFieldIncome::where('status','no aplicado')->update(['status'=>'aplicado']);
 
 
 
 
-        return response()->json(['success'=>true, 'message'=>[$finish]],200);
+        return response()->json(['success'=>true, 'message'=>'listo'],200);
 
     }
     public function removeLine(Request $request)

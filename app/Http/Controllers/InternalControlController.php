@@ -13,7 +13,8 @@ class InternalControlController extends Controller
 
     public function create()
     {
-        return view('IncomesAndExpenses.createInternalControl');
+        $insternalControls = InternalControl::all();
+        return view('IncomesAndExpenses.createInternalControl',compact('insternalControls'));
     }
 
     public function store(InternalControlCreateRequest $request)

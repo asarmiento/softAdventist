@@ -20,11 +20,15 @@
                         <div class=" col-lg-3 col-md-3  ">
                             <h3>El sabado <strong>{{rows.saturday}}</strong> </h3>
                         </div>
-                        <div class=" col-lg-6 col-md-6  ">
-                            <h3>Lineas Agregadas <strong>{{totalRows }} </strong> </h3>
+                        <div class=" col-lg-6 col-md-6 ">
+                            <div style="height: 30px; width:300px;" class="progress progress-striped active">
+                                <div style="width:100%;  font-size:24px" class="progress-bar progress-bar-warning">A Registrado {{totalRows }} Sobres </div>
+                            </div>
                         </div>
-                        <div class=" col-lg-6 col-md-6  ">
-                            <h3>Con un total <strong>{{totalBalance | moneyFormat }} </strong> </h3>
+                        <div class=" col-lg-6 col-md-6 ">
+                            <div style="height: 30px; width:300px;" class="progress progress-striped active">
+                                <div style="width:100%;  font-size:24px" class="progress-bar progress-bar-success">Con un total de {{totalBalance | moneyFormat }}  </div>
+                            </div>
                         </div>
                         <div class=" col-lg-12 col-md-12  ">
                             <hr> </hr>
@@ -135,8 +139,8 @@
                                 </div>
                             </div>
                         </div>
-
-                        <div class="col-lg-12 col-md-12  text-center">
+                        <div  v-if="result"></div>
+                        <div  v-else class="col-lg-12 col-md-12  text-center">
                             <div class="btn">
                                 <button   v-on:click="send"  class="btn btn-success">Agregar Sobre</button>
                             </div>
@@ -338,6 +342,8 @@
                  temp_incomes:[],
                  totalRows:'',
                  totalBalance:'',
+                 totalRowsW:'',
+                 totalBalanceW:'',
                  btSelectAll:[],
                  rowsTotal:'',
                  result:'',
@@ -405,7 +411,9 @@
                         this.data.envelope_number= '';
                         this.data.tithes= '';
                         this.data.offering= '';
+                        this.data.background_inversion= '';
                         this.errors.member_id= '';
+                        this.errors.background_inversion= '';
                         this.errors.envelope_number= '';
                         this.errors.tithes= '';
                        }
@@ -651,13 +659,15 @@
                    }
                });
            },
-           finish: function (line,event) {
+           finish: function (saturday,event) {
 
                var self = this;
-               axios.post('/tesoreria/finish-info-income', line)
+               axios.post('/tesoreria/finish-info-income', saturday)
                    .then(response => {
-                       //self.temp_incomes.splice(index, 1);
-                       document.location = '/tesoreria/reporte-semanal/'+line;
+                       if(response.data.message ='listo'){
+                           document.location = '/tesoreria/reporte-semanal/'+saturday;
+                       }
+
                    }).catch(function (error) {
                    if (error.response) {
                        let data = error.response.campo;

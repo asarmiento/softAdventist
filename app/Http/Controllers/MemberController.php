@@ -68,8 +68,7 @@ class MemberController extends Controller
 
     public function listMemberInfo()
     {
-
-        return response()->json($this->listMemberInforme());
+        return response()->json($this->listEnvelopesCreate());
     }
 
 
