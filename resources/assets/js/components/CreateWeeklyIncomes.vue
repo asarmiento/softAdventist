@@ -39,7 +39,7 @@
                                 <label>Nombre del Sobre de Diezmos</label>
                                 <div class="input-group " >
                                     <span class="input-group-addon"><i class="fa fa-calendar-o"></i></span>
-                                    <v-select v-model="data.member_id" :options="dataMembers" placeholder="Seleccione un miembro"></v-select>
+                                    <v-select v-model="data.member_id"  :options="dataMembers" placeholder="Seleccione un miembro"></v-select>
                                   </div>
                                 <small class="help-block"  >{{errors.member_id}}</small>
                             </div>
