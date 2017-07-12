@@ -148,8 +148,6 @@
                 axios.post('/tesoreria/'+self.url, this.data)
                     .then(response => {
                         if(response.data.success = true){
-                    this.$alert({title: 'Se Guardo con Exito!!!',
-                        message: response.data.message});
                         document.location = 'registro-de-ingresos/'+response.data.token;
                         this.data.saturday= '';
                         this.data.number= '';
