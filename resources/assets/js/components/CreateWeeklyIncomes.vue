@@ -39,7 +39,7 @@
                                 <label>Nombre del Sobre de Diezmos</label>
                                 <div class="input-group " >
                                     <span class="input-group-addon"><i class="fa fa-calendar-o"></i></span>
-                                    <v-select v-model="data.member_id"  :options="dataMembers" placeholder="Seleccione un miembro"></v-select>
+                                    <v-select v-model="data.member_id" :options="dataMembers" placeholder="Seleccione un miembro"></v-select>
                                   </div>
                                 <small class="help-block"  >{{errors.member_id}}</small>
                             </div>
@@ -256,7 +256,7 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <!--div-- class="fixed-table-pagination" style="">
+                                <div class="fixed-table-pagination" style="">
                                     <div class="pull-left pagination-detail">
                                         <span class="pagination-info" v-if="totalRows <= 5">Mostrando {{totalRows}} lineas</span>
                                         <span class="pagination-info" v-else="">Mostrar 1 a 5 de {{totalRows}} lineas</span>
@@ -277,14 +277,10 @@
                                         <ul class="pagination">
                                             <li class="page-pre"><a href="javascript:void(0)">‹</a></li>
                                             <li class="page-number active"><a href="javascript:void(0)">1</a></li>
-                                            <li class="page-number"><a href="javascript:void(0)">2</a></li>
-                                            <li class="page-number"><a href="javascript:void(0)">3</a></li>
-                                            <li class="page-number"><a href="javascript:void(0)">4</a></li>
-                                            <li class="page-number"><a href="javascript:void(0)">5</a></li>
                                             <li class="page-next"><a href="javascript:void(0)">›</a></li>
                                         </ul>
                                     </div>
-                                </div-->
+                                </div>
                             </div>
                         </div>
                         <div class="clearfix"></div>
@@ -671,7 +667,7 @@
                axios.post('/tesoreria/finish-info-income', saturday)
                    .then(response => {
                        if(response.data.message ='listo'){
-                           document.location = 'tesoreria/registro-control-interno';
+                           document.location = '/tesoreria/reporte-semanal/'+saturday;
                        }
 
                    }).catch(function (error) {
