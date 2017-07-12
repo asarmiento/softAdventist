@@ -61,7 +61,7 @@ Route::group(['prefix'=>'registrado','middleware'=>'auth'],function (){
 
 });
 
-Route::group(['prefix'=>'tesoreria','middleware'=>['auth','cont']],function (){
+Route::group(['prefix'=>'tesoreria','middleware'=>['auth']],function (){
         //miembros
         Route::get('home', ['uses'=>'HomeController@index','as'=>'home']);
         Route::get('nuevo-miembros', ['uses'=>'MemberController@create','as'=>'new-member']);
