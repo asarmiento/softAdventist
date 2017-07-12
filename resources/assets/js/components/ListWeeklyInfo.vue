@@ -79,7 +79,10 @@
                                         <td style="text-align: center; ">₡ {{list.sixty}}</td>
                                         <td style="text-align: center; ">₡ {{list.other_church}}</td>
                                         <td style="text-align: center; ">₡ {{totalChurch(list)}}</td>
-                                        <td style="text-align: center; "><div class=" "  @click="pdfInfo(list.internal_control.saturday)"><span class="btn btn-danger btn-xs fa fa-file-pdf-o fa-2x"></span></div></td>
+                                        <td style="text-align: center; ">
+                                            <a :href="pdfInfo(list.internal_control.saturday)"  target='_blank' class=''>
+                                            <i class='btn btn-danger fa fa-file-pdf-o'></i></a>
+                                        </td>
 
                                     </tr>
 
@@ -168,19 +171,8 @@
                return Number(parseFloat(list.sixty)+parseFloat(list.other_church)).toFixed(2);
            },
            pdfInfo: function (saturday) {
-
-               axios.get('/tesoreria/reporte-semanal/'+saturday)
-                   .then(function (response) {
-                       document.location.target='nueva'
-                       document.location = '/tesoreria/reporte-semanal/'+saturday;
-                       document.location.target='_blank'
-                       console.log(response);
-                   })
-                   .catch(function (error) {
-                       console.log(error);
-                   });
-            //
-           }
+               return "/tesoreria/reporte-semanal/"+saturday;
+           },
        },
         filters:{
             moneyFormat: function(value){

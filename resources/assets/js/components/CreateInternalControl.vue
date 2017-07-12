@@ -92,6 +92,8 @@
                                 <td>{{control.number_of_envelopes}}</td>
                                 <td>{{control.balance}}</td>
                                 <td>{{control.status}}</td>
+                                <td ><a :href="pdfInfo(control.saturday)"  target='_blank' class='btn btn-danger'>
+                                    <i class='fa fa-file-pdf-o'></i></a></td>
                             </tr>
                         </tbody>
                     </table><div class="dataTables_info" id="demo-dt-delete_info" role="status" aria-live="polite">Showing 1 to 10 of 57 entries</div><div class="dataTables_paginate paging_simple_numbers" id="demo-dt-delete_paginate"><ul class="pagination"><li class="paginate_button previous disabled" aria-controls="demo-dt-delete" tabindex="0" id="demo-dt-delete_previous"><a href="#"><i class="demo-psi-arrow-left"></i></a></li><li class="paginate_button active" aria-controls="demo-dt-delete" tabindex="0"><a href="#">1</a></li><li class="paginate_button " aria-controls="demo-dt-delete" tabindex="0"><a href="#">2</a></li><li class="paginate_button " aria-controls="demo-dt-delete" tabindex="0"><a href="#">3</a></li><li class="paginate_button disabled" aria-controls="demo-dt-delete" tabindex="0" id="demo-dt-delete_ellipsis"><a href="#">…</a></li><li class="paginate_button " aria-controls="demo-dt-delete" tabindex="0"><a href="#">6</a></li><li class="paginate_button next" aria-controls="demo-dt-delete" tabindex="0" id="demo-dt-delete_next"><a href="#"><i class="demo-psi-arrow-right"></i></a></li></ul></div></div>
@@ -136,6 +138,9 @@
                // console.log(JSON.parse(this.internal_control));
         },
         methods: {
+            pdfInfo: function (data) {
+                 return "/tesoreria/reporte-semanal/"+data;
+            },
             send: function (event) {
                 console.log(this.data.selected);
                 var self = this;

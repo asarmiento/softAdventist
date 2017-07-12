@@ -391,24 +391,7 @@ trait ListInformMembersTraits
 
             array_push($data,$datos);
 
-        $title =  [
-            'Nombres',
-            'Recibos N°',
-            'Diezmos',
-            'Ofrenda'
-        ];
-        $localTitles = LocalFieldIncome::whereHas('localFieldIncomeAccount',function ($q){
-            $q->where('type','temp');
-        })->where('status','no aplicado')->get();
-        foreach ($localTitles AS $localTitle):
-            array_push($title,$localTitle->localFieldIncomeAccount->name);
-        endforeach;
-        $churchTitles = WeeklyIncome::whereHas('incomeAccount',function ($q){
-            $q->where('type','temp');
-        })->where('status','no aplicado')->get();
-        foreach ($churchTitles AS $churchTitle):
-            array_push($title,$churchTitle->incomeAccount->name);
-        endforeach;
+        $title =  $this->titleInfo();
 
         $totalBalance = WeeklyIncome::where('status', 'no aplicado')->sum('balance') +  LocalFieldIncome::where('status', 'no aplicado')->sum('balance');
         $totalRows = count($this->countEnvelopeList());

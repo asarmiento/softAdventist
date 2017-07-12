@@ -256,7 +256,7 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <div class="fixed-table-pagination" style="">
+                                <!--div-- class="fixed-table-pagination" style="">
                                     <div class="pull-left pagination-detail">
                                         <span class="pagination-info" v-if="totalRows <= 5">Mostrando {{totalRows}} lineas</span>
                                         <span class="pagination-info" v-else="">Mostrar 1 a 5 de {{totalRows}} lineas</span>
@@ -284,7 +284,7 @@
                                             <li class="page-next"><a href="javascript:void(0)">›</a></li>
                                         </ul>
                                     </div>
-                                </div>
+                                </div-->
                             </div>
                         </div>
                         <div class="clearfix"></div>
@@ -408,10 +408,10 @@
                             if(response.data.result.success){
                                 self.result =response.data.result
                             }
-                           /* var index = this.temp_local_field_incomes.indexOf(event)
+                            var index = this.temp_local_field_incomes.indexOf(event)
                             this.temp_local_field_incomes.splice(index)
                             var index = this.temp_incomes.indexOf(event)
-                            this.temp_incomes.splice(index)*/
+                            this.temp_incomes.splice(index)
 
                         this.data.member_id= '';
                         this.data.envelope_number= '';
@@ -671,7 +671,7 @@
                axios.post('/tesoreria/finish-info-income', saturday)
                    .then(response => {
                        if(response.data.message ='listo'){
-                           document.location = '/tesoreria/reporte-semanal/'+saturday;
+                           document.location = 'tesoreria/registro-control-interno';
                        }
 
                    }).catch(function (error) {
