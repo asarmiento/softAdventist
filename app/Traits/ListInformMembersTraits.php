@@ -340,17 +340,19 @@ trait ListInformMembersTraits
          */
          $data = [];
 
-           $tithes = LocalFieldIncomeAccount::join('local_field_incomes','local_field_incomes.local_field_income_account_id','=','local_field_income_accounts.id')
-                ->where('type','diez')->where('envelope_number',$envelope)->sum('local_field_incomes.balance');
+        $tithes = $this->localFieldIncomeAccountRepository->sumTypeForEnvelope($envelope,'diez');
+        $offering = $this->incomeAccountRepository->sumTypeForEnvelope($envelope,'fix')  +
+                    $this->localFieldIncomeAccountRepository->sumTypeForEnvelope($envelope,'offren');
 
-            $offering = IncomeAccount::join('weekly_incomes','weekly_incomes.income_account_id','=','income_accounts.id')
-                    ->where('type','fix')->where('envelope_number',$envelope)->sum('weekly_incomes.balance')  +
-                LocalFieldIncomeAccount::join('local_field_incomes','local_field_incomes.local_field_income_account_id','=','local_field_income_accounts.id')
-                    ->where('type','offren')->where('envelope_number',$envelope)->sum('local_field_incomes.balance')  ;
+        $member = Member::whereHas('weeklyIncomes',function ($q) use($envelope){
+            $q->where('envelope_number',$envelope);
+        })->first();
 
-            $member = Member::whereHas('weeklyIncomes',function ($q) use($envelope){
+        if(!$member):
+            $member = Member::whereHas('localFieldIncomes',function ($q) use($envelope){
                 $q->where('envelope_number',$envelope);
             })->first();
+        endif;
 
             $datos = [
                 'envelope'=>$envelope,
