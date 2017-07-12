@@ -116,10 +116,10 @@ class WeeklyIncomeController extends Controller
         endforeach;
         $datos = ($this->newMember($id));
         $result = $this->finishInfo();
-
+        $account = [];
         return response()->json(['success'=>true, 'message'=>'Se creo con Exito!!!!','newMember'=>$datos['data'],
                                  'title'=>$datos['title'],'totalBalance'=>$datos['totalBalance'],
-                                 'totalRows'=>$datos['totalRows'],'result'=>$result],200);
+                                 'totalRows'=>$datos['totalRows'],'account'=>$account,'result'=>$result],200);
     }
 
 

@@ -408,7 +408,8 @@
                             if(response.data.result.success){
                                 self.result =response.data.result
                             }
-                            //
+                            self.temp_local_field_incomes.push(response.data.account);
+                            self.temp_incomes.push(response.data.account);
 
                         this.data.member_id= '';
                         this.data.envelope_number= '';
