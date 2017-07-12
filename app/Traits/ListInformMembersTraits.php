@@ -411,7 +411,7 @@ trait ListInformMembersTraits
         endforeach;
 
         $totalBalance = WeeklyIncome::where('status', 'no aplicado')->sum('balance') +  LocalFieldIncome::where('status', 'no aplicado')->sum('balance');
-        $totalRows = count($this->countEnvelopeList()[0]);
+        $totalRows = count($this->countEnvelopeList());
 
 
         return ['data'=>$data,'title'=>$title,'totalBalance'=>$totalBalance,
