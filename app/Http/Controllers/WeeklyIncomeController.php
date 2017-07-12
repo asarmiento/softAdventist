@@ -117,10 +117,11 @@ class WeeklyIncomeController extends Controller
         $datos = ($this->newMember($id));
         $result = $this->finishInfo();
         $account = [];
-        return response()->json(['success'=>true, 'message'=>'Se creo con Exito!!!!','newMember'=>$datos['data'],
+        return redirect()->route('create-internal-control');
+            /*response()->json(['success'=>true, 'message'=>'Se creo con Exito!!!!','newMember'=>$datos['data'],
                                  'title'=>$datos['title'],'totalBalance'=>$datos['totalBalance'],
                                  'totalRows'=>$datos['totalRows'],'account'=>$account,'result'=>$result],200);
-    }
+   */ }
 
 
     /**
