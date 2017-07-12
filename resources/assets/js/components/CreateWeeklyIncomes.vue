@@ -405,7 +405,10 @@
                             self.titleMembers = response.data.title
                             self.totalBalance = response.data.totalBalance;
                             self.totalRows = response.data.totalRows;
-                            self.result = response.data.result
+                            if(response.data.result.success){
+                                self.result =response.data.result
+                            }
+                            //
 
                         this.data.member_id= '';
                         this.data.envelope_number= '';
