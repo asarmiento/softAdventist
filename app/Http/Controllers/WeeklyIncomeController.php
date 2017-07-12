@@ -117,7 +117,9 @@ class WeeklyIncomeController extends Controller
         $datos = ($this->newMember($id));
         $result = $this->finishInfo();
         $account = [];
-        return response()->json(['success'=>true,'result'=>$result],200);
+        return response()->json(['success'=>true, 'message'=>'Se creo con Exito!!!!','newMember'=>$datos['data'],
+                                 'title'=>$datos['title'],'totalBalance'=>$datos['totalBalance'],
+                                 'totalRows'=>$datos['totalRows'],'account'=>$account,'result'=>$result],200);
     }
 
 
@@ -234,16 +236,10 @@ class WeeklyIncomeController extends Controller
                 ->update(['balance'=>($localAccount->balance+$balance)]);
         Departament::where('id',$localAccount->departament_id)->update(['balance'=>(Departament::find($localAccount->departament_id)->balance+$balance)]);
         endforeach;
-
-
         InternalControl::where('status','no aplicado')->update(['status'=>'aplicado']);
         WeeklyIncome::where('status','no aplicado')->update(['status'=>'aplicado']);
          LocalFieldIncome::where('status','no aplicado')->update(['status'=>'aplicado']);
-
-
-
-
-        return response()->json(['success'=>true, 'message'=>'listo'],200);
+        return redirect()->route('create-internal-control'); //response()->json(['success'=>true, 'message'=>'listo'],200);
 
     }
     public function removeLine(Request $request)
