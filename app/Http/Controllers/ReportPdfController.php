@@ -99,7 +99,7 @@ class ReportPdfController extends Controller
                 $pdf  .= Fpdf::Cell(5,5,utf8_decode($e),1,0,'C');
                 foreach ($envelope['datos'] AS $dato):
                     if(strlen($dato)>10 ):
-                        $pdf  .= Fpdf::Cell(40,5,(utf8_decode($dato)),1,0,'L');
+                        $pdf  .= Fpdf::Cell(40,5,substr(utf8_decode($dato),0,31),1,0,'L');
                     else:
                         $pdf  .= Fpdf::Cell(13,5,(utf8_decode($dato)),1,0,'C');
                     endif;
