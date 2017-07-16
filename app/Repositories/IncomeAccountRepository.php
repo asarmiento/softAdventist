@@ -23,7 +23,7 @@ class IncomeAccountRepository extends BaseRepository
     public function listSelects()
     {
         $contents = [];
-        foreach ($this->filterChurchAccounts() AS $account):
+        foreach ($this->filterChurchRelation('departament') AS $account):
             $value = ['value'=>$account->token, 'label'=>$account->name];
             array_push($contents,$value);
         endforeach;

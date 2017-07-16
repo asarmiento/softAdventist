@@ -75,10 +75,8 @@
                                     <li class="divider"></li>
                                     <li class="dropdown-header">Cuentas Bancarias</li>
                                     <li><a href="{{route('create-bank')}}">Cuentas Bancarias<span class="pull-right badge badge-purple"></span></a></li>
-                                    <li><a href="{{route('register-deposit')}}">Nuevo Deposito</a></li>
-                                    <li><a href="#">Lista Deposito</a></li>
-                                    <li><a href="#">Nuevo Cheques</a></li>
-                                    <li><a href="#">Lista de Cheques</a></li>
+                                    <li><a href="{{route('register-deposit')}}">Depositos Iglesia</a></li>
+                                    <li><a href="{{route('create-check')}}">Cheques</a></li>
                                 </ul>
 
                             </div>

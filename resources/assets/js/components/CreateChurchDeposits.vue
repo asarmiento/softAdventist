@@ -172,7 +172,7 @@
               },
            },
         created(){
-            this.$http.get('/tesoreria/lista-info-sin-deposito')
+                this.$http.get('/tesoreria/lista-info-sin-deposito')
             .then((response) => {
                 this.internals = response.data;
             });

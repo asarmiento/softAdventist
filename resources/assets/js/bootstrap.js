@@ -21,7 +21,7 @@ Vue.use(require('vue-resource'));
 Vue.use(require('vue-radio-checkbox'));
 Vue.use(require('vuejs-paginator'));
 Vue.use(require('numeral'));
-Vue.use(require('vue-datepicker'));
+Vue.use(require('vue2-multi-uploader'));
 window.Money = require("js-money");
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests

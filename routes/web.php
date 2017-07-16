@@ -121,8 +121,9 @@ Route::group(['prefix'=>'registrado','middleware'=>'auth'],function (){
         /**
          * Cheques
          */
-        Route::get('registro-de-cheques', ['uses'=>'ExpenseAccountController@create','as'=>'create-expenses']);
-        Route::post('save-expense', 'ExpenseAccountController@store');
+        Route::get('registro-de-cheques', ['uses'=>'Church\CheckAndExpenses\CheckController@create','as'=>'create-check']);
+        Route::get('lista-de-cheques', ['uses'=>'Church\CheckAndExpenses\CheckController@listCheck','as'=>'list-check']);
+        Route::post('save-check', 'Church\CheckAndExpenses\CheckController@store');
 
         Route::get('lista-miembro1s', ['uses'=>'MemberController@index','as'=>'charge-members']);
         Route::get('lista-miembros1', ['uses'=>'MemberController@index','as'=>'list-departament']);

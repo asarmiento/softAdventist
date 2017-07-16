@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Church\CheckAndExpenses;
 
 use App\Http\Requests\ExpenseAccountCreateRequest;
 use App\Repositories\ExpenseAccountRepository;

@@ -49,9 +49,9 @@ abstract class BaseRepository {
         return $contents;
     }
 
-    public function filterChurchAccounts()
+    public function filterChurchRelation($relation)
     {
-        return $this->newQuery()->whereHas('departament',function ($q){
+        return $this->newQuery()->whereHas($relation,function ($q){
             $q->where('church_id',1);
         })->get();
     }
