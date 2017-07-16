@@ -162,7 +162,6 @@
                return JSON.parse(this.incomes_weeklys);
     },
         },
-
        methods: {
            totalField: function (list){
                return Number(parseFloat(list.tithes)+parseFloat(list.forty)+parseFloat(list.other)).toFixed(2);

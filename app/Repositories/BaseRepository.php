@@ -34,7 +34,27 @@ abstract class BaseRepository {
     public function newQuery() {
         return $this->getModel()->newQuery();
     }
+    public function filterChurchs()
+    {
+        return $this->newQuery()->where('church_id',1)->get();
+    }
 
+    public function listSelects()
+    {
+        $contents = [];
+        foreach ($this->filterChurchs() AS $data):
+            $value = ['value'=>$data->token, 'label'=>$data->name];
+            array_push($contents,$value);
+        endforeach;
+        return $contents;
+    }
+
+    public function filterChurchAccounts()
+    {
+        return $this->newQuery()->whereHas('departament',function ($q){
+            $q->where('church_id',1);
+        })->get();
+    }
     public function sumEnvelope($envelope,$data)
     {
         return $this->newQuery()->where('envelope_number', $envelope)->sum($data);

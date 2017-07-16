@@ -20,4 +20,9 @@ class InternalControl extends Entity
         return $this->belongsToMany(LocalFieldIncomeAccount::getClass(),'local_field_incomes')
             ->withPivot('envelope_number','balance','status');
     }
+
+    public function churchDeposit()
+    {
+        return $this->belongsToMany(ChurchDeposit::getClass())->withPivot('balance','user_id')->withTimestamps();
+    }
 }

@@ -20,7 +20,15 @@ class IncomeAccountRepository extends BaseRepository
     {
         return new IncomeAccount();// TODO: Implement getModel() method.
     }
-
+    public function listSelects()
+    {
+        $contents = [];
+        foreach ($this->filterChurchAccounts() AS $account):
+            $value = ['value'=>$account->token, 'label'=>$account->name];
+            array_push($contents,$value);
+        endforeach;
+        return $contents;
+    }
     public function sumTypeForEnvelope($envelope,$type)
     {
         return $this->newQuery()->join('weekly_incomes','weekly_incomes.income_account_id','=','income_accounts.id')

@@ -396,7 +396,6 @@
                 axios.post('/tesoreria/save-weekly-incomes', this.data)
                     .then(response => {
                         if(response.data.success = true){
-
                             self.listMembers.push(response.data.newMember[0]);
                             self.titleMembers = response.data.title
                             self.totalBalance = response.data.totalBalance;
@@ -664,10 +663,10 @@
                var self = this;
                axios.post('/tesoreria/finish-info-income', saturday)
                    .then(response => {
-                       if(response.data.result ='listo'){
+                       if(response.data.message ='listo'){
+                           this.$route.route.go('tesoreria/registro-control-interno');
                            document.location = 'tesoreria/registro-control-interno';
                        }
-
                    }).catch(function (error) {
                    if (error.response) {
                        let data = error.response.campo;

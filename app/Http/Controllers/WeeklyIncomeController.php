@@ -239,7 +239,7 @@ class WeeklyIncomeController extends Controller
         InternalControl::where('status','no aplicado')->update(['status'=>'aplicado']);
         WeeklyIncome::where('status','no aplicado')->update(['status'=>'aplicado']);
          LocalFieldIncome::where('status','no aplicado')->update(['status'=>'aplicado']);
-        return redirect()->route('create-internal-control'); //response()->json(['success'=>true, 'message'=>'listo'],200);
+        return response()->json(['success'=>true, 'message'=>'listo'],200);
 
     }
     public function removeLine(Request $request)

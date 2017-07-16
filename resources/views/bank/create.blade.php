@@ -1,9 +1,8 @@
 @extends('layouts.system')
+
 @section('content')
 <div id="app">
-    <create-expenses title="Nuevo Gasto" url="save-expense" accounts="{{json_encode($accounts)}}" >
-
-    </create-expenses>
+    <create-bank title="Cuentas Bancaria" url="save-bank" banks="{{json_encode($banks)}}" ></create-bank>
 </div>
 @endsection
 @section('scripts')

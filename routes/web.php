@@ -61,8 +61,10 @@ Route::group(['prefix'=>'registrado','middleware'=>'auth'],function (){
 
 });
 
-Route::group(['prefix'=>'tesoreria','middleware'=>['auth']],function (){
+    Route::group(['prefix'=>'tesoreria','middleware'=>['auth']],function (){
+
         //miembros
+        Route::get('/', 'HomeController@index');
         Route::get('home', ['uses'=>'HomeController@index','as'=>'home']);
         Route::get('nuevo-miembros', ['uses'=>'MemberController@create','as'=>'new-member']);
         Route::get('cobro-a-miembros', ['uses'=>'MemberController@charge','as'=>'charge-members']);
@@ -74,12 +76,29 @@ Route::group(['prefix'=>'tesoreria','middleware'=>['auth']],function (){
         Route::get('crear-departamento', ['uses'=>'DepartamentController@create','as'=>'create-departament']);
         Route::post('save-departament', 'DepartamentController@store');
         /**
+         * Cuentas Bancarias
+         */
+        Route::get('cuentas-bancarias', ['uses'=>'Bank\BankController@create','as'=>'create-bank']);
+        Route::post('save-bank', 'Bank\BankController@store');
+
+
+        Route::get('depositos-de-la-iglesia', ['uses'=>'Bank\ChurchDepositController@create','as'=>'register-deposit']);
+        Route::get('lista-depositos', ['uses'=>'Bank\ChurchDepositController@lists','as'=>'list-deposit']);
+        Route::post('save-church-deposit', 'Bank\ChurchDepositController@store');
+        Route::post('remove-deposit', 'Bank\ChurchDepositController@remove');
+        /**
          * Ingresos
          */
         Route::get('registrar-ingresos', ['uses'=>'IncomeAccountController@create','as'=>'create-incomes']);
         Route::post('save-incomes', 'IncomeAccountController@store');
+        //controles internos
         Route::get('registro-control-interno', ['uses'=>'InternalControlController@create','as'=>'create-internal-control']);
         Route::post('save-internal-control', 'InternalControlController@store');
+        Route::get('lista-info-sin-deposito', ['uses'=>'InternalControlController@listInfos','as'=>'list-infos-sin-deposito']);
+
+
+
+        Route::post('balance-internal-control', 'InternalControlController@balanceInfo');
         Route::get('registro-de-ingresos/{token}', ['uses'=>'WeeklyIncomeController@create','as'=>'registro-de-ingresos']);
         Route::post('save-register-incomes', 'InternalControlController@store');
         Route::post('save-weekly-incomes', 'WeeklyIncomeController@store');
@@ -94,20 +113,25 @@ Route::group(['prefix'=>'tesoreria','middleware'=>['auth']],function (){
         Route::post('remove-iglesia-temp-income', 'TempIncomesController@remove');
         Route::post('remove-line-income', 'WeeklyIncomeController@removeLine');
 
-    /**
-         * Gastos
-         */
+        /**
+        * Gastos
+        */
         Route::get('registrar-gastos', ['uses'=>'ExpenseAccountController@create','as'=>'create-expenses']);
         Route::post('save-expense', 'ExpenseAccountController@store');
+        /**
+         * Cheques
+         */
+        Route::get('registro-de-cheques', ['uses'=>'ExpenseAccountController@create','as'=>'create-expenses']);
+        Route::post('save-expense', 'ExpenseAccountController@store');
 
-    Route::get('lista-miembro1s', ['uses'=>'MemberController@index','as'=>'charge-members']);
-    Route::get('lista-miembros1', ['uses'=>'MemberController@index','as'=>'list-departament']);
-    Route::get('lista-miembros11', ['uses'=>'MemberController@index','as'=>'change-status']);
-    Route::get('lista-miembro3s', ['uses'=>'MemberController@index','as'=>'create-cta-ing']);
-    Route::get('lista-miembro4s', ['uses'=>'MemberController@index','as'=>'list-cta-gto']);
-    Route::get('lista-miembro6s', ['uses'=>'MemberController@index','as'=>'list-info-week']);
-    //Reportes
-    Route::get('reporte-semanal/{date}', ['uses'=>'ReportPdfController@infoSemanal','as'=>'reportWeekly']);
+        Route::get('lista-miembro1s', ['uses'=>'MemberController@index','as'=>'charge-members']);
+        Route::get('lista-miembros1', ['uses'=>'MemberController@index','as'=>'list-departament']);
+        Route::get('lista-miembros11', ['uses'=>'MemberController@index','as'=>'change-status']);
+        Route::get('lista-miembro3s', ['uses'=>'MemberController@index','as'=>'create-cta-ing']);
+        Route::get('lista-miembro4s', ['uses'=>'MemberController@index','as'=>'list-cta-gto']);
+        Route::get('lista-miembro6s', ['uses'=>'MemberController@index','as'=>'list-info-week']);
+        //Reportes
+        Route::get('reporte-semanal/{date}', ['uses'=>'ReportPdfController@infoSemanal','as'=>'reportWeekly']);
 
 
-});
+    });

@@ -1,7 +1,7 @@
 <template>
         <div class="row">
             <div class="col-md-12 col-md-offset-0">
-                <div id="newMembers" class="panel panel-default">
+                <div id="newAccountExpense" class="panel panel-default">
                     <div class="panel-heading">
                         <div class="text-center " >
                             <h1> {{title}}   </h1>
@@ -19,28 +19,16 @@
                             </div>
                         </div>
 
-                        <div class=" col-lg-3 col-md-3  " :class="{'has-feedback has-error':errors.departament_id.length > 0}">
+                        <div class=" col-lg-3 col-md-3  " :class="{'has-feedback has-error':errors.income_account_id.length > 0}">
                             <div class="panel-default ">
-                                <label>{{relation}}</label>
+                                <label for="data.income_account_id">Tipo de Ingreso</label>
                                 <div class="input-group " >
                                     <span class="input-group-addon"><i class="fa fa-archive"></i></span>
-                                    <v-select    v-model="data.departament_id"  :options="select"></v-select>
+                                    <v-select   v-model="data.income_account_id"  :options="select" ></v-select>
                                 </div>
-                                <small class="help-block"  >{{errors.departament_id}}</small>
+                                <small class="help-block"  >{{errors.income_account_id}}</small>
                             </div>
                         </div>
-                        <div class=" col-lg-3 col-md-3  " :class="{'has-feedback has-error':errors.departament_id.length > 0}">
-                            <div class="panel-default ">
-                                <label></label>
-
-                                <div class="input-group     custom-checkbox " >
-                                    <input type="checkbox" id="Tipo-temporal" value="temp"   v-model="data.checkedNames">
-                                    <label for="Tipo-temporal">Cuenta Base</label>
-                                </div>
-                                <small class="help-block"  >{{errors.departament_id}}</small>
-                            </div>
-                        </div>
-
                         <div class="col-lg-12 col-md-12  text-center">
                             <div class="btn">
                                 <button   v-on:click="send"  class="btn btn-success">Guardar </button>
@@ -56,30 +44,27 @@
 <script>
     import vSelect from "vue-select"
     export default {
-        props: ['title','url','contents','relation'],
+        props: ['title','url','accounts'],
         components: {vSelect},
          data () {
              return   {
                  data: {
                      name: '',
-                     departament_id: null,
-                     checkedNames:'',
+                     income_account_id: null,
                  },
                  errors: {
                      name: '',
-                     departament_id: '',
-                     type:'',
+                     income_account_id: '',
                  }
              }
          },
         computed:{
             select(){
-              return  JSON.parse(this.contents)
+              return  JSON.parse(this.accounts)
             },
         },
         created(){
-            var optionsSelect = [];
-                console.log(JSON.parse(this.contents));
+           console.log(JSON.parse(this.accounts));
         },
         methods: {
             send: function (event) {
@@ -91,9 +76,9 @@
                     this.$alert({title: 'Se Guardo con Exito!!!',
                         message: response.data.message});
                         this.data.name= '';
-                        this.data.departament_id= '';
+                        this.data.income_account_id= '';
                         this.errors.name= '';
-                        this.errors.departament_id= '';
+                        this.errors.income_account_id= '';
                         }
                 }).catch(function (error) {
                     if (error.response) {
@@ -132,7 +117,3 @@
     }
 </script>
 
-<style scoped>
-
-
-</style>
