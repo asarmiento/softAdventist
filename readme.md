@@ -1,4 +1,4 @@
-<p align="center"><img src="http://logo.contadventista.org/Logo-sistemas-amigables.png"></p>
+<p align="center"><img width="200" height="113" src="http://logo.contadventista.org/Logo-sistemas-amigables.png"></p>
 
 <p align="center">
 <a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
@@ -9,7 +9,7 @@
 
 ## Acerca de SoftAdventist
 
-SoftFriendly es una aplicación elaborada en laravel 5.4 (Backend) y Vue.js 2 (frontend), Hecho por Sistemas Amigables de Costa Rica como una ofrenda para la iglesia.
+SoftFriendly es una aplicación elaborada en laravel <img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"> (Backend) y Vue.js 2 (frontend), Hecho por Sistemas Amigables de Costa Rica como una ofrenda para la iglesia.
 
 Fue creada al observar la necesidad de un sistema para los tesoreros(as) de las diferentes iglesias Adventistas del Septimo Dia. tambien como un sistema de inscripción para diferentes retiros que elaboran las iglesias o los campos locales.
 
