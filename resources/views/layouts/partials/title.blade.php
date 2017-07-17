@@ -6,7 +6,7 @@
     <!--Searchbox-->
     <div class="searchbox">
         <div class="input-group custom-search-form">
-            <input type="text" class="form-control" placeholder="Search..">
+            <input type="text" class="form-control" placeholder="Buscar...">
             <span class="input-group-btn">
                                 <button class="text-muted" type="button"><i class="pli-magnifi-glass"></i></button>
                             </span>

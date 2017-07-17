@@ -6,7 +6,7 @@
         <!--Brand logo & name-->
         <!--================================-->
         <div class="navbar-header">
-            <a href="index.html" class="navbar-brand">
+            <a href="{{route('home')}}" class="navbar-brand">
                 <img src="{{asset('img/logo.png')}}" alt="Nifty Logo" class="brand-icon">
                 <div class="brand-title">
                     <span class="brand-text">Soft-Adventist</span>
@@ -52,7 +52,7 @@
                                     <h4 class="text-light mar-no">Weekend shopping</h4>
                                     <div class="pad-ver box-inline">
                                                 <span class="icon-wrap icon-wrap-lg icon-circle bg-trans-light">
-                                                    <i class="pli-add-cart icon-4x"></i>
+                                                    <i class="pli-add-cart icon-3x"></i>
                                                 </span>
                                     </div>
                                     <p class="pad-btm">
@@ -104,8 +104,8 @@
                                     <li class="dropdown-header">Registros</li>
                                     <li><a href="{{route('create-internal-control')}}">Registro de Ingresos</a></li>
                                     <li><a href="#">Traspaso entre Cuentas</a></li>
-                                    <li><a href="#">Registro de Cheques</a></li>
-                                    <li><a href="#">Registro de Caja Chica</a></li>
+                                    <li><a href="{{route('create-expenses')}}">Registro de Gastos</a></li>
+                                    <li><a href="#">Lista de Gastos</a></li>
                                     <li><a href="#">Forms</a></li>
                                     <li class="divider"></li>
                                     <li>

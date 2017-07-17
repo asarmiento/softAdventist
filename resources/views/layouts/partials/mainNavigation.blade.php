@@ -8,7 +8,6 @@
         <div id="mainnav-menu-wrap">
             <div class="nano">
                 <div class="nano-content">
-
                     <!--Profile Widget-->
                     <!--================================-->
                     <div id="mainnav-profile" class="mainnav-profile">
@@ -37,8 +36,6 @@
                             </a>
                         </div>
                     </div>
-
-
                     <!--Shortcut buttons-->
                     <!--================================-->
                     <div id="mainnav-shortcut">
@@ -62,12 +59,9 @@
                     </div>
                     <!--================================-->
                     <!--End shortcut buttons-->
-
                     <ul id="mainnav-menu" class="list-group">
-
                         <!--Category name-->
                         <li class="list-header">JA</li>
-
                         <!--Menu list item-->
                         <li class="active-link">
                             <a href="{{route('home')}}">
@@ -75,7 +69,6 @@
                                 <span class="menu-title">Registrar</span>
                             </a>
                         </li>
-
                         <!--Menu list item-->
                         @if(currentUser()->type_user == 'admin')
 			<li>

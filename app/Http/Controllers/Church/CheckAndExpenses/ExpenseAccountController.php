@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Church\CheckAndExpenses;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\ExpenseAccountCreateRequest;
 use App\Repositories\ExpenseAccountRepository;
 use App\Repositories\IncomeAccountRepository;
