@@ -28436,7 +28436,7 @@ return zhTw;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(153);
-module.exports = __webpack_require__(284);
+module.exports = __webpack_require__(287);
 
 
 /***/ }),
@@ -28471,6 +28471,7 @@ Vue.component('createExpenses', __webpack_require__(260));
 Vue.component('createBank', __webpack_require__(263));
 Vue.component('createChurchDeposits', __webpack_require__(268));
 Vue.component('createCheck', __webpack_require__(279));
+Vue.component('registroExpenses', __webpack_require__(284));
 
 var app = new Vue({
   el: '#app'
@@ -59687,6 +59688,283 @@ if (false) {
 
 /***/ }),
 /* 284 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var Component = __webpack_require__(2)(
+  /* script */
+  __webpack_require__(285),
+  /* template */
+  __webpack_require__(286),
+  /* styles */
+  null,
+  /* scopeId */
+  null,
+  /* moduleIdentifier (server only) */
+  null
+)
+Component.options.__file = "C:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\RegistroExpenses.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] RegistroExpenses.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-99a87284", Component.options)
+  } else {
+    hotAPI.reload("data-v-99a87284", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 285 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_select__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_select___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue_select__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: ['title', 'url', 'accounts', 'checks'],
+    components: { vSelect: __WEBPACK_IMPORTED_MODULE_0_vue_select___default.a },
+    data: function data() {
+        return {
+            data: {
+                name: '',
+                income_account_id: null
+            },
+            errors: {
+                name: '',
+                income_account_id: ''
+            }
+        };
+    },
+
+    computed: {
+        select: function select() {
+            return JSON.parse(this.accounts);
+        }
+    },
+    created: function created() {
+        console.log(JSON.parse(this.accounts));
+    },
+
+    methods: {
+        send: function send(event) {
+            var _this = this;
+
+            console.log(this.data.selected);
+            var self = this;
+            axios.post('/tesoreria/' + self.url, this.data).then(function (response) {
+                if (response.data.success = true) {
+                    _this.$alert({ title: 'Se Guardo con Exito!!!',
+                        message: response.data.message });
+                    _this.data.name = '';
+                    _this.data.income_account_id = '';
+                    _this.errors.name = '';
+                    _this.errors.income_account_id = '';
+                }
+            }).catch(function (error) {
+                if (error.response) {
+                    var data = error.response.data;
+                    if (error.response.status === 422) {
+                        for (var index in data) {
+                            var messages = '';
+                            data[index].forEach(function (item) {
+                                messages += item + ' ';
+                            });
+                            self.errors[index] = messages;
+                        }
+                    } else if (error.response.status === 401) {
+                        self.errors.response.invalid = true;
+                        self.errors.response.msg = data.msg.message;
+                    } else if (error.response.status === 500) {
+                        console.log(data);
+                        for (var index in data) {
+                            var messages = '';
+                            data[index].forEach(function (item) {
+                                messages += item + ' ';
+                            });
+                            self.errors[index] = messages;
+                        }
+                    }
+                } else if (error.request) {
+                    console.log(error.request);
+                    alert("Error empty");
+                } else {
+                    console.log('Error', error.message);
+                    alert("Error");
+                }
+            });
+        }
+    }
+});
+
+/***/ }),
+/* 286 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "row"
+  }, [_c('div', {
+    staticClass: "col-md-12 col-md-offset-0"
+  }, [_c('div', {
+    staticClass: "panel panel-default",
+    attrs: {
+      "id": "newAccountExpense"
+    }
+  }, [_c('div', {
+    staticClass: "panel-heading"
+  }, [_c('div', {
+    staticClass: "text-center "
+  }, [_c('h1', [_vm._v(" " + _vm._s(_vm.title) + "   ")])])]), _vm._v(" "), _c('div', {
+    staticClass: "panel-body"
+  }, [_c('div', {
+    staticClass: " col-lg-3 col-md-3  ",
+    class: {
+      'has-feedback has-error': _vm.errors.name.length > 0
+    }
+  }, [_c('div', {
+    staticClass: "panel-default "
+  }, [_c('label', [_vm._v("Nombre")]), _vm._v(" "), _c('div', {
+    staticClass: "input-group "
+  }, [_vm._m(0), _vm._v(" "), _c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.data.name),
+      expression: "data.name"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "type": "text"
+    },
+    domProps: {
+      "value": (_vm.data.name)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.data.name = $event.target.value
+      }
+    }
+  })]), _vm._v(" "), _c('small', {
+    staticClass: "help-block"
+  }, [_vm._v(_vm._s(_vm.errors.name))])])]), _vm._v(" "), _c('div', {
+    staticClass: " col-lg-3 col-md-3  ",
+    class: {
+      'has-feedback has-error': _vm.errors.income_account_id.length > 0
+    }
+  }, [_c('div', {
+    staticClass: "panel-default "
+  }, [_c('label', {
+    attrs: {
+      "for": "data.income_account_id"
+    }
+  }, [_vm._v("Tipo de Ingreso")]), _vm._v(" "), _c('div', {
+    staticClass: "input-group "
+  }, [_vm._m(1), _vm._v(" "), _c('v-select', {
+    attrs: {
+      "options": _vm.select
+    },
+    model: {
+      value: (_vm.data.income_account_id),
+      callback: function($$v) {
+        _vm.data.income_account_id = $$v
+      },
+      expression: "data.income_account_id"
+    }
+  })], 1), _vm._v(" "), _c('small', {
+    staticClass: "help-block"
+  }, [_vm._v(_vm._s(_vm.errors.income_account_id))])])]), _vm._v(" "), _c('div', {
+    staticClass: "col-lg-12 col-md-12  text-center"
+  }, [_c('div', {
+    staticClass: "btn"
+  }, [_c('button', {
+    staticClass: "btn btn-success",
+    on: {
+      "click": _vm.send
+    }
+  }, [_vm._v("Guardar ")])])])])])])])
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('span', {
+    staticClass: "input-group-addon"
+  }, [_c('i', {
+    staticClass: "fa fa-archive"
+  })])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('span', {
+    staticClass: "input-group-addon"
+  }, [_c('i', {
+    staticClass: "fa fa-archive"
+  })])
+}]}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-99a87284", module.exports)
+  }
+}
+
+/***/ }),
+/* 287 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

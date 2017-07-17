@@ -21,7 +21,7 @@ Route::get('/confirmation/{token}', ['uses'=>'Auth\RegisterController@confirmati
 Route::get('/activation/{email}', ['uses'=>'Auth\RegisterController@activation','as'=>'activation']);
 Route::get('iglesia', ['uses'=>'Church\ChurchController@create','as'=>'create-church']);
 
-Route::group(['prefix'=>'registrado','middleware'=>'auth'],function (){
+    Route::group(['prefix'=>'registrado','middleware'=>'auth'],function (){
 
     Route::get('test/index', ['uses'=>'TestController@index','as'=>'test']);
     Route::get('test/pendiente', ['uses'=>'TestController@pendiente','as'=>'pendiente']);
@@ -94,8 +94,10 @@ Route::group(['prefix'=>'registrado','middleware'=>'auth'],function (){
         /**
         * Gastos
         */
-        Route::get('registrar-gastos', ['uses'=>'Church\CheckAndExpenses\ExpenseAccountController@create','as'=>'create-expenses']);
+        Route::get('crear-account-gastos', ['uses'=>'Church\CheckAndExpenses\ExpenseAccountController@create','as'=>'create-expenses']);
+        Route::get('registro-de-gastos', ['uses'=>'Church\CheckAndExpenses\ExpenseAccountController@createInvoices','as'=>'register-expenses']);
         Route::post('save-expense', 'ExpenseAccountController@store');
+        Route::post('save-expense-invoice', 'ExpenseAccountController@storeInvoice');
         /**
          * Cheques
          */

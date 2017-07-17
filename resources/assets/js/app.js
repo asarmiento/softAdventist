@@ -28,6 +28,7 @@ Vue.component('createExpenses', require('./components/CreateExpenses.vue'));
 Vue.component('createBank', require('./components/CreateBank.vue'));
 Vue.component('createChurchDeposits', require('./components/CreateChurchDeposits.vue'));
 Vue.component('createCheck', require('./components/CreateCheck.vue'));
+Vue.component('registroExpenses', require('./components/RegistroExpenses.vue'));
 
 
 
