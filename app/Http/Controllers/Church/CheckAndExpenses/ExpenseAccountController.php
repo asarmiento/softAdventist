@@ -79,7 +79,7 @@ class ExpenseAccountController extends Controller
 
     public function createInvoices()
     {
-        $accounts =$this->expenseAccountRepository->filterChurchRelation('departament');
+        $accounts =$this->expenseAccountRepository->listSelects();
         $checks = $this->checkRepository->filterChurchRelation('bank');
         return view('IncomesAndExpenses.accounts.registroExpense', compact('accounts','checks'));
     }

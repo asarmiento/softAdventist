@@ -19,9 +19,9 @@
                             </div>
                         </div>
 
-                        <div class=" col-lg-3 col-md-3  " :class="{'has-feedback has-error':errors.income_account_id.length > 0}">
+                        <div class=" col-lg-4 col-md-4  " :class="{'has-feedback has-error':errors.income_account_id.length > 0}">
                             <div class="panel-default ">
-                                <label for="data.income_account_id">Tipo de Ingreso</label>
+                                <label for="data.income_account_id">Cuenta de Gasto</label>
                                 <div class="input-group " >
                                     <span class="input-group-addon"><i class="fa fa-archive"></i></span>
                                     <v-select   v-model="data.income_account_id"  :options="select" ></v-select>

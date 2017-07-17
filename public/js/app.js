@@ -59907,7 +59907,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   })]), _vm._v(" "), _c('small', {
     staticClass: "help-block"
   }, [_vm._v(_vm._s(_vm.errors.name))])])]), _vm._v(" "), _c('div', {
-    staticClass: " col-lg-3 col-md-3  ",
+    staticClass: " col-lg-4 col-md-4  ",
     class: {
       'has-feedback has-error': _vm.errors.income_account_id.length > 0
     }
@@ -59917,7 +59917,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "for": "data.income_account_id"
     }
-  }, [_vm._v("Tipo de Ingreso")]), _vm._v(" "), _c('div', {
+  }, [_vm._v("Cuenta de Gasto")]), _vm._v(" "), _c('div', {
     staticClass: "input-group "
   }, [_vm._m(1), _vm._v(" "), _c('v-select', {
     attrs: {

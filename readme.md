@@ -9,7 +9,7 @@
 
 ## Acerca de SoftAdventist
 
-SoftFriendly es una aplicación elaborada en laravel 
+SoftFriendly es una aplicación elaborada con base en Laravel 
 <img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"> 
 (Backend) y Vue.js 2 (frontend), Hecho por Sistemas Amigables de Costa Rica SAOR S.A., 
 como un apoyo a la Iglesia Adventista del Séptimo Día de Quepos.
