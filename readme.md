@@ -27,7 +27,7 @@ que el sobre de diezmo no lo traiga incluido.
 
 Las iglesias podran llevar control de sus ingresos y gastos, tambien control de los informes a los campos locales, control de los materiales de escuela sabatica u otros gastos.
 <ul>
-<li>Control Interno
+<li><strong>Control Interno</strong>
 <ul><li>
 <p>
 Debe registrar los datos del control interno de cada sabado y escanear el
@@ -40,7 +40,7 @@ junto con los sobres.
 </p>	
 </li></ul>
 </li>	
-<li> Sobres de Diezmos
+<li> <strong>Sobres de Diezmos</strong>
 <ul><li><p>
 	Debe registrar cada no de los sobres depositados en sabado por la mañana e incluidos 
  	en el control interno del sabado.
@@ -52,7 +52,7 @@ junto con los sobres.
 	que entrego el sobre.
 </p></li></ul>
 </li>
-<li> Recibos
+<li> <strong>Recibos</strong>
 <ul><li><p>
 	Por cada uno de los sobres de diezmos que son registrados en el sistema generara un
 	recibo, que se mostrara en el momento de finalizar el proceso de registros. 
@@ -61,13 +61,13 @@ junto con los sobres.
 	reimprimir un recibo las veces que desee, solo que iran con la leyenda copia. 
 </p></li></ul>
 </li>
-<li> Control Semanal
+<li><strong> Control Semanal</strong>
 <ul><li><p>
 	Una vez finalizado el proceso de registro de los sobres de Diezmos tambien podra 
 	imprimir o descargar el informe semanal las veces que desee. 
 </p></li></ul>
 </li>
-<li> Cuentas Bancarias
+<li><strong> Cuentas Bancarias</strong>
 <ul><li><p>
 	El sistema le ayuda a llevar el control de sus cuentas bancarias, para indicarle 
 	el saldo que debe tener segun los ingresos y salidas de su iglesia. 
@@ -76,7 +76,7 @@ junto con los sobres.
 	control las cuentas en moneda local. <strong>"proxima version multimonedas"</strong>
 </p></li></ul>
 </li>
-<li> Departamentos
+<li> <strong>Departamentos</strong>
 <ul><li><p>
 	SoftAdventist le controla el presupuesto de cada uno de los departamentos de su iglesia. 
 </p><p>
@@ -91,19 +91,19 @@ junto con los sobres.
 <p>
 	SoftAdventist le permite poder tener sub cuentas de ingresos o Gastos para cada departamento, segun como 
 	sea necesario para su iglesia por ejemplo:
-	<ul><li>Ingreso Sub Cuenta de Fondo de Iglesia
+	<ul><li><strong>Ingreso Sub Cuenta de Fondo de Iglesia</strong>
     		<ul>
     		<li>Pro-Construccón</li>
     		<li>Revistas Prioridades</li>
     		</ul>
     	</li>
-    	<li>Ingreso Sub Cuenta de Escuela Sabatica
+    	<li><strong>Ingreso Sub Cuenta de Escuela Sabatica</strong>
             <ul>
             	<li>Materiales Escuela Sabatica</li>
             </ul>
         </li>
     </ul>
-	<ul><li>Gastos de Iglesia
+	<ul><li><strong>Gastos de Iglesia</strong>
 		<ul>
 		<li>Limpieza Iglesia</li>
 		<li>Energia Electrica</li>
@@ -113,7 +113,7 @@ junto con los sobres.
 	</li></ul>
 </p></li></ul>
 </li>
-<li> Cheques
+<li><strong> Cheques</strong>
 <ul><li><p>
 	Debe registrarse todos los cheques elaborados de todas las cuentas bancarias de la iglesia, incluso 
 	 los cheques anulados tambien, igualmente debe escanear la copia del cheque con la firma de recibido
@@ -122,7 +122,7 @@ junto con los sobres.
 	SoftAdventist desminuira cada cheque del saldo de su cuenta bancaria donde corresponda el mismo.
 </p></li></ul>
 </li>
-<li> Gastos
+<li> <strong>Gastos</strong>
 <ul><li><p>
 	Cada gasto esta ligado a una sub cuenta de ingresos de un departamento segun sea la necesidad de la
 	 iglesia, tambien esta ligado a un cheque o en su defecto a cobros bancarios por emision de chequeras.
@@ -133,7 +133,7 @@ junto con los sobres.
 </p>
 </li></ul>
 </li>
-<li> Miembros de Iglesia
+<li> <strong>Miembros de Iglesia</strong>
 <ul><li>
 <p>
 	Se deben registrar a todos los miembros de Iglesia adultos, adolecentes, niños o visitas que han 
@@ -141,14 +141,14 @@ junto con los sobres.
 </p>
 </li></ul>
 </li>
-<li> Control de Material Escuela Sabaticas
+<li><strong> Control de Material Escuela Sabaticas</strong>
 <ul><li><p>
 	Sabemos lo complicado es poder controlar los pagos de materiales de escuela sabatica que son entregados 
 	a los miembros de iglesia. SoftAdventist le aydua a poder controlar esos pagos hecho por los miembros
 	segun el material que se le fue entregado.
 </p></li></ul>
 </li>
-<li> Depositos de la Iglesia
+<li><strong> Depositos de la Iglesia</strong>
 <ul><li>
 <p>
 	Debe depositar todo el dinero recibido cada sabado a las cuentas de la iglesia y registrar esos 
@@ -157,7 +157,7 @@ junto con los sobres.
 </p>
 </li></ul>
 </li>
-<li> Depositos al Campo Local
+<li><strong> Depositos al Campo Local</strong>
 <ul><li>
 <p>
 	Una vez hecho el deposito del cheque emitido en la cuenta del campo local al que pertenece la iglesia,
