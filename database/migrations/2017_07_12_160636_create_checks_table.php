@@ -22,6 +22,7 @@ class CreateChecksTable extends Migration
             $table->text('detail');
             $table->decimal('balance',20,2);
             $table->enum('type',['church','local_field']);
+            $table->enum('status',['no aplicado','aplicado']);
             $table->text('token');
             $table->integer('bank_id')->unsigned()->index();
             $table->integer('user_id')->unsigned()->index();

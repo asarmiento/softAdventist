@@ -11,7 +11,7 @@
 
 SoftFriendly es una aplicación elaborada con base en Laravel 
 <img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"> 
-(Backend) y Vue.js 2 (frontend), Hecho por Sistemas Amigables de Costa Rica SAOR S.A., 
+(Backend) y Vue.js 2 (frontend), hecho por Sistemas Amigables de Costa Rica SAOR S.A., 
 como un apoyo a la Iglesia Adventista del Séptimo Día de Quepos.
 
 SoftAdventist fue creado, al observar la necesidad de una herramienta para los tesoreros(as) de las diferentes 
@@ -28,9 +28,8 @@ La iglesia que se usamos para la prueba piloto desde la versión 1 es la
  El modulo de inscripción fue utilizado por el departamento de Jóvenes de la Asociación 
  Central Sur de Costa Rica.
 
-Si desea que su Iglesia o Campo Local utilice este sistema favor contactar a Anwar Sarmiento 
+Si desea que su iglesia o campo local utilice este sistema favor contactar a Anwar Sarmiento 
 [asarmiento@sistemasamigables.com](mailto:asarmiento@sistemasamigables.com)
-
 
 - Este sistema le ayudara a controlar 100% todas las entradas y salidas de su iglesia, le ahorra tiempo ya que 
 solo debe registrar cada uno de sus ingresos (Control Interno y sobres de Diezmos) y sus salidas 
@@ -169,7 +168,7 @@ iglesia cuando registre el deposito del campo local correspondiente a los inform
 </p>
 </li></ul>
 </li>
-<li><strong> Depósitos al Campo Local</strong>
+<li><strong> Depósitos al campo local</strong>
 <ul><li>
 <p>
    Una vez hecho el deposito del cheque emitido en la cuenta del campo local al que pertenece la iglesia,

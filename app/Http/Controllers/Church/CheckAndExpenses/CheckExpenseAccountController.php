@@ -11,7 +11,7 @@ use App\Repositories\IncomeAccountRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 
-class ExpenseAccountController extends Controller
+class CheckExpenseAccountController extends Controller
 {
     //
 
@@ -60,31 +60,42 @@ class ExpenseAccountController extends Controller
 
     public function create()
     {
-        $accounts =$this->incomeAccountRepository->listSelects();
-        return view('departament.accounts.createExpense', compact('accounts'));
+        $accounts =$this->expenseAccountRepository->listSelects();
+        $checks = $this->checkRepository->filterChurchRelation('bank');
+        return view('IncomesAndExpenses.accounts.registroExpense', compact('accounts','checks'));
     }
 
-
-    public function store(ExpenseAccountCreateRequest $request)
+    public function store(Request $request)
     {
         $data = $request->all();
-        $incomeAccount = $this->incomeAccountRepository->getModel()->where('token',$data['income_account_id']['value'])->first();
-        $name = $data['name'];
-        $data['name'] = 'Gto-'.$name;
+        $expenseAccount = $this->expenseAccountRepository->getModel()->where('token',$data['expense_account']['value'])->first();
 
-        if($this->expenseAccountRepository->getModel()->where('name',$data['name'])->where('income_account_id',$incomeAccount->id)->count() > 0 ):
-            return response()->json(['name'=>['Ya existe ese nombre con ese Tipo de Ingreso']],500);
-        endif;
-        $data['balance'] = '0';
-        $data['token'] = Crypt::encrypt(substr($data['name'],0,30));
-        $data['income_account_id'] = $incomeAccount->id;
 
-        $expenseAccount = $this->expenseAccountRepository->getModel();
-        $expenseAccount->fill($data);
-        if($expenseAccount->save()):
-               return response()->json(['success'=>true, 'message'=>'Se creo con Exito!!!!'],200);
+        $data['token'] = Crypt::encrypt(substr($data['number'],0,30));
+        $data['expense_account_id'] = $expenseAccount->id;
+        $data['image'] = ".";
+        $data['user_id'] = currentUser()->id;
+        $expense = $this->checkExpenseRepository->getModel();
+        $expense->fill($data);
+        if($expense->save()):
+            return response()->json(['success'=>true, 'message'=>'Se creo con Exito!!!!','result'=>$expense],200);
         endif;
     }
 
+    public function listsNoAplicado()
+    {
+        return $this->checkExpenseRepository
+            ->filterChurchRelationNot('expenseAccount.incomeAccount.departament');
+    }
 
+    public function listsAplicado()
+    {
+        return $this->checkExpenseRepository
+            ->filterChurchRelationOk('expenseAccount.incomeAccount.departament','aplicado');
+    }
+
+    public function lists()
+    {
+        return view('IncomesAndExpenses.accounts.listsExpense');
+    }
 }

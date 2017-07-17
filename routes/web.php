@@ -95,9 +95,13 @@ Route::get('iglesia', ['uses'=>'Church\ChurchController@create','as'=>'create-ch
         * Gastos
         */
         Route::get('crear-account-gastos', ['uses'=>'Church\CheckAndExpenses\ExpenseAccountController@create','as'=>'create-expenses']);
-        Route::get('registro-de-gastos', ['uses'=>'Church\CheckAndExpenses\ExpenseAccountController@createInvoices','as'=>'register-expenses']);
-        Route::post('save-expense', 'ExpenseAccountController@store');
-        Route::post('save-expense-invoice', 'ExpenseAccountController@storeInvoice');
+        Route::post('save-expense', 'Church\CheckAndExpenses\ExpenseAccountController@store');
+
+        Route::get('registro-de-gastos', ['uses'=>'Church\CheckAndExpenses\CheckExpenseAccountController@create','as'=>'register-expenses']);
+        Route::get('lista-de-gastos-not', 'Church\CheckAndExpenses\CheckExpenseAccountController@listsNoAplicado');
+        Route::get('lista-de-gastos', 'Church\CheckAndExpenses\CheckExpenseAccountController@listsAplicado');
+        Route::get('lista-de-todos-los-gastos', ['uses'=>'Church\CheckAndExpenses\CheckExpenseAccountController@lists','as'=>'list-expenses']);
+        Route::post('save-expense-invoice', 'Church\CheckAndExpenses\CheckExpenseAccountController@store');
         /**
          * Cheques
          */

@@ -20,6 +20,7 @@ class CreateCheckExpensesTable extends Migration
             $table->text('detail');
             $table->string('image');
             $table->decimal('balance',20,2);
+            $table->enum('status',['no aplicado','aplicado'])->default('no aplicado');
             $table->text('token');
             $table->integer('expense_account_id')->unsigned()->index();
             $table->integer('check_id')->unsigned()->index();

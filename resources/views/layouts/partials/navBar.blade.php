@@ -105,7 +105,7 @@
                                     <li><a href="{{route('create-internal-control')}}">Registro de Ingresos</a></li>
                                     <li><a href="#">Traspaso entre Cuentas</a></li>
                                     <li><a href="{{route('register-expenses')}}">Registro de Gastos</a></li>
-                                    <li><a href="#">Lista de Gastos</a></li>
+                                    <li><a href="{{route('list-expenses')}}">Lista de Gastos</a></li>
                                     <li><a href="#">Forms</a></li>
                                     <li class="divider"></li>
                                     <li>
