@@ -179,7 +179,6 @@
 
             this.$http.get('/tesoreria/lista-depositos')
             .then((response) => {
-                console.log(response.data);
                 this.all_depositos = response.data;
             });
         },
@@ -242,6 +241,7 @@
                     .then(response => {
                         if(response.data.success = true){
                            this.internals = response.data.result;
+                            this.all_depositos = response.data.deposits;
                         this.data.number= '';
                         this.data.date= '';
                         this.data.balance= '';

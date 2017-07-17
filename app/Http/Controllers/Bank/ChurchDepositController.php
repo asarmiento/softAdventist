@@ -101,18 +101,22 @@ class ChurchDepositController extends Controller
                                 $balance = $totalDeposito;
                                 $totalDeposito -= $balance;
                             }
-                            $churchDeposit->internalControls()->attach($control->id,
+                           $churchDeposit->internalControls()->attach($control->id,
                                 [ 'balance' => $balance, 'user_id' => currentUser()->id ]);
                         }
                         else{
                             break;
                         }
                     endforeach;
-                    DB::commit();
+                $balanceBank = $churchDeposit->bank()->sum('balance') + $churchDeposit->balance ;
+                $churchDeposit->bank()->update(['balance'=>$balanceBank]);
+
+                DB::commit();
                     return response()->json([
                         'success' => false,
                         'message' => 'Se regitro con Exito!!!',
-                        'result'  => $this->internalControlRepository->listPivotSelects()
+                        'result'  => $this->internalControlRepository->listPivotSelects(),
+                        'deposits'  => $this->lists()
                     ], 200);
             else:
                 DB::rollback();
@@ -148,6 +152,9 @@ class ChurchDepositController extends Controller
     {
         $data = $request->all();
         $deposit = $this->churchDepositRepository->token($data['token']);
+        $balance = $deposit->bank()->sum('balance') - $deposit->balance ;
+        $deposit->bank()->update(['balance'=>$balance]);
+
         DB::table('church_deposit_internal_control')->where('church_deposit_id', $deposit->id)->delete();
         $this->churchDepositRepository->getModel()->where('id',$deposit->id)->delete();
         return response()->json(['exito'], 200);

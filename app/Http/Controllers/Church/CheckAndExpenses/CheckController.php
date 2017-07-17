@@ -58,9 +58,11 @@ class CheckController extends Controller
         $data['user_id']= currentUser()->id;
         $data['token'] = Crypt::encrypt($data['number']);
 
-        $bank = $this->checkRepository->getModel();
-        $bank->fill($data);
-        if($bank->save()):
+        $check = $this->checkRepository->getModel();
+        $check->fill($data);
+        if($check->save()):
+            $balance = $check->bank()->sum('balance') - $check->balance ;
+            $check->bank()->update(['balance'=>$balance]);
             return response()->json([
                 'message'=>'El cheque ha sido registrado: '.$bank->name,
                                      'list'=>$this->listCheck(),

@@ -56850,7 +56850,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         });
 
         this.$http.get('/tesoreria/lista-depositos').then(function (response) {
-            console.log(response.data);
             _this.all_depositos = response.data;
         });
     },
@@ -56914,6 +56913,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             axios.post('/tesoreria/' + self.url, this.data).then(function (response) {
                 if (response.data.success = true) {
                     _this4.internals = response.data.result;
+                    _this4.all_depositos = response.data.deposits;
                     _this4.data.number = '';
                     _this4.data.date = '';
                     _this4.data.balance = '';
