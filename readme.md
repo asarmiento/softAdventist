@@ -23,19 +23,6 @@ Esta estructurada para ser utilizada en diferentes niveles.
 - Campos Locales (podran observar reportes por Zonas, Distritos o por Iglesias).
 - Iglesias (Aqui es donde se ingresara la informacion financiera de cada iglesia).
 
-
-## División
-
-La división podra ver los reportes de ingresos de las uniones, campos locales hasta llegar a las iglesias, diferentes resumenes de diezmos y ofrendas reportados por las iglesias.
-
-## Unión
-
-Las Uniones podra ver los reportes de ingresos de los campos locales hasta llegar a las iglesias, diferentes resumenes de diezmos y ofrendas reportados por las iglesias.
-
-## Campo Locale
-
-Los Campos Locales podra ver los reportes de ingresos de las iglesias, diferentes resumenes de diezmos y ofrendas reportados por las iglesias.
-
 ## Iglesia
 
 Las iglesias podran llevar control de sus ingresos y gastos, tambien control de los informes a los campos locales, control de los materiales de escuela sabatica u otros gastos.
