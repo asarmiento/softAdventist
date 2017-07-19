@@ -48,7 +48,7 @@
                                 <small class="help-block"  >{{errors.date}}</small>
                             </div>
                         </div>
-                        <div class=" col-lg-3 col-md-3  " :class="{'has-feedback has-error':errors.bank.length > 0}">
+                        <div class=" col-lg-4 col-md-4  " :class="{'has-feedback has-error':errors.bank.length > 0}">
                             <div class="panel-default ">
                                 <label>Cuenta Bancaria</label>
                                 <div class="input-group " >
@@ -59,7 +59,7 @@
                                 <small class="help-block"  >{{errors.bank}}</small>
                             </div>
                         </div>
-                        <div class=" col-lg-3 col-md-3  " :class="{'has-feedback has-error':errors.type.length > 0}">
+                        <div class=" col-lg-4 col-md-4  " :class="{'has-feedback has-error':errors.type.length > 0}">
                             <div class="panel-default ">
                                 <label>Tipo de Cheque</label>
                                 <div class="input-group " >
@@ -190,8 +190,7 @@
                     .then(response => {
                         if(response.data.success = true){
                             this.checks = response.data.list;
-                    this.$alert({title: 'Se Guardo con Exito!!!',
-                        message: response.data.message});
+                            document.location = 'registro-detalle-cheque/'+response.data.token;
                         this.data.number= '';
                         this.data.name= '';
                         this.data.balance= '';

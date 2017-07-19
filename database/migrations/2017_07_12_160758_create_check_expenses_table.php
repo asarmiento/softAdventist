@@ -15,6 +15,7 @@ class CreateCheckExpensesTable extends Migration
     {
         Schema::create('check_expenses', function(Blueprint $table) {
             $table->increments('id');
+            $table->integer('reference')->unsigned()->nullabel();
             $table->string('number');
             $table->date('date');
             $table->text('detail');

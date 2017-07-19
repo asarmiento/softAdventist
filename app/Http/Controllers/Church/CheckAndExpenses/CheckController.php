@@ -66,6 +66,7 @@ class CheckController extends Controller
             return response()->json([
                 'message'=>'El cheque ha sido registrado: '.$bank->name,
                                      'list'=>$this->listCheck(),
+                                     'token'=>$check->token,
                                      'success'=>true],200);
         endif;
 

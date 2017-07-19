@@ -98,10 +98,15 @@ Route::get('iglesia', ['uses'=>'Church\ChurchController@create','as'=>'create-ch
         Route::post('save-expense', 'Church\CheckAndExpenses\ExpenseAccountController@store');
 
         Route::get('registro-de-gastos', ['uses'=>'Church\CheckAndExpenses\CheckExpenseAccountController@create','as'=>'register-expenses']);
-        Route::get('lista-de-gastos-not', 'Church\CheckAndExpenses\CheckExpenseAccountController@listsNoAplicado');
+        Route::get('registro-detalle-cheque/{token}', 'Church\CheckAndExpenses\CheckExpenseAccountController@createCheck');
+        Route::get('lista-de-gastos-not/{check}', 'Church\CheckAndExpenses\CheckExpenseAccountController@balanceNot');
+        Route::get('balance-de-gastos-not', 'Church\CheckAndExpenses\CheckExpenseAccountController@balanceNotC');
         Route::get('lista-de-gastos', 'Church\CheckAndExpenses\CheckExpenseAccountController@listsAplicado');
         Route::get('lista-de-todos-los-gastos', ['uses'=>'Church\CheckAndExpenses\CheckExpenseAccountController@lists','as'=>'list-expenses']);
         Route::post('save-expense-invoice', 'Church\CheckAndExpenses\CheckExpenseAccountController@store');
+        Route::post('finish-expense-invoice', 'Church\CheckAndExpenses\CheckExpenseAccountController@finish');
+        Route::get('edit-expense-invoice/{token}', 'Church\CheckAndExpenses\CheckExpenseAccountController@edit');
+        Route::post('remove', 'Church\CheckAndExpenses\CheckExpenseAccountController@destroy');
         /**
          * Cheques
          */
@@ -117,6 +122,7 @@ Route::get('iglesia', ['uses'=>'Church\ChurchController@create','as'=>'create-ch
         Route::get('lista-miembro6s', ['uses'=>'MemberController@index','as'=>'list-info-week']);
         //Reportes
         Route::get('reporte-semanal/{date}', ['uses'=>'ReportPdfController@infoSemanal','as'=>'reportWeekly']);
+        Route::get('pdf-de-gastos/{token}', 'ReportPdfController@checkDetail');
 
 
     });

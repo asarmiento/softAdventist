@@ -16,4 +16,9 @@ class Check extends Entity
     {
         return $this->belongsTo(Bank::getClass());
     }
+
+    public function checkExpenses()
+    {
+        return $this->hasMany(CheckExpense::getClass());
+    }
 }

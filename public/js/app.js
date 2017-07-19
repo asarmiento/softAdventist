@@ -4535,6 +4535,103 @@ return hooks;
 
 /***/ }),
 /* 1 */
+/***/ (function(module, exports) {
+
+/* globals __VUE_SSR_CONTEXT__ */
+
+// this module is a runtime utility for cleaner component module output and will
+// be included in the final webpack user bundle
+
+module.exports = function normalizeComponent (
+  rawScriptExports,
+  compiledTemplate,
+  injectStyles,
+  scopeId,
+  moduleIdentifier /* server only */
+) {
+  var esModule
+  var scriptExports = rawScriptExports = rawScriptExports || {}
+
+  // ES6 modules interop
+  var type = typeof rawScriptExports.default
+  if (type === 'object' || type === 'function') {
+    esModule = rawScriptExports
+    scriptExports = rawScriptExports.default
+  }
+
+  // Vue.extend constructor export interop
+  var options = typeof scriptExports === 'function'
+    ? scriptExports.options
+    : scriptExports
+
+  // render functions
+  if (compiledTemplate) {
+    options.render = compiledTemplate.render
+    options.staticRenderFns = compiledTemplate.staticRenderFns
+  }
+
+  // scopedId
+  if (scopeId) {
+    options._scopeId = scopeId
+  }
+
+  var hook
+  if (moduleIdentifier) { // server build
+    hook = function (context) {
+      // 2.3 injection
+      context =
+        context || // cached call
+        (this.$vnode && this.$vnode.ssrContext) || // stateful
+        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
+      // 2.2 with runInNewContext: true
+      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
+        context = __VUE_SSR_CONTEXT__
+      }
+      // inject component styles
+      if (injectStyles) {
+        injectStyles.call(this, context)
+      }
+      // register component module identifier for async chunk inferrence
+      if (context && context._registeredComponents) {
+        context._registeredComponents.add(moduleIdentifier)
+      }
+    }
+    // used by ssr in case component is cached and beforeCreate
+    // never gets called
+    options._ssrRegister = hook
+  } else if (injectStyles) {
+    hook = injectStyles
+  }
+
+  if (hook) {
+    var functional = options.functional
+    var existing = functional
+      ? options.render
+      : options.beforeCreate
+    if (!functional) {
+      // inject component registration as beforeCreate hook
+      options.beforeCreate = existing
+        ? [].concat(existing, hook)
+        : [hook]
+    } else {
+      // register for functioal component in vue file
+      options.render = function renderWithStyleInjection (h, context) {
+        hook.call(context)
+        return existing(h, context)
+      }
+    }
+  }
+
+  return {
+    esModule: esModule,
+    exports: scriptExports,
+    options: options
+  }
+}
+
+
+/***/ }),
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4841,103 +4938,6 @@ module.exports = {
   extend: extend,
   trim: trim
 };
-
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports) {
-
-/* globals __VUE_SSR_CONTEXT__ */
-
-// this module is a runtime utility for cleaner component module output and will
-// be included in the final webpack user bundle
-
-module.exports = function normalizeComponent (
-  rawScriptExports,
-  compiledTemplate,
-  injectStyles,
-  scopeId,
-  moduleIdentifier /* server only */
-) {
-  var esModule
-  var scriptExports = rawScriptExports = rawScriptExports || {}
-
-  // ES6 modules interop
-  var type = typeof rawScriptExports.default
-  if (type === 'object' || type === 'function') {
-    esModule = rawScriptExports
-    scriptExports = rawScriptExports.default
-  }
-
-  // Vue.extend constructor export interop
-  var options = typeof scriptExports === 'function'
-    ? scriptExports.options
-    : scriptExports
-
-  // render functions
-  if (compiledTemplate) {
-    options.render = compiledTemplate.render
-    options.staticRenderFns = compiledTemplate.staticRenderFns
-  }
-
-  // scopedId
-  if (scopeId) {
-    options._scopeId = scopeId
-  }
-
-  var hook
-  if (moduleIdentifier) { // server build
-    hook = function (context) {
-      // 2.3 injection
-      context =
-        context || // cached call
-        (this.$vnode && this.$vnode.ssrContext) || // stateful
-        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
-      // 2.2 with runInNewContext: true
-      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
-        context = __VUE_SSR_CONTEXT__
-      }
-      // inject component styles
-      if (injectStyles) {
-        injectStyles.call(this, context)
-      }
-      // register component module identifier for async chunk inferrence
-      if (context && context._registeredComponents) {
-        context._registeredComponents.add(moduleIdentifier)
-      }
-    }
-    // used by ssr in case component is cached and beforeCreate
-    // never gets called
-    options._ssrRegister = hook
-  } else if (injectStyles) {
-    hook = injectStyles
-  }
-
-  if (hook) {
-    var functional = options.functional
-    var existing = functional
-      ? options.render
-      : options.beforeCreate
-    if (!functional) {
-      // inject component registration as beforeCreate hook
-      options.beforeCreate = existing
-        ? [].concat(existing, hook)
-        : [hook]
-    } else {
-      // register for functioal component in vue file
-      options.render = function renderWithStyleInjection (h, context) {
-        hook.call(context)
-        return existing(h, context)
-      }
-    }
-  }
-
-  return {
-    esModule: esModule,
-    exports: scriptExports,
-    options: options
-  }
-}
 
 
 /***/ }),
@@ -6514,7 +6514,7 @@ module.exports = root;
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {
 
-var utils = __webpack_require__(1);
+var utils = __webpack_require__(2);
 var normalizeHeaderName = __webpack_require__(212);
 
 var DEFAULT_CONTENT_TYPE = {
@@ -17001,7 +17001,7 @@ module.exports = function bind(fn, thisArg) {
 "use strict";
 
 
-var utils = __webpack_require__(1);
+var utils = __webpack_require__(2);
 var settle = __webpack_require__(213);
 var buildURL = __webpack_require__(215);
 var parseHeaders = __webpack_require__(216);
@@ -17253,7 +17253,7 @@ function injectStyle (ssrContext) {
   if (disposed) return
   __webpack_require__(227)
 }
-var Component = __webpack_require__(2)(
+var Component = __webpack_require__(1)(
   /* script */
   __webpack_require__(230),
   /* template */
@@ -28436,7 +28436,7 @@ return zhTw;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(153);
-module.exports = __webpack_require__(287);
+module.exports = __webpack_require__(290);
 
 
 /***/ }),
@@ -28472,7 +28472,7 @@ Vue.component('createBank', __webpack_require__(263));
 Vue.component('createChurchDeposits', __webpack_require__(268));
 Vue.component('createCheck', __webpack_require__(279));
 Vue.component('registroExpenses', __webpack_require__(284));
-Vue.component('listsExpenses', __webpack_require__(301));
+Vue.component('listsExpenses', __webpack_require__(287));
 
 var app = new Vue({
   el: '#app'
@@ -50452,7 +50452,7 @@ module.exports = __webpack_require__(208);
 "use strict";
 
 
-var utils = __webpack_require__(1);
+var utils = __webpack_require__(2);
 var bind = __webpack_require__(28);
 var Axios = __webpack_require__(210);
 var defaults = __webpack_require__(15);
@@ -50539,7 +50539,7 @@ function isSlowBuffer (obj) {
 
 
 var defaults = __webpack_require__(15);
-var utils = __webpack_require__(1);
+var utils = __webpack_require__(2);
 var InterceptorManager = __webpack_require__(220);
 var dispatchRequest = __webpack_require__(221);
 var isAbsoluteURL = __webpack_require__(223);
@@ -50821,7 +50821,7 @@ process.umask = function() { return 0; };
 "use strict";
 
 
-var utils = __webpack_require__(1);
+var utils = __webpack_require__(2);
 
 module.exports = function normalizeHeaderName(headers, normalizedName) {
   utils.forEach(headers, function processHeader(value, name) {
@@ -50901,7 +50901,7 @@ module.exports = function enhanceError(error, config, code, request, response) {
 "use strict";
 
 
-var utils = __webpack_require__(1);
+var utils = __webpack_require__(2);
 
 function encode(val) {
   return encodeURIComponent(val).
@@ -50976,7 +50976,7 @@ module.exports = function buildURL(url, params, paramsSerializer) {
 "use strict";
 
 
-var utils = __webpack_require__(1);
+var utils = __webpack_require__(2);
 
 /**
  * Parse headers into an object
@@ -51020,7 +51020,7 @@ module.exports = function parseHeaders(headers) {
 "use strict";
 
 
-var utils = __webpack_require__(1);
+var utils = __webpack_require__(2);
 
 module.exports = (
   utils.isStandardBrowserEnv() ?
@@ -51138,7 +51138,7 @@ module.exports = btoa;
 "use strict";
 
 
-var utils = __webpack_require__(1);
+var utils = __webpack_require__(2);
 
 module.exports = (
   utils.isStandardBrowserEnv() ?
@@ -51198,7 +51198,7 @@ module.exports = (
 "use strict";
 
 
-var utils = __webpack_require__(1);
+var utils = __webpack_require__(2);
 
 function InterceptorManager() {
   this.handlers = [];
@@ -51257,7 +51257,7 @@ module.exports = InterceptorManager;
 "use strict";
 
 
-var utils = __webpack_require__(1);
+var utils = __webpack_require__(2);
 var transformData = __webpack_require__(222);
 var isCancel = __webpack_require__(31);
 var defaults = __webpack_require__(15);
@@ -51343,7 +51343,7 @@ module.exports = function dispatchRequest(config) {
 "use strict";
 
 
-var utils = __webpack_require__(1);
+var utils = __webpack_require__(2);
 
 /**
  * Transform the data for a request or a response
@@ -52055,7 +52055,7 @@ function injectStyle (ssrContext) {
   if (disposed) return
   __webpack_require__(233)
 }
-var Component = __webpack_require__(2)(
+var Component = __webpack_require__(1)(
   /* script */
   __webpack_require__(235),
   /* template */
@@ -52312,7 +52312,7 @@ function injectStyle (ssrContext) {
   if (disposed) return
   __webpack_require__(238)
 }
-var Component = __webpack_require__(2)(
+var Component = __webpack_require__(1)(
   /* script */
   __webpack_require__(240),
   /* template */
@@ -52692,7 +52692,7 @@ function injectStyle (ssrContext) {
   if (disposed) return
   __webpack_require__(243)
 }
-var Component = __webpack_require__(2)(
+var Component = __webpack_require__(1)(
   /* script */
   __webpack_require__(245),
   /* template */
@@ -53442,7 +53442,7 @@ function injectStyle (ssrContext) {
   if (disposed) return
   __webpack_require__(251)
 }
-var Component = __webpack_require__(2)(
+var Component = __webpack_require__(1)(
   /* script */
   __webpack_require__(253),
   /* template */
@@ -54990,7 +54990,7 @@ function injectStyle (ssrContext) {
   if (disposed) return
   __webpack_require__(256)
 }
-var Component = __webpack_require__(2)(
+var Component = __webpack_require__(1)(
   /* script */
   __webpack_require__(258),
   /* template */
@@ -55637,7 +55637,7 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var Component = __webpack_require__(2)(
+var Component = __webpack_require__(1)(
   /* script */
   __webpack_require__(261),
   /* template */
@@ -55918,7 +55918,7 @@ function injectStyle (ssrContext) {
   if (disposed) return
   __webpack_require__(264)
 }
-var Component = __webpack_require__(2)(
+var Component = __webpack_require__(1)(
   /* script */
   __webpack_require__(266),
   /* template */
@@ -56584,7 +56584,7 @@ function injectStyle (ssrContext) {
   if (disposed) return
   __webpack_require__(269)
 }
-var Component = __webpack_require__(2)(
+var Component = __webpack_require__(1)(
   /* script */
   __webpack_require__(271),
   /* template */
@@ -56963,7 +56963,7 @@ function injectStyle (ssrContext) {
   if (disposed) return
   __webpack_require__(273)
 }
-var Component = __webpack_require__(2)(
+var Component = __webpack_require__(1)(
   /* script */
   __webpack_require__(275),
   /* template */
@@ -58821,7 +58821,7 @@ function injectStyle (ssrContext) {
   if (disposed) return
   __webpack_require__(280)
 }
-var Component = __webpack_require__(2)(
+var Component = __webpack_require__(1)(
   /* script */
   __webpack_require__(282),
   /* template */
@@ -59097,8 +59097,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             axios.post('/tesoreria/' + self.url, this.data).then(function (response) {
                 if (response.data.success = true) {
                     _this2.checks = response.data.list;
-                    _this2.$alert({ title: 'Se Guardo con Exito!!!',
-                        message: response.data.message });
+                    document.location = 'registro-detalle-cheque/' + response.data.token;
                     _this2.data.number = '';
                     _this2.data.name = '';
                     _this2.data.balance = '';
@@ -59289,7 +59288,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   })]), _vm._v(" "), _c('small', {
     staticClass: "help-block"
   }, [_vm._v(_vm._s(_vm.errors.date))])])]), _vm._v(" "), _c('div', {
-    staticClass: " col-lg-3 col-md-3  ",
+    staticClass: " col-lg-4 col-md-4  ",
     class: {
       'has-feedback has-error': _vm.errors.bank.length > 0
     }
@@ -59312,7 +59311,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   })], 1), _vm._v(" "), _c('small', {
     staticClass: "help-block"
   }, [_vm._v(_vm._s(_vm.errors.bank))])])]), _vm._v(" "), _c('div', {
-    staticClass: " col-lg-3 col-md-3  ",
+    staticClass: " col-lg-4 col-md-4  ",
     class: {
       'has-feedback has-error': _vm.errors.type.length > 0
     }
@@ -59692,7 +59691,7 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var Component = __webpack_require__(2)(
+var Component = __webpack_require__(1)(
   /* script */
   __webpack_require__(285),
   /* template */
@@ -59854,10 +59853,43 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    props: ['title', 'url', 'accounts', 'checks'],
+    props: ['title', 'url', 'accounts', 'checks', 'expense'],
     components: { vSelect: __WEBPACK_IMPORTED_MODULE_0_vue_select___default.a },
     data: function data() {
         return {
@@ -59866,6 +59898,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 date: '',
                 detail: '',
                 balance: '',
+                token_check: '',
                 expense_account: ''
             },
             errors: {
@@ -59873,23 +59906,42 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 date: '',
                 detail: '',
                 balance: '',
-                expense_account: ''
+                expense_account: '',
+                token_check: ''
             },
-            expenses: ''
+            balances: ''
         };
     },
 
     computed: {
         select: function select() {
             return JSON.parse(this.accounts);
+        },
+        check: function check() {
+            return JSON.parse(this.checks);
+        },
+        expenses: function expenses() {
+            return JSON.parse(this.expense);
+        },
+        aplicado: function aplicado() {
+            return 'aplicado';
         }
     },
     created: function created() {
         var _this = this;
 
-        this.$http.get('/tesoreria/lista-de-gastos-not').then(function (response) {
-            _this.expenses = response.data;
-        });;
+        if (this.check) {
+            this.data.token_check = this.check.token;
+        }
+        if (this.check) {
+            this.$http.get('/tesoreria/lista-de-gastos-not/' + this.check.id).then(function (response) {
+                _this.balances = response.data;
+            });
+        } else {
+            this.$http.get('/tesoreria/balance-de-gastos-not').then(function (response) {
+                _this.balances = response.data;
+            });
+        }
     },
 
     methods: {
@@ -59905,6 +59957,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                         message: response.data.message
                     });
                     _this2.expenses.push(response.data.result);
+                    _this2.balances = response.data.balance;
                     _this2.data.number = '';
                     _this2.data.date = '';
                     _this2.data.detail = '';
@@ -59949,28 +60002,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 }
             });
         },
-        aplic: function aplic(event) {
+        remove: function remove(check, index, event) {
             var _this3 = this;
 
-            console.log(this.data.selected);
             var self = this;
-            axios.post('/tesoreria/', this.data).then(function (response) {
+            axios.post('/tesoreria/remove', check).then(function (response) {
                 if (response.data.success = true) {
-                    _this3.$alert({
-                        title: 'Se Guardo con Exito!!!',
-                        message: response.data.message
-                    });
-                    _this3.expenses.push(response.data.result);
-                    _this3.data.number = '';
-                    _this3.data.date = '';
-                    _this3.data.detail = '';
-                    _this3.data.balance = '';
-                    _this3.data.expense_account = '';
-                    _this3.errors.number = '';
-                    _this3.errors.date = '';
-                    _this3.errors.detail = '';
-                    _this3.errors.balance = '';
-                    _this3.errors.expense_account = '';
+                    _this3.expenses.splice(index, 1);
+                    _this3.balances = response.data.balance;
                 }
             }).catch(function (error) {
                 if (error.response) {
@@ -59983,6 +60022,79 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                             });
                             self.errors[index] = messages;
                         }
+                    } else if (error.response.status === 401) {
+                        self.errors.response.invalid = true;
+                        self.errors.response.msg = data.msg.message;
+                    } else if (error.response.status === 500) {
+                        console.log(data);
+                        for (var index in data) {
+                            var messages = '';
+                            data[index].forEach(function (item) {
+                                messages += item + ' ';
+                            });
+                            self.errors[index] = messages;
+                        }
+                    }
+                } else if (error.request) {
+                    console.log(error.request);
+                    alert("Error empty");
+                } else {
+                    console.log('Error', error.message);
+                    alert("Error");
+                }
+            });
+        },
+        aplic: function aplic(check, event) {
+            var self = this;
+            axios.post('/tesoreria/finish-expense-invoice', check).then(function (response) {
+                if (response.data.success = true) {
+
+                    document.location = '/tesoreria/pdf-de-gastos/' + response.data.message;
+                }
+            }).catch(function (error) {
+                if (error.response) {
+                    var data = error.response.data;
+                    if (error.response.status === 422) {
+                        self.$alert({
+                            title: 'Error al Aplicar!!!',
+                            message: data.message
+                        });
+                    } else if (error.response.status === 401) {
+                        self.errors.response.invalid = true;
+                        self.errors.response.msg = data.msg.message;
+                    } else if (error.response.status === 500) {
+                        console.log(data);
+                        for (var index in data) {
+                            var messages = '';
+                            data[index].forEach(function (item) {
+                                messages += item + ' ';
+                            });
+                            self.errors[index] = messages;
+                        }
+                    }
+                } else if (error.request) {
+                    console.log(error.request);
+                    alert("Error empty");
+                } else {
+                    console.log('Error', error.message);
+                    alert("Error");
+                }
+            });
+        },
+        edit: function edit(token, event) {
+            var self = this;
+            axios.get('/tesoreria/edit-expense-invoice/' + token).then(function (response) {
+                if (response.data.success = true) {
+                    document.location = '/tesoreria/registro-detalle-cheque/' + token;
+                }
+            }).catch(function (error) {
+                if (error.response) {
+                    var data = error.response.data;
+                    if (error.response.status === 422) {
+                        self.$alert({
+                            title: 'Error al Aplicar!!!',
+                            message: data.message
+                        });
                     } else if (error.response.status === 401) {
                         self.errors.response.invalid = true;
                         self.errors.response.msg = data.msg.message;
@@ -60018,17 +60130,81 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('div', {
     staticClass: "col-md-12 col-md-offset-0"
   }, [_c('div', {
+    staticClass: "panel-heading"
+  }, [_c('div', {
+    staticClass: "text-center "
+  }, [_c('h1', [_vm._v(" " + _vm._s(_vm.title) + " ")])])]), _vm._v(" "), (_vm.check.status === _vm.aplicado) ? _c('div', {
+    staticClass: "panel panel-default",
+    attrs: {
+      "id": "editAccountExpense"
+    }
+  }, [_c('h1', [_vm._v("El Cheque #" + _vm._s(_vm.check.number) + " ya esta aplicado, si realmente necesita modificar algún\n                gasto del cheque presione "), _c('a', {
+    attrs: {
+      "href": "#"
+    },
+    on: {
+      "click": function($event) {
+        _vm.edit(_vm.check.token)
+      }
+    }
+  }, [_c('span', {
+    staticClass: "fa fa-check"
+  }), _vm._v("Aqui")])])]) : _c('div', {
     staticClass: "panel panel-default",
     attrs: {
       "id": "newAccountExpense"
     }
   }, [_c('div', {
-    staticClass: "panel-heading"
-  }, [_c('div', {
-    staticClass: "text-center "
-  }, [_c('h1', [_vm._v(" " + _vm._s(_vm.title) + " ")])])]), _vm._v(" "), _c('div', {
     staticClass: "panel-body"
-  }, [_c('div', {
+  }, [(_vm.check) ? _c('div', {
+    staticClass: " col-lg-12 col-md-12  ",
+    staticStyle: {
+      "text-aling": "center"
+    }
+  }, [_c('table', {
+    staticStyle: {
+      "width": "100%"
+    }
+  }, [_c('tr', [_c('td', {
+    staticStyle: {
+      "width": "33%"
+    }
+  }, [_c('h3', [_vm._v("Cheque # " + _vm._s(_vm.check.number))])]), _vm._v(" "), _c('td', {
+    staticStyle: {
+      "width": "33%"
+    }
+  }, [_c('h3', [_vm._v("Dirigido a: " + _vm._s(_vm.check.name))])]), _vm._v(" "), _c('td', {
+    staticStyle: {
+      "width": "33%"
+    }
+  }, [_c('h3', [_vm._v("Monto: " + _vm._s(_vm.check.balance))])])]), _vm._v(" "), _c('tr', [_c('td', {
+    staticStyle: {
+      "width": "100%"
+    },
+    attrs: {
+      "colspan": "3"
+    }
+  }, [_c('h4', [_vm._v("Por concepto: " + _vm._s(_vm.check.detail))])]), _vm._v(" "), _c('td', [_c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.data.token_check),
+      expression: "data.token_check"
+    }],
+    attrs: {
+      "type": "hidden",
+      "value": ""
+    },
+    domProps: {
+      "value": (_vm.data.token_check)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.data.token_check = $event.target.value
+      }
+    }
+  })])])])]) : _vm._e(), _vm._v(" "), _vm._m(0), _vm._v(" "), _c('div', {
     staticClass: " col-lg-3 col-md-3  ",
     class: {
       'has-feedback has-error': _vm.errors.number.length > 0
@@ -60037,7 +60213,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "panel-default "
   }, [_c('label', [_vm._v("Numero de Factura")]), _vm._v(" "), _c('div', {
     staticClass: "input-group "
-  }, [_vm._m(0), _vm._v(" "), _c('input', {
+  }, [_vm._m(1), _vm._v(" "), _c('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -60068,7 +60244,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "panel-default "
   }, [_c('label', [_vm._v("Fecha")]), _vm._v(" "), _c('div', {
     staticClass: "input-group "
-  }, [_vm._m(1), _vm._v(" "), _c('input', {
+  }, [_vm._m(2), _vm._v(" "), _c('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -60099,7 +60275,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "panel-default "
   }, [_c('label', [_vm._v("Monto a Registrar de la Factura")]), _vm._v(" "), _c('div', {
     staticClass: "input-group "
-  }, [_vm._m(2), _vm._v(" "), _c('input', {
+  }, [_vm._m(3), _vm._v(" "), _c('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -60130,7 +60306,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "panel-default "
   }, [_c('label', [_vm._v("Detalle del Gasto")]), _vm._v(" "), _c('div', {
     staticClass: "input-group "
-  }, [_vm._m(3), _vm._v(" "), _c('input', {
+  }, [_vm._m(4), _vm._v(" "), _c('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -60165,7 +60341,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_vm._v("Cuenta de Gasto")]), _vm._v(" "), _c('div', {
     staticClass: "input-group "
-  }, [_vm._m(4), _vm._v(" "), _c('v-select', {
+  }, [_vm._m(5), _vm._v(" "), _c('v-select', {
     attrs: {
       "options": _vm.select
     },
@@ -60187,11 +60363,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "click": _vm.send
     }
-  }, [_vm._v("Guardar")])])])])])]), _vm._v(" "), _c('div', {
+  }, [_vm._v("Guardar")])])])])])]), _vm._v(" "), (_vm.check.status != 'aplicado') ? _c('div', {
     staticClass: "col-md-12 col-md-offset-0"
   }, [_c('div', {
     staticClass: "panel"
-  }, [_vm._m(5), _vm._v(" "), _c('div', {
+  }, [_vm._m(6), _vm._v(" "), _c('div', {
     staticClass: "panel-body"
   }, [_c('div', {
     staticClass: "dataTables_wrapper form-inline dt-bootstrap no-footer",
@@ -60210,24 +60386,50 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "role": "grid",
       "aria-describedby": "demo-dt-delete_info"
     }
-  }, [_vm._m(6), _vm._v(" "), _c('tbody', _vm._l((_vm.expenses), function(expense) {
+  }, [_vm._m(7), _vm._v(" "), _c('tbody', [_vm._l((_vm.expenses), function(expense, index) {
     return _c('tr', {
       staticClass: "odd",
       attrs: {
         "role": "row"
       }
-    }, [_vm._m(7, true), _vm._v(" "), _c('td', {}, [_vm._v(_vm._s(expense.number))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(expense.date))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(expense.detail))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(expense.balance))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(expense.balance))]), _vm._v(" "), _vm._m(8, true)])
-  }))]), _vm._v(" "), _c('div', {
+    }, [_c('td', {
+      staticClass: "sorting_1"
+    }, [_c('a', {
+      on: {
+        "click": function($event) {
+          _vm.remove(expense, index)
+        }
+      }
+    }, [_c('span', {
+      staticClass: "btn btn-danger fa fa-remove"
+    })])]), _vm._v(" "), _c('td', {}, [_vm._v(_vm._s(expense.number))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(expense.date))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(expense.detail))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(expense.balance))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(expense.balance))]), _vm._v(" "), _vm._m(8, true)])
+  }), _vm._v(" "), _c('tr', [_c('td', {
+    staticStyle: {
+      "text-align": "right"
+    },
+    attrs: {
+      "colspan": "5"
+    }
+  }, [_vm._v("Total:")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.balances))])])], 2)]), _vm._v(" "), _c('div', {
     staticClass: "col-lg-12 col-md-12  text-center"
   }, [_c('div', {
     staticClass: "btn"
-  }, [_c('button', {
+  }, [_c('a', {
     staticClass: "btn btn-success",
+    attrs: {
+      "target": "_blank"
+    },
     on: {
-      "click": _vm.aplic
+      "click": function($event) {
+        _vm.aplic(_vm.check)
+      }
     }
-  }, [_vm._v("Finalizar Registro")])])])])])])])])
+  }, [_vm._v("Finalizar\n                                Registro")])])])])])])]) : _vm._e()])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: " col-lg-12 col-md-12  "
+  }, [_c('hr')])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('span', {
     staticClass: "input-group-addon"
   }, [_c('i', {
@@ -60284,12 +60486,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "min-tablet sorting"
   })])])
 },function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('td', {
-    staticClass: "sorting_1"
-  }, [_c('span', {
-    staticClass: "btn btn-danger fa fa-remove"
-  })])
-},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('td', [_c('a', {
     staticClass: "btn btn-info",
     attrs: {
@@ -60309,33 +60505,14 @@ if (false) {
 
 /***/ }),
 /* 287 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 288 */,
-/* 289 */,
-/* 290 */,
-/* 291 */,
-/* 292 */,
-/* 293 */,
-/* 294 */,
-/* 295 */,
-/* 296 */,
-/* 297 */,
-/* 298 */,
-/* 299 */,
-/* 300 */,
-/* 301 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var Component = __webpack_require__(2)(
+var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(302),
+  __webpack_require__(288),
   /* template */
-  __webpack_require__(303),
+  __webpack_require__(289),
   /* styles */
   null,
   /* scopeId */
@@ -60367,7 +60544,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 302 */
+/* 288 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -60445,7 +60622,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 303 */
+/* 289 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -60527,6 +60704,12 @@ if (false) {
      require("vue-hot-reload-api").rerender("data-v-548324b0", module.exports)
   }
 }
+
+/***/ }),
+/* 290 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);

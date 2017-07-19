@@ -63,9 +63,16 @@ abstract class BaseRepository {
     {
         return $this->newQuery()->whereIn('envelope_number', $envelopes)->sum('balance');
     }
+    public function sumStatus($status)
+    {
+        return $this->newQuery()->where('status', $status)->sum('balance');
+    }
     public function getType($type)
     {
         return $this->newQuery()->where('type', $type)->get();
     }
 
+    public function find($id){
+        return $this->newQuery()->find($id);
+    }
 }
