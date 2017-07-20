@@ -54183,7 +54183,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             axios.post('/tesoreria/finish-info-income', saturday).then(function (response) {
                 if (response.data.success) {
                     ///this.$route.route.go('tesoreria/registro-control-interno');
-                    document.location = 'tesoreria/registro-control-interno';
+                    document.location = '/tesoreria/registro-control-interno';
                 }
             }).catch(function (error) {
                 if (error.response) {
