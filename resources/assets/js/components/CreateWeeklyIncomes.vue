@@ -663,8 +663,8 @@
                var self = this;
                axios.post('/tesoreria/finish-info-income', saturday)
                    .then(response => {
-                       if(response.data.message ='listo'){
-                           this.$route.route.go('tesoreria/registro-control-interno');
+                       if(response.data.success){
+                           ///this.$route.route.go('tesoreria/registro-control-interno');
                            document.location = 'tesoreria/registro-control-interno';
                        }
                    }).catch(function (error) {

@@ -54178,12 +54178,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
         },
         finish: function finish(saturday, event) {
-            var _this6 = this;
 
             var self = this;
             axios.post('/tesoreria/finish-info-income', saturday).then(function (response) {
-                if (response.data.message = 'listo') {
-                    _this6.$route.route.go('tesoreria/registro-control-interno');
+                if (response.data.success) {
+                    ///this.$route.route.go('tesoreria/registro-control-interno');
                     document.location = 'tesoreria/registro-control-interno';
                 }
             }).catch(function (error) {
