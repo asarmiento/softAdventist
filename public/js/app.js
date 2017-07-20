@@ -56796,6 +56796,46 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -56928,16 +56968,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     _this4.errors.internal_control_id = '';
                     _this4.errors.bank_id = '';
                     _this4.errors.total = '';
-                    _this4.$alert({ title: 'Se Guardo con Exito!!!',
-                        message: response.data.message });
+                    _this4.$alert({
+                        title: 'Se Guardo con Exito!!!',
+                        message: response.data.message
+                    });
                 }
             }).catch(function (error) {
                 if (error.response) {
 
                     var data = error.response.data;
                     if (error.response.status === 422) {
-                        self.$alert({ title: 'Error al Intentar guardar!!!',
-                            message: error.response.data.message });
+                        self.$alert({
+                            title: 'Error al Intentar guardar!!!',
+                            message: error.response.data.message
+                        });
                     } else if (error.response.status === 401) {
                         self.errors.response.invalid = true;
                         self.errors.response.msg = data.msg.message;
@@ -58536,7 +58580,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "click": _vm.send
     }
-  }, [_vm._v("Guardar ")])])])])])]), _vm._v(" "), _c('div', {
+  }, [_vm._v("Guardar")])])])])])]), _vm._v(" "), _c('div', {
     staticClass: "col-md-12 col-md-offset-0"
   }, [_c('div', {
     staticClass: "panel"
@@ -58586,14 +58630,14 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }, [_c('i', {
       staticClass: "fa fa-file-pdf-o"
     })])])])
-  }))]), _c('div', {
+  }))]), _vm._v(" "), _c('div', {
     staticClass: "dataTables_info",
     attrs: {
       "id": "demo-dt-delete_info",
       "role": "status",
       "aria-live": "polite"
     }
-  }, [_vm._v("Showing 1 to 10 of 57 entries")]), _vm._m(9)])])])])])
+  }, [_vm._v("Showing 1\n                        to 10 of 57 entries\n                    ")]), _vm._v(" "), _vm._m(9)])])])])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('span', {
     staticClass: "input-group-addon"
@@ -58676,7 +58720,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "colspan": "1",
       "aria-sort": "ascending"
     }
-  }, [_vm._v("Numero de Deposito")]), _vm._v(" "), _c('th', {
+  }, [_vm._v("Numero de Deposito\n                            ")]), _vm._v(" "), _c('th', {
     staticClass: "sorting",
     attrs: {
       "tabindex": "0",
@@ -58684,7 +58728,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "rowspan": "1",
       "colspan": "1"
     }
-  }, [_vm._v("Fecha")]), _vm._v(" "), _c('th', {
+  }, [_vm._v("\n                                Fecha\n                            ")]), _vm._v(" "), _c('th', {
     staticClass: "min-tablet sorting",
     attrs: {
       "tabindex": "0",
@@ -58692,7 +58736,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "rowspan": "1",
       "colspan": "1"
     }
-  }, [_vm._v("Monto")]), _vm._v(" "), _c('th', {
+  }, [_vm._v("Monto\n                            ")]), _vm._v(" "), _c('th', {
     staticClass: "min-tablet sorting",
     attrs: {
       "tabindex": "0",
@@ -58700,7 +58744,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "rowspan": "1",
       "colspan": "1"
     }
-  }, [_vm._v("Numero de Cuenta")]), _vm._v(" "), _c('th', {
+  }, [_vm._v("Numero de Cuenta\n                            ")]), _vm._v(" "), _c('th', {
     staticClass: "min-tablet sorting",
     attrs: {
       "tabindex": "0",
@@ -58708,7 +58752,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "rowspan": "1",
       "colspan": "1"
     }
-  }, [_vm._v("Nombre de Cuenta")]), _vm._v(" "), _c('th', {
+  }, [_vm._v("Nombre de Cuenta\n                            ")]), _vm._v(" "), _c('th', {
     staticClass: "min-tablet sorting",
     attrs: {
       "tabindex": "0",
@@ -58716,7 +58760,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "rowspan": "1",
       "colspan": "1"
     }
-  }, [_vm._v("Ver")])])])
+  }, [_vm._v("Ver\n                            ")])])])
 },function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "dataTables_paginate paging_simple_numbers",
@@ -58738,7 +58782,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('i', {
     staticClass: "demo-psi-arrow-left"
-  })])]), _c('li', {
+  })])]), _vm._v(" "), _c('li', {
     staticClass: "paginate_button active",
     attrs: {
       "aria-controls": "demo-dt-delete",
@@ -58748,7 +58792,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "href": "#"
     }
-  }, [_vm._v("1")])]), _c('li', {
+  }, [_vm._v("1")])]), _vm._v(" "), _c('li', {
     staticClass: "paginate_button ",
     attrs: {
       "aria-controls": "demo-dt-delete",
@@ -58758,7 +58802,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "href": "#"
     }
-  }, [_vm._v("2")])]), _c('li', {
+  }, [_vm._v("2")])]), _vm._v(" "), _c('li', {
     staticClass: "paginate_button ",
     attrs: {
       "aria-controls": "demo-dt-delete",
@@ -58768,7 +58812,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "href": "#"
     }
-  }, [_vm._v("3")])]), _c('li', {
+  }, [_vm._v("3")])]), _vm._v(" "), _c('li', {
     staticClass: "paginate_button disabled",
     attrs: {
       "aria-controls": "demo-dt-delete",
@@ -58779,7 +58823,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "href": "#"
     }
-  }, [_vm._v("…")])]), _c('li', {
+  }, [_vm._v("…")])]), _vm._v(" "), _c('li', {
     staticClass: "paginate_button ",
     attrs: {
       "aria-controls": "demo-dt-delete",
@@ -58789,7 +58833,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "href": "#"
     }
-  }, [_vm._v("6")])]), _c('li', {
+  }, [_vm._v("6")])]), _vm._v(" "), _c('li', {
     staticClass: "paginate_button next",
     attrs: {
       "aria-controls": "demo-dt-delete",
@@ -59044,6 +59088,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -59059,7 +59120,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 balance: '',
                 type: '',
                 detail: '',
-                date: ''
+                date: '',
+                internal_control_id: ''
             },
             errors: {
                 number: '',
@@ -59068,10 +59130,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 balance: '',
                 detail: '',
                 type: '',
-                date: ''
+                date: '',
+                internal_control_id: ''
             },
-            option: [{ 'value': 'church', 'label': 'Gastos de Iglesia' }, { 'value': 'local_field', 'label': 'Reporte al Campo Local' }],
-            checks: []
+            option: [{ 'value': 'church', 'label': 'Gastos de Iglesia' }, { 'value': 'local_field', 'label': 'Reporte de informes al Campo Local' }],
+            checks: [],
+            internals: [],
+            active: false
         };
     },
 
@@ -59085,33 +59150,54 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
         this.$http.get('/tesoreria/lista-de-cheques').then(function (response) {
             _this.checks = response.data;
-        });;
+        });
+        this.$http.get('/tesoreria/lista-info-sin-deposito').then(function (response) {
+            _this.internals = response.data;
+        });
     },
 
     methods: {
-        pdfInfo: function pdfInfo(token) {},
-        send: function send(event) {
+        pdfInfo: function pdfInfo() {},
+        balance_info: function balance_info(val) {
             var _this2 = this;
+
+            var self = this;
+            if (val) {
+                axios.post('/tesoreria/balance-internal-control', val).then(function (response) {
+                    _this2.data.balance = response.data.balance;
+                }).catch(function (error) {});
+            }
+        },
+
+        infoActive: function infoActive(val) {
+            console.log(val.value);
+            if (val.value === 'local_field') {
+                this.active = true;
+            }
+            this.data.type = val;
+        },
+        send: function send(event) {
+            var _this3 = this;
 
             var self = this;
             axios.post('/tesoreria/' + self.url, this.data).then(function (response) {
                 if (response.data.success = true) {
-                    _this2.checks = response.data.list;
+                    _this3.checks = response.data.list;
                     document.location = 'registro-detalle-cheque/' + response.data.token;
-                    _this2.data.number = '';
-                    _this2.data.name = '';
-                    _this2.data.balance = '';
-                    _this2.data.date = '';
-                    _this2.data.detail = '';
-                    _this2.data.type = '';
-                    _this2.data.bank = '';
-                    _this2.errors.number = '';
-                    _this2.errors.name = '';
-                    _this2.errors.balance = '';
-                    _this2.errors.date = '';
-                    _this2.errors.detail = '';
-                    _this2.errors.type = '';
-                    _this2.errors.bank = '';
+                    _this3.data.number = '';
+                    _this3.data.name = '';
+                    _this3.data.balance = '';
+                    _this3.data.date = '';
+                    _this3.data.detail = '';
+                    _this3.data.type = '';
+                    _this3.data.bank = '';
+                    _this3.errors.number = '';
+                    _this3.errors.name = '';
+                    _this3.errors.balance = '';
+                    _this3.errors.date = '';
+                    _this3.errors.detail = '';
+                    _this3.errors.type = '';
+                    _this3.errors.bank = '';
                 }
             }).catch(function (error) {
                 if (error.response) {
@@ -59203,7 +59289,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "panel-default "
   }, [_c('label', [_vm._v("Monto del Cheque")]), _vm._v(" "), _c('div', {
     staticClass: "input-group "
-  }, [_vm._m(1), _vm._v(" "), _c('input', {
+  }, [_vm._m(1), _vm._v(" "), (_vm.active === false) ? _c('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -59213,6 +59299,27 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "form-control",
     attrs: {
       "type": "text"
+    },
+    domProps: {
+      "value": (_vm.data.balance)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.data.balance = $event.target.value
+      }
+    }
+  }) : _c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.data.balance),
+      expression: "data.balance"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "type": "text",
+      "readonly": ""
     },
     domProps: {
       "value": (_vm.data.balance)
@@ -59322,7 +59429,8 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_vm._m(5), _vm._v(" "), _c('v-select', {
     attrs: {
       "options": _vm.option,
-      "placeholder": "Seleccione un Tipo de Cheque"
+      "placeholder": "Seleccione un Tipo de Cheque",
+      "on-change": _vm.infoActive
     },
     model: {
       value: (_vm.data.type),
@@ -59364,7 +59472,33 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   })]), _vm._v(" "), _c('small', {
     staticClass: "help-block"
-  }, [_vm._v(_vm._s(_vm.errors.detail))])])]), _vm._v(" "), _c('div', {
+  }, [_vm._v(_vm._s(_vm.errors.detail))])])]), _vm._v(" "), (_vm.active === true) ? _c('div', {
+    staticClass: " col-lg-10 col-md-10",
+    class: {
+      'has-feedback has-error': _vm.errors.internal_control_id.length > 0
+    }
+  }, [_c('div', {
+    staticClass: "panel-default "
+  }, [_c('label', [_vm._v("Informes Semanales a Reportar en Cheque")]), _vm._v(" "), _c('div', {
+    staticClass: "input-group "
+  }, [_vm._m(7), _vm._v(" "), _c('v-select', {
+    staticClass: "chosen-container chosen-container-multi chosen-with-drop chosen-container-active",
+    attrs: {
+      "placeholder": "Seleccione los Informes Reportados en este deposito",
+      "multiple": "",
+      "options": _vm.internals,
+      "on-change": _vm.balance_info
+    },
+    model: {
+      value: (_vm.data.internal_control_id),
+      callback: function($$v) {
+        _vm.data.internal_control_id = $$v
+      },
+      expression: "data.internal_control_id"
+    }
+  })], 1), _vm._v(" "), _c('small', {
+    staticClass: "help-block"
+  }, [_vm._v(_vm._s(_vm.errors.internal_control_id))])])]) : _vm._e(), _vm._v(" "), _c('div', {
     staticClass: "col-lg-12 col-md-12  text-center"
   }, [_c('div', {
     staticClass: "btn"
@@ -59377,14 +59511,14 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "col-md-12 col-md-offset-0"
   }, [_c('div', {
     staticClass: "panel"
-  }, [_vm._m(7), _vm._v(" "), _c('div', {
+  }, [_vm._m(8), _vm._v(" "), _c('div', {
     staticClass: "panel-body"
   }, [_c('div', {
     staticClass: "dataTables_wrapper form-inline dt-bootstrap no-footer",
     attrs: {
       "id": "demo-dt-delete_wrapper"
     }
-  }, [_vm._m(8), _vm._v(" "), _c('table', {
+  }, [_vm._m(9), _vm._v(" "), _c('table', {
     staticClass: "table table-striped table-bordered dataTable no-footer dtr-inline",
     staticStyle: {
       "width": "100%"
@@ -59396,13 +59530,13 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "role": "grid",
       "aria-describedby": "demo-dt-delete_info"
     }
-  }, [_vm._m(9), _vm._v(" "), _c('tbody', _vm._l((_vm.checks), function(check) {
+  }, [_vm._m(10), _vm._v(" "), _c('tbody', _vm._l((_vm.checks), function(check) {
     return _c('tr', {
       staticClass: "odd",
       attrs: {
         "role": "row"
       }
-    }, [_vm._m(10, true), _vm._v(" "), _c('td', {}, [_vm._v(_vm._s(check.number))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(check.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(check.balance))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(check.date))]), _vm._v(" "), (check.type === 'church') ? _c('td', [_vm._v("Gastos de Iglesia")]) : _c('td', [_vm._v("Informe Campo Local")]), _vm._v(" "), _c('td'), _vm._v(" "), _c('td', [_c('a', {
+    }, [_vm._m(11, true), _vm._v(" "), _c('td', {}, [_vm._v(_vm._s(check.number))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(check.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(check.balance))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(check.date))]), _vm._v(" "), (check.type === 'church') ? _c('td', [_vm._v("Gastos de Iglesia")]) : _c('td', [_vm._v("Informe Campo Local")]), _vm._v(" "), _c('td'), _vm._v(" "), _c('td', [_c('a', {
       staticClass: "btn btn-danger",
       attrs: {
         "href": _vm.pdfInfo(check.token),
@@ -59418,7 +59552,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "role": "status",
       "aria-live": "polite"
     }
-  }, [_vm._v("Showing 1 to 10 of 57 entries")]), _vm._m(11)])])])])])
+  }, [_vm._v("Showing 1 to 10 of 57 entries")]), _vm._m(12)])])])])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('span', {
     staticClass: "input-group-addon"
@@ -59460,6 +59594,12 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "input-group-addon"
   }, [_c('i', {
     staticClass: "fa fa-file-text-o"
+  })])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('span', {
+    staticClass: "input-group-addon"
+  }, [_c('i', {
+    staticClass: "fa fa-archive"
   })])
 },function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
@@ -60048,7 +60188,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var self = this;
             axios.post('/tesoreria/finish-expense-invoice', check).then(function (response) {
                 if (response.data.success = true) {
-
                     document.location = '/tesoreria/pdf-de-gastos/' + response.data.message;
                 }
             }).catch(function (error) {

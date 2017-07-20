@@ -307,10 +307,7 @@
                 axios.post('/tesoreria/finish-expense-invoice', check)
                     .then(response => {
                         if (response.data.success = true) {
-
                                 document.location = '/tesoreria/pdf-de-gastos/' + response.data.message;
-
-
                         }
                     }).catch(function (error) {
                     if (error.response) {

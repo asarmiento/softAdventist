@@ -23,7 +23,8 @@
                                 <label>Monto del Cheque</label>
                                 <div class="input-group " >
                                     <span class="input-group-addon"><i class="fa fa-money"></i></span>
-                                    <input type="text" v-model="data.balance"   class="form-control" >
+                                    <input type="text" v-model="data.balance" v-if="active === false"  class="form-control" >
+                                    <input type="text" v-model="data.balance" readonly v-else  class="form-control" >
                                 </div>
                                 <small class="help-block"  >{{errors.balance}}</small>
                             </div>
@@ -65,7 +66,9 @@
                                 <div class="input-group " >
                                     <span class="input-group-addon"><i class="fa fa-check"></i></span>
                                     <v-select  :options="option" v-model="data.type"
-                                               placeholder="Seleccione un Tipo de Cheque">
+                                               placeholder="Seleccione un Tipo de Cheque"
+                                               :on-change="infoActive"
+                                    >
                                     </v-select>
                                 </div>
                                 <small class="help-block"  >{{errors.type}}</small>
@@ -81,6 +84,20 @@
                                 <small class="help-block"  >{{errors.detail}}</small>
                             </div>
                         </div>
+                        <div v-if="active === true" class=" col-lg-10 col-md-10" :class="{'has-feedback has-error':errors.internal_control_id.length > 0}">
+                            <div class="panel-default ">
+                                <label>Informes Semanales a Reportar en Cheque</label>
+                                <div class="input-group " >
+                                    <span class="input-group-addon"><i class="fa fa-archive"></i></span>
+                                    <v-select placeholder="Seleccione los Informes Reportados en este deposito" multiple
+                                              class="chosen-container chosen-container-multi chosen-with-drop chosen-container-active"
+                                              v-model="data.internal_control_id"  :options="internals"
+                                              :on-change="balance_info" ></v-select>
+                                </div>
+                                <small class="help-block"  >{{errors.internal_control_id}}</small>
+                            </div>
+                        </div>
+
                         <div class="col-lg-12 col-md-12  text-center">
                             <div class="btn">
                                 <button   v-on:click="send"  class="btn btn-success">Guardar </button>
@@ -152,6 +169,7 @@
                      type: '',
                      detail: '',
                      date: '',
+                     internal_control_id: '',
                  },
                  errors: {
                      number: '',
@@ -161,12 +179,15 @@
                      detail: '',
                      type: '',
                      date: '',
+                     internal_control_id: '',
                  },
                  option: [
                      {'value':'church','label':'Gastos de Iglesia'},
-                     {'value':'local_field','label':'Reporte al Campo Local'}
+                     {'value':'local_field','label':'Reporte de informes al Campo Local'}
                  ],
                  checks:[],
+                 internals:[],
+                 active:false,
              }
          },
         computed:
@@ -178,11 +199,32 @@
         created(){
             this.$http.get('/tesoreria/lista-de-cheques').then((response) => {
                 this.checks = response.data;
-            });;
+            });
+            this.$http.get('/tesoreria/lista-info-sin-deposito')
+                .then((response) => {
+                    this.internals = response.data;
+                });
         },
         methods: {
-            pdfInfo:function (token) {
+            pdfInfo:function () {
 
+            },
+            balance_info(val) {
+                var self = this;
+                if (val) {
+                    axios.post('/tesoreria/balance-internal-control', val)
+                        .then(response => {
+                            this.data.balance = response.data.balance;
+                        }).catch(function (error) {
+                    });
+                }
+            },
+            infoActive:function (val) {
+                console.log(val.value);
+                if(val.value ==='local_field'){
+                    this.active = true
+                }
+                this.data.type = val;
             },
             send: function (event) {
                 var self = this;
