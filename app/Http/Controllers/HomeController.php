@@ -29,6 +29,11 @@ class HomeController extends Controller
     {
         return view('home');
     }
+
+    public function help()
+    {
+        return view('help');
+    }
     /**
      * Show the application dashboard.
      *

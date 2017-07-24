@@ -16,7 +16,9 @@ Route::get('/', function () {
 });
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 Auth::routes();
-
+Route::get('home', ['uses'=>'HomeController@index','as'=>'home']);
+Route::get('manual-de-usuario', ['uses'=>'HomeController@help','as'=>'help']);
+/*
 Route::get('/confirmation/{token}', ['uses'=>'Auth\RegisterController@confirmation','as'=>'confirmation']);
 Route::get('/activation/{email}', ['uses'=>'Auth\RegisterController@activation','as'=>'activation']);
 Route::get('iglesia', ['uses'=>'Church\ChurchController@create','as'=>'create-church']);
@@ -38,16 +40,19 @@ Route::get('iglesia', ['uses'=>'Church\ChurchController@create','as'=>'create-ch
 
 
 });
+*/
+    Route::group(['prefix'=>'tesoreria','middleware'=>'auth'],function (){
 
-    Route::group(['prefix'=>'tesoreria','middleware'=>['auth']],function (){
-
-        //miembros
         Route::get('/', 'HomeController@index');
         Route::get('home', ['uses'=>'HomeController@index','as'=>'home']);
+        Route::get('profile', ['uses'=>'HomeController@index','as'=>'profile']);
+        //miembros
+        Route::get('nuevo-miembros', ['uses'=>'MemberController@create','as'=>'profile']);
         Route::get('nuevo-miembros', ['uses'=>'MemberController@create','as'=>'new-member']);
         Route::get('cobro-a-miembros', ['uses'=>'MemberController@charge','as'=>'charge-members']);
         Route::post('save-miembros', 'MemberController@store');
         Route::get('lista-miembros', ['uses'=>'MemberController@index','as'=>'list-members']);
+        Route::get('lists-miembros', ['uses'=>'MemberController@getData','as'=>'listMembers']);
         /**
          * Departamentos
          */

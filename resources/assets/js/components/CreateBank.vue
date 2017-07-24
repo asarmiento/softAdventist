@@ -127,6 +127,7 @@
                         if(response.data.success = true){
                     this.$alert({title: 'Se Guardo con Exito!!!',
                         message: response.data.message});
+                        this.allbanks.push(response.data.result)
                         this.data.code= '';
                         this.data.name= '';
                         this.data.initial_balance= '';

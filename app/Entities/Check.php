@@ -10,12 +10,26 @@ namespace App\Entities;
 
 class Check extends Entity
 {
-    protected $fillable = ['number','name','token','detail','bank_id','type','image','date','balance','user_id'];
+
+    protected $fillable = [
+        'number',
+        'name',
+        'token',
+        'detail',
+        'bank_id',
+        'type',
+        'image',
+        'date',
+        'balance',
+        'user_id'
+    ];
+
 
     public function bank()
     {
         return $this->belongsTo(Bank::getClass());
     }
+
 
     public function checkExpenses()
     {

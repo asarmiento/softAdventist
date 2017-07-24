@@ -10,3 +10,14 @@ function currentUser()
 {
     return auth()->user();
 }
+
+function churchSession($church)
+{
+    \Session::put('church', $church);
+}
+
+function userChurch()
+{
+
+    return \Session::get('church');
+}

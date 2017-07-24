@@ -52,13 +52,13 @@
     export default {
         props: ['title'],
         components: {},
-        data () {
+        data() {
             return {
                 expenses: ''
             }
         },
         computed: {},
-        created(){
+        created() {
             this.$http.get('/tesoreria/lista-de-gastos').then((response) => {
                 this.expenses = response.data;
             });

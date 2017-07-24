@@ -127,7 +127,7 @@
 
             </ul>
             <ul class="nav navbar-top-links pull-right">
-
+                <li class="dropdown"><a href="{{route('help')}}"><i class="fa fa-question-circle"></i> Manual de Usuario</a></li>
                 <!--Language selector-->
                 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                 <li class="dropdown">

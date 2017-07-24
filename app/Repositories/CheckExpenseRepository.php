@@ -21,30 +21,35 @@ class CheckExpenseRepository extends BaseRepository
         return new CheckExpense();// TODO: Implement getModel() method.
     }
 
-    public function filterChurchRelationNot($relation,$check = null)
+
+    public function filterChurchRelationNot($relation, $check = null)
     {
-        return $this->newQuery()->whereHas($relation,function ($q) {
-            $q->where('church_id',1);
-        })->where('status','no aplicado')->where('check_id',$check)->get();
+        return $this->newQuery()->whereHas($relation, function ($q) {
+            $q->where('church_id', 1);
+        })->where('status', 'no aplicado')->where('check_id', $check)->get();
     }
 
-    public function filterChurchRelationOk($relation,$status)
+
+    public function filterChurchRelationOk($relation, $status)
     {
-        return $this->newQuery()->whereHas($relation,function ($q){
-            $q->where('church_id',1);
-        })->where('status',$status)->get();
+        return $this->newQuery()->whereHas($relation, function ($q) {
+            $q->where('church_id', 1);
+        })->where('status', $status)->get();
     }
+
+
     public function numeration()
     {
-        $datas = $this->newQuery()->whereHas('expenseAccount.incomeAccount.departament',
-            function ($q) {
-                $q->where('church_id', 1);
-            })->max('reference');
+        $datas = $this->newQuery()->whereHas('expenseAccount.incomeAccount.departament', function ($q) {
+            $q->where('church_id', 1);
+        })->max('reference');
 
-        return ($datas+1);
+        return ($datas + 1);
     }
-    public function sumStatus($status,$check=null)
+
+
+    public function sumStatus($status, $check = null)
     {
-        return $this->newQuery()->where('status', $status)->where('check_id',$check)->sum('balance');
+        return $this->newQuery()->where('status', $status)->where('check_id', $check)->sum('balance');
     }
 }

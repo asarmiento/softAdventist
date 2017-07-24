@@ -30,6 +30,7 @@ Vue.component('createChurchDeposits', require('./components/CreateChurchDeposits
 Vue.component('createCheck', require('./components/CreateCheck.vue'));
 Vue.component('registroExpenses', require('./components/RegistroExpenses.vue'));
 Vue.component('listsExpenses', require('./components/ListsExpenses.vue'));
+Vue.component('listsMembers', require('./components/ListsMembers.vue'));
 
 
 
