@@ -159,7 +159,7 @@
 
 <script>
     import vSelect from "vue-select";
-    import MultipleFileUploader from 'vue2-multi-uploader'
+    import Uploader from component('MultipleFileUpload.vue')
     export default {
         props: ['title','url','banks'],
         components: {vSelect, MultipleFileUploader},

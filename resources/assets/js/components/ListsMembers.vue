@@ -29,6 +29,7 @@
         data() {
             return {
                 animals: [],
+                resource_url: [],
 
             }
 
@@ -37,8 +38,9 @@
         resource_url: '',
         computed: {},
         created() {
+            var self = this;
             this.$http.get('/tesoreria/lists-miembros').then((response) => {
-                this.resource_url = response.data;
+                self.resource_url = response.data;
             });
             console.log(this.resource_url);
         },
