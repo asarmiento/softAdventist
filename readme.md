@@ -201,3 +201,18 @@ Si descubres una vulnerabilidad de seguridad en SoftAdventist favor comunicarlo 
 Anwar Sarmiento al email 
 [asarmiento@sistemasamigables.com](mailto:asarmiento@sistemasamigables.com)
 
+### LICENSE
+
+---
+
+       CONDICIONES DE USO, REPRODUCCIÓN Y DISTRIBUCIÓN
+
+1. Definiciones.
+    "Licencia" hace referencia a las condiciones de uso, reproducción y distribución, 
+    según la definición establecida en las Secciones 1 a 9 de este documento.
+
+    "Licenciador" hace referencia al propietario de los derechos de autor, o la 
+    entidad autorizada por el mismo, que otorga la licencia.
+[Leer mas...](https://www.moo.com/es/about/fonts/apache-licence.html)
+
+
