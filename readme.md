@@ -204,6 +204,12 @@ Anwar Sarmiento al email
 ### LICENSE
 
 ---
+                    Licencia de Apache
+ 
+
+                  Versión 2.0, enero de 2004
+
+              http://www.apache.org/licenses/
 
        CONDICIONES DE USO, REPRODUCCIÓN Y DISTRIBUCIÓN
 
