@@ -118,6 +118,7 @@ Route::get('iglesia', ['uses'=>'Church\ChurchController@create','as'=>'create-ch
         Route::get('registro-de-cheques', ['uses'=>'Church\CheckAndExpenses\CheckController@create','as'=>'create-check']);
         Route::get('lista-de-cheques', ['uses'=>'Church\CheckAndExpenses\CheckController@listCheck','as'=>'list-check']);
         Route::post('save-check', 'Church\CheckAndExpenses\CheckController@store');
+        Route::post('upload-check', 'Church\CheckAndExpenses\CheckController@upload');
 
         Route::get('lista-miembro1s', ['uses'=>'MemberController@index','as'=>'charge-members']);
         Route::get('lista-miembros1', ['uses'=>'MemberController@index','as'=>'list-departament']);
@@ -128,6 +129,7 @@ Route::get('iglesia', ['uses'=>'Church\ChurchController@create','as'=>'create-ch
         //Reportes
         Route::get('reporte-semanal/{date}', ['uses'=>'ReportPdfController@infoSemanal','as'=>'reportWeekly']);
         Route::get('pdf-de-gastos/{token}', 'ReportPdfController@checkDetail');
+        Route::get('reporte-estado-de-cuenta-actual/{token}', 'ReportPdfController@stateAccountNow');
 
 
     });

@@ -51,4 +51,6 @@ class LoginController extends Controller
                 'status'=>'activo'
         ];
     }
+
+
 }

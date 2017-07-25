@@ -118,7 +118,7 @@
             },
         methods: {
             pdfInfo:function (token) {
-
+                return "/tesoreria/reporte-estado-de-cuenta-actual/"+token;
             },
             send: function (event) {
                 var self = this;

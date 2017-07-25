@@ -82,6 +82,20 @@ class ReportPdfController extends Controller
     }
 
 
+    /**
+     * ---------------------------------------------------------------------
+     * @Author     : Anwar Sarmiento "asarmiento@sistemasamigables.com"
+     * @Date       Create: ${DATE}
+     * @Time       Create: ${TIME}
+     * @Date       Update: 0000-00-00
+     * ---------------------------------------------------------------------
+     * @Description: Con este reporte podemos ver el detalle de facturas
+     *             asignadas a un cheque o gastos foraneos
+     * @Pasos      :
+     * @param $token
+     * ----------------------------------------------------------------------
+     * ----------------------------------------------------------------------
+     */
     public function checkDetail($token)
     {
         $data = $this->checkExpenseRepository->getModel()->where('reference', $token)->get();

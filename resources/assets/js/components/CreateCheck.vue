@@ -97,7 +97,11 @@
                                 <small class="help-block"  >{{errors.internal_control_id}}</small>
                             </div>
                         </div>
-
+                        <div class=" col-lg-5 col-md-5  " >
+                            <div class="panel-default ">
+                                <multiple-file-uploader postURL="http://softadventist.dev/tesoreria/upload-check" successMessagePath="" errorMessagePath=""></multiple-file-uploader>
+                            </div>
+                        </div>
                         <div class="col-lg-12 col-md-12  text-center">
                             <div class="btn">
                                 <button   v-on:click="send"  class="btn btn-success">Guardar </button>

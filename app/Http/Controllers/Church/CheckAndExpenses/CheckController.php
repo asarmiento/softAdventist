@@ -78,4 +78,11 @@ class CheckController extends Controller
     {
         return $this->checkRepository->filterChurchRelation('bank');
     }
+
+    public function upload(Request $request)
+    {
+        $file = $request->file('items')[0];
+        $file->store('public');
+      return response()->json(['successMessagePath'=>true],200);
+    }
 }
