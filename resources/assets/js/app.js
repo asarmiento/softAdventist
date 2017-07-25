@@ -23,7 +23,14 @@ Vue.component('createDepartament', require('./components/CreateDepartament.vue')
 Vue.component('createIncomes', require('./components/CreateAccounts.vue'));
 Vue.component('createInternalControl', require('./components/CreateInternalControl.vue'));
 Vue.component('createWeeklyIncomes', require('./components/CreateWeeklyIncomes.vue'));
-Vue.component('createExpenses', require('./components/CreateAccounts.vue'));
+Vue.component('listWeeklyInfo', require('./components/ListWeeklyInfo.vue'));
+Vue.component('createExpenses', require('./components/CreateExpenses.vue'));
+Vue.component('createBank', require('./components/CreateBank.vue'));
+Vue.component('createChurchDeposits', require('./components/CreateChurchDeposits.vue'));
+Vue.component('createCheck', require('./components/CreateCheck.vue'));
+Vue.component('registroExpenses', require('./components/RegistroExpenses.vue'));
+Vue.component('listsExpenses', require('./components/ListsExpenses.vue'));
+Vue.component('listsMembers', require('./components/ListsMembers.vue'));
 
 
 

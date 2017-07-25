@@ -10,7 +10,7 @@
 // Home
 Breadcrumbs::register('home', function($breadcrumbs)
 {
-    $breadcrumbs->push('Home', route('home'));
+    $breadcrumbs->push('Inicio', route('home'));
 });
 
 // Home > About

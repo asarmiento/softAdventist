@@ -10,7 +10,10 @@ namespace App\Entities;
 
 class Church extends Entity
 {
-    protected $fillable = ['name','address','longitud','latitud','mission_or_association_id'];
+
+    protected $fillable = [ 'name', 'address', 'longitud', 'latitud', 'district_id','url' ];
+
+
     public function getRules()
     {
         // TODO: Implement getRules() method.
@@ -21,4 +24,6 @@ class Church extends Entity
     {
         // TODO: Implement getUnique() method.
     }
+
+
 }

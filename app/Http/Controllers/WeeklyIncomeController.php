@@ -63,12 +63,14 @@ class WeeklyIncomeController extends Controller
          * Aqui guardaremos los datos de 60% de la iglesia segun lo presupuestado
          */
           foreach ($dataLista['accountFix'] AS $accountFix):
-              $church = $dataLista['church'];
+               $church = $dataLista['church'];
                $church['balance'] = $dataLista['sixty'] * ($accountFix->departament->percent_of_budget/100);
                $church['income_account_id'] = $accountFix->id;
-              $weeklyIncome = new WeeklyIncome();
-              $weeklyIncome->fill($church);
-              $weeklyIncome->save();
+               if($church['balance']>0):
+                  $weeklyIncome = new WeeklyIncome();
+                  $weeklyIncome->fill($church);
+                  $weeklyIncome->save();
+               endif;
           endforeach;
         /**
          *  Aqui guardaremos los ingresos de las otras cuentas temporales
@@ -79,18 +81,22 @@ class WeeklyIncomeController extends Controller
             $church = $dataLista['church'];
             $church['balance'] = $accountTemp->balance;
             $church['income_account_id'] = $accountTemp->income_account_id;
-            $weeklyIncome = new WeeklyIncome();
-            $weeklyIncome->fill($church);
-            $weeklyIncome->save();
-           TempIncomes::find($accountTemp->id)->delete();
+            if($church['balance']>0):
+                $weeklyIncome = new WeeklyIncome();
+                $weeklyIncome->fill($church);
+                $weeklyIncome->save();
+                TempIncomes::find($accountTemp->id)->delete();
+            endif;
         endforeach;
         /**
          * Aqui guardaremos Diezmos y el 40% ofrenda de la parte de la asociacion
          */
         foreach ($dataLista['campo'] AS $localField):
-            $localFieldIncome = new LocalFieldIncome();
-            $localFieldIncome->fill($localField);
-            $localFieldIncome->save();
+            if($localField['balance']>0):
+                $localFieldIncome = new LocalFieldIncome();
+                $localFieldIncome->fill($localField);
+                $localFieldIncome->save();
+            endif;
         endforeach;
         /**
          * Aqui guardaremos los montos de las cuentas temporales de la
@@ -101,17 +107,19 @@ class WeeklyIncomeController extends Controller
             $campo = $dataLista['campoTemp'];
             $campo['balance'] = $localFieldTemp->balance;
             $campo['local_field_income_account_id'] = $localFieldTemp->local_field_income_account_id;
-            $localFieldIncome = new LocalFieldIncome();
-            $localFieldIncome->fill($campo);
-             $localFieldIncome->save();
-            TempLocalFieldIncome::find($localFieldTemp->id)->delete();
+            if($campo['balance']>0):
+                $localFieldIncome = new LocalFieldIncome();
+                $localFieldIncome->fill($campo);
+                $localFieldIncome->save();
+                TempLocalFieldIncome::find($localFieldTemp->id)->delete();
+            endif;
         endforeach;
         $datos = ($this->newMember($id));
         $result = $this->finishInfo();
-
+        $account = [];
         return response()->json(['success'=>true, 'message'=>'Se creo con Exito!!!!','newMember'=>$datos['data'],
                                  'title'=>$datos['title'],'totalBalance'=>$datos['totalBalance'],
-                                 'totalRows'=>$datos['totalRows'],'result'=>$result],200);
+                                 'totalRows'=>$datos['totalRows'],'account'=>$account,'result'=>$result],200);
     }
 
 
@@ -132,8 +140,8 @@ class WeeklyIncomeController extends Controller
      */
     public function createArray($data)
     {
-        $forty= ($data['offering'] * 0.4);
-        $sixty= ($data['offering'] * 0.6);
+        $forty= (($data['offering']+$data['background_inversion']) * 0.4);
+        $sixty= (($data['offering']+$data['background_inversion']) * 0.6);
         $status = 'no aplicado';
         $member = Member::where('token',$data['member_id'])->first()->id;
         $accountFix = IncomeAccount::where('type','fix')->get();
@@ -207,7 +215,7 @@ class WeeklyIncomeController extends Controller
         })->where('status','no aplicado')->sum('balance')  ;
         $control = InternalControl::where('status','no aplicado')->first();
         $numeration = $this->numerationInfo();
-        $token = Crypt::encrypt($numeration.$control);
+        $token = Crypt::encrypt($numeration);
         $data = ['number'=>$numeration,
                 'token'=>$token,
                  'offering'=>($sixty+$forty),
@@ -228,16 +236,10 @@ class WeeklyIncomeController extends Controller
                 ->update(['balance'=>($localAccount->balance+$balance)]);
         Departament::where('id',$localAccount->departament_id)->update(['balance'=>(Departament::find($localAccount->departament_id)->balance+$balance)]);
         endforeach;
-
-
         InternalControl::where('status','no aplicado')->update(['status'=>'aplicado']);
-        $finish = WeeklyIncome::where('status','no aplicado')->update(['status'=>'aplicado']);
+        WeeklyIncome::where('status','no aplicado')->update(['status'=>'aplicado']);
          LocalFieldIncome::where('status','no aplicado')->update(['status'=>'aplicado']);
-
-
-
-
-        return response()->json(['success'=>true, 'message'=>[$finish]],200);
+        return response()->json(['success'=>true, 'message'=>'listo'],200);
 
     }
     public function removeLine(Request $request)

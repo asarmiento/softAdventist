@@ -20,11 +20,15 @@
                         <div class=" col-lg-3 col-md-3  ">
                             <h3>El sabado <strong>{{rows.saturday}}</strong> </h3>
                         </div>
-                        <div class=" col-lg-6 col-md-6  ">
-                            <h3>Lineas Agregadas <strong>{{totalRows }} </strong> </h3>
+                        <div class=" col-lg-6 col-md-6 ">
+                            <div style="height: 30px; width:300px;" class="progress progress-striped active">
+                                <div style="width:100%;  font-size:24px" class="progress-bar progress-bar-warning">A Registrado {{totalRows }} Sobres </div>
+                            </div>
                         </div>
-                        <div class=" col-lg-6 col-md-6  ">
-                            <h3>Con un total <strong>{{totalBalance | moneyFormat }} </strong> </h3>
+                        <div class=" col-lg-6 col-md-6 ">
+                            <div style="height: 30px; width:300px;" class="progress progress-striped active">
+                                <div style="width:100%;  font-size:24px" class="progress-bar progress-bar-success">Con un total de {{totalBalance | moneyFormat }}  </div>
+                            </div>
                         </div>
                         <div class=" col-lg-12 col-md-12  ">
                             <hr> </hr>
@@ -40,7 +44,7 @@
                                 <small class="help-block"  >{{errors.member_id}}</small>
                             </div>
                         </div>
-                        <div class=" col-lg-3 col-md-3  " :class="{'has-feedback has-error':errors.envelope_number.length > 0}">
+                        <div class=" col-lg-2 col-md-2  " :class="{'has-feedback has-error':errors.envelope_number.length > 0}">
                             <div class="panel-default ">
                                 <label>Numero de Sobre</label>
                                 <div class="input-group " >
@@ -51,7 +55,7 @@
                                 <small class="help-block"  >{{errors.envelope_number}}</small>
                             </div>
                         </div>
-                        <div class=" col-lg-3 col-md-3  " :class="{'has-feedback has-error':errors.tithes.length > 0}">
+                        <div class=" col-lg-2 col-md-2  " :class="{'has-feedback has-error':errors.tithes.length > 0}">
                             <div class="panel-default ">
                                 <label>Diezmos</label>
                                 <div class="input-group " >
@@ -61,7 +65,7 @@
                                 <small class="help-block"  >{{errors.tithes}}</small>
                             </div>
                         </div>
-                        <div class=" col-lg-3 col-md-3  " :class="{'has-feedback has-error':errors.offering.length > 0}">
+                        <div class=" col-lg-2 col-md-2  " :class="{'has-feedback has-error':errors.offering.length > 0}">
                             <div class="panel-default ">
                                 <label>Ofrendas</label>
                                 <div class="input-group " >
@@ -69,6 +73,16 @@
                                     <input type="number" v-model="data.offering"   class="form-control" >
                                 </div>
                                 <small class="help-block"  >{{errors.offering}}</small>
+                            </div>
+                        </div>
+                        <div class=" col-lg-2 col-md-2  " :class="{'has-feedback has-error':errors.background_inversion.length > 0}">
+                            <div class="panel-default ">
+                                <label>Fondo de Inversion</label>
+                                <div class="input-group " >
+                                    <span class="input-group-addon"><i class="fa fa-cog"></i></span>
+                                    <input type="number" v-model="data.background_inversion"   class="form-control" >
+                                </div>
+                                <small class="help-block"  >{{errors.background_inversion}}</small>
                             </div>
                         </div>
                         <div class="rows">
@@ -125,8 +139,8 @@
                                 </div>
                             </div>
                         </div>
-
-                        <div class="col-lg-12 col-md-12  text-center">
+                        <div  v-if="result"></div>
+                        <div  v-else class="col-lg-12 col-md-12  text-center">
                             <div class="btn">
                                 <button   v-on:click="send"  class="btn btn-success">Agregar Sobre</button>
                             </div>
@@ -263,10 +277,6 @@
                                         <ul class="pagination">
                                             <li class="page-pre"><a href="javascript:void(0)">‹</a></li>
                                             <li class="page-number active"><a href="javascript:void(0)">1</a></li>
-                                            <li class="page-number"><a href="javascript:void(0)">2</a></li>
-                                            <li class="page-number"><a href="javascript:void(0)">3</a></li>
-                                            <li class="page-number"><a href="javascript:void(0)">4</a></li>
-                                            <li class="page-number"><a href="javascript:void(0)">5</a></li>
                                             <li class="page-next"><a href="javascript:void(0)">›</a></li>
                                         </ul>
                                     </div>
@@ -279,7 +289,7 @@
                 </div>
                 <div v-if="result" class="col-lg-12 col-md-12  text-center">
                     <div class="btn">
-                        <button   v-on:click="finish"  class="btn btn-success">Finalizar Informe</button>
+                        <button   v-on:click="finish(rows.saturday)"  class="btn btn-success">Finalizar Informe</button>
                     </div>
                 </div>
             </div>
@@ -306,6 +316,7 @@
                      envelope_number: '',
                      tithes: '',
                      offering: '',
+                     background_inversion: '',
                      internal_control_id: '',
                  },
                  campo:{
@@ -327,6 +338,8 @@
                  temp_incomes:[],
                  totalRows:'',
                  totalBalance:'',
+                 totalRowsW:'',
+                 totalBalanceW:'',
                  btSelectAll:[],
                  rowsTotal:'',
                  result:'',
@@ -335,6 +348,7 @@
                      envelope_number: '',
                      tithes:'',
                      offering:'',
+                     background_inversion:'',
                  }
              }
          },
@@ -382,18 +396,23 @@
                 axios.post('/tesoreria/save-weekly-incomes', this.data)
                     .then(response => {
                         if(response.data.success = true){
-
                             self.listMembers.push(response.data.newMember[0]);
                             self.titleMembers = response.data.title
                             self.totalBalance = response.data.totalBalance;
                             self.totalRows = response.data.totalRows;
-                            self.result = response.data.result
+                            if(response.data.result.success){
+                                self.result =response.data.result
+                            }
+                            this.temp_local_field_incomes = [];
+                            this.temp_incomes = [];
 
                         this.data.member_id= '';
                         this.data.envelope_number= '';
                         this.data.tithes= '';
                         this.data.offering= '';
+                        this.data.background_inversion= '';
                         this.errors.member_id= '';
+                        this.errors.background_inversion= '';
                         this.errors.envelope_number= '';
                         this.errors.tithes= '';
                        }
@@ -639,11 +658,15 @@
                    }
                });
            },
-           finish: function (line,index,event) {
+           finish: function (saturday,event) {
+
                var self = this;
-               axios.post('/tesoreria/finish-info-income', line)
+               axios.post('/tesoreria/finish-info-income', saturday)
                    .then(response => {
-                       document.location = '/';
+                       if(response.data.success){
+                           ///this.$route.route.go('tesoreria/registro-control-interno');
+                           document.location = '/tesoreria/registro-control-interno';
+                       }
                    }).catch(function (error) {
                    if (error.response) {
                        let data = error.response.campo;

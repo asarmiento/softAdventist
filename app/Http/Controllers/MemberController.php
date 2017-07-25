@@ -2,15 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Entities\IncomeAccount;
-use App\Entities\LocalFieldIncome;
-use App\Entities\LocalFieldIncomeAccount;
 use App\Entities\Member;
-use App\Entities\SummaryOfWeeklyEarnings;
-use App\Entities\TempIncomes;
-use App\Entities\TempLocalFieldIncome;
 use App\Entities\User;
-use App\Entities\WeeklyIncome;
 use App\Http\Requests\CreateMemberRequest;
 use App\Traits\ListInformMembersTraits;
 use Illuminate\Http\Request;
@@ -20,11 +13,38 @@ use Validator;
 
 class MemberController extends Controller
 {
+    public function __construct() {
+            $this->middleware('cont')->only('create','edit','store','listMemberInfo');
+    }
+
+
     use ListInformMembersTraits;
     public function index()
     {
-        $members = Member::where('church_id',currentUser()->member->church_id)->get();
-     return view('members.index',compact('members'));
+        return view('members.listsMembers');
+    }
+
+    public function getData()
+    {
+        $model =  Member::searchPaginateAndOrder();
+        $columns = Member::$columns;
+
+        return response()->json([
+            'model'=>[
+                'pagination' => [
+                    'total' => $model->total(),
+                    'per_page' => $model->perPage(),
+                    'current_page' => $model->currentPage(),
+                    'last_page' => $model->lastPage(),
+                    'from' => $model->firstItem(),
+                    'to' => $model->lastItem()
+                ],
+                'data' => $model
+            ],
+            'columns'=>$columns
+        ]);
+
+         response()->json($response);
     }
 
     public function create()
@@ -60,7 +80,7 @@ class MemberController extends Controller
         $member = new Member();
         $member->fill($data);
         if($member->save()):
-           return $this->exito('El Miembro: '.$member->nameComplete());
+           return $this->exito(trans('El Miembro: ').$member->nameComplete());
         endif;
         return $this->errores($member->errors);
 
@@ -68,8 +88,7 @@ class MemberController extends Controller
 
     public function listMemberInfo()
     {
-
-        return response()->json($this->listMemberInforme());
+        return response()->json($this->listEnvelopesCreate());
     }
 
 

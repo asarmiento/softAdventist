@@ -6,18 +6,22 @@ use Closure;
 
 class Tesoreria
 {
+
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param  \Illuminate\Http\Request $request
+     * @param  \Closure                 $next
+     *
      * @return mixed
      */
     public function handle($request, Closure $next)
     {
-        if (currentUser()->type_user =='cont') {
-            return redirect('/tesoreria');
+        if (currentUser()->type_user == 'cont') {
+            return $next($request);
         }
-        return $next($request);
+        //abort(403);
+        return redirect('/home');
+
     }
 }

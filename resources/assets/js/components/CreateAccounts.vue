@@ -22,12 +22,9 @@
                         <div class=" col-lg-3 col-md-3  " :class="{'has-feedback has-error':errors.departament_id.length > 0}">
                             <div class="panel-default ">
                                 <label>{{relation}}</label>
-
                                 <div class="input-group " >
                                     <span class="input-group-addon"><i class="fa fa-archive"></i></span>
                                     <v-select    v-model="data.departament_id"  :options="select"></v-select>
-
-
                                 </div>
                                 <small class="help-block"  >{{errors.departament_id}}</small>
                             </div>

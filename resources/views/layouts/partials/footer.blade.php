@@ -13,7 +13,7 @@
     <!-- Visible when footer positions are static -->
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <div class="hide-fixed pull-right pad-rgt">
-        14GB of <strong>512GB</strong> Free.
+       <strong>V3.0</strong>
     </div>
 
 
@@ -22,7 +22,7 @@
     <!-- Remove the class "show-fixed" and "hide-fixed" to make the content always appears. -->
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
-    <p class="pad-lft">&#0169; {{\Carbon\Carbon::now()->format('Y')}} Sistemas Amigables de Costa Rica SAOR S.A.</p>
+    <p class="pad-lft">&#0169;2015-{{\Carbon\Carbon::now()->format('Y')}} Sistemas Amigables de Costa Rica SAOR S.A.</p>
 
 
 

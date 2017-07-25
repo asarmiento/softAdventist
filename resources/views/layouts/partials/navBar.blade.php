@@ -6,7 +6,7 @@
         <!--Brand logo & name-->
         <!--================================-->
         <div class="navbar-header">
-            <a href="index.html" class="navbar-brand">
+            <a href="{{route('home')}}" class="navbar-brand">
                 <img src="{{asset('img/logo.png')}}" alt="Nifty Logo" class="brand-icon">
                 <div class="brand-title">
                     <span class="brand-text">Soft-Adventist</span>
@@ -52,7 +52,7 @@
                                     <h4 class="text-light mar-no">Weekend shopping</h4>
                                     <div class="pad-ver box-inline">
                                                 <span class="icon-wrap icon-wrap-lg icon-circle bg-trans-light">
-                                                    <i class="pli-add-cart icon-4x"></i>
+                                                    <i class="pli-add-cart icon-3x"></i>
                                                 </span>
                                     </div>
                                     <p class="pad-btm">
@@ -73,9 +73,10 @@
                                     <li><a href="{{route('charge-members')}}">Cobro a Miembros</a></li>
                                     <li><a href="#" class="disabled"></a></li>
                                     <li class="divider"></li>
-                                    <li class="dropdown-header"></li>
-                                    <li><a href="#"><span class="pull-right badge badge-purple"></span> </a></li>
-                                    <li><a href="#"></a></li>
+                                    <li class="dropdown-header">Cuentas Bancarias</li>
+                                    <li><a href="{{route('create-bank')}}">Cuentas Bancarias<span class="pull-right badge badge-purple"></span></a></li>
+                                    <li><a href="{{route('register-deposit')}}">Depositos Iglesia</a></li>
+                                    <li><a href="{{route('create-check')}}">Cheques</a></li>
                                 </ul>
 
                             </div>
@@ -91,8 +92,8 @@
                                     <li><a href="{{route('create-expenses')}}">Crear Cuentas de Gastos</a></li>
                                     <li class="divider"></li>
                                     <li class="dropdown-header">Informes</li>
-                                    <li><a href="{{route('list-info-month')}}">Informe Mensual</a></li>
-                                    <li><a href="{{route('list-info-week')}}"><span class="pull-right badge badge-success"></span>Informe Semanal</a></li>
+                                    <li><a href="">Informe Mensual</a></li>
+                                    <li><a href="{{route('list-info-weekly')}}">Informe Semanal</a></li>
                                     <li><a href="#">Saldos por Departamentos</a></li>
                                     <li><a href="#">Saldo por Cuentas</a></li>
                                 </ul>
@@ -103,8 +104,8 @@
                                     <li class="dropdown-header">Registros</li>
                                     <li><a href="{{route('create-internal-control')}}">Registro de Ingresos</a></li>
                                     <li><a href="#">Traspaso entre Cuentas</a></li>
-                                    <li><a href="#">Registro de Cheques</a></li>
-                                    <li><a href="#">Registro de Caja Chica</a></li>
+                                    <li><a href="{{route('register-expenses')}}">Registro de Gastos</a></li>
+                                    <li><a href="{{route('list-expenses')}}">Lista de Gastos</a></li>
                                     <li><a href="#">Forms</a></li>
                                     <li class="divider"></li>
                                     <li>
@@ -126,7 +127,7 @@
 
             </ul>
             <ul class="nav navbar-top-links pull-right">
-
+                <li class="dropdown"><a href="{{route('help')}}"><i class="fa fa-question-circle"></i> Manual de Usuario</a></li>
                 <!--Language selector-->
                 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                 <li class="dropdown">

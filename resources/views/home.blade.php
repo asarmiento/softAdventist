@@ -1,155 +1,96 @@
 @extends('layouts.system')
-
 @section('content')
-<div class="panel-body">
-                        @if(session('alert'))
-                            <p class="alert alert-success">{{session('alert')}}</p>
-                        @endif
-                        @if(session('error'))
-                            <p class="alert alert-danger">{{session('error')}}</p>
-                        @endif
-                        <div class="col-md-12  text-center"><h1>Hola: {{currentUser()->nameComplete()}}</h1></div>
-                        <div class="col-md-12  text-center"><h1>Tu Cédula es: {{currentUser()->identification_card}}</h1></div>
-                        <form action="{{route('save-inscription')}}" method="post" accept-charset="UTF-8" enctype="multipart/form-data">
-                            <div class="row text-center"> {{csrf_field()}}
-                                <div class="content-box-blue col-md-12">
-                                    <div class="col-md-4  text-center form-group"><label>Código: </label>
-                                        <input type="text" name="code" readonly="readonly"  class="form-control" value="{{ $code}}">
-                                        <input type="hidden" name="code" readonly="readonly"  class="form-control" value="{{ $code}}">
-                                    </div>
-                                    <div class="col-md-4  text-center form-group"><label>Fecha de Nacimiento: </label>
-                                        <input type="date" name="birthdate"  class="form-control"  value="{{old('birthdate')}}"  placeholder="0000-00-00">
-                                        @if ($errors->has('birthdate'))
-                                            <span class="help-block  alert-danger">
-                                        <strong>{{ $errors->first('birthdate') }}</strong>
-                                    </span>
-                                        @endif
-                                    </div>
-                                    <div class="col-md-4  text-center form-group"><label>Genero: </label>
-                                        <select name="gender" class="form-control">
-                                            <option value="">Seleccione un Genero</option>
-                                            <option value="woman" @if (\Illuminate\Support\Facades\Input::old('gender') == 'woman') selected="selected" @endif>Mujer</option>
-                                            <option value="man" @if (\Illuminate\Support\Facades\Input::old('gender') == 'man') selected="selected" @endif>Hombre</option>
-                                        </select>
-                                        @if ($errors->has('gender'))
-                                            <span class="help-block  alert-danger">
-                                        <strong>{{ $errors->first('gender') }}</strong>
-                                    </span>
-                                        @endif
-                                    </div>
-                                    <div class="col-md-5  text-center form-group">
-                                        <label>Iglesia a la que pertenece: </label>
-                                        <input type="text" name="church" class="form-control"  value="{{old('amount')}}"  placeholder="Quepos">
-                                        @if ($errors->has('church'))
-                                            <span class="help-block  alert-danger">
-                                        <strong>{{ $errors->first('church') }}</strong>
-                                    </span>
-                                        @endif
-                                    </div>
-                                    <div class="col-md-5  text-center form-group">
-                                        <label>Talla de Camiseta: </label>
-                                        <select name="shirt_size" class="form-control">
-                                            <option value="">Seleccione una Talla</option>
-                                            <option value="14" @if (\Illuminate\Support\Facades\Input::old('shirt_size') == '14') selected="selected" @endif>14</option>
-                                            <option value="16" @if (\Illuminate\Support\Facades\Input::old('shirt_size') == '16') selected="selected" @endif>16</option>
-                                            <option value="XS" @if (\Illuminate\Support\Facades\Input::old('shirt_size') == 'XS') selected="selected" @endif>XS</option>
-                                            <option value="S" @if (\Illuminate\Support\Facades\Input::old('shirt_size') == 'S') selected="selected" @endif>S</option>
-                                            <option value="M" @if (\Illuminate\Support\Facades\Input::old('shirt_size') == 'M') selected="selected" @endif>M</option>
-                                            <option value="L" @if (\Illuminate\Support\Facades\Input::old('shirt_size') == 'L') selected="selected" @endif>L</option>
-                                            <option value="XL" @if (\Illuminate\Support\Facades\Input::old('shirt_size') == 'XL') selected="selected" @endif>XL</option>
-                                            <option value="XXL" @if (\Illuminate\Support\Facades\Input::old('shirt_size') == 'XXL') selected="selected" @endif>XXL</option>
-                                        </select>
-                                        @if ($errors->has('shirt_size'))
-                                            <span class="help-block  alert-danger">
-                                        <strong>{{ $errors->first('shirt_size') }}</strong>
-                                    </span>
-                                        @endif
-                                    </div>
-                                    <div class="col-md-12  text-center form-group">
-                                        <label>Lugar de Residencia: </label>
-                                        <input type="text" name="address"  class="form-control"  value="{{old('address')}}"  placeholder="Barrio San Martin, 500 metros sur del Aeropuerto la Managua, Quepos">
-                                        @if ($errors->has('address'))
-                                            <span class="help-block  alert-danger">
-                                        <strong>{{ $errors->first('address') }}</strong>
-                                    </span>
-                                        @endif
-                                    </div>
-                                    <div class="col-md-4  text-center form-group">
-                                        <label>Metodo de Pago: </label>
-                                        <select name="payment_method" class="form-control">
-                                            <option value="">Seleccione Un Metodo</option>
-                                            <option value="Transferencia" @if (\Illuminate\Support\Facades\Input::old('payment_method') == 'Transferencia') selected="selected" @endif>Transferencia</option>
-                                            <option value="Deposito" @if (\Illuminate\Support\Facades\Input::old('payment_method') == 'Deposito') selected="selected" @endif>Deposito</option>
-                                            <option value="Caja ACSCR" @if (\Illuminate\Support\Facades\Input::old('payment_method') == 'Caja ACSCR') selected="selected" @endif>Caja ACSCR</option>
-                                        </select>
-                                        @if ($errors->has('payment_method'))
-                                            <span class="help-block  alert-danger">
-                                        <strong>{{ $errors->first('payment_method') }}</strong>
-                                    </span>
-                                        @endif
-                                    </div>
-                                    <div class="col-md-4  text-center form-group">
-                                        <label>Monto Abonado: </label>
-                                        <input type="number" name="amount"  class="form-control" max="{{$saldo}}" value="{{old('amount')}}" placeholder="8500">
-                                        @if ($errors->has('amount'))
-                                            <span class="help-block  alert-danger">
-                                        <strong>{{ $errors->first('amount') }}</strong>
-                                    </span>
-                                        @endif
-                                    </div>
-                                    <div class="col-md-4  text-center form-group">
-                                        <label>N° Comprobante: </label>
-                                        <input type="text" name="voucher"  {{old('voucher')}} class="form-control" placeholder="144657">
-                                        @if ($errors->has('voucher'))
-                                            <span class="help-block alert-danger">
-                                        <strong>{{ $errors->first('voucher') }}</strong>
-                                    </span>
-                                        @endif
-                                    </div>
-                                    <div class="col-md-4  text-center form-group">
-                                        <label>Banco: </label>
-                                        <input type="text" name="bank" {{old('bank')}}  value="Banco Nacional"  class="form-control">
-                                        @if ($errors->has('bank'))
-                                            <span class="help-block alert-danger">
-                                        <strong>{{ $errors->first('bank') }}</strong>
-                                            </span>
-                                        @endif
-                                    </div>
-                                    <div class="col-md-4  text-center form-group">
-                                        <label>Saldo: </label>
-                                        <input type="text" name=""  value="{{number_format($saldo,2)}}" readonly class="form-control">
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-md-4 control-label">Imagen del Deposito</label>
-                                        <div class="col-md-6">
-                                            <input type="file" class="form-control" name="file" >
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12   ">
-                                        <input type="submit" value="Guardar" class="btn btn-default">
-
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                        <div>
-                            <table class="table tab-content">
-                                <thead>
-                                <th>Comprobante</th>
-                                <th>fecha</th>
-                                <th>Monto</th>
-                                </thead>
-                                <tbody>
-                                @foreach($registros AS $registro)
-                                    <tr>
-                                        <td>{{$registro->voucher}}</td>
-                                        <td>{{$registro->date}}</td>
-                                        <td>{{$registro->amount}}</td>
-                                    </tr>
-                                @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
+<div class="panel-body" style="width: 90%; margin: 0 auto; padding-top: 0em">
+    <h2 style="text-align: center">Manual de la Iglesia revisión 2015 p.76-80</h2>
+   <div class="panel-default">
+        <div class="col-md-12">
+            <div class="col-md-6" style="text-align: justify">
+                <p>
+                    <strong>El tesorero y la custodia de los fondos de la iglesia.</strong> El tesorero es el
+                    custodio de todos los fondos de la iglesia, que están constituidos por:
+                    <ul>
+                    <li>1. fondos de la asociación,</li>
+                    <li>2. fondos de la iglesia local,</li>
+                    <li>3. fondos pertenecientes a las organizaciones auxiliares de la iglesia local.</li>
+                    </ul>
+                    El tesorero deposita todos los fondos (de la asociación, de la iglesia
+                    local y los de las organizaciones auxiliares de la iglesia local) en un banco
+                    o en una institución financiera en una cuenta abierta a nombre de la
+                    iglesia, a no ser que la asociación autorice otro sistema.
+                </p><p>
+                    Los dirigentes y las organizaciones de la iglesia local
+                    El excedente de los fondos de la iglesia puede ser depositado en una
+                    cuenta de ahorro con la autorización de la junta directiva de la iglesia.
+                    Cuando se muevan sumas elevadas destinadas a construcciones u otros
+                    proyectos especiales, la junta directiva de la iglesia podrá autorizar la apertura
+                    de cuentas bancarias para dichos proyectos. En todo caso, tales cuentas
+                    serán manejadas por el tesorero, quien informará de las mismas, y de
+                    todos los demás fondos, a la iglesia.
+                    Todas las cuentas bancarias de la iglesia son exclusivamente para fondos
+                    de la iglesia y no deben mezclarse con ninguna otra cuenta ni con fondos
+                    personales.
+                </p>
+                <p>
+                    <strong>Fondos de la asociación.</strong>
+                    Los fondos de la asociación, que incluyen los
+                    diezmos, todos los fondos misioneros regulares y los destinados a proyectos
+                    especiales de la asociación y las instituciones, son fondos en custodia. El
+                    tesorero de la iglesia, al final de cada mes, o con más frecuencia si así lo requiere
+                    la asociación, debe enviar al tesorero de la asociación el total de los
+                    fondos de la asociación recibidos en ese período. La iglesia no puede en
+                    ningún caso tomar prestados, usar o retener los fondos de la asociación.
+                </p>
+                <p>
+                    <strong>Método debido para el envío de fondos a la asociación.</strong>
+                     El tesorero de
+                    la iglesia, al enviar las remesas al tesorero de la asociación, donde sea
+                    posible legalmente, debe extender todos los cheques, los giros bancarios,
+                    o cualquier otro instrumento de pago a la orden de la asociación, y no a
+                    la de una persona. Debe incluir con la remesa la hoja duplicada del libro
+                    de tesorería de la iglesia. La asociación proporciona los formularios para
+                    las remesas (ver pp. 139-142).
+                </p>
+            </div>
+            <div class="col-md-6" style="text-align: justify">
+                <p>
+                    <strong>Fondos de la iglesia local.</strong> Los fondos de la iglesia local están constituidos
+                    por los fondos para los gastos de la iglesia, los de proyectos de construcción
+                    y reparación de la iglesia y los destinados a la ayuda de los pobres y necesitados.
+                    Estos fondos pertenecen a la iglesia local y el tesorero los desembolsa
+                    únicamente por autorización de la junta directiva o de una reunión
+                    administrativa de la iglesia. Sin embargo, el tesorero pagará del mismo
+                    fondo de gastos los cargos recurrentes autorizados por la junta directiva.
+                </p><p>
+                    <strong>Fondos de las organizaciones auxiliares. </strong> Los fondos de las organizaciones
+                    auxiliares incluyen los destinados a programas misioneros, a Vida Familiar,
+                    al Ministerio Juvenil Adventista, a los Servicios Comunitarios Adventistas
+                    o Sociedad Dorcas, a los gastos de Escuela Sabática y la porción de los
+                    fondos de los Ministerios de la Salud que pertenecen a la iglesia local, y
+                    pueden incluir los de la escuela de la iglesia. Todo el dinero recibido por
+                    esos órganos, y para el uso de ellos, tiene que ser entregado lo antes
+                    posible al tesorero de la iglesia por el secretario correspondiente, por el
+                    diácono o por la persona que haya recibido los fondos. Únicamente pueden
+                    desembolsarse por orden del órgano auxiliar al que pertenezcan.
+                    El tesorero extenderá un recibo de todos los fondos recibidos. Cuando reciba
+                    el dinero de parte del tesorero, el secretario del órgano auxiliar
+                    entregará el correspondiente recibo al tesorero.
+                </p><p>
+                    <strong>Recibos extendidos a los miembros.</strong> El tesorero debe entregar prontamente
+                    a quien corresponda un recibo de todas y cada una de las sumas
+                    de dinero recibidas por la iglesia, por pequeña que sea la cantidad, y debe
+                    mantener una contabilidad minuciosa de todos los recibos y de todos los
+                    pagos. Todas las ofrendas generales que no estén incluidas en sobres tienen
+                    que ser contadas por el tesorero en presencia de otro dirigente de la
+                    iglesia, preferentemente un diácono o una diaconisa, quien extenderá el
+                    recibo correspondiente a tal dirigente.
+                </p><p>
+                    <strong>Conservación de los documentos financieros.</strong> Los documentos financieros,
+                    los comprobantes, las facturas o las constancias de pago de todos
+                    los fondos recibidos o desembolsados deben conservarse de acuerdo con
+                    el sistema establecido por la asociación local.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection

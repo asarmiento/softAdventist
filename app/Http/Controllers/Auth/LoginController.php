@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Entities\Church;
+use App\Entities\Member;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
@@ -26,7 +28,7 @@ class LoginController extends Controller
      * @var string
      */
 
-    protected $redirectTo = '/registrado/inscription';
+   // protected $redirectTo = '/tesoreria/home';
 
     /**
      * Create a new controller instance.
@@ -40,10 +42,15 @@ class LoginController extends Controller
 
     protected function credentials($request)
     {
+
+        $church=Church::find(Member::where('email',$request->get('email'))->first()->church_id);
+        churchSession($church);
         return [
                 'email'=>$request->get('email'),
                 'password'=>$request->get('password'),
-                'registration_token'=>null
+                'status'=>'activo'
         ];
     }
+
+
 }

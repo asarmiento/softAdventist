@@ -60,8 +60,50 @@
                         </div>
                     </div>
                 </div>
+                </div>
+
+
+            <div class="col-md-12 col-md-offset-0">
+
+            <div class="panel">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Lista de Controles Internos</h3>
+                </div>
+
+                <div class="panel-body">
+                    <div id="demo-dt-delete_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+                        <div id="demo-dt-delete_filter" class="dataTables_filter">
+                            <label>Buscar: <input type="search" class="form-control input-sm" placeholder="" aria-controls="demo-dt-delete"></label>
+                        </div>
+                        <table id="demo-dt-delete" class="table table-striped table-bordered dataTable no-footer dtr-inline" cellspacing="0" width="100%" role="grid" aria-describedby="demo-dt-delete_info" style="width: 100%;">
+                        <thead>
+                            <tr role="row">
+                                <th class="sorting_asc" tabindex="0" aria-controls="demo-dt-delete" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 277px;">Eliminar</th>
+                                <th class="sorting" tabindex="0" aria-controls="demo-dt-delete" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 277px;">Sabado</th>
+                                <th class="sorting" tabindex="0" aria-controls="demo-dt-delete" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 408px;">Numero de Sobres</th>
+                                <th class="min-tablet sorting" tabindex="0" aria-controls="demo-dt-delete" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 203px;">Total Ingresado</th>
+                                <th class="min-tablet sorting" tabindex="0" aria-controls="demo-dt-delete" rowspan="1" colspan="1" aria-label="Extn.: activate to sort column ascending" style="width: 131px;">Estado</th>
+                                <th class="min-tablet sorting" tabindex="0" aria-controls="demo-dt-delete" rowspan="1" colspan="1" aria-label="Extn.: activate to sort column ascending" style="width: 131px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="control in internalControls" role="row" class="odd">
+                                <td class="sorting_1"><span class="btn btn-danger fa fa-remove"></span></td>
+                                <td class="">{{control.saturday}}</td>
+                                <td>{{control.number_of_envelopes}}</td>
+                                <td>{{control.balance}}</td>
+                                <td>{{control.status}}</td>
+                                <td ><a :href="pdfInfo(control.saturday)"  target='_blank' class='btn btn-danger'>
+                                    <i class='fa fa-file-pdf-o'></i></a></td>
+                            </tr>
+                        </tbody>
+                    </table><div class="dataTables_info" id="demo-dt-delete_info" role="status" aria-live="polite">Showing 1 to 10 of 57 entries</div><div class="dataTables_paginate paging_simple_numbers" id="demo-dt-delete_paginate"><ul class="pagination"><li class="paginate_button previous disabled" aria-controls="demo-dt-delete" tabindex="0" id="demo-dt-delete_previous"><a href="#"><i class="demo-psi-arrow-left"></i></a></li><li class="paginate_button active" aria-controls="demo-dt-delete" tabindex="0"><a href="#">1</a></li><li class="paginate_button " aria-controls="demo-dt-delete" tabindex="0"><a href="#">2</a></li><li class="paginate_button " aria-controls="demo-dt-delete" tabindex="0"><a href="#">3</a></li><li class="paginate_button disabled" aria-controls="demo-dt-delete" tabindex="0" id="demo-dt-delete_ellipsis"><a href="#">…</a></li><li class="paginate_button " aria-controls="demo-dt-delete" tabindex="0"><a href="#">6</a></li><li class="paginate_button next" aria-controls="demo-dt-delete" tabindex="0" id="demo-dt-delete_next"><a href="#"><i class="demo-psi-arrow-right"></i></a></li></ul></div></div>
+                </div>
             </div>
         </div>
+        </div>
+        </div>
+
 
 </template>
 
@@ -69,7 +111,7 @@
     import vSelect from "vue-select";
     import { Confirm } from '@lassehaslev/vue-confirm';
     export default {
-        props: ['title','url'],
+        props: ['title','url','internal_control'],
         components: {vSelect},
          data () {
              return   {
@@ -88,23 +130,24 @@
              }
          },
        computed:{
-            select(){
-             // return  JSON.parse(this.contents)
+           internalControls(){
+              return  JSON.parse(this.internal_control)
             },
         },
         created(){
             var optionsSelect = [];
-               // console.log(JSON.parse(this.contents));
+               // console.log(JSON.parse(this.internal_control));
         },
         methods: {
+            pdfInfo: function (data) {
+                 return "/tesoreria/reporte-semanal/"+data;
+            },
             send: function (event) {
                 console.log(this.data.selected);
                 var self = this;
                 axios.post('/tesoreria/'+self.url, this.data)
                     .then(response => {
                         if(response.data.success = true){
-                    this.$alert({title: 'Se Guardo con Exito!!!',
-                        message: response.data.message});
                         document.location = 'registro-de-ingresos/'+response.data.token;
                         this.data.saturday= '';
                         this.data.number= '';
