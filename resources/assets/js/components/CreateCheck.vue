@@ -113,8 +113,8 @@
                                             name="items">
 					            </span>
                                 <div class="btn-group pull-right">
-                                    <button id="dz-upload-btn" @click="onSubmit" class="btn btn-primary" type="submit" >
-                                        <i class="fa fa-upload-cloud"></i> Upload
+                                    <button id="dz-upload-btn" @click="onSubmit" class="btn btn-primary" type="submit">
+                                        <i class="fa fa-upload-cloud"></i> Subir
                                     </button>
                                 </div>
                             </div>
@@ -127,12 +127,15 @@
                                                 <div class="media-body">
                                                     <p class="text-main text-bold mar-no text-overflow" data-dz-name="">
                                                         {{itemsNames}}</p>
-                                                    <span class="dz-error text-danger text-sm" data-dz-errormessage=""></span>
-                                                    <p class="text-sm" data-dz-size=""><strong>{{itemsSizes}}</strong></p>
+                                                    <span class="dz-error text-danger text-sm"
+                                                          data-dz-errormessage=""></span>
+                                                    <p class="text-sm" data-dz-size=""><strong>{{itemsSizes}}</strong>
+                                                    </p>
                                                     <div id="dz-total-progress" style="opacity:50">
                                                         <div class="progress progress-xs active" role="progressbar"
                                                              aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-                                                            <div class="progress-bar progress-bar-success" style="width:15%;"
+                                                            <div class="progress-bar progress-bar-success"
+                                                                 style="width:15%;"
                                                                  data-dz-uploadprogress=""></div>
                                                         </div>
                                                     </div>
@@ -140,7 +143,8 @@
                                             </div>
                                         </div>
                                         <div class="media-right">
-                                            <button data-dz-remove="" @click="removeItems" class="btn btn-xs btn-danger dz-cancel">
+                                            <button data-dz-remove="" @click="removeItems"
+                                                    class="btn btn-xs btn-danger dz-cancel">
                                                 <i class="demo-pli-cross"></i></button>
                                         </div>
                                     </div>
@@ -148,10 +152,11 @@
                             </div>
                             <!--End Dropzonejs using Bootstrap theme-->
                         </div>
-                     </div>
+                    </div>
                     <div class="col-lg-12 col-md-12  text-center">
-                        <div  class="btn">
-                            <button v-on:click="send" :disabled="data.ck === null"  class="btn btn-success">Guardar</button>
+                        <div class="btn">
+                            <button v-on:click="send" :disabled="data.ck === null" class="btn btn-success">Guardar
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -208,9 +213,9 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="check in checks" role="row" class="odd">
+                            <tr v-for="(check, index) in checks" role="row" class="odd">
                                 <td class="sorting_1">
-                                    <a v-if="check.status === 'aplicado'"  :href="remove(check.token)" target="_blank">
+                                    <a v-if="check.status === 'aplicado'" @click="remove(check)" target="_blank">
                                         <span class="btn btn-danger fa fa-remove"></span></a>
                                     <a v-else :href="routeEdit(check.token)" target="_blank">
                                         <span class="btn btn-info fa fa-pencil"></span></a>
@@ -223,7 +228,8 @@
                                 <td v-if="check.type === 'church'">Gastos de Iglesia</td>
                                 <td v-else>Informe Campo Local</td>
                                 <td></td>
-                                <td><a v-if="check.checkExpenses" :href="pdfInfo(check.token)" target='_blank' class='btn btn-danger'>
+                                <td><a v-if="check.check_expenses.length > 0" :href="pdfInfo(check.token,index)" target='_blank'
+                                       class='btn btn-danger'>
                                     <i class='fa fa-file-pdf-o'></i></a></td>
                             </tr>
                             </tbody>
@@ -259,6 +265,7 @@
 
 <script>
     import vSelect from "vue-select";
+
     require('es6-promise').polyfill();
     export default {
         props: ['title', 'url', 'banks'],
@@ -274,8 +281,8 @@
                     detail: '',
                     date: '',
                     controls: [],
-                    ck:null,
-                    typeCk:'',
+                    ck: null,
+                    typeCk: '',
                 },
                 errors: {
                     number: '',
@@ -301,35 +308,32 @@
 
             }
         },
-        computed:{
-                allBanks() {
-                    return JSON.parse(this.banks);
-                },
-
+        computed: {
+            allBanks() {
+                return JSON.parse(this.banks);
             },
+
+
+        },
         created() {
             this.$http.get('/tesoreria/lista-de-cheques').then((response) => {
                 this.checks = response.data;
             });
-             this.$http.get('/tesoreria/lista-info-sin-deposito')
-                 .then((response) => {
-                     this.internals = response.data;
-                 });
+            this.$http.get('/tesoreria/lista-info-sin-deposito')
+                .then((response) => {
+                    this.internals = response.data;
+                });
 
         },
         methods: {
-            bytesToSize(bytes) {
-                const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-                if (bytes === 0) return 'n/a';
-                let i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
-                if (i === 0) return bytes + ' ' + sizes[i];
-                return (bytes / Math.pow(1024, i)).toFixed(2) + ' ' + sizes[i];
+            urlImage(data){
+                return '../../storage/checks/'+data;
             },
             routeEdit: function (data) {
-                return 'registro-detalle-cheque/'+data
+                return 'registro-detalle-cheque/' + data
             },
             pdfInfo: function (data) {
-                return 'pdf-de-gastos/'+data
+                return 'pdf-de-gastos/' + data
             },
             balance_info(val) {
                 var self = this;
@@ -337,7 +341,7 @@
                     axios.post('/tesoreria/balance-internal-control', val)
                         .then(response => {
                             this.data.balance = response.data.balance;
-                         //   this.data.internal_controls = val;
+                            //   this.data.internal_controls = val;
                         }).catch(function (error) {
                     });
                 }
@@ -345,14 +349,47 @@
             infoActive: function (val) {
                 if (val.value === 'local_field') {
                     this.active = true;
-                    this.data.balance=0;
-                }else{
+                    this.data.balance = 0;
+                } else {
                     this.active = false
                 }
                 this.data.type = val;
             },
-            remove:function () {
-
+            remove: function (data,index) {
+                axios.post('http://softadventist.dev/tesoreria/delete-check', data)
+                    .then(response => {
+                        this.checks.splice(index,1);
+                        this.$alert({
+                            title: 'Se Elimino con Exito!!!',
+                            message: response.data
+                        });
+                        console.log(response.data)
+                    }).catch(function (error) {
+                    if (error.response) {
+                        let data = error.response.data;
+                        if (error.response.status === 422) {
+                            for (var index in data) {
+                                var messages = '';
+                                data[index].forEach(function (item) {
+                                    messages += item + ' '
+                                });
+                                self.errors[index] = messages;
+                            }
+                        } else if (error.response.status === 401) {
+                            self.errors.response.invalid = true;
+                            self.errors.response.msg = data.msg.message;
+                        } else {
+                            console.log(error);
+                            alert("Error generic");
+                        }
+                    } else if (error.request) {
+                        console.log(error.request);
+                        alert("Error empty");
+                    } else {
+                        console.log('Error', error.message);
+                        alert("Error");
+                    }
+                });
             },
             send: function (event) {
                 var self = this;
@@ -377,6 +414,10 @@
                             this.errors.detail = '';
                             this.errors.type = '';
                             this.errors.bank = '';
+                            this.formData = '';
+                            this.items = '';
+                            this.itemsNames = '';
+                            this.itemsSizes = '';
                         }
                     }).catch(function (error) {
                     if (error.response) {
@@ -405,10 +446,17 @@
                     }
                 });
             },
+            bytesToSize(bytes) {
+                const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+                if (bytes === 0) return 'n/a';
+                let i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+                if (i === 0) return bytes + ' ' + sizes[i];
+                return (bytes / Math.pow(1024, i)).toFixed(2) + ' ' + sizes[i];
+            },
             onChange(e) {
                 this.formData = new FormData();
                 let files = e.target.files || e.dataTransfer.files;
-               let fileSizes = 0;
+                let fileSizes = 0;
                 for (let fileIn in files) {
                     if (!isNaN(fileIn)) {
                         this.items = e.target.files[fileIn] || e.dataTransfer.files[fileIn];
@@ -420,14 +468,14 @@
                         console.log(files[fileIn])
                     }
                 }
-                },
+            },
             removeItems() {
                 this.items = '';
                 this.itemsNames = '';
                 this.itemsSizes = '';
             },
             onSubmit() {
-                axios.post('http://softadventist.dev/tesoreria/upload-check',  this.formData)
+                axios.post('http://softadventist.dev/tesoreria/upload-check', this.formData)
                     .then(response => {
                         this.data.ck = response.data
                         console.log(response.data)
@@ -467,7 +515,8 @@
     .mostrar {
         display: block;
     }
-    .desactive{
+
+    .desactive {
 
     }
 </style>

@@ -27,4 +27,9 @@ class CheckRepository extends BaseRepository
             $q->where('church_id',userChurch()->id);
         })->with('checkExpenses')->with('bank')->get();
     }
+
+    public function changeStatus($ck)
+    {
+        return $this->newQuery()->where('id',$ck)->update(['status'=>'aplicado']);
+    }
 }

@@ -77,6 +77,7 @@ Route::get('iglesia', ['uses'=>'Church\ChurchController@create','as'=>'create-ch
         //controles internos
         Route::get('registro-control-interno', ['uses'=>'InternalControlController@create','as'=>'create-internal-control']);
         Route::post('save-internal-control', 'InternalControlController@store');
+        Route::post('upload-internal-control', 'InternalControlController@upload');
         Route::get('lista-info-sin-deposito', ['uses'=>'InternalControlController@listInfos','as'=>'list-infos-sin-deposito']);
 
 
@@ -119,6 +120,7 @@ Route::get('iglesia', ['uses'=>'Church\ChurchController@create','as'=>'create-ch
         Route::get('lista-de-cheques', ['uses'=>'Church\CheckAndExpenses\CheckController@listCheck','as'=>'list-check']);
         Route::post('save-check', 'Church\CheckAndExpenses\CheckController@store');
         Route::post('upload-check', 'Church\CheckAndExpenses\CheckController@upload');
+        Route::post('delete-check', 'Church\CheckAndExpenses\CheckController@destroy');
 
         Route::get('lista-miembro1s', ['uses'=>'MemberController@index','as'=>'charge-members']);
         Route::get('lista-miembros1', ['uses'=>'MemberController@index','as'=>'list-departament']);

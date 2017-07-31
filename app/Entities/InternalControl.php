@@ -12,7 +12,8 @@ class InternalControl extends Entity
         'number_of_envelopes',
         'saturday',
         'token',
-        'church_id'
+        'church_id',
+        'image'
     ];
 
     public function localFieldIncomeAccounts()

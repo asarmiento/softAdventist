@@ -8,6 +8,7 @@ use App\Repositories\CheckExpenseRepository;
 use App\Repositories\CheckRepository;
 use App\Repositories\ExpenseAccountRepository;
 use App\Repositories\IncomeAccountRepository;
+use App\Traits\AccountDepartamentTraits;
 use Hamcrest\Thingy;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
@@ -15,7 +16,7 @@ use Illuminate\Support\Facades\Crypt;
 class CheckExpenseAccountController extends Controller
 {
 
-    //
+    use AccountDepartamentTraits;
 
     /**
      * @var IncomeAccountRepository
@@ -95,10 +96,12 @@ class CheckExpenseAccountController extends Controller
         $data['token'] = Crypt::encrypt(substr($data['number'], 0, 30));
         $data['expense_account_id'] = $expenseAccount->id;
         $data['image'] = ".";
+        $data['reference'] = $this->numerationGto();
         $data['user_id'] = currentUser()->id;
         $expense = $this->checkExpenseRepository->getModel();
         $expense->fill($data);
         if ($expense->save()):
+            $this->checkRepository->changeStatus($expense->check_id);
             return response()->json([
                 'success' => true,
                 'message' => 'Se creo con Exito!!!!',

@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Entities\InternalControl;
 use App\Http\Requests\InternalControlCreateRequest;
 use App\Repositories\InternalControlRepository;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Storage;
 
 class InternalControlController extends Controller
 {
@@ -39,11 +41,18 @@ class InternalControlController extends Controller
         $data = $request->all();
         $data['token'] = Crypt::encrypt($data['number'].$data['saturday']);
         $data['church_id'] = 1;
+        //carbamos la fecha del ck para poder crear la carpeta donde se guardara la imagen
+        $date = new Carbon($data['saturday']);
+        //obtenemos el tipo de documento para concatenar la extención
+        $type = explode('/', $data['typeIC']);
+        $data['image'] = $date->format('M-y').'/'.$data['number'].'-'.$data['church_id'].'.'.$type[1];
 
         $internalControl = $this->internalControlRepository->getModel();
         $internalControl->fill($data);
         if($internalControl->save()):
-                return response()->json(['success'=>true, 'message'=>'Se creo con Exito!!!!','token'=>$internalControl->token],200);
+            //aqui movemos la imagen del cheque de la carpeta temporal a la carpeta del mes
+            Storage::move('internalControls/temp/'.$data['name'], 'internalControls/'.$internalControl->image);
+            return response()->json(['success'=>true, 'message'=>'Se creo con Exito!!!!','token'=>$internalControl->token],200);
         endif;
         return response()->json($internalControl->errors,422);
     }
@@ -71,5 +80,14 @@ class InternalControlController extends Controller
     public function listInfos()
     {
         return $this->internalControlRepository->listPivotSelects();
+    }
+
+    public function upload(Request $request)
+    {
+        $file = $request->file('items');
+        $name = 'temp'.rand(1, 2000);
+        $file->storeAs('internalControls/temp', $name);
+
+        return response()->json($name, 200);
     }
 }

@@ -75,7 +75,7 @@ class CheckController extends Controller
         //obtenemos el tipo de documento para concatenar la extención
         $type = explode('/', $data['typeCk']);
         $data['bank_id'] = $bank->id;
-        $data['image'] = $date->format('M-y').'/'.$data['number'].'-'.$data['bank_id'].'.'.$type[1];
+        $data['image'] = $date->format('M-y').'/'.$data['number'].'_'.$data['bank_id'].'.'.$type[1];
         $data['type'] = $data['type']['value'];
         $data['user_id'] = currentUser()->id;
         $data['token'] = Crypt::encrypt($data['number']);
@@ -127,5 +127,14 @@ class CheckController extends Controller
         $file->storeAs('checks/temp', $name);
 
         return response()->json($name, 200);
+    }
+
+    public function destroy(Request $request)
+    {   $data= $request->all();
+        $check = $this->checkRepository->token($request->get('token'));
+       // Storage::delete('checks/'.$check->image);
+        $check->internalControl()->detach();
+        $check->delete();
+        return response()->json('Se elimino con exito!!', 200);
     }
 }

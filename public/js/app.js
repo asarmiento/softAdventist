@@ -52808,7 +52808,7 @@ exports = module.exports = __webpack_require__(3)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -52931,6 +52931,59 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -52943,14 +52996,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 saturday: '',
                 number: null,
                 number_of_envelopes: '',
-                balance: ''
+                balance: '',
+                name: null,
+                typeIC: ''
             },
             errors: {
                 saturday: '',
                 number: '',
                 number_of_envelopes: '',
                 balance: ''
-            }
+            },
+            formData: '',
+            items: '',
+            itemsNames: '',
+            itemsSizes: ''
         };
     },
 
@@ -53008,6 +53067,67 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                             });
                             self.errors[index] = messages;
                         }
+                    }
+                } else if (error.request) {
+                    console.log(error.request);
+                    alert("Error empty");
+                } else {
+                    console.log('Error', error.message);
+                    alert("Error");
+                }
+            });
+        },
+        bytesToSize: function bytesToSize(bytes) {
+            var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+            if (bytes === 0) return 'n/a';
+            var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+            if (i === 0) return bytes + ' ' + sizes[i];
+            return (bytes / Math.pow(1024, i)).toFixed(2) + ' ' + sizes[i];
+        },
+        onChange: function onChange(e) {
+            this.formData = new FormData();
+            var files = e.target.files || e.dataTransfer.files;
+            var fileSizes = 0;
+            for (var fileIn in files) {
+                if (!isNaN(fileIn)) {
+                    this.items = e.target.files[fileIn] || e.dataTransfer.files[fileIn];
+                    this.itemsNames = files[fileIn].name;
+                    this.data.typeIC = files[fileIn].type;
+                    this.itemsSizes = this.bytesToSize(files[fileIn].size);
+                    fileSizes = files[fileIn].size;
+                    this.formData.append('items', this.items);
+                    console.log(files[fileIn]);
+                }
+            }
+        },
+        removeItems: function removeItems() {
+            this.items = '';
+            this.itemsNames = '';
+            this.itemsSizes = '';
+        },
+        onSubmit: function onSubmit() {
+            var _this2 = this;
+
+            axios.post('http://softadventist.dev/tesoreria/upload-internal-control', this.formData).then(function (response) {
+                _this2.data.name = response.data;
+                console.log(response.data);
+            }).catch(function (error) {
+                if (error.response) {
+                    var data = error.response.data;
+                    if (error.response.status === 422) {
+                        for (var index in data) {
+                            var messages = '';
+                            data[index].forEach(function (item) {
+                                messages += item + ' ';
+                            });
+                            self.errors[index] = messages;
+                        }
+                    } else if (error.response.status === 401) {
+                        self.errors.response.invalid = true;
+                        self.errors.response.msg = data.msg.message;
+                    } else {
+                        console.log(error);
+                        alert("Error generic");
                     }
                 } else if (error.request) {
                     console.log(error.request);
@@ -53200,11 +53320,90 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   })]), _vm._v(" "), _c('small', {
     staticClass: "help-block"
   }, [_vm._v(_vm._s(_vm.errors.balance))])])]), _vm._v(" "), _c('div', {
+    staticClass: " col-lg-5 col-md-5  "
+  }, [_c('div', {
+    staticClass: "panel-body"
+  }, [_c('p', [_vm._v("Debe subir la imagen del control interno firmado.")]), _vm._v(" "), _c('div', {
+    staticClass: "bord-top pad-ver"
+  }, [_c('span', {
+    staticClass: "btn btn-file btn-success fileinput-button dz-clickable"
+  }, [_c('i', {
+    staticClass: "fa fa-plus"
+  }), _vm._v("\n\t\t\t\t\t                Buscar Archivo...\n                                     "), _c('input', {
+    attrs: {
+      "type": "file",
+      "id": "items",
+      "name": "items"
+    },
+    on: {
+      "change": _vm.onChange
+    }
+  })]), _vm._v(" "), _c('div', {
+    staticClass: "btn-group pull-right"
+  }, [_c('button', {
+    staticClass: "btn btn-primary",
+    attrs: {
+      "id": "dz-upload-btn",
+      "type": "submit"
+    },
+    on: {
+      "click": _vm.onSubmit
+    }
+  }, [_c('i', {
+    staticClass: "fa fa-upload-cloud"
+  }), _vm._v(" subir\n                                        ")])])]), _vm._v(" "), _c('div', {
+    attrs: {
+      "id": "dz-previews"
+    }
+  }, [_c('div', {
+    staticClass: "pad-top bord-top dz-image-preview",
+    attrs: {
+      "id": ""
+    }
+  }, [(_vm.itemsNames) ? _c('div', {
+    staticClass: "media"
+  }, [_c('div', {
+    staticClass: "media-body"
+  }, [_c('div', {
+    staticClass: "media-block"
+  }, [_c('div', {
+    staticClass: "media-body"
+  }, [_c('p', {
+    staticClass: "text-main text-bold mar-no text-overflow",
+    attrs: {
+      "data-dz-name": ""
+    }
+  }, [_vm._v("\n                                                            " + _vm._s(_vm.itemsNames))]), _vm._v(" "), _c('span', {
+    staticClass: "dz-error text-danger text-sm",
+    attrs: {
+      "data-dz-errormessage": ""
+    }
+  }), _vm._v(" "), _c('p', {
+    staticClass: "text-sm",
+    attrs: {
+      "data-dz-size": ""
+    }
+  }, [_c('strong', [_vm._v(_vm._s(_vm.itemsSizes))])]), _vm._v(" "), _vm._m(4)])])]), _vm._v(" "), _c('div', {
+    staticClass: "media-right"
+  }, [_c('button', {
+    staticClass: "btn btn-xs btn-danger dz-cancel",
+    attrs: {
+      "data-dz-remove": ""
+    },
+    on: {
+      "click": _vm.removeItems
+    }
+  }, [_c('i', {
+    staticClass: "demo-pli-cross"
+  })])])]) : _vm._e()])])])]), _vm._v(" "), _c('div', {
     staticClass: "col-lg-12 col-md-12  text-center"
   }, [_c('div', {
     staticClass: "btn"
   }, [_c('button', {
     staticClass: "btn btn-success",
+    attrs: {
+      "disabled": _vm.data.name === null
+    },
     on: {
       "click": _vm.send
     }
@@ -53212,14 +53411,14 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "col-md-12 col-md-offset-0"
   }, [_c('div', {
     staticClass: "panel"
-  }, [_vm._m(4), _vm._v(" "), _c('div', {
+  }, [_vm._m(5), _vm._v(" "), _c('div', {
     staticClass: "panel-body"
   }, [_c('div', {
     staticClass: "dataTables_wrapper form-inline dt-bootstrap no-footer",
     attrs: {
       "id": "demo-dt-delete_wrapper"
     }
-  }, [_vm._m(5), _vm._v(" "), _c('table', {
+  }, [_vm._m(6), _vm._v(" "), _c('table', {
     staticClass: "table table-striped table-bordered dataTable no-footer dtr-inline",
     staticStyle: {
       "width": "100%"
@@ -53231,13 +53430,13 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "role": "grid",
       "aria-describedby": "demo-dt-delete_info"
     }
-  }, [_vm._m(6), _vm._v(" "), _c('tbody', _vm._l((_vm.internalControls), function(control) {
+  }, [_vm._m(7), _vm._v(" "), _c('tbody', _vm._l((_vm.internalControls), function(control) {
     return _c('tr', {
       staticClass: "odd",
       attrs: {
         "role": "row"
       }
-    }, [_vm._m(7, true), _vm._v(" "), _c('td', {}, [_vm._v(_vm._s(control.saturday))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(control.number_of_envelopes))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(control.balance))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(control.status))]), _vm._v(" "), _c('td', [_c('a', {
+    }, [_vm._m(8, true), _vm._v(" "), _c('td', {}, [_vm._v(_vm._s(control.saturday))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(control.number_of_envelopes))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(control.balance))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(control.status))]), _vm._v(" "), _c('td', [_c('a', {
       staticClass: "btn btn-danger",
       attrs: {
         "href": _vm.pdfInfo(control.saturday),
@@ -53253,7 +53452,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "role": "status",
       "aria-live": "polite"
     }
-  }, [_vm._v("Showing 1 to 10 of 57 entries")]), _vm._m(8)])])])])])
+  }, [_vm._v("Showing 1 to 10 of 57 entries")]), _vm._m(9)])])])])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('span', {
     staticClass: "input-group-addon"
@@ -53278,6 +53477,31 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('i', {
     staticClass: "fa fa-cogs"
   })])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticStyle: {
+      "opacity": "50"
+    },
+    attrs: {
+      "id": "dz-total-progress"
+    }
+  }, [_c('div', {
+    staticClass: "progress progress-xs active",
+    attrs: {
+      "role": "progressbar",
+      "aria-valuemin": "0",
+      "aria-valuemax": "100",
+      "aria-valuenow": "0"
+    }
+  }, [_c('div', {
+    staticClass: "progress-bar progress-bar-success",
+    staticStyle: {
+      "width": "15%"
+    },
+    attrs: {
+      "data-dz-uploadprogress": ""
+    }
+  })])])
 },function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "panel-heading"
@@ -53558,7 +53782,7 @@ exports = module.exports = __webpack_require__(3)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -53872,6 +54096,49 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 
@@ -54148,10 +54415,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         removeChurch: function removeChurch(Church, index, event) {
             var self = this;
             axios.post('/tesoreria/remove-iglesia-temp-income', Church).then(function (response) {
-                console.log(self.temp_incomes);
-                console.log(index);
                 self.temp_incomes.splice(index, 1);
-                console.log(self.temp_incomes);
             }).catch(function (error) {
                 if (error.response) {
                     var data = error.response.campo;
@@ -54304,7 +54568,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "panel-heading"
   }, [_c('div', {
     staticClass: "text-center "
-  }, [_c('h1', [_vm._v(" " + _vm._s(_vm.title) + "   ")])])]), _vm._v(" "), _c('div', {
+  }, [_c('h1', [_vm._v(" " + _vm._s(_vm.title) + " ")])])]), _vm._v(" "), _c('div', {
     staticClass: "panel-body"
   }, [_c('div', {
     staticClass: " col-lg-3 col-md-3  "
@@ -54330,7 +54594,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "width": "100%",
       "font-size": "24px"
     }
-  }, [_vm._v("A Registrado " + _vm._s(_vm.totalRows) + " Sobres ")])])]), _vm._v(" "), _c('div', {
+  }, [_vm._v("A\n                            Registrado " + _vm._s(_vm.totalRows) + " Sobres\n                        ")])])]), _vm._v(" "), _c('div', {
     staticClass: " col-lg-6 col-md-6 "
   }, [_c('div', {
     staticClass: "progress progress-striped active",
@@ -54344,7 +54608,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "width": "100%",
       "font-size": "24px"
     }
-  }, [_vm._v("Con un total de " + _vm._s(_vm._f("moneyFormat")(_vm.totalBalance)) + "  ")])])]), _vm._v(" "), _vm._m(0), _vm._v(" "), _c('div', {
+  }, [_vm._v("Con un\n                            total de " + _vm._s(_vm._f("moneyFormat")(_vm.totalBalance)) + "\n                        ")])])]), _vm._v(" "), _vm._m(0), _vm._v(" "), _c('div', {
     staticClass: " col-lg-3 col-md-3 ",
     class: {
       'has-feedback has-error': _vm.errors.member_id.length > 0
@@ -54695,7 +54959,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "top": "41px",
       "display": "none"
     }
-  }, [_vm._v("Loading, please wait...")]), _vm._v(" "), _c('table', {
+  }, [_vm._v("Loading, please\n                                wait...\n                            ")]), _vm._v(" "), _c('table', {
     staticClass: "demo-add-niftycheck table table-hover",
     staticStyle: {
       "margin-top": "0px"
@@ -54760,7 +55024,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }, [_c('span', {
       staticClass: "fa fa-remove"
     })])]), _vm._v(" "), _vm._l((member.datos), function(dmember) {
-      return _c('td', [_c('div', [_vm._v(_vm._s(dmember) + " ")])])
+      return _c('td', [_c('div', [_vm._v(_vm._s(dmember))])])
     })], 2)
   }))])]), _vm._v(" "), _vm._m(10), _vm._v(" "), _c('div', {
     staticClass: "fixed-table-pagination"
@@ -54825,7 +55089,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "panel-heading"
   }, [_c('h3', {
     staticClass: "panel-title"
-  }, [_vm._v("Ingresos para el Campo Local   ")])])
+  }, [_vm._v("Ingresos para el Campo Local ")])])
 },function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "panel-heading"
@@ -54902,21 +55166,21 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "value": "1",
       "checked": "checked"
     }
-  }), _vm._v(" ID")])]), _vm._v(" "), _c('li', [_c('label', [_c('input', {
+  }), _vm._v("\n                                        ID")])]), _vm._v(" "), _c('li', [_c('label', [_c('input', {
     attrs: {
       "type": "checkbox",
       "data-field": "name",
       "value": "2",
       "checked": "checked"
     }
-  }), _vm._v(" Name")])]), _vm._v(" "), _c('li', [_c('label', [_c('input', {
+  }), _vm._v("\n                                        Name")])]), _vm._v(" "), _c('li', [_c('label', [_c('input', {
     attrs: {
       "type": "checkbox",
       "data-field": "date",
       "value": "3",
       "checked": "checked"
     }
-  }), _vm._v(" Order date")])]), _vm._v(" "), _c('li', [_c('label', [_c('input', {
+  }), _vm._v("\n                                        Order date")])]), _vm._v(" "), _c('li', [_c('label', [_c('input', {
     attrs: {
       "type": "checkbox",
       "data-field": "amount",
@@ -59845,7 +60109,7 @@ exports = module.exports = __webpack_require__(3)(undefined);
 
 
 // module
-exports.push([module.i, "\n.mostrar[data-v-74dd544c] {\n    display: block;\n}\n.desactive[data-v-74dd544c]{\n}\n", ""]);
+exports.push([module.i, "\n.mostrar[data-v-74dd544c] {\n    display: block;\n}\n.desactive[data-v-74dd544c] {\n}\n", ""]);
 
 // exports
 
@@ -60117,6 +60381,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+
 
 
 __webpack_require__(288).polyfill();
@@ -60176,12 +60447,8 @@ __webpack_require__(288).polyfill();
     },
 
     methods: {
-        bytesToSize: function bytesToSize(bytes) {
-            var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-            if (bytes === 0) return 'n/a';
-            var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
-            if (i === 0) return bytes + ' ' + sizes[i];
-            return (bytes / Math.pow(1024, i)).toFixed(2) + ' ' + sizes[i];
+        urlImage: function urlImage(data) {
+            return '../../storage/checks/' + data;
         },
 
         routeEdit: function routeEdit(data) {
@@ -60211,31 +60478,71 @@ __webpack_require__(288).polyfill();
             }
             this.data.type = val;
         },
-        remove: function remove() {},
-        send: function send(event) {
+        remove: function remove(data, index) {
             var _this3 = this;
+
+            axios.post('http://softadventist.dev/tesoreria/delete-check', data).then(function (response) {
+                _this3.checks.splice(index, 1);
+                _this3.$alert({
+                    title: 'Se Elimino con Exito!!!',
+                    message: response.data
+                });
+                console.log(response.data);
+            }).catch(function (error) {
+                if (error.response) {
+                    var _data = error.response.data;
+                    if (error.response.status === 422) {
+                        for (var index in _data) {
+                            var messages = '';
+                            _data[index].forEach(function (item) {
+                                messages += item + ' ';
+                            });
+                            self.errors[index] = messages;
+                        }
+                    } else if (error.response.status === 401) {
+                        self.errors.response.invalid = true;
+                        self.errors.response.msg = _data.msg.message;
+                    } else {
+                        console.log(error);
+                        alert("Error generic");
+                    }
+                } else if (error.request) {
+                    console.log(error.request);
+                    alert("Error empty");
+                } else {
+                    console.log('Error', error.message);
+                    alert("Error");
+                }
+            });
+        },
+        send: function send(event) {
+            var _this4 = this;
 
             var self = this;
             axios.post('/tesoreria/' + self.url, this.data).then(function (response) {
                 if (response.data.success = true) {
-                    _this3.checks = response.data.list;
+                    _this4.checks = response.data.list;
                     document.location = 'registro-detalle-cheque/' + response.data.token;
-                    _this3.data.number = '';
-                    _this3.data.name = '';
-                    _this3.data.balance = '';
-                    _this3.data.date = '';
-                    _this3.data.detail = '';
-                    _this3.data.type = '';
-                    _this3.data.bank = '';
-                    _this3.data.ck = '';
-                    _this3.data.typeCk = '';
-                    _this3.errors.number = '';
-                    _this3.errors.name = '';
-                    _this3.errors.balance = '';
-                    _this3.errors.date = '';
-                    _this3.errors.detail = '';
-                    _this3.errors.type = '';
-                    _this3.errors.bank = '';
+                    _this4.data.number = '';
+                    _this4.data.name = '';
+                    _this4.data.balance = '';
+                    _this4.data.date = '';
+                    _this4.data.detail = '';
+                    _this4.data.type = '';
+                    _this4.data.bank = '';
+                    _this4.data.ck = '';
+                    _this4.data.typeCk = '';
+                    _this4.errors.number = '';
+                    _this4.errors.name = '';
+                    _this4.errors.balance = '';
+                    _this4.errors.date = '';
+                    _this4.errors.detail = '';
+                    _this4.errors.type = '';
+                    _this4.errors.bank = '';
+                    _this4.formData = '';
+                    _this4.items = '';
+                    _this4.itemsNames = '';
+                    _this4.itemsSizes = '';
                 }
             }).catch(function (error) {
                 if (error.response) {
@@ -60264,6 +60571,13 @@ __webpack_require__(288).polyfill();
                 }
             });
         },
+        bytesToSize: function bytesToSize(bytes) {
+            var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+            if (bytes === 0) return 'n/a';
+            var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+            if (i === 0) return bytes + ' ' + sizes[i];
+            return (bytes / Math.pow(1024, i)).toFixed(2) + ' ' + sizes[i];
+        },
         onChange: function onChange(e) {
             this.formData = new FormData();
             var files = e.target.files || e.dataTransfer.files;
@@ -60286,10 +60600,10 @@ __webpack_require__(288).polyfill();
             this.itemsSizes = '';
         },
         onSubmit: function onSubmit() {
-            var _this4 = this;
+            var _this5 = this;
 
             axios.post('http://softadventist.dev/tesoreria/upload-check', this.formData).then(function (response) {
-                _this4.data.ck = response.data;
+                _this5.data.ck = response.data;
                 console.log(response.data);
             }).catch(function (error) {
                 if (error.response) {
@@ -61791,7 +62105,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('i', {
     staticClass: "fa fa-upload-cloud"
-  }), _vm._v(" Upload\n                                    ")])])]), _vm._v(" "), _c('div', {
+  }), _vm._v(" Subir\n                                    ")])])]), _vm._v(" "), _c('div', {
     attrs: {
       "id": "dz-previews"
     }
@@ -61847,7 +62161,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "click": _vm.send
     }
-  }, [_vm._v("Guardar")])])])])])]), _vm._v(" "), _c('div', {
+  }, [_vm._v("Guardar\n                            ")])])])])])]), _vm._v(" "), _c('div', {
     staticClass: "col-md-12 col-md-offset-0"
   }, [_c('div', {
     staticClass: "panel"
@@ -61870,7 +62184,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "role": "grid",
       "aria-describedby": "demo-dt-delete_info"
     }
-  }, [_vm._m(11), _vm._v(" "), _c('tbody', _vm._l((_vm.checks), function(check) {
+  }, [_vm._m(11), _vm._v(" "), _c('tbody', _vm._l((_vm.checks), function(check, index) {
     return _c('tr', {
       staticClass: "odd",
       attrs: {
@@ -61880,8 +62194,12 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       staticClass: "sorting_1"
     }, [(check.status === 'aplicado') ? _c('a', {
       attrs: {
-        "href": _vm.remove(check.token),
         "target": "_blank"
+      },
+      on: {
+        "click": function($event) {
+          _vm.remove(check)
+        }
       }
     }, [_c('span', {
       staticClass: "btn btn-danger fa fa-remove"
@@ -61892,10 +62210,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }, [_c('span', {
       staticClass: "btn btn-info fa fa-pencil"
-    })])]), _vm._v(" "), _c('td', {}, [_vm._v(_vm._s(check.number))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(check.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(check.balance))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(check.date))]), _vm._v(" "), (check.type === 'church') ? _c('td', [_vm._v("Gastos de Iglesia")]) : _c('td', [_vm._v("Informe Campo Local")]), _vm._v(" "), _c('td'), _vm._v(" "), _c('td', [(check.checkExpenses) ? _c('a', {
+    })])]), _vm._v(" "), _c('td', {}, [_vm._v(_vm._s(check.number))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(check.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(check.balance))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(check.date))]), _vm._v(" "), (check.type === 'church') ? _c('td', [_vm._v("Gastos de Iglesia")]) : _c('td', [_vm._v("Informe Campo Local")]), _vm._v(" "), _c('td'), _vm._v(" "), _c('td', [(check.check_expenses.length > 0) ? _c('a', {
       staticClass: "btn btn-danger",
       attrs: {
-        "href": _vm.pdfInfo(check.token),
+        "href": _vm.pdfInfo(check.token, index),
         "target": "_blank"
       }
     }, [_c('i', {
