@@ -20,6 +20,7 @@ class Check extends Entity
         'type',
         'image',
         'date',
+        'status',
         'balance',
         'user_id'
     ];
@@ -34,5 +35,12 @@ class Check extends Entity
     public function checkExpenses()
     {
         return $this->hasMany(CheckExpense::getClass());
+    }
+
+
+    public function internalControl()
+    {
+        return $this->belongsToMany(InternalControl::getClass(), 'check_i_c_by_l_f')->withPivot('balance',
+                'token')->withTimestamps();
     }
 }

@@ -1,98 +1,51 @@
 <template>
-    <div class="uploadBox">
-        <h3>Add files</h3>
-        <form role="form" enctype="multipart/form-data" @submit.prevent="onSubmit">
-            <div class="uploadBoxMain" v-if="!itemsAdded">
-                <div class="form-group">
-                    <div class="dropArea" @ondragover="onChange">
-                        Drop multiple files here.
-                        <input type="file" id="items" name="items[]" required multiple @change="onChange">
-                        <p class="help-block">Space for your instructions</p>
-                    </div>
-                </div>
-            </div>
-            <div class="uploadBoxMain" v-else>
-                <p><strong>Names</strong></p>
-                <ol>
-                    <li v-for="name in itemsNames">{{name}}</li>
-                </ol>
-                <p><strong>Sizes</strong></p>
-                <ol>
-                    <li v-for="size in itemsSizes">{{size}}</li>
-                </ol>
-                <p><strong>Total files:</strong> {{itemsAdded}}</p>
-                <p><strong>Total upload size:</strong> {{itemsTotalSize}}</p>
-                <button @click="removeItems">Remove files</button>
-                <!-- Loader -->
-                <div class="loader" v-if="isLoaderVisible">
+    <div :class="pOI(styleClass)">
+        <form role="form" enctype="multipart/form-data" @submit.prevent="">
+
+            <div class="loader" v-if="isLoaderVisible">
                     <div class="loaderImg"></div>
                 </div>
-                <!-- End Loader -->
-            </div>
-            <div>
-                <button type="submit" class="btn btn-primary btn-black btn-round" :disabled="itemsAdded < minItems || itemsAdded > maxItems">
-                    Upload</button>
-                <button type="button" class="btn btn-default btn-round" @click="removeItems">Cancel</button>
-            </div>
-            <br>
-            <div class="successMsg" v-if="successMsg !== ''">{{successMsg}}</div>
-            <div class="errorMsg" v-if="errorMsg !== ''">An error has occurred:<br>{{errorMsg}}</div>
-            <div class="errorMsg" v-if="itemsAdded && itemsAdded < minItems">Minimum {{minItems}} files need to be added to uploader. Please remove the files and try again.</div>
-            <div class="errorMsg" v-if="itemsAdded && itemsAdded > maxItems">A maximum of {{maxItems}} files can be uploaded each time. Please remove the files and try again.</div>
+
+
+
         </form>
     </div>
 </template>
 
 <script>
     require('es6-promise').polyfill();
-  //  import axios from 'axios';
-
-  //  component: {axios}
     export default {
         props: {
             postURL: {
                 type: String,
                 required: true
             },
-            minItems: {
-                type: Number,
-                default: 1
-            },
-            maxItems: {
-                type: Number,
-                default: 30
-            },
             method: {
                 type: String,
                 default: 'post'
-            },
-            postMeta: {
-                type: [String, Array, Object],
-                default: ''
             },
             successMessagePath: {
                 type: String,
                 required: true
             },
-            errorMessagePath: {
+            name: {
                 type: String,
                 required: true
             },
-            clases:{
-                type:Array,
-                default:['uploadBox']
+            styleClass: {
+                type: String,
+                default: 'origin'
             }
         },
-
         /*
          * The component's data.
          */
         data() {
             return {
-                items: [],
+                items: '',
                 itemsAdded: '',
-                itemsNames: [],
-                itemsSizes: [],
+                itemsNames: '',
+                itemsSizes: '',
                 itemsTotalSize: '',
                 formData: '',
                 successMsg: '',
@@ -100,7 +53,6 @@
                 isLoaderVisible: false,
             }
         },
-
         methods: {
             // http://scratch99.com/web-development/javascript/convert-bytes-to-mb-kb/
             bytesToSize(bytes) {
@@ -110,65 +62,98 @@
                 if (i === 0) return bytes + ' ' + sizes[i];
                 return (bytes / Math.pow(1024, i)).toFixed(2) + ' ' + sizes[i];
             },
-
+            pOI(style) {
+                if (style === 'origin') {
+                    return 'uploadBox'
+                }
+                else {
+                    return 'new'
+                }
+            },
             onChange(e) {
                 this.successMsg = '';
                 this.errorMsg = '';
                 this.formData = new FormData();
                 let files = e.target.files || e.dataTransfer.files;
-                this.itemsAdded = files.length;
+                this.itemsAdded = this.items.length;
                 let fileSizes = 0;
-                for (let x in files) {
-                    if (!isNaN(x)) {
-                        this.items = e.target.files[x] || e.dataTransfer.files[x];
-                        this.itemsNames[x] = files[x].name;
-                        this.itemsSizes[x] = this.bytesToSize(files[x].size);
-                        fileSizes += files[x].size;
-                        this.formData.append('items[]', this.items);
+                for (let fileIn in files) {
+                    if (!isNaN(fileIn)) {
+                        this.items = e.target.files[fileIn] || e.dataTransfer.files[fileIn];
+                        this.itemsNames = files[fileIn].name;
+                        this.itemsSizes = this.bytesToSize(files[fileIn].size);
+                        fileSizes = files[fileIn].size;
+                        this.formData.append('items', this.items);
+                        console.log(this.items)
                     }
                 }
                 this.itemsTotalSize = this.bytesToSize(fileSizes);
             },
-
             removeItems() {
                 this.items = '';
                 this.itemsAdded = '';
-                this.itemsNames = [];
-                this.itemsSizes = [];
+                this.itemsNames = '';
+                this.itemsSizes = '';
                 this.itemsTotalSize = '';
             },
 
             onSubmit() {
-                this.isLoaderVisible = true;
-
-                if ((typeof this.postMeta === 'string' && this.postMeta !== '') ||
-                    (typeof this.postMeta === 'object' && Object.keys(this.postMeta).length > 0)) {
-                    this.formData.append('postMeta', this.postMeta);
-                }
-
-                if (this.method === 'put' || this.method === 'post' ) {
-                    axios({method: this.method, url: this.postURL, data: this.formData})
-                        .then((response) => {
-                        this.isLoaderVisible = false;
-                    // Show success message
-                    this.successMsg = response + "." + this.successMessagePath;
-                    this.removeItems();
-                })
-                .catch((error) => {
-                        this.isLoaderVisible = false;
-                    this.errorMsg = error + "." + this.errorMessagePath;
-                    this.removeItems();
+                axios.post('http://softadventist.dev/tesoreria/upload-check',  this.formData)
+                    .then(response => {
+                      console.log(response.data)
+                     }).catch(function (error) {
+                    if (error.response) {
+                        let data = error.response.data;
+                        if (error.response.status === 422) {
+                            for (var index in data) {
+                                var messages = '';
+                                data[index].forEach(function (item) {
+                                    messages += item + ' '
+                                });
+                                self.errors[index] = messages;
+                            }
+                        } else if (error.response.status === 401) {
+                            self.errors.response.invalid = true;
+                            self.errors.response.msg = data.msg.message;
+                        } else {
+                            console.log(error);
+                            alert("Error generic");
+                        }
+                    } else if (error.request) {
+                        console.log(error.request);
+                        alert("Error empty");
+                    } else {
+                        console.log('Error', error.message);
+                        alert("Error");
+                    }
                 });
-                } else {
-                    this.errorMsg = "This HTTP method is not allowed. Please use either 'put' or 'post' methods.";
-                    this.removeItems();
-                }
-            },
+           },
         }
     }
 </script>
 
 <style>
+    .btn-file {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-file input[type=file] {
+        position: absolute;
+        top: 0;
+        right: 0;
+        min-width: 100%;
+        min-height: 100%;
+        font-size: 100px;
+        text-align: right;
+        filter: alpha(opacity=0);
+        opacity: 0;
+        outline: none;
+        background: white;
+        cursor: inherit;
+        display: block;
+    }
+
     .uploadBox {
         position: relative;
         background: #eee;
@@ -190,8 +175,17 @@
     .uploadBox .dropArea {
         position: relative;
         width: 100%;
-        height: 100px;
+        height: 300px;
         border: 5px dashed #00ADCE;
+        text-align: center;
+        font-size: 2em;
+        padding-top: 80px;
+    }
+
+    .new .dropArea {
+        position: relative;
+        width: 100%;
+        border: 1px dashed #00ADCE;
         text-align: center;
         font-size: 2em;
         padding-top: 80px;
@@ -208,6 +202,7 @@
         height: 100%;
         opacity: 0;
     }
+
     /* End drag and drop */
 
     /* Loader */
@@ -241,6 +236,7 @@
             transform: rotate(360deg);
         }
     }
+
     /* End Loader */
 
     .uploadBox .errorMsg {

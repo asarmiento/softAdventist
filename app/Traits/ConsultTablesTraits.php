@@ -23,11 +23,11 @@ trait ConsultTablesTraits
         $contents= [];
         foreach ($internals AS $data):
             $churchDeposit = InternalControl::where('internal_controls.token',$data->token)
-                ->join('church_deposit_internal_control',
-                    'church_deposit_internal_control.internal_control_id',
+                ->join('church_deposit_internal_controls',
+                    'church_deposit_internal_controls.internal_control_id',
                     '=','internal_controls.id');
             if($churchDeposit):
-                if($data->balance > $churchDeposit->sum('church_deposit_internal_control.balance')):
+                if($data->balance > $churchDeposit->sum('church_deposit_internal_controls.balance')):
                     $value = ['value'=>$data->token, 'label'=>$data->saturday];
                     array_push($contents,$value);
                 endif;

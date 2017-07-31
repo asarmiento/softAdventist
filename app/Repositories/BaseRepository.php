@@ -52,7 +52,7 @@ abstract class BaseRepository {
     public function filterChurchRelation($relation)
     {
         return $this->newQuery()->whereHas($relation,function ($q){
-            $q->where('church_id',1);
+            $q->where('church_id',userChurch()->id);
         })->get();
     }
     public function sumEnvelope($envelope,$data)

@@ -20,4 +20,11 @@ class CheckRepository extends BaseRepository
     {
         return new Check();// TODO: Implement getModel() method.
     }
+
+    public function listCheks()
+    {
+        return $this->newQuery()->whereHas('bank',function ($q){
+            $q->where('church_id',userChurch()->id);
+        })->with('checkExpenses')->with('bank')->get();
+    }
 }
