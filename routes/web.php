@@ -54,11 +54,13 @@ Route::post('contacto', ['uses'=>'Auth\RegisterController@contactPost','as'=>'co
         Route::get('cobro-a-miembros', ['uses'=>'MemberController@charge','as'=>'charge-members']);
         Route::post('save-miembros', 'MemberController@store');
         Route::get('lista-miembros', ['uses'=>'MemberController@index','as'=>'list-members']);
+        Route::get('lista-miembros-deuda', ['uses'=>'MemberController@index','as'=>'list-members-due']);
         Route::get('lists-miembros', ['uses'=>'MemberController@getData','as'=>'listMembers']);
         /**
          * Departamentos
          */
         Route::get('crear-departamento', ['uses'=>'DepartamentController@create','as'=>'create-departament']);
+        Route::get('movimientos-departamento', ['uses'=>'DepartamentController@create','as'=>'move-departaments']);
         Route::post('save-departament', 'DepartamentController@store');
         /**
          * Cuentas Bancarias

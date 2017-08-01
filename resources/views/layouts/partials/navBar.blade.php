@@ -7,7 +7,7 @@
         <!--================================-->
         <div class="navbar-header">
             <a href="{{route('home')}}" class="navbar-brand">
-                <img src="{{asset('img/logo.png')}}" alt="Nifty Logo" class="brand-icon">
+                <img src="{{asset('img/Logo-IASD.png')}}" alt="Nifty Logo" class="brand-icon">
                 <div class="brand-title">
                     <span class="brand-text">Soft-Adventist</span>
                 </div>
@@ -48,17 +48,17 @@
                             <div class="col-sm-12 col-md-3">
 
                                 <!--Mega menu widget-->
-                                <div class="text-center bg-info pad-all">
-                                    <h4 class="text-light mar-no">Weekend shopping</h4>
+                                <div class="text-center bg-success pad-all">
+                                    <h4 class="text-light mar-no">SoftAdventist</h4>
                                     <div class="pad-ver box-inline">
                                                 <span class="icon-wrap icon-wrap-lg icon-circle bg-trans-light">
-                                                    <i class="pli-add-cart icon-3x"></i>
+                                                    <img style="border-radius: 10px" width="100" height="100" src="{{asset('img/Logo-IASD.png')}}"></img>
                                                 </span>
                                     </div>
-                                    <p class="pad-btm">
+                                    <!--p class="pad-btm">
                                         Members get <span class="text-lg text-bold">50%</span> more points. Lorem ipsum dolor sit amet!
-                                    </p>
-                                    <a href="#" class="btn btn-info">Learn More...</a>
+                                    </p-->
+                                    <a href="https://asarmiento.github.io/softAdventist/" class="btn btn-info">Leer Mas...</a>
                                 </div>
 
                             </div>
@@ -106,9 +106,9 @@
                                     <li><a href="#">Traspaso entre Cuentas</a></li>
                                     <li><a href="{{route('register-expenses')}}">Registro de Gastos</a></li>
                                     <li><a href="{{route('list-expenses')}}">Lista de Gastos</a></li>
-                                    <li><a href="#">Forms</a></li>
+                                    <li><a href="#"></a></li>
                                     <li class="divider"></li>
-                                    <li>
+                                    <!--li>
                                         <form role="form" class="form">
                                             <div class="form-group">
                                                 <label class="dropdown-header" for="demo-megamenu-input">Newsletter</label>
@@ -116,7 +116,7 @@
                                             </div>
                                             <button class="btn btn-primary btn-block" type="submit">Submit</button>
                                         </form>
-                                    </li>
+                                    </li-->
                                 </ul>
                             </div>
                         </div>
@@ -206,16 +206,16 @@
                         @if(currentUser()->youngBoy()->count()>0)
                         <!-- Dropdown heading  -->
                         <div class="pad-all bord-btm">
-                            <p class="text-main mar-btm"><span class="text-bold">{{currentUser()->youngBoy->retirements()->sum('amount')}}</span> de {{number_format(38500,2)}} Pagado el {{number_format((currentUser()->youngBoy->retirements()->sum('amount')/38500)*100,2)}}%</p>
+                            <p class="text-main mar-btm"><span class="text-bold">{{currentUser()->youngBoy->retirements()->sum('amount')}}</span> de {{number_format(0,2)}} Pagado el {{number_format((currentUser()->youngBoy->retirements()->sum('amount')/38500)*100,2)}}%</p>
                             <div class="progress progress-sm">
                                 <div class="progress-bar" style="width: {{((currentUser()->youngBoy->retirements()->sum('amount')/38500)*100)}}%;">
-                                    <span class="sr-only">{{number_format((currentUser()->youngBoy->retirements()->sum('amount')/38500)*100,2)}}%</span>
+                                    <span class="sr-only">{{number_format((currentUser()->youngBoy->retirements()->sum('amount')/1)*100,2)}}%</span>
                                 </div>
                             </div>
                         </div>
                         @else
                                 <div class="pad-all bord-btm">
-                                    <p class="text-main mar-btm"><span class="text-bold">0</span> de {{number_format(38500,2)}} Pagado el 0%</p>
+                                    <p class="text-main mar-btm"><span class="text-bold">0</span> de {{number_format(0,2)}} Pagado el 0%</p>
                                     <div class="progress progress-sm">
                                         <div class="progress-bar" style="width: 0%;">
                                             <span class="sr-only">0%</span>
@@ -234,13 +234,13 @@
                             <li>
                                 <a href="#">
                                     <span class="badge badge-danger pull-right">9</span>
-                                    <i class="pli-mail icon-fw icon-lg"></i> Messages
+                                    <i class="pli-mail icon-fw icon-lg"></i> Mensajes
                                 </a>
                             </li>
                             <li>
                                 <a href="#">
                                     <span class="label label-success pull-right">New</span>
-                                    <i class="pli-gear icon-fw icon-lg"></i> Settings
+                                    <i class="pli-gear icon-fw icon-lg"></i> Configurar
                                 </a>
                             </li>
                         </ul>
