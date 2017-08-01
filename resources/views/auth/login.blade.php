@@ -17,7 +17,7 @@
         <!-- LOGIN FORM -->
         <!--===================================================-->
         <div class="cls-content">
-            <div class="pull-right "><a class="btn btn-default" href="">Contactanos <i class="fa fa-send"></i></a></div>
+            <div class="pull-right "><a class="btn btn-default" href="{{route('contact')}}">Contactanos <i class="fa fa-send"></i></a></div>
             <div class="cls-content-sm panel">
 
                 <div class="panel-body">
