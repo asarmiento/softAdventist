@@ -90,4 +90,9 @@ class InternalControlController extends Controller
 
         return response()->json($name, 200);
     }
+
+    public function destroy(Request $request){
+        $this->internalControlRepository->find($request->get('id'))->delete();
+        return response()->json(['success'=>true,'message'=>'Eliminado con Exito'], 200);
+    }
 }

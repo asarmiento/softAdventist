@@ -140,8 +140,10 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="control in internalControls" role="row" class="odd">
-                                <td class="sorting_1"><span class="btn btn-danger fa fa-remove"></span></td>
+                            <tr v-for="(control,index) in internalControls" role="row" class="odd">
+                                <td class="sorting_1">
+                                    <a v-if="control.status === 'no aplicado'" @click="remove(control,index)" ><span class="btn btn-danger fa fa-remove"></span></a>
+                                </td>
                                 <td class="">{{control.saturday}}</td>
                                 <td>{{control.number_of_envelopes}}</td>
                                 <td>{{control.balance}}</td>
@@ -240,6 +242,41 @@
                                 data[index].forEach( function(item){ messages += item + ' '});
                                 self.errors[index] = messages;
                             }
+                        }
+                    } else if (error.request) {
+                        console.log(error.request);
+                        alert("Error empty");
+                    } else {
+                        console.log('Error', error.message);
+                        alert("Error");
+                    }
+                });
+            },
+            remove: function (data,index) {
+                axios.post('/tesoreria/delete-internal-control', data)
+                    .then(response => {
+                        this.internalControls.splice(index,1);
+                        this.$alert({
+                            title: 'Se Elimino con Exito!!!',
+                            message: response.data
+                        });
+                    }).catch(function (error) {
+                    if (error.response) {
+                        let data = error.response.data;
+                        if (error.response.status === 422) {
+                            for (var index in data) {
+                                var messages = '';
+                                data[index].forEach(function (item) {
+                                    messages += item + ' '
+                                });
+                                self.errors[index] = messages;
+                            }
+                        } else if (error.response.status === 401) {
+                            self.errors.response.invalid = true;
+                            self.errors.response.msg = data.msg.message;
+                        } else {
+                            console.log(error);
+                            alert("Error generic");
                         }
                     } else if (error.request) {
                         console.log(error.request);

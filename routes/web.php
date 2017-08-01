@@ -78,6 +78,7 @@ Route::get('iglesia', ['uses'=>'Church\ChurchController@create','as'=>'create-ch
         Route::get('registro-control-interno', ['uses'=>'InternalControlController@create','as'=>'create-internal-control']);
         Route::post('save-internal-control', 'InternalControlController@store');
         Route::post('upload-internal-control', 'InternalControlController@upload');
+        Route::post('delete-internal-control', 'InternalControlController@destroy');
         Route::get('lista-info-sin-deposito', ['uses'=>'InternalControlController@listInfos','as'=>'list-infos-sin-deposito']);
 
 
