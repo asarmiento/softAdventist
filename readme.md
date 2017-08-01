@@ -33,9 +33,9 @@ La iglesia que se usamos para la prueba piloto desde la versión 1 es la
  Central Sur de Costa Rica.
 
 Si desea que su iglesia o campo local utilice este sistema favor contactar a Anwar Sarmiento 
-[asarmiento@sistemasamigables.com](mailto:asarmiento@sistemasamigables.com)
+[asarmiento@sistemasamigables.com](mailto:asarmiento@sistemasamigables.com).
 
-- Este sistema le ayudara a controlar 100% todas las entradas y salidas de su iglesia, le ahorra tiempo ya que 
+Este sistema le ayudara a controlar 100% todas las entradas y salidas de su iglesia, le ahorra tiempo ya que 
 solo debe registrar cada uno de sus ingresos (Control Interno y sobres de Diezmos) y sus salidas 
 (Cheques y Facturas de Gastos), genera los informes semanales, los recibos para los miembros, en caso
 que el sobre de diezmo no lo traiga incluido.
