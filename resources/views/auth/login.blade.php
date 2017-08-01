@@ -56,7 +56,8 @@
                     <a class="btn-link mar-rgt" href="{{ route('password.request') }}">
                         Restablecer mi Contraseña!
                     </a>
-                    <a href="#" class="btn-link mar-lft"></a>
+                </br>
+                    <a href="https://asarmiento.github.io/softAdventist/" target="_blank" class="btn-link  ">Conoce mas de SoftAdventist</a>
 
                     <div class="media pad-top bord-top">
                         <div class="pull-right">
