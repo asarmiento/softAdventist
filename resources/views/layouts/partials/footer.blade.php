@@ -13,7 +13,7 @@
     <!-- Visible when footer positions are static -->
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <div class="hide-fixed pull-right pad-rgt">
-       <strong>V3.0</strong>
+       <strong>V3.0.4</strong>
     </div>
 
 

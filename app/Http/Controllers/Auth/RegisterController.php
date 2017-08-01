@@ -79,12 +79,12 @@ class RegisterController extends Controller
         $token = str_random(40);
         $user->registration_token = $token;
         $user->save();
-        $url = route('confirmation',$token);
-         $urlActive = route('activation',['email'=>$user->registration_token]);
+        $url = route('verificacion',$token);
+         $urlActive = route('active',['email'=>$user->registration_token]);
 
-        Mail::send('auth/registration',compact('user','url'),function ($e) use ($user){
-                $e->from('jaacscr@contadventista.org','Departamento de Jovenes ACSCR');
-                $e->to($user->email,$user->name)->subject('Activa tu Cuenta de JA!');
+        Mail::send('auth/verification',compact('user','url'),function ($e) use ($user){
+                $e->from('info@contadventista.org','Soporte SACR');
+                $e->to($user->email,$user->name)->subject('Verifica tu Email!');
         });
 
         Mail::send('auth/registration',compact('user','url'),function ($j) use ($user){
@@ -129,5 +129,36 @@ class RegisterController extends Controller
         $user->save();
         endif;
         return redirect()->route('login')->with('alert','Email confirmado, puede Iniciar Sesión!');
+    }
+
+    public function verificacion($token)
+    {
+        $user = User::where('registration_token',$token)->first();
+        if($user):
+        $user->registration_token= null;
+        $user->save();
+        endif;
+        return redirect()->route('login')->with('alert','Email Verificado, Debe esperar que los Administradores activen su cuenta!');
+    }
+
+    public function contact()
+    {
+        return view('auth.contact');
+    }
+
+    public function contactPost(Request $request)
+    {
+        $data = $request->all();
+
+        Mail::send('auth/contacto',compact('data'),function ($e) use ($data){
+            $e->from($data['email'],$data['name']);
+            $e->to('info@contadventista.org','Soporte SACR')->subject('Verifica tu Email!');
+         });
+        Mail::send('auth/contactoUser',compact('data'),function ($e) use ($data){
+            $e->from('no-reply@sistemasamigables.com','SACR');
+            $e->to($data['email'],$data['name'])->subject('Confirmación de Recibido');
+        });
+        return redirect()->route('login')->with('alert','Se ha enviado correctamente, pronto te responderemos ');
+
     }
 }

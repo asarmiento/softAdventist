@@ -18,10 +18,12 @@ Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 Auth::routes();
 Route::get('home', ['uses'=>'HomeController@index','as'=>'home']);
 Route::get('manual-de-usuario', ['uses'=>'HomeController@help','as'=>'help']);
-/*
-Route::get('/confirmation/{token}', ['uses'=>'Auth\RegisterController@confirmation','as'=>'confirmation']);
-Route::get('/activation/{email}', ['uses'=>'Auth\RegisterController@activation','as'=>'activation']);
-Route::get('iglesia', ['uses'=>'Church\ChurchController@create','as'=>'create-church']);
+
+Route::get('/verification/{token}', ['uses'=>'Auth\RegisterController@verificacion','as'=>'verificacion']);
+Route::get('/activation/{email}', ['uses'=>'Auth\RegisterController@activation','as'=>'active']);
+Route::get('contacto', ['uses'=>'Auth\RegisterController@contact','as'=>'contact']);
+Route::post('contacto', ['uses'=>'Auth\RegisterController@contactPost','as'=>'contacto']);
+/*Route::get('iglesia', ['uses'=>'Church\ChurchController@create','as'=>'create-church']);
 
     Route::group(['prefix'=>'registrado','middleware'=>'auth'],function (){
 

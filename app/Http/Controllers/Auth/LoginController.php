@@ -42,9 +42,12 @@ class LoginController extends Controller
 
     protected function credentials($request)
     {
+        $member = Member::where('email',$request->get('email'))->first();
 
-        $church=Church::find(Member::where('email',$request->get('email'))->first()->church_id);
-        churchSession($church);
+        if($member) {
+            $church=Church::find($member->church_id);
+            churchSession($church);
+        }
         return [
                 'email'=>$request->get('email'),
                 'password'=>$request->get('password'),
