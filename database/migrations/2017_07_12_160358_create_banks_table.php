@@ -15,8 +15,8 @@ class CreateBanksTable extends Migration
     {
         Schema::create('banks', function(Blueprint $table) {
             $table->increments('id');
-            $table->string('code');
-            $table->string('name');
+            $table->string('code',200);
+            $table->string('name',200);
             $table->decimal('initial_balance',20,2);
             $table->decimal('balance',20,2);
             $table->text('token');

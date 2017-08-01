@@ -20,7 +20,7 @@ class CreateSummaryOfWeeklyEarningsTable extends Migration
             $table->decimal('forty',20,2);
             $table->decimal('sixty',20,2);
             $table->decimal('other',20,2);
-            $table->string('token');
+            $table->text('token');
             $table->integer('internal_control_id')->unsigned()->index();
             $table->foreign('internal_control_id')->references('id')->on('internal_controls')->onDelete('no action');
             $table->engine = 'InnoDB';

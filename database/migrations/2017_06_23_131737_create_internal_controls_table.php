@@ -16,9 +16,9 @@ class CreateInternalControlsTable extends Migration
             $table->increments('id');
             $table->integer('number');
             $table->decimal('balance', 20,2);
-            $table->string('number_of_envelopes');
+            $table->string('number_of_envelopes',200);
             $table->date('saturday');
-            $table->string('token');
+            $table->text('token');
             $table->integer('church_id')->unsigned()->index();
             $table->foreign('church_id')->references('id')->on('churches')->onDelete('no action');
             $table->engine = 'InnoDB';

@@ -16,7 +16,7 @@ class CreateLocalFieldIncomesTable extends Migration
             $table->increments('id');
             $table->decimal('balance', 20,2);
             $table->enum('status',['no aplicado','aplicado']);
-            $table->string('token');
+            $table->text('token');
             $table->integer('local_field_income_account_id')->unsigned()->index();
             $table->integer('internal_control_id')->unsigned()->index();
             //relation

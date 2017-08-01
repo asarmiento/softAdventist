@@ -15,8 +15,8 @@ class CreateChurchesTable extends Migration
     {
         Schema::create('churches', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name')->unique();
-            $table->string('address');
+            $table->string('name',200)->unique();
+            $table->text('address');
             $table->decimal('longitud',20,6);
             $table->decimal('latitud',20,6);
             $table->timestamps();

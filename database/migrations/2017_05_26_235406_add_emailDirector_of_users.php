@@ -13,7 +13,7 @@ class AddEmailDirectorOfUsers extends Migration
      */
     public function up() {
         Schema::table('users', function(Blueprint $table) {
-            $table->string('email_director')->after('email');
+            $table->string('email_director',200)->after('email');
         });
     }
 

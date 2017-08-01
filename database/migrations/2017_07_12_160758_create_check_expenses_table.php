@@ -16,10 +16,10 @@ class CreateCheckExpensesTable extends Migration
         Schema::create('check_expenses', function(Blueprint $table) {
             $table->increments('id');
             $table->integer('reference')->unsigned()->nullabel();
-            $table->string('number');
+            $table->string('number',200);
             $table->date('date');
             $table->text('detail');
-            $table->string('image');
+            $table->string('image',200);
             $table->decimal('balance',20,2);
             $table->enum('status',['no aplicado','aplicado'])->default('no aplicado');
             $table->text('token');

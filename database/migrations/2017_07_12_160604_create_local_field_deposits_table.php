@@ -15,7 +15,7 @@ class CreateLocalFieldDepositsTable extends Migration
     {
         Schema::create('local_field_deposits', function(Blueprint $table) {
             $table->increments('id');
-            $table->string('number');
+            $table->string('number',200);
             $table->date('date');
             $table->decimal('balance',20,2);
             $table->text('token');

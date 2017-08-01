@@ -17,7 +17,7 @@ class CreateDepartamentsTable extends Migration
             $table->string('name', 100);
             $table->decimal('percent_of_budget', 20,2)->nullable();
             $table->decimal('budget', 20,2);
-            $table->string('token');
+            $table->text('token');
             $table->integer('church_id')->unsigned()->index();
             $table->foreign('church_id')->references('id')->on('churches')->onDelete('no action');
             $table->engine = 'InnoDB';

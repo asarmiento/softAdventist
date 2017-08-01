@@ -15,10 +15,10 @@ class CreateYoungBoysTable extends Migration
     {
         Schema::create('young_boys', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('code');
-            $table->string('church');
-            $table->string('age');
-            $table->string('address');
+            $table->string('code',200);
+            $table->string('church',200);
+            $table->string('age',200);
+            $table->string('address',200);
             $table->enum('gender',['man','woman']);
             $table->integer('user_id')->unsigned()->index();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('no action');

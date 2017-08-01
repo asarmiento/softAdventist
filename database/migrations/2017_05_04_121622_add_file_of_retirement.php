@@ -14,7 +14,7 @@ class AddFileOfRetirement extends Migration
     public function up()
     {
         Schema::table('retirements', function (Blueprint $table) {
-            $table->string('file')->after('date');
+            $table->string('file',200)->after('date');
         });
     }
 

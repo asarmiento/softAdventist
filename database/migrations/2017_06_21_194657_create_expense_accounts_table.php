@@ -16,7 +16,7 @@ class CreateExpenseAccountsTable extends Migration
             $table->increments('id');
             $table->string('name', 100);
             $table->decimal('balance', 20,2);
-            $table->string('token');
+            $table->text('token');
             $table->integer('income_account_id')->unsigned()->index();
             $table->foreign('income_account_id')->references('id')->on('income_accounts')->onDelete('no action');
             $table->engine = 'InnoDB';

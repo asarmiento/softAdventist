@@ -17,7 +17,7 @@ class CreateIncomeAccountsTable extends Migration
             $table->string('name', 100);
             $table->decimal('balance', 20,2);
             $table->enum('type',['fix','temp'])->default('temp');
-            $table->string('token');
+            $table->text('token');
             $table->integer('departament_id')->unsigned()->index();
             $table->foreign('departament_id')->references('id')->on('departaments')->onDelete('no action');
             $table->engine = 'InnoDB';

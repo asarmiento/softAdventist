@@ -19,8 +19,8 @@ class CreateRetirementsTable extends Migration
             $table->enum('shirt_size',['14','16','XS','S','M','L','XL','XXL']);
             $table->enum('payment_method',['Transferencia','Deposito','Caja ACSCR']);
             $table->decimal('amount',20,2);
-            $table->string('voucher');
-            $table->string('bank');
+            $table->string('voucher',200);
+            $table->string('bank',200);
             $table->integer('young_boy_id')->unsigned()->index();
             $table->foreign('young_boy_id')->references('id')->on('young_boys')->onDelete('no action');
             $table->timestamps();

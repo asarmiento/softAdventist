@@ -14,8 +14,8 @@ class CreateLocalFieldTable extends Migration
     public function up() {
         Schema::create('local_fields', function(Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
-            $table->string('token');
+            $table->string('name',200);
+            $table->string('token',250);
             $table->engine = 'InnoDB';
             $table->timestamps();
             $table->softDeletes();

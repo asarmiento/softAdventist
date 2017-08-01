@@ -14,9 +14,9 @@ class CreateDistrictsTable extends Migration
     public function up() {
         Schema::create('districts', function(Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
-            $table->string('shepherd');
-            $table->string('token');
+            $table->string('name',200);
+            $table->string('shepherd',200);
+            $table->text('token');
             $table->integer('local_field_id')->unsigned()->index();
             $table->foreign('local_field_id')->references('id')->on('local_fields')->onDelete('no action');
             $table->engine = 'InnoDB';

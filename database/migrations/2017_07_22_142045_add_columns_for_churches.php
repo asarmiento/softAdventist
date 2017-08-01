@@ -16,8 +16,8 @@ class AddColumnsForChurches extends Migration
     {
         Schema::table('churches', function (Blueprint $table) {
             $table->string('url',100)->after('name');
-            $table->string('phone',20)->after('url');
-            $table->string('email',20)->after('phone');
+            $table->string('phone',80)->after('url');
+            $table->string('email',80)->after('phone');
             $table->integer('user_id')->unsigned()->after('district_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('no action');
         });

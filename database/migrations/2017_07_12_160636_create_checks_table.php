@@ -15,9 +15,9 @@ class CreateChecksTable extends Migration
     {
         Schema::create('checks', function(Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
-            $table->string('number');
-            $table->string('image');
+            $table->string('name',200);
+            $table->string('number',200);
+            $table->string('image',200);
             $table->date('date');
             $table->text('detail');
             $table->decimal('balance',20,2);

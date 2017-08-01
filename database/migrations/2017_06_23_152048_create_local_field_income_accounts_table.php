@@ -16,7 +16,7 @@ class CreateLocalFieldIncomeAccountsTable extends Migration
             $table->increments('id');
             $table->string('name', 100);
             $table->decimal('balance', 20,2);
-            $table->string('token');
+            $table->text('token');
             $table->integer('local_field_id')->unsigned()->index();
             $table->foreign('local_field_id')->references('id')->on('local_fields')->onDelete('no action');
             $table->engine = 'InnoDB';
