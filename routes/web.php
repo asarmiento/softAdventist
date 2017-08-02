@@ -68,10 +68,13 @@ Route::post('contacto', ['uses'=>'Auth\RegisterController@contactPost','as'=>'co
         Route::get('cuentas-bancarias', ['uses'=>'Bank\BankController@create','as'=>'create-bank']);
         Route::post('save-bank', 'Bank\BankController@store');
 
-
+        /**
+         * Depositos de Iglesia
+         */
         Route::get('depositos-de-la-iglesia', ['uses'=>'Bank\ChurchDepositController@create','as'=>'register-deposit']);
         Route::get('lista-depositos', ['uses'=>'Bank\ChurchDepositController@lists','as'=>'list-deposit']);
         Route::post('save-church-deposit', 'Bank\ChurchDepositController@store');
+        Route::post('upload-church-deposit', 'Bank\ChurchDepositController@upload');
         Route::post('remove-deposit', 'Bank\ChurchDepositController@remove');
         /**
          * Ingresos

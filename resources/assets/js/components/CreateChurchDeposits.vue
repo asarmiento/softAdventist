@@ -72,9 +72,63 @@
                             <small class="help-block">{{errors.total}}</small>
                         </div>
                     </div>
+                    <div class=" col-lg-5 col-md-5  ">
+                        <div class="panel-body">
+                            <!--Dropzonejs using Bootstrap theme-->
+                            <!--===================================================-->
+                            <p>Debe subir la imagen del control interno firmado.</p>
+                            <div class="bord-top pad-ver">
+                                <!-- The fileinput-button span is used to style the file input field as button -->
+                                <span class="btn btn-file btn-success fileinput-button dz-clickable">
+					                <i class="fa fa-plus"></i>
+					                Buscar Archivo...
+                                     <input type="file" id="items" @change="onChange"
+                                            name="items">
+					            </span>
+                                <div class="btn-group pull-right">
+                                    <button id="dz-upload-btn" @click="onSubmit" class="btn btn-primary" type="submit">
+                                        <i class="fa fa-upload-cloud"></i> subir
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="dz-previews">
+                                <div id="" class="pad-top bord-top dz-image-preview">
+                                    <div class="media" v-if="itemsNames">
+                                        <div class="media-body">
+                                            <!--This is used as the file preview template-->
+                                            <div class="media-block">
+                                                <div class="media-body">
+                                                    <p class="text-main text-bold mar-no text-overflow" data-dz-name="">
+                                                        {{itemsNames}}</p>
+                                                    <span class="dz-error text-danger text-sm"
+                                                          data-dz-errormessage=""></span>
+                                                    <p class="text-sm" data-dz-size=""><strong>{{itemsSizes}}</strong>
+                                                    </p>
+                                                    <div id="dz-total-progress" style="opacity:50">
+                                                        <div class="progress progress-xs active" role="progressbar"
+                                                             aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                                                            <div class="progress-bar progress-bar-success"
+                                                                 style="width:15%;"
+                                                                 data-dz-uploadprogress=""></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="media-right">
+                                            <button data-dz-remove="" @click="removeItems"
+                                                    class="btn btn-xs btn-danger dz-cancel">
+                                                <i class="demo-pli-cross"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--End Dropzonejs using Bootstrap theme-->
+                        </div>
+                    </div>
                     <div class="col-lg-12 col-md-12  text-center">
                         <div class="btn">
-                            <button v-on:click="send" class="btn btn-success">Guardar</button>
+                            <button :disabled="data.name === null" v-on:click="send" class="btn btn-success">Guardar</button>
                         </div>
                     </div>
                 </div>
@@ -168,7 +222,6 @@
     import vSelect from "vue-select";
     import myDatepicker  from "vue-datepicker";
     import {Confirm} from '@lassehaslev/vue-confirm';
-
     export default {
         props: ['title', 'url', 'banks'],
         components: {vSelect, myDatepicker},
@@ -181,7 +234,8 @@
                     internal_control_id: [],
                     bank_id: '',
                     total: '',
-
+                    typeCD:'',
+                    name:null
                 },
                 errors: {
                     number: '',
@@ -190,6 +244,8 @@
                     internal_control_id: [],
                     bank_id: '',
                     total: '',
+                    typeCD:'',
+                    name:null
                 },
                 state: {
                     highlighted: {
@@ -204,6 +260,10 @@
                 },
                 internals: [],
                 all_depositos: [],
+                formData: '',
+                items: '',
+                itemsNames: '',
+                itemsSizes: '',
             }
         },
         computed: {
@@ -322,7 +382,67 @@
                         alert("Error");
                     }
                 });
-            }
+            },
+            bytesToSize(bytes) {
+                const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+                if (bytes === 0) return 'n/a';
+                let i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+                if (i === 0) return bytes + ' ' + sizes[i];
+                return (bytes / Math.pow(1024, i)).toFixed(2) + ' ' + sizes[i];
+            },
+            onChange(e) {
+                this.formData = new FormData();
+                let files = e.target.files || e.dataTransfer.files;
+                let fileSizes = 0;
+                for (let fileIn in files) {
+                    if (!isNaN(fileIn)) {
+                        this.items = e.target.files[fileIn] || e.dataTransfer.files[fileIn];
+                        this.itemsNames = files[fileIn].name;
+                        this.data.typeCD = files[fileIn].type;
+                        this.itemsSizes = this.bytesToSize(files[fileIn].size);
+                        fileSizes = files[fileIn].size;
+                        this.formData.append('items', this.items);
+                        console.log(files[fileIn])
+                    }
+                }
+            },
+            removeItems() {
+                this.items = '';
+                this.itemsNames = '';
+                this.itemsSizes = '';
+            },
+            onSubmit() {
+                axios.post('http://softadventist.dev/tesoreria/upload-church-deposit', this.formData)
+                    .then(response => {
+                        this.data.name = response.data
+                        console.log(response.data)
+                    }).catch(function (error) {
+                    if (error.response) {
+                        let data = error.response.data;
+                        if (error.response.status === 422) {
+                            for (var index in data) {
+                                var messages = '';
+                                data[index].forEach(function (item) {
+                                    messages += item + ' '
+                                });
+                                self.errors[index] = messages;
+                            }
+                        } else if (error.response.status === 401) {
+                            self.errors.response.invalid = true;
+                            self.errors.response.msg = data.msg.message;
+                        } else {
+                            console.log(error);
+                            alert("Error generic");
+                        }
+                    } else if (error.request) {
+                        console.log(error.request);
+                        alert("Error empty");
+                    } else {
+                        console.log('Error', error.message);
+                        alert("Error");
+                    }
+                });
+            },
         },
     }
 </script>

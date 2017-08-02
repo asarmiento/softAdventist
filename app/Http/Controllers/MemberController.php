@@ -10,15 +10,34 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use function Sodium\randombytes_random16;
 use Validator;
+use Yajra\Datatables\Datatables;
 
 class MemberController extends Controller
 {
+    use ListInformMembersTraits;
+
+
+    /**
+     * MemberController constructor.
+     */
     public function __construct() {
             $this->middleware('cont')->only('create','edit','store','listMemberInfo');
     }
 
 
-    use ListInformMembersTraits;
+    /**
+     * ---------------------------------------------------------------------
+     * @Author     : Anwar Sarmiento "asarmiento@sistemasamigables.com"
+     * @Date       Create: ${DATE}
+     * @Time       Create: ${TIME}
+     * @Date       Update: 0000-00-00
+     * ---------------------------------------------------------------------
+     * @Description:
+     * @Pasos      :
+     * ----------------------------------------------------------------------
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * ----------------------------------------------------------------------
+     */
     public function index()
     {
         return view('members.listsMembers');
@@ -27,9 +46,8 @@ class MemberController extends Controller
     public function getData()
     {
         $model =  Member::searchPaginateAndOrder();
-        $columns = Member::$columns;
-
-        return response()->json([
+     /*   $columns = Member::$columns;
+        $response = [
             'model'=>[
                 'pagination' => [
                     'total' => $model->total(),
@@ -42,9 +60,10 @@ class MemberController extends Controller
                 'data' => $model
             ],
             'columns'=>$columns
-        ]);
+        ];*/
+        return $model;
 
-         response()->json($response);
+        // response()->json($response);
     }
 
     public function create()

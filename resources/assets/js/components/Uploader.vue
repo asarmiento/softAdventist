@@ -2,9 +2,60 @@
     <div :class="pOI(styleClass)">
         <form role="form" enctype="multipart/form-data" @submit.prevent="">
 
-            <div class="loader" v-if="isLoaderVisible">
-                    <div class="loaderImg"></div>
+            <div class=" col-lg-5 col-md-5  ">
+                <div class="panel-body">
+                    <!--Dropzonejs using Bootstrap theme-->
+                    <!--===================================================-->
+                    <p>Debe subir la imagen del control interno firmado.</p>
+                    <div class="bord-top pad-ver">
+                        <!-- The fileinput-button span is used to style the file input field as button -->
+                        <span class="btn btn-file btn-success fileinput-button dz-clickable">
+					                <i class="fa fa-plus"></i>
+					                Buscar Archivo...
+                                     <input type="file" id="items" @change="onChange"
+                                            name="items">
+					            </span>
+                        <div class="btn-group pull-right">
+                            <button id="dz-upload-btn" @click="onSubmit" class="btn btn-primary" type="submit">
+                                <i class="fa fa-upload-cloud"></i> subir
+                            </button>
+                        </div>
+                    </div>
+                    <div id="dz-previews">
+                        <div id="" class="pad-top bord-top dz-image-preview">
+                            <div class="media" v-if="itemsNames">
+                                <div class="media-body">
+                                    <!--This is used as the file preview template-->
+                                    <div class="media-block">
+                                        <div class="media-body">
+                                            <p class="text-main text-bold mar-no text-overflow" data-dz-name="">
+                                                {{itemsNames}}</p>
+                                            <span class="dz-error text-danger text-sm"
+                                                  data-dz-errormessage=""></span>
+                                            <p class="text-sm" data-dz-size=""><strong>{{itemsSizes}}</strong>
+                                            </p>
+                                            <div id="dz-total-progress" style="opacity:50">
+                                                <div class="progress progress-xs active" role="progressbar"
+                                                     aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                                                    <div class="progress-bar progress-bar-success"
+                                                         style="width:15%;"
+                                                         data-dz-uploadprogress=""></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="media-right">
+                                    <button data-dz-remove="" @click="removeItems"
+                                            class="btn btn-xs btn-danger dz-cancel">
+                                        <i class="demo-pli-cross"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--End Dropzonejs using Bootstrap theme-->
                 </div>
+            </div>
 
 
 
