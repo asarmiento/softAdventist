@@ -28656,7 +28656,7 @@ return zhTw;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(154);
-module.exports = __webpack_require__(300);
+module.exports = __webpack_require__(302);
 
 
 /***/ }),
@@ -63811,13 +63811,13 @@ if (false) {
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(314)
+  __webpack_require__(298)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(298),
+  __webpack_require__(300),
   /* template */
-  __webpack_require__(299),
+  __webpack_require__(301),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -63850,14 +63850,50 @@ module.exports = Component.exports
 
 /***/ }),
 /* 298 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(299);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(4)("4b3f0bcd", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-d465e1d8\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./ListsMembers.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-d465e1d8\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./ListsMembers.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 299 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(3)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, "\n.title{\n      border:1px solid #000;\n      width:300px;\n      /*padding-right:30%;*/\n      text-align:left !important;\n}\n.value{\n      clear: both;\n      min-width:200px;\n      text-align:left !important;\n}\n /** .listStyle{\n      border: solid 1px #000;\n      width:1024px;\n  }*/\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 300 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
 //
 //
 //
@@ -64024,9 +64060,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             self.datos = response.data.model;
             self.columns = response.data.columns;
         });
+        console.log(this.numberPaginate(self.datos.last_page));
     },
 
     methods: {
+        numberPaginate: function numberPaginate(number) {
+            var x;
+            for (x = 0; x > number; x++) {
+                return number[x];
+            }
+            /* "<li v-for='(number, index) in datos.last_page' class='page-number active'
+                 v-if='number === datos.current_page'>
+                     <a href='' @click.prevent='page(datos.path,number)'>number</a>
+                 </li>";
+                 <li v-else class="page-number">
+                     <a href="" @click.prevent="page(datos.path,number)">{{number}}</a>
+                 </li>*/
+        },
         styleType: function styleType() {
             var self = this;
             if (this.typeStyle) {
@@ -64081,7 +64131,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 299 */
+/* 301 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -64330,33 +64380,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.pagePre(_vm.datos.prev_page_url)
       }
     }
-  }, [_vm._v("‹")])]), _vm._v(" "), _vm._l((_vm.datos.last_page), function(number, index) {
-    return (number === _vm.datos.current_page) ? _c('li', {
-      staticClass: "page-number active"
-    }, [_c('a', {
-      attrs: {
-        "href": ""
-      },
-      on: {
-        "click": function($event) {
-          $event.preventDefault();
-          _vm.page(_vm.datos.path, number)
-        }
-      }
-    }, [_vm._v(_vm._s(number))])]) : _c('li', {
-      staticClass: "page-number"
-    }, [_c('a', {
-      attrs: {
-        "href": ""
-      },
-      on: {
-        "click": function($event) {
-          $event.preventDefault();
-          _vm.page(_vm.datos.path, number)
-        }
-      }
-    }, [_vm._v(_vm._s(number))])])
-  }), _vm._v(" "), _c('li', {
+  }, [_vm._v("‹")])]), _vm._v("\n                        " + _vm._s(_vm.numberPaginate(_vm.datos.last_page)) + "\n\n                        "), _c('li', {
     directives: [{
       name: "show",
       rawName: "v-show",
@@ -64374,7 +64398,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.pageNext(_vm.datos.next_page_url)
       }
     }
-  }, [_vm._v("›")])])], 2)])])])]), _vm._v(" "), _c('div', {
+  }, [_vm._v("›")])])])])])])]), _vm._v(" "), _c('div', {
     staticClass: "clearfix"
   })])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -64477,63 +64501,10 @@ if (false) {
 }
 
 /***/ }),
-/* 300 */
+/* 302 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 301 */,
-/* 302 */,
-/* 303 */,
-/* 304 */,
-/* 305 */,
-/* 306 */,
-/* 307 */,
-/* 308 */,
-/* 309 */,
-/* 310 */,
-/* 311 */,
-/* 312 */,
-/* 313 */,
-/* 314 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(315);
-if(typeof content === 'string') content = [[module.i, content, '']];
-if(content.locals) module.exports = content.locals;
-// add the styles to the DOM
-var update = __webpack_require__(4)("4b3f0bcd", content, false);
-// Hot Module Replacement
-if(false) {
- // When the styles change, update the <style> tags
- if(!content.locals) {
-   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-d465e1d8\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./ListsMembers.vue", function() {
-     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-d465e1d8\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./ListsMembers.vue");
-     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-     update(newContent);
-   });
- }
- // When the module is disposed, remove the <style> tags
- module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 315 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(3)(undefined);
-// imports
-
-
-// module
-exports.push([module.i, "\n.title{\n    clear: both;\n     border:1px solid #000;\n     min-width:50%;\n     /*/padding-right:30%;*/\n     text-align:left !important;\n}\n.value{\n     clear: both;\n     min-width:200px;\n     text-align:left !important;\n}\n/** .listStyle{\n     border: solid 1px #000;\n     width:1024px;\n }*/\n", ""]);
-
-// exports
-
 
 /***/ })
 /******/ ]);

@@ -14,7 +14,6 @@ class CreateInternalControlsTable extends Migration
     public function up() {
         Schema::create('internal_controls', function(Blueprint $table) {
             $table->increments('id');
-            $table->string('image',250);
             $table->integer('number');
             $table->decimal('balance', 20,2);
             $table->string('number_of_envelopes',200);

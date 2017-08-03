@@ -128,11 +128,7 @@
                             <li v-show="datos.prev_page_url" class="page-pre">
                                 <a href="" @click.prevent="pagePre(datos.prev_page_url)">‹</a>
                             </li>
-                            <li v-for="(number, index) in datos.last_page" class="page-number active"
-                                v-if="number === datos.current_page">
-                                <a href="" @click.prevent="page(datos.path,number)">{{number}}</a></li>
-                            <li v-else class="page-number"><a href="" @click.prevent="page(datos.path,number)">{{number}}</a>
-                            </li>
+                            {{numberPaginate(datos.last_page)}}
 
                             <li v-show="datos.next_page_url" class="page-next">
                                 <a href="" @click.prevent="pageNext(datos.next_page_url)">›</a>
@@ -167,8 +163,22 @@
                 self.datos = response.data.model;
                 self.columns = response.data.columns;
             });
+            console.log(this.numberPaginate(self.datos.last_page))
         },
         methods: {
+            numberPaginate(number){
+                var x;
+                for(x=0;x>number;x++){
+                    return (number[x]);
+                }
+           /* "<li v-for='(number, index) in datos.last_page' class='page-number active'
+                v-if='number === datos.current_page'>
+                    <a href='' @click.prevent='page(datos.path,number)'>number</a>
+                </li>";
+                <li v-else class="page-number">
+                    <a href="" @click.prevent="page(datos.path,number)">{{number}}</a>
+                </li>*/
+            },
             styleType() {
                 var self = this;
                 if (this.typeStyle) {
@@ -223,11 +233,10 @@
 </script>
 
 <style>
-   .title{
-       clear: both;
+  .title{
         border:1px solid #000;
-        min-width:50%;
-        /*/padding-right:30%;*/
+        width:300px;
+        /*padding-right:30%;*/
         text-align:left !important;
     }
     .value{
