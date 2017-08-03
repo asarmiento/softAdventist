@@ -76,4 +76,17 @@ class Member extends Entity
     {
         return $this->hasMany(LocalFieldIncome::getClass());
     }
+
+    public function scopeSearch($query, $search){
+        if(trim($search) != ""){
+            $query->where("name","LIKE","%$search%")
+                ->orWhere("last","LIKE","%$search%")
+                ->orWhere("bautizmoDate","LIKE","%$search%")
+                ->orWhere("birthdate","LIKE","%$search%")
+                ->orWhere("phone","LIKE","%$search%")
+                ->orWhere("email","LIKE","%$search%")
+                ->orWhere("charter","LIKE","%$search%");
+        }
+
+    }
 }

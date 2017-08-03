@@ -37,6 +37,4 @@ Vue.component('listsMembers', require('./components/ListsMembers.vue'));
 
 const app = new Vue({
         el: '#app',
-
-
 });

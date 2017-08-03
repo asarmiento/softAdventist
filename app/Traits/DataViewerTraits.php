@@ -10,8 +10,8 @@ namespace App\Traits;
 
 trait DataViewerTraits
 {
-    public function scopeSearchPaginateAndOrder($query)
+    public function scopeSearchPaginateAndOrder($query, $count = 10,$search = null)
     {
-        return $query->paginate(10);
+        return $query->search($search)->paginate($count);
     }
 }

@@ -14,14 +14,16 @@ use Yajra\Datatables\Datatables;
 
 class MemberController extends Controller
 {
+
     use ListInformMembersTraits;
 
 
     /**
      * MemberController constructor.
      */
-    public function __construct() {
-            $this->middleware('cont')->only('create','edit','store','listMemberInfo');
+    public function __construct()
+    {
+        $this->middleware('cont')->only('create', 'edit', 'store', 'listMemberInfo');
     }
 
 
@@ -43,72 +45,72 @@ class MemberController extends Controller
         return view('members.listsMembers');
     }
 
-    public function getData()
+
+    public function getData(Request $request)
     {
-        $model =  Member::searchPaginateAndOrder();
-     /*   $columns = Member::$columns;
+        $model = Member::searchPaginateAndOrder(($request->get('all')) ? $request->get('all') : $request->get('perPage'),
+            $request->get('search'));
+
+        $columns = Member::$columns;
         $response = [
-            'model'=>[
-                'pagination' => [
-                    'total' => $model->total(),
-                    'per_page' => $model->perPage(),
-                    'current_page' => $model->currentPage(),
-                    'last_page' => $model->lastPage(),
-                    'from' => $model->firstItem(),
-                    'to' => $model->lastItem()
-                ],
-                'data' => $model
-            ],
-            'columns'=>$columns
-        ];*/
-        return $model;
+            'model' => $model,
+
+            'columns' => $columns
+        ];
+
+        return $response;
 
         // response()->json($response);
     }
+
 
     public function create()
     {
         return view('members.create');
     }
 
+
     public function edit()
     {
         $member = Member::all();
-        return view('members.create',compact('member'));
+
+        return view('members.create', compact('member'));
     }
+
 
     public function store(CreateMemberRequest $request)
     {
         $data = $request->all();
-        $data = $this->CreacionArray($data,'');
-        $user = User::where('email',$data['email'])->first();
-        $data['church_id']= 1;
-        if(count($user)==0):
+        $data = $this->CreacionArray($data, '');
+        $user = User::where('email', $data['email'])->first();
+        $data['church_id'] = 1;
+        if (count($user) == 0):
             $user = User::create([
                 'identification_card' => $data['charter'],
-                'name' => $data['name'],
-                'last_name' => $data['last'],
-                'email' => $data['email'],
-                'status' => 'activo',
-                'token' => str_random(40),
-                'password' => bcrypt(123456),
+                'name'                => $data['name'],
+                'last_name'           => $data['last'],
+                'email'               => $data['email'],
+                'status'              => 'activo',
+                'token'               => str_random(40),
+                'password'            => bcrypt(123456),
             ]);
         endif;
 
-        $data['user_id']= $user->id;
+        $data['user_id'] = $user->id;
         $member = new Member();
         $member->fill($data);
-        if($member->save()):
-           return $this->exito(trans('El Miembro: ').$member->nameComplete());
+        if ($member->save()):
+            return $this->exito(trans('El Miembro: ').$member->nameComplete());
         endif;
+
         return $this->errores($member->errors);
 
     }
+
 
     public function listMemberInfo()
     {
         return response()->json($this->listEnvelopesCreate());
     }
-
 
 }

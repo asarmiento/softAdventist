@@ -28698,7 +28698,6 @@ Vue.component('listsMembers', __webpack_require__(297));
 
 var app = new Vue({
   el: '#app'
-
 });
 
 /***/ }),
@@ -63810,13 +63809,17 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(314)
+}
 var Component = __webpack_require__(1)(
   /* script */
   __webpack_require__(298),
   /* template */
   __webpack_require__(299),
   /* styles */
-  null,
+  injectStyle,
   /* scopeId */
   null,
   /* moduleIdentifier (server only) */
@@ -63999,169 +64002,81 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-// import VuePaginator from 'vuejs-paginator'
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['source', 'title'],
     components: {},
     data: function data() {
         return {
-            animals: [],
-            members: []
-
+            txtSearch: '',
+            counts: ['5', '10', '20', '50'],
+            datos: [],
+            columns: [],
+            typeAll: true,
+            typeStyle: true
         };
     },
 
-    // Here you define the url of your paginated API
     computed: {},
     created: function created() {
         var self = this;
         this.$http.get('/tesoreria/lists-miembros').then(function (response) {
-            self.members = response;
+            self.datos = response.data.model;
+            self.columns = response.data.columns;
         });
-        console.log(self.members);
     },
 
     methods: {
-        updateResource: function updateResource(data) {}
+        styleType: function styleType() {
+            var self = this;
+            if (this.typeStyle) {
+                this.typeStyle = false;
+            } else {
+                this.typeStyle = true;
+            }
+        },
+
+        sarch: function sarch(url) {
+            var self = this;
+            this.$http.get(url + '?search=' + this.txtSearch).then(function (response) {
+                self.datos = response.data.model;
+            });
+        },
+        pagePre: function pagePre(url) {
+            var self = this;
+            this.$http.get(url).then(function (response) {
+                self.datos = response.data.model;
+            });
+        },
+        pageNext: function pageNext(url) {
+            var self = this;
+            this.$http.get(url).then(function (response) {
+                self.datos = response.data.model;
+            });
+        },
+        page: function page(url, number) {
+            var self = this;
+            this.$http.get(url + '?page=' + number).then(function (response) {
+                self.datos = response.data.model;
+            });
+        },
+        perPage: function perPage(url, number) {
+            var self = this;
+            this.$http.get(url + '?perPage=' + number).then(function (response) {
+                self.datos = response.data.model;
+            });
+        },
+        all: function all(url, total) {
+            var self = this;
+            if (this.typeAll) {
+                this.typeAll = false;
+            } else {
+                this.typeAll = true;
+            }
+            this.$http.get(url + '?all=' + total).then(function (response) {
+                self.datos = response.data.model;
+            });
+        }
     }
 });
 
@@ -64170,8 +64085,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _vm._m(0)
-},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "row panel-body"
   }, [_c('div', {
@@ -64180,12 +64093,33 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "fixed-table-toolbar"
   }, [_c('div', {
     staticClass: "columns columns-right btn-group pull-right"
-  }, [_c('button', {
+  }, [(_vm.typeAll) ? _c('button', {
     staticClass: "btn btn-default",
     attrs: {
       "type": "button",
       "name": "paginationSwitch",
       "title": "Hide/Show pagination"
+    },
+    on: {
+      "click": function($event) {
+        if (!('button' in $event) && _vm._k($event.keyCode, "prevet")) { return null; }
+        _vm.all(_vm.datos.path, _vm.datos.total)
+      }
+    }
+  }, [_c('i', {
+    staticClass: "glyphicon demo-pli-arrow-down"
+  })]) : _c('button', {
+    staticClass: "btn btn-default",
+    attrs: {
+      "type": "button",
+      "name": "paginationSwitch",
+      "title": "Hide/Show pagination"
+    },
+    on: {
+      "click": function($event) {
+        if (!('button' in $event) && _vm._k($event.keyCode, "prevet")) { return null; }
+        _vm.all(_vm.datos.path, 15)
+      }
     }
   }, [_c('i', {
     staticClass: "glyphicon demo-pli-arrow-down"
@@ -64193,110 +64127,51 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "btn btn-default",
     attrs: {
       "type": "button",
-      "name": "refresh",
-      "title": "Refresh"
-    }
-  }, [_c('i', {
-    staticClass: "glyphicon demo-pli-repeat-2"
-  })]), _vm._v(" "), _c('button', {
-    staticClass: "btn btn-default",
-    attrs: {
-      "type": "button",
       "name": "toggle",
       "title": "Toggle"
+    },
+    on: {
+      "click": function($event) {
+        if (!('button' in $event) && _vm._k($event.keyCode, "prevet")) { return null; }
+        _vm.styleType($event)
+      }
     }
   }, [_c('i', {
     staticClass: "glyphicon demo-pli-layout-grid"
-  })]), _vm._v(" "), _c('div', {
-    staticClass: "keep-open btn-group",
-    attrs: {
-      "title": "Columns"
-    }
-  }, [_c('button', {
-    staticClass: "btn btn-default dropdown-toggle",
-    attrs: {
-      "type": "button",
-      "data-toggle": "dropdown",
-      "aria-expanded": "false"
-    }
-  }, [_c('i', {
-    staticClass: "glyphicon demo-pli-check"
-  }), _vm._v(" "), _c('span', {
-    staticClass: "caret"
-  })]), _vm._v(" "), _c('ul', {
-    staticClass: "dropdown-menu",
-    attrs: {
-      "role": "menu"
-    }
-  }, [_c('li', [_c('label', [_c('input', {
-    attrs: {
-      "type": "checkbox",
-      "data-field": "id",
-      "value": "0",
-      "checked": "checked"
-    }
-  }), _vm._v("\n                            Invoice")])]), _vm._v(" "), _c('li', [_c('label', [_c('input', {
-    attrs: {
-      "type": "checkbox",
-      "data-field": "name",
-      "value": "1",
-      "checked": "checked"
-    }
-  }), _vm._v("\n                            Name")])]), _vm._v(" "), _c('li', [_c('label', [_c('input', {
-    attrs: {
-      "type": "checkbox",
-      "data-field": "date",
-      "value": "2",
-      "checked": "checked"
-    }
-  }), _vm._v(" Order date")])]), _vm._v(" "), _c('li', [_c('label', [_c('input', {
-    attrs: {
-      "type": "checkbox",
-      "data-field": "amount",
-      "value": "3",
-      "checked": "checked"
-    }
-  }), _vm._v("\n                            Amount")])]), _vm._v(" "), _c('li', [_c('label', [_c('input', {
-    attrs: {
-      "type": "checkbox",
-      "data-field": "status",
-      "value": "4",
-      "checked": "checked"
-    }
-  }), _vm._v("\n                            Status")])]), _vm._v(" "), _c('li', [_c('label', [_c('input', {
-    attrs: {
-      "type": "checkbox",
-      "data-field": "track",
-      "value": "5",
-      "checked": "checked"
-    }
-  }), _vm._v(" Tracking\n                            Number")])])])])]), _vm._v(" "), _c('div', {
+  })])]), _vm._v(" "), _c('div', {
     staticClass: "pull-right search"
   }, [_c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.txtSearch),
+      expression: "txtSearch"
+    }],
     staticClass: "form-control",
     attrs: {
       "type": "text",
-      "placeholder": "Search"
+      "placeholder": "Buscar"
+    },
+    domProps: {
+      "value": (_vm.txtSearch)
+    },
+    on: {
+      "keyup": function($event) {
+        _vm.sarch(_vm.datos.path)
+      },
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.txtSearch = $event.target.value
+      }
     }
   })])]), _vm._v(" "), _c('div', {
     staticClass: "fixed-table-container",
     staticStyle: {
       "padding-bottom": "0px"
     }
-  }, [_c('div', {
-    staticClass: "fixed-table-header",
-    staticStyle: {
-      "display": "none"
-    }
-  }, [_c('table')]), _vm._v(" "), _c('div', {
+  }, [_vm._m(0), _vm._v(" "), (_vm.typeStyle) ? _c('div', {
     staticClass: "fixed-table-body"
-  }, [_c('div', {
-    staticClass: "fixed-table-loading",
-    staticStyle: {
-      "top": "41px",
-      "display": "none"
-    }
-  }, [_vm._v("Loading, please wait...")]), _vm._v(" "), _c('table', {
+  }, [_c('table', {
     staticClass: "table table-hover",
     attrs: {
       "id": "demo-editable",
@@ -64305,545 +64180,92 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "data-show-toggle": "true",
       "data-show-columns": "true",
       "data-sort-name": "id",
-      "data-page-list": "[5, 10, 20]",
+      "data-page-list": "counts",
       "data-page-size": "10",
       "data-pagination": "true",
       "data-show-pagination-switch": "true"
     }
-  }, [_c('thead', [_c('tr', [_c('th', {
-    attrs: {
-      "data-field": "id",
-      "tabindex": "0"
-    }
-  }, [_c('div', {
-    staticClass: "th-inner "
-  }, [_vm._v("Invoice")]), _vm._v(" "), _c('div', {
-    staticClass: "fht-cell"
-  })]), _vm._v(" "), _c('th', {
-    attrs: {
-      "data-field": "name",
-      "tabindex": "0"
-    }
-  }, [_c('div', {
-    staticClass: "th-inner "
-  }, [_vm._v("Name")]), _vm._v(" "), _c('div', {
-    staticClass: "fht-cell"
-  })]), _vm._v(" "), _c('th', {
-    attrs: {
-      "data-field": "date",
-      "tabindex": "0"
-    }
-  }, [_c('div', {
-    staticClass: "th-inner "
-  }, [_vm._v("Order date")]), _vm._v(" "), _c('div', {
-    staticClass: "fht-cell"
-  })]), _vm._v(" "), _c('th', {
-    attrs: {
-      "data-field": "amount",
-      "tabindex": "0"
-    }
-  }, [_c('div', {
-    staticClass: "th-inner "
-  }, [_vm._v("Amount")]), _vm._v(" "), _c('div', {
-    staticClass: "fht-cell"
-  })]), _vm._v(" "), _c('th', {
+  }, [_vm._m(1), _vm._v(" "), _c('tbody', _vm._l((_vm.datos.data), function(dato, index) {
+    return _c('tr', {
+      attrs: {
+        "data-index": index
+      }
+    }, [_c('td', {}, [_c('a', {
+      staticClass: "btn-link",
+      attrs: {
+        "href": "#"
+      }
+    }, [_vm._v(" " + _vm._s(dato.charter))])]), _vm._v(" "), _c('td', {}, [_c('a', {
+      staticClass: "editable editable-click",
+      attrs: {
+        "href": "",
+        "data-name": "name",
+        "data-pk": "53431",
+        "data-value": "Steve N. Horton"
+      }
+    }, [_vm._v(_vm._s(dato.name) + "\n                            " + _vm._s(dato.last))])]), _vm._v(" "), _c('td', {}, [_vm._v(_vm._s(dato.birthdate))]), _vm._v(" "), _c('td', {}, [_vm._v(_vm._s(dato.bautizmoDate))]), _vm._v(" "), _c('td', {}), _vm._v(" "), _vm._m(2, true)])
+  }))])]) : _c('div', {
+    staticClass: "fixed-table-body"
+  }, [_c('table', {
+    staticClass: "table table-hover",
     staticStyle: {
-      "text-align": "center"
+      "margin-top": "0px"
     },
     attrs: {
-      "data-field": "status",
-      "tabindex": "0"
+      "data-search": "true",
+      "data-show-refresh": "true",
+      "data-show-toggle": "true",
+      "data-show-columns": "true",
+      "data-sort-name": "id",
+      "data-pagination": "true",
+      "data-show-pagination-switch": "true"
     }
-  }, [_c('div', {
-    staticClass: "th-inner "
-  }, [_vm._v("Status")]), _vm._v(" "), _c('div', {
-    staticClass: "fht-cell"
-  })]), _vm._v(" "), _c('th', {
-    attrs: {
-      "data-field": "track",
-      "tabindex": "0"
-    }
-  }, [_c('div', {
-    staticClass: "th-inner "
-  }, [_vm._v("Tracking Number")]), _vm._v(" "), _c('div', {
-    staticClass: "fht-cell"
-  })])])]), _vm._v(" "), _c('tbody', [_c('tr', {
-    attrs: {
-      "data-index": "0"
-    }
-  }, [_c('td', {}, [_c('a', {
-    staticClass: "btn-link",
-    attrs: {
-      "href": "#"
-    }
-  }, [_vm._v(" Order #53431")])]), _vm._v(" "), _c('td', {}, [_c('a', {
-    staticClass: "editable editable-click",
-    attrs: {
-      "href": "javascript:void(0)",
-      "data-name": "name",
-      "data-pk": "53431",
-      "data-value": "Steve N. Horton"
-    }
-  }, [_vm._v("Steve N.\n                            Horton")])]), _vm._v(" "), _c('td', {}, [_vm._v("Oct 22, 2014")]), _vm._v(" "), _c('td', {}, [_c('a', {
-    staticClass: "editable editable-click",
-    attrs: {
-      "href": "javascript:void(0)",
-      "data-name": "amount",
-      "data-pk": "53431",
-      "data-value": "$45.00",
-      "data-original-title": "",
-      "title": ""
-    }
-  }, [_vm._v("$45.00")])]), _vm._v(" "), _c('td', {
-    staticStyle: {
-      "text-align": "center"
-    }
-  }, [_c('div', {
-    staticClass: "label label-table label-success"
-  }, [_vm._v(" Paid")])]), _vm._v(" "), _c('td', {}, [_c('a', {
-    staticClass: "editable editable-click",
-    attrs: {
-      "href": "javascript:void(0)",
-      "data-name": "track",
-      "data-pk": "53431",
-      "data-value": "undefined"
-    }
-  }, [_vm._v("undefined")])])]), _vm._v(" "), _c('tr', {
-    attrs: {
-      "data-index": "1"
-    }
-  }, [_c('td', {}, [_c('a', {
-    staticClass: "btn-link",
-    attrs: {
-      "href": "#"
-    }
-  }, [_vm._v(" Order #53432")])]), _vm._v(" "), _c('td', {}, [_c('a', {
-    staticClass: "editable editable-click",
-    attrs: {
-      "href": "javascript:void(0)",
-      "data-name": "name",
-      "data-pk": "53432",
-      "data-value": "Charles S Boyle"
-    }
-  }, [_vm._v("Charles S\n                            Boyle")])]), _vm._v(" "), _c('td', {}, [_vm._v("Oct 24, 2014")]), _vm._v(" "), _c('td', {}, [_c('a', {
-    staticClass: "editable editable-click",
-    attrs: {
-      "href": "javascript:void(0)",
-      "data-name": "amount",
-      "data-pk": "53432",
-      "data-value": "$245.30",
-      "data-original-title": "",
-      "title": ""
-    }
-  }, [_vm._v("$245.30")])]), _vm._v(" "), _c('td', {
-    staticStyle: {
-      "text-align": "center"
-    }
-  }, [_c('div', {
-    staticClass: "label label-table label-info"
-  }, [_vm._v(" Shipped")])]), _vm._v(" "), _c('td', {}, [_c('a', {
-    staticClass: "editable editable-click",
-    attrs: {
-      "href": "javascript:void(0)",
-      "data-name": "track",
-      "data-pk": "53432",
-      "data-value": "CGX0089734531"
-    }
-  }, [_vm._v("CGX0089734531")])])]), _vm._v(" "), _c('tr', {
-    attrs: {
-      "data-index": "2"
-    }
-  }, [_c('td', {}, [_c('a', {
-    staticClass: "btn-link",
-    attrs: {
-      "href": "#"
-    }
-  }, [_vm._v(" Order #53433")])]), _vm._v(" "), _c('td', {}, [_c('a', {
-    staticClass: "editable editable-click",
-    attrs: {
-      "href": "javascript:void(0)",
-      "data-name": "name",
-      "data-pk": "53433",
-      "data-value": "Lucy Doe"
-    }
-  }, [_vm._v("Lucy Doe")])]), _vm._v(" "), _c('td', {}, [_vm._v("Oct 24, 2014")]), _vm._v(" "), _c('td', {}, [_c('a', {
-    staticClass: "editable editable-click editable-open",
-    attrs: {
-      "href": "javascript:void(0)",
-      "data-name": "amount",
-      "data-pk": "53433",
-      "data-value": "$38.00",
-      "data-original-title": "",
-      "title": "",
-      "aria-describedby": "popover554181"
-    }
-  }, [_vm._v("$38.00")]), _vm._v(" "), _c('div', {
-    staticClass: "popover fade top in editable-container editable-popup",
-    staticStyle: {
-      "top": "65px",
-      "left": "723.313px",
-      "display": "block"
-    },
-    attrs: {
-      "role": "tooltip",
-      "id": "popover554181"
-    }
-  }, [_c('div', {
-    staticClass: "arrow",
-    staticStyle: {
-      "left": "50%"
-    }
-  }), _vm._v(" "), _c('h3', {
-    staticClass: "popover-title",
+  }, [_c('thead', {
     staticStyle: {
       "display": "none"
     }
-  }), _vm._v(" "), _c('div', {
-    staticClass: "popover-content"
-  }, [_c('div', [_c('div', {
-    staticClass: "editableform-loading",
-    staticStyle: {
-      "display": "none"
-    }
-  }), _vm._v(" "), _c('form', {
-    staticClass: "form-inline editableform"
-  }, [_c('div', {
-    staticClass: "control-group form-group"
-  }, [_c('div', [_c('div', {
-    staticClass: "editable-input",
-    staticStyle: {
-      "position": "relative"
-    }
-  }, [_c('input', {
-    staticClass: "form-control input-sm",
-    staticStyle: {
-      "padding-right": "24px"
-    },
-    attrs: {
-      "type": "text"
-    }
-  }), _c('span', {
-    staticClass: "editable-clear-x"
-  })]), _vm._v(" "), _c('div', {
-    staticClass: "editable-buttons"
-  }, [_c('button', {
-    staticClass: "btn btn-primary editable-submit",
-    attrs: {
-      "type": "submit"
-    }
-  }, [_c('i', {
-    staticClass: "fa fa-fw fa-check"
-  })]), _vm._v(" "), _c('button', {
-    staticClass: "btn btn-default editable-cancel",
-    attrs: {
-      "type": "button"
-    }
-  }, [_c('i', {
-    staticClass: "fa fa-fw fa-times"
-  })])])]), _vm._v(" "), _c('div', {
-    staticClass: "editable-error-block help-block",
-    staticStyle: {
-      "display": "none"
-    }
-  })])])])])])]), _vm._v(" "), _c('td', {
-    staticStyle: {
-      "text-align": "center"
-    }
-  }, [_c('div', {
-    staticClass: "label label-table label-info"
-  }, [_vm._v(" Shipped")])]), _vm._v(" "), _c('td', {}, [_c('a', {
-    staticClass: "editable editable-click",
-    attrs: {
-      "href": "javascript:void(0)",
-      "data-name": "track",
-      "data-pk": "53433",
-      "data-value": "CGX0089934571"
-    }
-  }, [_vm._v("CGX0089934571")])])]), _vm._v(" "), _c('tr', {
-    attrs: {
-      "data-index": "3"
-    }
-  }, [_c('td', {}, [_c('a', {
-    staticClass: "btn-link",
-    attrs: {
-      "href": "#"
-    }
-  }, [_vm._v(" Order #53434")])]), _vm._v(" "), _c('td', {}, [_c('a', {
-    staticClass: "editable editable-click",
-    attrs: {
-      "href": "javascript:void(0)",
-      "data-name": "name",
-      "data-pk": "53434",
-      "data-value": "Teresa L. Doe"
-    }
-  }, [_vm._v("Teresa L. Doe")])]), _vm._v(" "), _c('td', {}, [_vm._v("Oct 15, 2014")]), _vm._v(" "), _c('td', {}, [_c('a', {
-    staticClass: "editable editable-click",
-    attrs: {
-      "href": "javascript:void(0)",
-      "data-name": "amount",
-      "data-pk": "53434",
-      "data-value": "$77.99"
-    }
-  }, [_vm._v("$77.99")])]), _vm._v(" "), _c('td', {
-    staticStyle: {
-      "text-align": "center"
-    }
-  }, [_c('div', {
-    staticClass: "label label-table label-info"
-  }, [_vm._v(" Shipped")])]), _vm._v(" "), _c('td', {}, [_c('a', {
-    staticClass: "editable editable-click",
-    attrs: {
-      "href": "javascript:void(0)",
-      "data-name": "track",
-      "data-pk": "53434",
-      "data-value": "CGX0089734574"
-    }
-  }, [_vm._v("CGX0089734574")])])]), _vm._v(" "), _c('tr', {
-    attrs: {
-      "data-index": "4"
-    }
-  }, [_c('td', {}, [_c('a', {
-    staticClass: "btn-link",
-    attrs: {
-      "href": "#"
-    }
-  }, [_vm._v(" Order #53435")])]), _vm._v(" "), _c('td', {}, [_c('a', {
-    staticClass: "editable editable-click",
-    attrs: {
-      "href": "javascript:void(0)",
-      "data-name": "name",
-      "data-pk": "53435",
-      "data-value": "Teresa L. Doe"
-    }
-  }, [_vm._v("Teresa L. Doe")])]), _vm._v(" "), _c('td', {}, [_vm._v("Oct 12, 2014")]), _vm._v(" "), _c('td', {}, [_c('a', {
-    staticClass: "editable editable-click",
-    attrs: {
-      "href": "javascript:void(0)",
-      "data-name": "amount",
-      "data-pk": "53435",
-      "data-value": "$18.00"
-    }
-  }, [_vm._v("$18.00")])]), _vm._v(" "), _c('td', {
-    staticStyle: {
-      "text-align": "center"
-    }
-  }, [_c('div', {
-    staticClass: "label label-table label-success"
-  }, [_vm._v(" Paid")])]), _vm._v(" "), _c('td', {}, [_c('a', {
-    staticClass: "editable editable-click",
-    attrs: {
-      "href": "javascript:void(0)",
-      "data-name": "track",
-      "data-pk": "53435",
-      "data-value": "undefined"
-    }
-  }, [_vm._v("undefined")])])]), _vm._v(" "), _c('tr', {
-    attrs: {
-      "data-index": "5"
-    }
-  }, [_c('td', {}, [_c('a', {
-    staticClass: "btn-link",
-    attrs: {
-      "href": "#"
-    }
-  }, [_vm._v(" Order #53436")])]), _vm._v(" "), _c('td', {}, [_c('a', {
-    staticClass: "editable editable-click",
-    attrs: {
-      "href": "javascript:void(0)",
-      "data-name": "name",
-      "data-pk": "53436",
-      "data-value": "Scott S. Calabrese"
-    }
-  }, [_vm._v("Scott S.\n                            Calabrese")])]), _vm._v(" "), _c('td', {}, [_vm._v("Oct 12, 2014")]), _vm._v(" "), _c('td', {}, [_c('a', {
-    staticClass: "editable editable-click",
-    attrs: {
-      "href": "javascript:void(0)",
-      "data-name": "amount",
-      "data-pk": "53436",
-      "data-value": "$11.50"
-    }
-  }, [_vm._v("$11.50")])]), _vm._v(" "), _c('td', {
-    staticStyle: {
-      "text-align": "center"
-    }
-  }, [_c('div', {
-    staticClass: "label label-table label-danger"
-  }, [_vm._v(" Refunded")])]), _vm._v(" "), _c('td', {}, [_c('a', {
-    staticClass: "editable editable-click",
-    attrs: {
-      "href": "javascript:void(0)",
-      "data-name": "track",
-      "data-pk": "53436",
-      "data-value": "undefined"
-    }
-  }, [_vm._v("undefined")])])]), _vm._v(" "), _c('tr', {
-    attrs: {
-      "data-index": "6"
-    }
-  }, [_c('td', {}, [_c('a', {
-    staticClass: "btn-link",
-    attrs: {
-      "href": "#"
-    }
-  }, [_vm._v(" Order #53437")])]), _vm._v(" "), _c('td', {}, [_c('a', {
-    staticClass: "editable editable-click",
-    attrs: {
-      "href": "javascript:void(0)",
-      "data-name": "name",
-      "data-pk": "53437",
-      "data-value": "Charles S Boyle"
-    }
-  }, [_vm._v("Charles S\n                            Boyle")])]), _vm._v(" "), _c('td', {}, [_vm._v("Oct 15, 2014")]), _vm._v(" "), _c('td', {}, [_c('a', {
-    staticClass: "editable editable-click",
-    attrs: {
-      "href": "javascript:void(0)",
-      "data-name": "amount",
-      "data-pk": "53437",
-      "data-value": "$234.00"
-    }
-  }, [_vm._v("$234.00")])]), _vm._v(" "), _c('td', {
-    staticStyle: {
-      "text-align": "center"
-    }
-  }, [_c('div', {
-    staticClass: "label label-table label-warning"
-  }, [_vm._v(" Unpaid")])]), _vm._v(" "), _c('td', {}, [_c('a', {
-    staticClass: "editable editable-click",
-    attrs: {
-      "href": "javascript:void(0)",
-      "data-name": "track",
-      "data-pk": "53437",
-      "data-value": "undefined"
-    }
-  }, [_vm._v("undefined")])])]), _vm._v(" "), _c('tr', {
-    attrs: {
-      "data-index": "7"
-    }
-  }, [_c('td', {}, [_c('a', {
-    staticClass: "btn-link",
-    attrs: {
-      "href": "#"
-    }
-  }, [_vm._v(" Order #53438")])]), _vm._v(" "), _c('td', {}, [_c('a', {
-    staticClass: "editable editable-click",
-    attrs: {
-      "href": "javascript:void(0)",
-      "data-name": "name",
-      "data-pk": "53438",
-      "data-value": "Steve N. Horton"
-    }
-  }, [_vm._v("Steve N.\n                            Horton")])]), _vm._v(" "), _c('td', {}, [_vm._v("Oct 15, 2014")]), _vm._v(" "), _c('td', {}, [_c('a', {
-    staticClass: "editable editable-click",
-    attrs: {
-      "href": "javascript:void(0)",
-      "data-name": "amount",
-      "data-pk": "53438",
-      "data-value": "$56.99"
-    }
-  }, [_vm._v("$56.99")])]), _vm._v(" "), _c('td', {
-    staticStyle: {
-      "text-align": "center"
-    }
-  }, [_c('div', {
-    staticClass: "label label-table label-info"
-  }, [_vm._v(" Shipped")])]), _vm._v(" "), _c('td', {}, [_c('a', {
-    staticClass: "editable editable-click",
-    attrs: {
-      "href": "javascript:void(0)",
-      "data-name": "track",
-      "data-pk": "53438",
-      "data-value": "CGX0089674534"
-    }
-  }, [_vm._v("CGX0089674534")])])]), _vm._v(" "), _c('tr', {
-    attrs: {
-      "data-index": "8"
-    }
-  }, [_c('td', {}, [_c('a', {
-    staticClass: "btn-link",
-    attrs: {
-      "href": "#"
-    }
-  }, [_vm._v(" Order #53439")])]), _vm._v(" "), _c('td', {}, [_c('a', {
-    staticClass: "editable editable-click",
-    attrs: {
-      "href": "javascript:void(0)",
-      "data-name": "name",
-      "data-pk": "53439",
-      "data-value": "Teresa L. Doe"
-    }
-  }, [_vm._v("Teresa L. Doe")])]), _vm._v(" "), _c('td', {}, [_vm._v("Oct 15, 2014")]), _vm._v(" "), _c('td', {}, [_c('a', {
-    staticClass: "editable editable-click",
-    attrs: {
-      "href": "javascript:void(0)",
-      "data-name": "amount",
-      "data-pk": "53439",
-      "data-value": "$77.99"
-    }
-  }, [_vm._v("$77.99")])]), _vm._v(" "), _c('td', {
-    staticStyle: {
-      "text-align": "center"
-    }
-  }, [_c('div', {
-    staticClass: "label label-table label-info"
-  }, [_vm._v(" Shipped")])]), _vm._v(" "), _c('td', {}, [_c('a', {
-    staticClass: "editable editable-click",
-    attrs: {
-      "href": "javascript:void(0)",
-      "data-name": "track",
-      "data-pk": "53439",
-      "data-value": "CGX0089734574"
-    }
-  }, [_vm._v("CGX0089734574")])])]), _vm._v(" "), _c('tr', {
-    attrs: {
-      "data-index": "9"
-    }
-  }, [_c('td', {}, [_c('a', {
-    staticClass: "btn-link",
-    attrs: {
-      "href": "#"
-    }
-  }, [_vm._v(" Order #53440")])]), _vm._v(" "), _c('td', {}, [_c('a', {
-    staticClass: "editable editable-click",
-    attrs: {
-      "href": "javascript:void(0)",
-      "data-name": "name",
-      "data-pk": "53440",
-      "data-value": "Scott S. Calabrese"
-    }
-  }, [_vm._v("Scott S.\n                            Calabrese")])]), _vm._v(" "), _c('td', {}, [_vm._v("Oct 17, 2014")]), _vm._v(" "), _c('td', {}, [_c('a', {
-    staticClass: "editable editable-click",
-    attrs: {
-      "href": "javascript:void(0)",
-      "data-name": "amount",
-      "data-pk": "53440",
-      "data-value": "$45.23"
-    }
-  }, [_vm._v("$45.23")])]), _vm._v(" "), _c('td', {
-    staticStyle: {
-      "text-align": "center"
-    }
-  }, [_c('div', {
-    staticClass: "label label-table label-success"
-  }, [_vm._v(" Paid")])]), _vm._v(" "), _c('td', {}, [_c('a', {
-    staticClass: "editable editable-click",
-    attrs: {
-      "href": "javascript:void(0)",
-      "data-name": "track",
-      "data-pk": "53440",
-      "data-value": "undefined"
-    }
-  }, [_vm._v("undefined")])])])])])]), _vm._v(" "), _c('div', {
-    staticClass: "fixed-table-footer",
-    staticStyle: {
-      "display": "none"
-    }
-  }, [_c('table', [_c('tbody', [_c('tr')])])]), _vm._v(" "), _c('div', {
+  }), _vm._v(" "), _c('tbody', _vm._l((_vm.datos.data), function(dato, index) {
+    return _c('tr', {
+      staticClass: "listStyle",
+      attrs: {
+        "data-index": index
+      }
+    }, [_c('td', {
+      attrs: {
+        "colspan": "6"
+      }
+    }, [_c('div', {
+      staticClass: "card-view"
+    }, [_c('span', {
+      staticClass: "title"
+    }, [_vm._v("Cédula")]), _vm._v(" "), _c('span', {
+      staticClass: "value"
+    }, [_vm._v(_vm._s(dato.charter))])]), _vm._v(" "), _c('div', {
+      staticClass: "card-view"
+    }, [_c('span', {
+      staticClass: "title"
+    }, [_vm._v("Nombre Completo")]), _vm._v(" "), _c('span', {
+      staticClass: "value"
+    }, [_vm._v(_vm._s(dato.name) + " " + _vm._s(dato.last))])]), _vm._v(" "), _c('div', {
+      staticClass: "card-view"
+    }, [_c('span', {
+      staticClass: "title"
+    }, [_vm._v("Fecha Nacimiento")]), _vm._v(" "), _c('span', {
+      staticClass: "value"
+    }, [_vm._v(_vm._s(dato.birthdate))])]), _vm._v(" "), _c('div', {
+      staticClass: "card-view"
+    }, [_c('span', {
+      staticClass: "title"
+    }, [_vm._v("Fecha Bautismo")]), _vm._v(" "), _c('span', {
+      staticClass: "value"
+    }, [_vm._v(_vm._s(dato.bautizmoDate))])]), _vm._v(" "), _vm._m(3, true), _vm._v(" "), _vm._m(4, true)])])
+  }))])]), _vm._v(" "), _c('div', {
     staticClass: "fixed-table-pagination"
   }, [_c('div', {
     staticClass: "pull-left pagination-detail"
   }, [_c('span', {
     staticClass: "pagination-info"
-  }, [_vm._v("Showing 1 to 10 of 25 rows")]), _c('span', {
+  }, [_vm._v("Mirando " + _vm._s(_vm.datos.from) + " al " + _vm._s(_vm.datos.to) + " de " + _vm._s(_vm.datos.total) + " rows")]), _vm._v(" "), _c('span', {
     staticClass: "page-list"
   }, [_c('span', {
     staticClass: "btn-group dropup"
@@ -64855,63 +64277,195 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('span', {
     staticClass: "page-size"
-  }, [_vm._v("10")]), _vm._v(" "), _c('span', {
+  }, [_vm._v(_vm._s(_vm.datos.per_page))]), _vm._v(" "), _c('span', {
     staticClass: "caret"
-  })]), _c('ul', {
+  })]), _vm._v(" "), _c('ul', {
     staticClass: "dropdown-menu",
     attrs: {
       "role": "menu"
     }
-  }, [_c('li', [_c('a', {
-    attrs: {
-      "href": "javascript:void(0)"
-    }
-  }, [_vm._v("5")])]), _c('li', {
-    staticClass: "active"
-  }, [_c('a', {
-    attrs: {
-      "href": "javascript:void(0)"
-    }
-  }, [_vm._v("10")])]), _c('li', [_c('a', {
-    attrs: {
-      "href": "javascript:void(0)"
-    }
-  }, [_vm._v("20")])])])]), _vm._v(" records per page")])]), _vm._v(" "), _c('div', {
+  }, _vm._l((_vm.counts), function(count) {
+    return (count === _vm.datos.per_page) ? _c('li', {
+      staticClass: "active"
+    }, [_c('a', {
+      attrs: {
+        "href": ""
+      },
+      on: {
+        "click": function($event) {
+          $event.preventDefault();
+          _vm.perPage(_vm.datos.path, count)
+        }
+      }
+    }, [_vm._v(_vm._s(count))])]) : _c('li', [_c('a', {
+      attrs: {
+        "href": ""
+      },
+      on: {
+        "click": function($event) {
+          $event.preventDefault();
+          _vm.perPage(_vm.datos.path, count)
+        }
+      }
+    }, [_vm._v(_vm._s(count))])])
+  }))]), _vm._v(" Filas por páginas")])]), _vm._v(" "), _c('div', {
     staticClass: "pull-right pagination"
   }, [_c('ul', {
     staticClass: "pagination"
   }, [_c('li', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.datos.prev_page_url),
+      expression: "datos.prev_page_url"
+    }],
     staticClass: "page-pre"
   }, [_c('a', {
     attrs: {
-      "href": "javascript:void(0)"
+      "href": ""
+    },
+    on: {
+      "click": function($event) {
+        $event.preventDefault();
+        _vm.pagePre(_vm.datos.prev_page_url)
+      }
     }
-  }, [_vm._v("‹")])]), _vm._v(" "), _c('li', {
-    staticClass: "page-number active"
-  }, [_c('a', {
-    attrs: {
-      "href": "javascript:void(0)"
-    }
-  }, [_vm._v("1")])]), _vm._v(" "), _c('li', {
-    staticClass: "page-number"
-  }, [_c('a', {
-    attrs: {
-      "href": "javascript:void(0)"
-    }
-  }, [_vm._v("2")])]), _vm._v(" "), _c('li', {
-    staticClass: "page-number"
-  }, [_c('a', {
-    attrs: {
-      "href": "javascript:void(0)"
-    }
-  }, [_vm._v("3")])]), _vm._v(" "), _c('li', {
+  }, [_vm._v("‹")])]), _vm._v(" "), _vm._l((_vm.datos.last_page), function(number, index) {
+    return (number === _vm.datos.current_page) ? _c('li', {
+      staticClass: "page-number active"
+    }, [_c('a', {
+      attrs: {
+        "href": ""
+      },
+      on: {
+        "click": function($event) {
+          $event.preventDefault();
+          _vm.page(_vm.datos.path, number)
+        }
+      }
+    }, [_vm._v(_vm._s(number))])]) : _c('li', {
+      staticClass: "page-number"
+    }, [_c('a', {
+      attrs: {
+        "href": ""
+      },
+      on: {
+        "click": function($event) {
+          $event.preventDefault();
+          _vm.page(_vm.datos.path, number)
+        }
+      }
+    }, [_vm._v(_vm._s(number))])])
+  }), _vm._v(" "), _c('li', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.datos.next_page_url),
+      expression: "datos.next_page_url"
+    }],
     staticClass: "page-next"
   }, [_c('a', {
     attrs: {
-      "href": "javascript:void(0)"
+      "href": ""
+    },
+    on: {
+      "click": function($event) {
+        $event.preventDefault();
+        _vm.pageNext(_vm.datos.next_page_url)
+      }
     }
-  }, [_vm._v("›")])])])])])])]), _vm._v(" "), _c('div', {
+  }, [_vm._v("›")])])], 2)])])])]), _vm._v(" "), _c('div', {
     staticClass: "clearfix"
+  })])
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "fixed-table-header",
+    staticStyle: {
+      "display": "none"
+    }
+  }, [_c('table')])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('thead', [_c('tr', [_c('th', {
+    attrs: {
+      "data-field": "id",
+      "tabindex": "0"
+    }
+  }, [_c('div', {
+    staticClass: "th-inner "
+  }, [_vm._v("Cédula")]), _vm._v(" "), _c('div', {
+    staticClass: "fht-cell"
+  })]), _vm._v(" "), _c('th', {
+    attrs: {
+      "data-field": "name",
+      "tabindex": "0"
+    }
+  }, [_c('div', {
+    staticClass: "th-inner "
+  }, [_vm._v("Nombre Compelto")]), _vm._v(" "), _c('div', {
+    staticClass: "fht-cell"
+  })]), _vm._v(" "), _c('th', {
+    attrs: {
+      "data-field": "date",
+      "tabindex": "0"
+    }
+  }, [_c('div', {
+    staticClass: "th-inner "
+  }, [_vm._v("Fecha Nacimiento")]), _vm._v(" "), _c('div', {
+    staticClass: "fht-cell"
+  })]), _vm._v(" "), _c('th', {
+    attrs: {
+      "data-field": "amount",
+      "tabindex": "0"
+    }
+  }, [_c('div', {
+    staticClass: "th-inner "
+  }, [_vm._v("Fecha Bautismo")]), _vm._v(" "), _c('div', {
+    staticClass: "fht-cell"
+  })]), _vm._v(" "), _c('th', {
+    staticStyle: {
+      "text-align": "center"
+    },
+    attrs: {
+      "data-field": "status",
+      "tabindex": "0"
+    }
+  }, [_c('div', {
+    staticClass: "th-inner "
+  }, [_vm._v("Movimientos")]), _vm._v(" "), _c('div', {
+    staticClass: "fht-cell"
+  })]), _vm._v(" "), _c('th', {
+    attrs: {
+      "data-field": "track",
+      "tabindex": "0"
+    }
+  }, [_c('div', {
+    staticClass: "th-inner "
+  }, [_vm._v("Mat. Esc. Pendiente")]), _vm._v(" "), _c('div', {
+    staticClass: "fht-cell"
+  })])])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('td', {
+    staticStyle: {
+      "text-align": "center"
+    }
+  }, [_c('div', {
+    staticClass: "label label-table label-success"
+  })])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "card-view"
+  }, [_c('span', {
+    staticClass: "title"
+  }, [_vm._v("Movimientos")]), _vm._v(" "), _c('span', {
+    staticClass: "value"
+  })])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "card-view"
+  }, [_c('span', {
+    staticClass: "title"
+  }, [_vm._v("Mat. Esc. Pendiente")]), _vm._v(" "), _c('span', {
+    staticClass: "value"
   })])
 }]}
 module.exports.render._withStripped = true
@@ -64927,6 +64481,59 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 301 */,
+/* 302 */,
+/* 303 */,
+/* 304 */,
+/* 305 */,
+/* 306 */,
+/* 307 */,
+/* 308 */,
+/* 309 */,
+/* 310 */,
+/* 311 */,
+/* 312 */,
+/* 313 */,
+/* 314 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(315);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(4)("4b3f0bcd", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-d465e1d8\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./ListsMembers.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-d465e1d8\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./ListsMembers.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 315 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(3)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, "\n.title{\n    clear: both;\n     border:1px solid #000;\n     min-width:50%;\n     /*/padding-right:30%;*/\n     text-align:left !important;\n}\n.value{\n     clear: both;\n     min-width:200px;\n     text-align:left !important;\n}\n/** .listStyle{\n     border: solid 1px #000;\n     width:1024px;\n }*/\n", ""]);
+
+// exports
+
 
 /***/ })
 /******/ ]);
