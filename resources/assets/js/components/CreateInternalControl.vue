@@ -316,7 +316,7 @@
                 this.itemsSizes = '';
             },
             onSubmit() {
-                axios.post('http://softadventist.dev/tesoreria/upload-internal-control', this.formData)
+                axios.post('/tesoreria/upload-internal-control', this.formData)
                     .then(response => {
                         this.data.name = response.data
                         console.log(response.data)
