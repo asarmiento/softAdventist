@@ -53147,7 +53147,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         onSubmit: function onSubmit() {
             var _this3 = this;
 
-            axios.post('http://softadventist.dev/tesoreria/upload-internal-control', this.formData).then(function (response) {
+            axios.post('/tesoreria/upload-internal-control', this.formData).then(function (response) {
                 _this3.data.name = response.data;
                 console.log(response.data);
             }).catch(function (error) {
@@ -63885,7 +63885,7 @@ exports = module.exports = __webpack_require__(2)(undefined);
 
 
 // module
-exports.push([module.i, "\n.title{\n      border:1px solid #000;\n      width:300px;\n      /*padding-right:30%;*/\n      text-align:left !important;\n}\n.value{\n      clear: both;\n      min-width:200px;\n      text-align:left !important;\n}\n /** .listStyle{\n      border: solid 1px #000;\n      width:1024px;\n  }*/\n", ""]);
+exports.push([module.i, "\n.tittle-2 {\n    text-align:left !important;\n    font-weight: bold;\n    float: left;\n    min-width: 30%;\n}\n.value {\n    text-align:left !important;\n    float: right;\n    min-width: 70%;\n}\n\n", ""]);
 
 // exports
 
@@ -63896,6 +63896,12 @@ exports.push([module.i, "\n.title{\n      border:1px solid #000;\n      width:30
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -64067,17 +64073,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     methods: {
         numberPaginate: function numberPaginate(number) {
-            var x;
-            for (x = 0; x > number; x++) {
-                return number[x];
-            }
+            /*  var x;
+              for(x=0;x>number;x++){
+                  return (number[x]);
+              }
             /* "<li v-for='(number, index) in datos.last_page' class='page-number active'
-                 v-if='number === datos.current_page'>
-                     <a href='' @click.prevent='page(datos.path,number)'>number</a>
-                 </li>";
-                 <li v-else class="page-number">
-                     <a href="" @click.prevent="page(datos.path,number)">{{number}}</a>
-                 </li>*/
+              v-if='number === datos.current_page'>
+                  <a href='' @click.prevent='page(datos.path,number)'>number</a>
+              </li>";
+              <li v-else class="page-number">
+                  <a href="" @click.prevent="page(datos.path,number)">{{number}}</a>
+              </li>*/
         },
         styleType: function styleType() {
             var self = this;
@@ -64282,33 +64288,29 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       attrs: {
         "data-index": index
       }
-    }, [_c('td', {
-      attrs: {
-        "colspan": "6"
-      }
-    }, [_c('div', {
+    }, [_c('td', [_c('div', {
       staticClass: "card-view"
-    }, [_c('span', {
-      staticClass: "title"
-    }, [_vm._v("Cédula")]), _vm._v(" "), _c('span', {
+    }, [_c('div', {
+      staticClass: "tittle-2"
+    }, [_vm._v("Cédula")]), _vm._v(" "), _c('div', {
       staticClass: "value"
     }, [_vm._v(_vm._s(dato.charter))])]), _vm._v(" "), _c('div', {
       staticClass: "card-view"
-    }, [_c('span', {
-      staticClass: "title"
-    }, [_vm._v("Nombre Completo")]), _vm._v(" "), _c('span', {
+    }, [_c('div', {
+      staticClass: "tittle-2"
+    }, [_vm._v("Nombre Completo")]), _vm._v(" "), _c('div', {
       staticClass: "value"
     }, [_vm._v(_vm._s(dato.name) + " " + _vm._s(dato.last))])]), _vm._v(" "), _c('div', {
       staticClass: "card-view"
-    }, [_c('span', {
-      staticClass: "title"
-    }, [_vm._v("Fecha Nacimiento")]), _vm._v(" "), _c('span', {
+    }, [_c('div', {
+      staticClass: "tittle-2"
+    }, [_vm._v("Fecha Nacimiento")]), _vm._v(" "), _c('div', {
       staticClass: "value"
     }, [_vm._v(_vm._s(dato.birthdate))])]), _vm._v(" "), _c('div', {
       staticClass: "card-view"
-    }, [_c('span', {
-      staticClass: "title"
-    }, [_vm._v("Fecha Bautismo")]), _vm._v(" "), _c('span', {
+    }, [_c('div', {
+      staticClass: "tittle-2"
+    }, [_vm._v("Fecha Bautismo")]), _vm._v(" "), _c('div', {
       staticClass: "value"
     }, [_vm._v(_vm._s(dato.bautizmoDate))])]), _vm._v(" "), _vm._m(3, true), _vm._v(" "), _vm._m(4, true)])])
   }))])]), _vm._v(" "), _c('div', {
@@ -64382,7 +64384,33 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.pagePre(_vm.datos.prev_page_url)
       }
     }
-  }, [_vm._v("‹")])]), _vm._v("\n                        " + _vm._s(_vm.numberPaginate(_vm.datos.last_page)) + "\n\n                        "), _c('li', {
+  }, [_vm._v("‹")])]), _vm._v(" "), _vm._l((_vm.datos.last_page), function(number) {
+    return (number === _vm.datos.current_page) ? _c('li', {
+      staticClass: "page-number active"
+    }, [_c('a', {
+      attrs: {
+        "href": ""
+      },
+      on: {
+        "click": function($event) {
+          $event.preventDefault();
+          _vm.page(_vm.datos.path, number)
+        }
+      }
+    }, [_vm._v(_vm._s(number))])]) : _c('li', {
+      staticClass: "page-number"
+    }, [_c('a', {
+      attrs: {
+        "href": ""
+      },
+      on: {
+        "click": function($event) {
+          $event.preventDefault();
+          _vm.page(_vm.datos.path, number)
+        }
+      }
+    }, [_vm._v(_vm._s(number))])])
+  }), _vm._v(" "), _c('li', {
     directives: [{
       name: "show",
       rawName: "v-show",
@@ -64400,7 +64428,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.pageNext(_vm.datos.next_page_url)
       }
     }
-  }, [_vm._v("›")])])])])])])]), _vm._v(" "), _c('div', {
+  }, [_vm._v("›")])])], 2)])])])]), _vm._v(" "), _c('div', {
     staticClass: "clearfix"
   })])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -64480,19 +64508,19 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
 },function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "card-view"
-  }, [_c('span', {
-    staticClass: "title"
-  }, [_vm._v("Movimientos")]), _vm._v(" "), _c('span', {
+  }, [_c('div', {
+    staticClass: "tittle-2"
+  }, [_vm._v("Movimientos")]), _vm._v(" "), _c('div', {
     staticClass: "value"
-  })])
+  }, [_vm._v("Test")])])
 },function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "card-view"
-  }, [_c('span', {
-    staticClass: "title"
-  }, [_vm._v("Mat. Esc. Pendiente")]), _vm._v(" "), _c('span', {
+  }, [_c('div', {
+    staticClass: "tittle-2"
+  }, [_vm._v("Mat. Esc. Pendiente")]), _vm._v(" "), _c('div', {
     staticClass: "value"
-  })])
+  }, [_vm._v("Test")])])
 }]}
 module.exports.render._withStripped = true
 if (false) {

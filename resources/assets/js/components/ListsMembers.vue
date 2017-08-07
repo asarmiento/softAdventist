@@ -77,30 +77,30 @@
                         <thead style="display: none;"></thead>
                         <tbody>
                         <tr v-for="(dato,index) in datos.data"  class="listStyle"  :data-index="index">
-                            <td   colspan="6">
+                            <td>
                                 <div class="card-view">
-                                    <span class="title" style >Cédula</span>
-                                    <span class="value">{{dato.charter}}</span>
-                                </div>
-                                <div class="card-view" style>
-                                    <span class="title" >Nombre Completo</span>
-                                    <span class="value" >{{dato.name}} {{dato.last}}</span>
+                                    <div class="tittle-2">Cédula</div>
+                                    <div class="value">{{dato.charter}}</div>
                                 </div>
                                 <div class="card-view">
-                                    <span class="title" style="">Fecha Nacimiento</span>
-                                    <span class="value">{{dato.birthdate}}</span>
+                                    <div class="tittle-2">Nombre Completo</div>
+                                    <div class="value" >{{dato.name}} {{dato.last}}</div>
                                 </div>
                                 <div class="card-view">
-                                    <span class="title" style="">Fecha Bautismo</span>
-                                    <span class="value">{{dato.bautizmoDate}}</span>
+                                    <div class="tittle-2">Fecha Nacimiento</div>
+                                    <div class="value">{{dato.birthdate}}</div>
                                 </div>
                                 <div class="card-view">
-                                    <span class="title" style="">Movimientos</span>
-                                    <span class="value"></span>
+                                    <div class="tittle-2">Fecha Bautismo</div>
+                                    <div class="value">{{dato.bautizmoDate}}</div>
                                 </div>
                                 <div class="card-view">
-                                    <span class="title" style="">Mat. Esc. Pendiente</span>
-                                    <span class="value"></span>
+                                    <div class="tittle-2">Movimientos</div>
+                                    <div class="value">Test</div>
+                                </div>
+                                <div class="card-view">
+                                    <div class="tittle-2">Mat. Esc. Pendiente</div>
+                                    <div class="value">Test</div>
                                 </div>
                             </td>
                         </tr>
@@ -128,7 +128,13 @@
                             <li v-show="datos.prev_page_url" class="page-pre">
                                 <a href="" @click.prevent="pagePre(datos.prev_page_url)">‹</a>
                             </li>
-                            {{numberPaginate(datos.last_page)}}
+                            <li v-for='number in datos.last_page' class='page-number active'
+                                v-if='number === datos.current_page'>
+                                <a href='' @click.prevent='page(datos.path,number)'>{{number}}</a>
+                            </li>
+                            <li v-else class="page-number">
+                                <a href="" @click.prevent="page(datos.path,number)">{{number}}</a>
+                            </li>
 
                             <li v-show="datos.next_page_url" class="page-next">
                                 <a href="" @click.prevent="pageNext(datos.next_page_url)">›</a>
@@ -167,7 +173,7 @@
         },
         methods: {
             numberPaginate(number){
-                var x;
+              /*  var x;
                 for(x=0;x>number;x++){
                     return (number[x]);
                 }
@@ -233,20 +239,19 @@
 </script>
 
 <style>
-  .title{
-        border:1px solid #000;
-        width:300px;
-        /*padding-right:30%;*/
+
+    .tittle-2 {
         text-align:left !important;
+        font-weight: bold;
+        float: left;
+        min-width: 30%;
     }
-    .value{
-        clear: both;
-        min-width:200px;
+
+    .value {
         text-align:left !important;
+        float: right;
+        min-width: 70%;
     }
-   /** .listStyle{
-        border: solid 1px #000;
-        width:1024px;
-    }*/
+
 </style>
 
