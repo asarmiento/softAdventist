@@ -26,4 +26,9 @@ class ChurchController extends Controller
 
         Church::create([]);
     }
+
+    public function transfers()
+    {
+        return view('departament.accounts.TransferAccounts');
+    }
 }

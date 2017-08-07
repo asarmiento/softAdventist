@@ -81,7 +81,15 @@ class InternalControlController extends Controller
     {
         return $this->internalControlRepository->listPivotSelects();
     }
+    public function InfosReport()
+    {
+        return $this->internalControlRepository->listReportSelects();
+    }
 
+    public function InfosSinReport()
+    {
+        return $this->internalControlRepository->listSinReportSelects();
+    }
     public function upload(Request $request)
     {
         $file = $request->file('items');

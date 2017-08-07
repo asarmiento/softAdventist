@@ -27,7 +27,16 @@ class InternalControlRepository extends BaseRepository
         $internals = $this->newQuery()->where('church_id',userChurch()->id)->get();
         return $this->listInfosActive($internals);
     }
-
+    public function listReportSelects()
+    {
+        $internals = $this->newQuery()->where('church_id',userChurch()->id)->get();
+        return $this->listInfosReport($internals);
+    }
+    public function listSinReportSelects()
+    {
+        $internals = $this->newQuery()->where('church_id',userChurch()->id)->get();
+        return $this->listInfosSinReport($internals);
+    }
     public function sumJoinTablePivotDeposit($token)
     {
         return $this->newQuery()->where('internal_controls.token',$token)

@@ -38,4 +38,29 @@ trait ConsultTablesTraits
         endforeach;
         return $contents;
     }
+
+    public function listInfosReport($internals)
+    {
+        $contents= [];
+        foreach ($internals AS $data):
+            $info = InternalControl::where('token',$data->token)->with('summaryOfWeeklyEarning.depositLocalFields')->get();
+            if($info[0]->summaryOfWeeklyEarning->depositLocalFields->count() > 0):
+                $value = ['value'=>$data->token, 'label'=>$data->saturday];
+                    array_push($contents,$value);
+            endif;
+        endforeach;
+        return $contents;
+    }
+    public function listInfosSinReport($internals)
+    {
+        $contents= [];
+        foreach($internals AS $data):
+           $info = InternalControl::where('token',$data->token)->with('summaryOfWeeklyEarning.depositLocalFields')->get();
+           if($info[0]->summaryOfWeeklyEarning->depositLocalFields->count() == 0):
+               $value = ['value'=>$data->token, 'label'=>$data->saturday];
+                array_push($contents,$value);
+            endif;
+        endforeach;
+        return $contents;
+    }
 }

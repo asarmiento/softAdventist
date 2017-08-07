@@ -36,7 +36,7 @@ abstract class BaseRepository {
     }
     public function filterChurchs()
     {
-        return $this->newQuery()->where('church_id',1)->get();
+        return $this->newQuery()->where('church_id',userChurch()->id)->get();
     }
 
     public function listSelects()
@@ -48,7 +48,15 @@ abstract class BaseRepository {
         endforeach;
         return $contents;
     }
-
+    public function listRelationSelects($relation)
+    {
+        $contents = [];
+        foreach ($this->filterChurchRelation($relation) AS $data):
+            $value = ['value'=>$data->token, 'label'=>$data->name];
+            array_push($contents,$value);
+        endforeach;
+        return $contents;
+    }
     public function filterChurchRelation($relation)
     {
         return $this->newQuery()->whereHas($relation,function ($q){

@@ -119,6 +119,10 @@ class CheckController extends Controller
         return $this->checkRepository->listCheks();
     }
 
+    public function listCheckLF()
+    {
+        return $this->checkRepository->listRelationSelects('bank');
+    }
 
     public function upload(Request $request)
     {

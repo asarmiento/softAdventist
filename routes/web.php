@@ -67,6 +67,13 @@ Route::post('contacto', ['uses'=>'Auth\RegisterController@contactPost','as'=>'co
          */
         Route::get('cuentas-bancarias', ['uses'=>'Bank\BankController@create','as'=>'create-bank']);
         Route::post('save-bank', 'Bank\BankController@store');
+        /**
+         * Deposito Campo local
+         */
+        Route::get('depositos-al-campo-local', ['uses'=>'LocalFieldIncomeController@create','as'=>'deposit-local-field']);
+        Route::get('lista-cuenta-campo-local', ['uses'=>'LocalField\BankLocalFieldController@listBankLocalField','as'=>'cuenta-local-field']);
+        Route::post('save-deposit-local-field', 'LocalFieldIncomeController@store');
+        Route::post('upload-local-field-deposit', 'LocalFieldIncomeController@upload');
 
         /**
          * Depositos de Iglesia
@@ -76,6 +83,7 @@ Route::post('contacto', ['uses'=>'Auth\RegisterController@contactPost','as'=>'co
         Route::post('save-church-deposit', 'Bank\ChurchDepositController@store');
         Route::post('upload-church-deposit', 'Bank\ChurchDepositController@upload');
         Route::post('remove-deposit', 'Bank\ChurchDepositController@remove');
+
         /**
          * Ingresos
          */
@@ -88,11 +96,18 @@ Route::post('contacto', ['uses'=>'Auth\RegisterController@contactPost','as'=>'co
         Route::post('delete-internal-control', 'InternalControlController@destroy');
         Route::get('lista-info-sin-deposito', ['uses'=>'InternalControlController@listInfos','as'=>'list-infos-sin-deposito']);
 
-
-
+        /**
+         *  Controles Internos
+         */
         Route::post('balance-internal-control', 'InternalControlController@balanceInfo');
-        Route::get('registro-de-ingresos/{token}', ['uses'=>'WeeklyIncomeController@create','as'=>'registro-de-ingresos']);
+        Route::get('lista-informes-reportados', ['uses'=>'InternalControlController@InfosReport','as'=>'list-reportados']);
+        Route::get('lista-informes-sin-reportados', ['uses'=>'InternalControlController@InfosSinReport','as'=>'list-sin-reportados']);
         Route::post('save-register-incomes', 'InternalControlController@store');
+
+        /**
+         * Informes semanales
+         */
+        Route::get('registro-de-ingresos/{token}', ['uses'=>'WeeklyIncomeController@create','as'=>'registro-de-ingresos']);
         Route::post('save-weekly-incomes', 'WeeklyIncomeController@store');
         Route::post('finish-info-income', 'WeeklyIncomeController@finish');
         Route::get('check-finish-info', 'WeeklyIncomeController@checkFinishInfo');
@@ -126,11 +141,19 @@ Route::post('contacto', ['uses'=>'Auth\RegisterController@contactPost','as'=>'co
          */
         Route::get('registro-de-cheques', ['uses'=>'Church\CheckAndExpenses\CheckController@create','as'=>'create-check']);
         Route::get('lista-de-cheques', ['uses'=>'Church\CheckAndExpenses\CheckController@listCheck','as'=>'list-check']);
+        Route::get('lista-de-cheques-local-field', ['uses'=>'Church\CheckAndExpenses\CheckController@listCheckLF','as'=>'list-check-LF']);
         Route::post('save-check', 'Church\CheckAndExpenses\CheckController@store');
         Route::post('upload-check', 'Church\CheckAndExpenses\CheckController@upload');
         Route::post('delete-check', 'Church\CheckAndExpenses\CheckController@destroy');
+        /**
+         * Transferencias entre cuentas
+         */
+        Route::get('transferencias-de-cuentas', ['uses'=>'Church\ChurchController@transfers','as'=>'transfer-of-accounts']);
+        Route::post('save-transferencias', 'Church\ChurchController@transfersStore');
 
         Route::get('lista-miembro1s', ['uses'=>'MemberController@index','as'=>'charge-members']);
+
+
         Route::get('lista-miembros1', ['uses'=>'MemberController@index','as'=>'list-departament']);
         Route::get('lista-miembros11', ['uses'=>'MemberController@index','as'=>'change-status']);
         Route::get('lista-miembro3s', ['uses'=>'MemberController@index','as'=>'create-cta-ing']);

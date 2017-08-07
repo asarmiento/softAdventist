@@ -76,6 +76,7 @@
                                     <li class="dropdown-header">Cuentas Bancarias</li>
                                     <li><a href="{{route('create-bank')}}">Cuentas Bancarias<span class="pull-right badge badge-purple"></span></a></li>
                                     <li><a href="{{route('register-deposit')}}">Depositos Iglesia</a></li>
+                                    <li><a href="{{route('deposit-local-field')}}">Depositos al Campo Local</a></li>
                                     <li><a href="{{route('create-check')}}">Cheques</a></li>
                                 </ul>
 
@@ -103,7 +104,7 @@
                                 <ul class="list-unstyled">
                                     <li class="dropdown-header">Registros</li>
                                     <li><a href="{{route('create-internal-control')}}">Registro de Ingresos</a></li>
-                                    <li><a href="#">Traspaso entre Cuentas</a></li>
+                                    <li><a href="{{route('transfer-of-accounts')}}">Traspaso entre Cuentas</a></li>
                                     <li><a href="{{route('register-expenses')}}">Registro de Gastos</a></li>
                                     <li><a href="{{route('list-expenses')}}">Lista de Gastos</a></li>
                                     <li><a href="#"></a></li>
