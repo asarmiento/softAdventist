@@ -48,16 +48,51 @@ class MemberController extends Controller
 
     public function getData(Request $request)
     {
-        $model = Member::searchPaginateAndOrder(($request->get('all')) ? $request->get('all') : $request->get('perPage'),
-            $request->get('search'));
+        $perPage = 10;
+        if($request->has('perPage')){
+            $perPage = $request->perPage;
+        }
+
+        $model = Member::searchPaginateAndOrder($perPage,$request->get('search'));
+
+        $array = [];
+        if($model->toArray()['last_page'] <= 7){
+            for($i=1;$i<=7;$i++){
+                $array[] = $i;
+            }
+        }else{
+            if($model->toArray()['current_page'] <= 4){
+                for($i=1;$i<=5;$i++){
+                    $array[] = $i;
+                }
+                $array[] = "...";
+                $array[] = $model->toArray()['last_page'];
+            }else if($model->toArray()['last_page'] - $model->toArray()['current_page'] < 4){
+                $array[] = 1;
+                $array[] = "...";
+                $i = $model->toArray()['last_page'] - 4;
+                for($i; $i<=$model->toArray()['last_page'];$i++){
+                    $array[] = $i;
+                }
+            }else{
+                $array[] = 1;
+                $array[] = "...";
+                $array[] = $model->toArray()['current_page'] - 1;
+                $array[] = $model->toArray()['current_page'];
+                $array[] = $model->toArray()['current_page'] + 1;
+                $array[] = "...";
+                $array[] = $model->toArray()['last_page'];
+            }
+        }
 
         $columns = Member::$columns;
+        $model['per_page'] = $perPage;
+
         $response = [
             'model' => $model,
-
-            'columns' => $columns
+            'columns' => $columns,
+            'my_pages' => $array
         ];
-
         return $response;
 
         // response()->json($response);

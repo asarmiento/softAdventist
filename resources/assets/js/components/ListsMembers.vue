@@ -128,14 +128,9 @@
                             <li v-show="datos.prev_page_url" class="page-pre">
                                 <a href="" @click.prevent="pagePre(datos.prev_page_url)">‹</a>
                             </li>
-                            <li v-for='number in datos.last_page' class='page-number active'
-                                v-if='number === datos.current_page'>
-                                <a href='' @click.prevent='page(datos.path,number)'>{{number}}</a>
+                            <li v-for='number in my_pages' class='page-number' :class="{'active': number == datos.current_page}">
+                                <a class="page-number" href='' @click.prevent='page(datos.path,number)'>{{ number }}</a>
                             </li>
-                            <li v-else class="page-number">
-                                <a href="" @click.prevent="page(datos.path,number)">{{number}}</a>
-                            </li>
-
                             <li v-show="datos.next_page_url" class="page-next">
                                 <a href="" @click.prevent="pageNext(datos.next_page_url)">›</a>
                             </li>
@@ -157,6 +152,7 @@
                 txtSearch: '',
                 counts: ['5', '10', '20', '50'],
                 datos: [],
+                my_pages: [],
                 columns: [],
                 typeAll: true,
                 typeStyle: true,
@@ -167,6 +163,7 @@
             var self = this;
             this.$http.get(this.source).then((response) => {
                 self.datos = response.data.model;
+                self.my_pages = response.data.my_pages;
                 self.columns = response.data.columns;
             });
             console.log(this.numberPaginate(self.datos.last_page))
@@ -197,30 +194,41 @@
                 var self = this;
                 this.$http.get(url + '?search=' + this.txtSearch).then((response) => {
                     self.datos = response.data.model;
+                    self.my_pages = response.data.my_pages;
                 });
             },
             pagePre(url) {
+                url += '&perPage=' + this.datos.per_page
                 var self = this;
                 this.$http.get(url).then((response) => {
                     self.datos = response.data.model;
+                    self.my_pages = response.data.my_pages;
                 });
             },
             pageNext(url) {
+                url += '&perPage=' + this.datos.per_page
                 var self = this;
                 this.$http.get(url).then((response) => {
                     self.datos = response.data.model;
+                    self.my_pages = response.data.my_pages;
                 });
             },
             page(url, number) {
-                var self = this;
-                this.$http.get(url + '?page=' + number).then((response) => {
-                    self.datos = response.data.model;
-                });
+                if(!isNaN(number)){
+                    var self = this;
+                    url += '?page=' + number
+                    url += '&perPage=' + this.datos.per_page
+                    this.$http.get(url).then((response) => {
+                        self.datos = response.data.model;
+                        self.my_pages = response.data.my_pages;
+                    });
+                }
             },
             perPage(url, number) {
                 var self = this;
                 this.$http.get(url + '?perPage=' + number).then((response) => {
                     self.datos = response.data.model;
+                    self.my_pages = response.data.my_pages;
                 });
             },
             all(url, total) {
@@ -232,6 +240,7 @@
                 }
                 this.$http.get(url + '?all=' + total).then((response) => {
                     self.datos = response.data.model;
+                    self.my_pages = response.data.my_pages;
                 });
             }
         },
