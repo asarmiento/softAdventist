@@ -57,7 +57,7 @@ class MemberController extends Controller
 
         $array = [];
         if($model->toArray()['last_page'] <= 7){
-            for($i=1;$i<=7;$i++){
+            for($i=1;$i<=$model->toArray()['last_page'];$i++){
                 $array[] = $i;
             }
         }else{
