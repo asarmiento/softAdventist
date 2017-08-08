@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Church\CheckAndExpenses;
 
+use App\Entities\ExpenseAccount;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ExpenseAccountCreateRequest;
 use App\Repositories\CheckExpenseRepository;
@@ -64,6 +65,23 @@ class ExpenseAccountController extends Controller
         return view('departament.accounts.createExpense', compact('accounts'));
     }
 
+
+    public function getData(Request $request)
+    {
+        $model = ExpenseAccount::searchPaginateAndOrder(($request->get('all')) ? $request->get('all') : $request->get('perPage'),
+            $request->get('search'));
+
+        $columns = ExpenseAccount::$columns;
+        $response = [
+            'model' => $model,
+
+            'columns' => $columns
+        ];
+
+        return $response;
+
+        // response()->json($response);
+    }
 
     public function store(ExpenseAccountCreateRequest $request)
     {

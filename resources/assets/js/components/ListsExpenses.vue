@@ -29,11 +29,11 @@
                         <thead>
                         <tr>
                             <th style="" data-field="id" tabindex="0">
-                                <div class="th-inner ">Cédula</div>
+                                <div class="th-inner ">Nombre del Gasto</div>
                                 <div class="fht-cell"></div>
                             </th>
                             <th style="" data-field="name" tabindex="0">
-                                <div class="th-inner ">Nombre Compelto</div>
+                                <div class="th-inner ">Acumulado a</div>
                                 <div class="fht-cell"></div>
                             </th>
                             <th style="" data-field="date" tabindex="0">

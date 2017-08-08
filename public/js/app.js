@@ -64265,7 +64265,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('div', {
     staticClass: "th-inner "
-  }, [_vm._v("Cédula")]), _vm._v(" "), _c('div', {
+  }, [_vm._v("Nombre del Gasto")]), _vm._v(" "), _c('div', {
     staticClass: "fht-cell"
   })]), _vm._v(" "), _c('th', {
     attrs: {
@@ -64274,7 +64274,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('div', {
     staticClass: "th-inner "
-  }, [_vm._v("Nombre Compelto")]), _vm._v(" "), _c('div', {
+  }, [_vm._v("Acumulado a")]), _vm._v(" "), _c('div', {
     staticClass: "fht-cell"
   })]), _vm._v(" "), _c('th', {
     attrs: {

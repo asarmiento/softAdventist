@@ -133,6 +133,7 @@ Route::post('contacto', ['uses'=>'Auth\RegisterController@contactPost','as'=>'co
         Route::get('lista-de-gastos-not/{check}', 'Church\CheckAndExpenses\CheckExpenseAccountController@balanceNot');
         Route::get('balance-de-gastos-not', 'Church\CheckAndExpenses\CheckExpenseAccountController@balanceNotC');
         Route::get('lista-de-gastos', 'Church\CheckAndExpenses\CheckExpenseAccountController@listsAplicado');
+        Route::get('lists-expenses', 'Church\CheckAndExpenses\CheckExpenseAccountController@getData');
         Route::get('lista-de-todos-los-gastos', ['uses'=>'Church\CheckAndExpenses\CheckExpenseAccountController@lists','as'=>'list-expenses']);
         Route::post('save-expense-invoice', 'Church\CheckAndExpenses\CheckExpenseAccountController@store');
         Route::post('finish-expense-invoice', 'Church\CheckAndExpenses\CheckExpenseAccountController@finish');
