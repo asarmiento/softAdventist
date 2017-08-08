@@ -165,7 +165,7 @@
         computed: {},
         created() {
             var self = this;
-            this.$http.get('/tesoreria/lists-miembros').then((response) => {
+            this.$http.get(this.source).then((response) => {
                 self.datos = response.data.model;
                 self.columns = response.data.columns;
             });

@@ -32,6 +32,7 @@ Vue.component('createCheck', require('./components/CreateCheck.vue'));
 Vue.component('registroExpenses', require('./components/RegistroExpenses.vue'));
 Vue.component('listsExpenses', require('./components/ListsExpenses.vue'));
 Vue.component('listsMembers', require('./components/ListsMembers.vue'));
+Vue.component('listsDepartaments', require('./components/ListsDepartaments.vue'));
 Vue.component('transferAccount', require('./components/TransferAccounts.vue'));
 Vue.component('depositLocalField', require('./components/DepositLocalField.vue'));
 

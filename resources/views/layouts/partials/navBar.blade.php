@@ -87,7 +87,7 @@
                                 <ul class="list-unstyled">
                                     <li class="dropdown-header">Departamentos</li>
                                     <li><a href="{{route('create-departament')}}"><span class="pull-right label label-danger"></span>Crear Departamentos</a></li>
-                                    <li><a href="{{route('list-departament')}}"><span class="pull-right label label-danger"></span>Lista de Departamentos</a></li>
+                                    <li><a href="{{route('lists-departament')}}"></span>Lista de Departamentos</a></li>
                                     <li><a href="{{route('change-status')}}">Activar o Desactivar Departamento</a></li>
                                     <li><a href="{{route('create-incomes')}}">Crear Cuentas de Ingresos</a></li>
                                     <li><a href="{{route('create-expenses')}}">Crear Cuentas de Gastos</a></li>

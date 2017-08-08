@@ -60,6 +60,8 @@ Route::post('contacto', ['uses'=>'Auth\RegisterController@contactPost','as'=>'co
          * Departamentos
          */
         Route::get('crear-departamento', ['uses'=>'DepartamentController@create','as'=>'create-departament']);
+        Route::get('lista-departament', ['uses'=>'DepartamentController@index','as'=>'lists-departament']);
+        Route::get('lists-departament', 'DepartamentController@getData');
         Route::get('movimientos-departamento', ['uses'=>'DepartamentController@create','as'=>'move-departaments']);
         Route::post('save-departament', 'DepartamentController@store');
         /**
