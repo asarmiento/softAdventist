@@ -31,7 +31,7 @@ class Member extends Entity
 
     use DataViewerTraits;
 
-    public static $columns = [ 'charter', 'name', 'last', 'birthdate', 'phone', 'cell', 'email' ];
+    public static $columns = [ 'charter', 'name', 'last', 'birthdate', 'phone', 'bautizmoDate', 'cell', 'email' ];
 
 
     public function incomes()

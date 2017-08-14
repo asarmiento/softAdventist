@@ -16,25 +16,36 @@ require('./bootstrap');
  */
 
 
-
-Vue.component('createMember', require('./components/CreateMember.vue'));
-Vue.component('editMember', require('./components/CreateMember.vue'));
-Vue.component('createDepartament', require('./components/CreateDepartament.vue'));
-Vue.component('createIncomes', require('./components/CreateAccounts.vue'));
-Vue.component('createInternalControl', require('./components/CreateInternalControl.vue'));
-Vue.component('createWeeklyIncomes', require('./components/CreateWeeklyIncomes.vue'));
-Vue.component('listWeeklyInfo', require('./components/ListWeeklyInfo.vue'));
-Vue.component('createExpenses', require('./components/CreateExpenses.vue'));
-Vue.component('createBank', require('./components/CreateBank.vue'));
-Vue.component('createChurchDeposits', require('./components/CreateChurchDeposits.vue'));
-Vue.component('createLocalDeposits', require('./components/CreateLocalDeposits.vue'));
-Vue.component('createCheck', require('./components/CreateCheck.vue'));
-Vue.component('registroExpenses', require('./components/RegistroExpenses.vue'));
-Vue.component('listsExpenses', require('./components/ListsExpenses.vue'));
-Vue.component('listsMembers', require('./components/ListsMembers.vue'));
-Vue.component('listsDepartaments', require('./components/ListsDepartaments.vue'));
+/**
+ * Componentes de ingreso de informacion nueva.
+ */
+Vue.component('createMember', require('./components/Creating/CreateMember.vue'));
+Vue.component('editMember', require('./components/Creating/CreateMember.vue'));
+Vue.component('createDepartament', require('./components/Creating/CreateDepartament.vue'));
+Vue.component('createIncomes', require('./components/Creating/CreateAccounts.vue'));
+Vue.component('createInternalControl', require('./components/Creating/CreateInternalControl.vue'));
+Vue.component('createWeeklyIncomes', require('./components/Creating/CreateWeeklyIncomes.vue'));
+Vue.component('createExpenses', require('./components/Creating/CreateExpenses.vue'));
+Vue.component('createBank', require('./components/Creating/CreateBank.vue'));
+Vue.component('createChurchDeposits', require('./components/Creating/CreateChurchDeposits.vue'));
+Vue.component('createLocalDeposits', require('./components/Creating/CreateLocalDeposits.vue'));
+Vue.component('createCheck', require('./components/Creating/CreateCheck.vue'));
+/**
+ * Listas de datos en tablas tipo dataTable
+ */
+Vue.component('listsIncomeAccounts', require('./components/Lists/ListsIncomeAccounts.vue'));
+Vue.component('listsExpenses', require('./components/Lists/ListsExpenses.vue'));
+Vue.component('listWeeklyInfo', require('./components/Lists/ListWeeklyInfo.vue'));
+Vue.component('listsMembers', require('./components/Lists/ListsMembers.vue'));
+Vue.component('listsInternalControls', require('./components/Lists/ListsInternalControls.vue'));
+Vue.component('listsDepartaments', require('./components/Lists/ListsDepartaments.vue'));
+Vue.component('listsCheckExpenses', require('./components/Lists/ListsCheckExpenses.vue'));
+/**
+ * Otros fromularios
+ */
 Vue.component('transferAccount', require('./components/TransferAccounts.vue'));
 Vue.component('depositLocalField', require('./components/DepositLocalField.vue'));
+Vue.component('registroExpenses', require('./components/RegistroExpenses.vue'));
 
 
 

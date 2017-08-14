@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Entities\Member;
 use App\Entities\User;
 use App\Http\Requests\CreateMemberRequest;
+use App\Traits\DataViewerTraits;
 use App\Traits\ListInformMembersTraits;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
@@ -16,7 +17,7 @@ class MemberController extends Controller
 {
 
     use ListInformMembersTraits;
-
+    use DataViewerTraits;
 
     /**
      * MemberController constructor.
@@ -46,57 +47,46 @@ class MemberController extends Controller
     }
 
 
+    /**
+     * ---------------------------------------------------------------------
+     * @Author     : Anwar Sarmiento "asarmiento@sistemasamigables.com"
+     * @Date       Create: ${DATE}
+     * @Time       Create: ${TIME}
+     * @Date       Update: 0000-00-00
+     * ---------------------------------------------------------------------
+     * @Description:
+     * @Pasos      :
+     * @param Request $request
+     * ----------------------------------------------------------------------
+     *
+     * @return array
+     * ----------------------------------------------------------------------
+     */
     public function getData(Request $request)
     {
         $perPage = 10;
-        if($request->has('perPage')){
+        if ($request->has('perPage')) {
             $perPage = $request->perPage;
         }
 
-        $model = Member::searchPaginateAndOrder($perPage,$request->get('search'));
+        $model = Member::searchPaginateAndOrder($perPage, $request->get('search'));
 
-        $array = [];
-        if($model->toArray()['last_page'] <= 7){
-            for($i=1;$i<=$model->toArray()['last_page'];$i++){
-                $array[] = $i;
-            }
-        }else{
-            if($model->toArray()['current_page'] <= 4){
-                for($i=1;$i<=5;$i++){
-                    $array[] = $i;
-                }
-                $array[] = "...";
-                $array[] = $model->toArray()['last_page'];
-            }else if($model->toArray()['last_page'] - $model->toArray()['current_page'] < 4){
-                $array[] = 1;
-                $array[] = "...";
-                $i = $model->toArray()['last_page'] - 4;
-                for($i; $i<=$model->toArray()['last_page'];$i++){
-                    $array[] = $i;
-                }
-            }else{
-                $array[] = 1;
-                $array[] = "...";
-                $array[] = $model->toArray()['current_page'] - 1;
-                $array[] = $model->toArray()['current_page'];
-                $array[] = $model->toArray()['current_page'] + 1;
-                $array[] = "...";
-                $array[] = $model->toArray()['last_page'];
-            }
-        }
+        $array = $this->myPages($model);
 
         $columns = Member::$columns;
         $model['per_page'] = $perPage;
 
         $response = [
-            'model' => $model,
-            'columns' => $columns,
+            'model'    => $model,
+            'columns'  => $columns,
             'my_pages' => $array
         ];
-        return $response;
 
-        // response()->json($response);
+        return $response;
     }
+
+
+
 
 
     public function create()

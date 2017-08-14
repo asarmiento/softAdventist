@@ -91,6 +91,8 @@ Route::post('contacto', ['uses'=>'Auth\RegisterController@contactPost','as'=>'co
          */
         Route::get('registrar-ingresos', ['uses'=>'IncomeAccountController@create','as'=>'create-incomes']);
         Route::post('save-incomes', 'IncomeAccountController@store');
+        Route::get('lista-de-informes', ['uses'=>'IncomeAccountController@index','as'=>'list-info-weekly']);
+        Route::get('lists-income-account', 'IncomeAccountController@getData');
         //controles internos
         Route::get('registro-control-interno', ['uses'=>'InternalControlController@create','as'=>'create-internal-control']);
         Route::post('save-internal-control', 'InternalControlController@store');
@@ -114,7 +116,6 @@ Route::post('contacto', ['uses'=>'Auth\RegisterController@contactPost','as'=>'co
         Route::post('finish-info-income', 'WeeklyIncomeController@finish');
         Route::get('check-finish-info', 'WeeklyIncomeController@checkFinishInfo');
         Route::get('list-member-weekly', 'MemberController@listMemberInfo');
-        Route::get('lista-de-informes', ['uses'=>'IncomeAccountController@index','as'=>'list-info-weekly']);
         //temporales
         Route::post('save-campo-temp-income', 'TempLocalFieldIncomeController@store');
         Route::post('remove-campo-temp-income', 'TempLocalFieldIncomeController@remove');
@@ -133,8 +134,8 @@ Route::post('contacto', ['uses'=>'Auth\RegisterController@contactPost','as'=>'co
         Route::get('lista-de-gastos-not/{check}', 'Church\CheckAndExpenses\CheckExpenseAccountController@balanceNot');
         Route::get('balance-de-gastos-not', 'Church\CheckAndExpenses\CheckExpenseAccountController@balanceNotC');
         Route::get('lista-de-gastos', 'Church\CheckAndExpenses\CheckExpenseAccountController@listsAplicado');
-        Route::get('lists-expenses', 'Church\CheckAndExpenses\CheckExpenseAccountController@getData');
-        Route::get('lista-de-todos-los-gastos', ['uses'=>'Church\CheckAndExpenses\CheckExpenseAccountController@lists','as'=>'list-expenses']);
+        Route::get('lists-check-expenses', 'Church\CheckAndExpenses\CheckExpenseAccountController@getData');
+        Route::get('lista-de-todos-los-gastos', ['uses'=>'Church\CheckAndExpenses\CheckExpenseAccountController@index','as'=>'list-expenses']);
         Route::post('save-expense-invoice', 'Church\CheckAndExpenses\CheckExpenseAccountController@store');
         Route::post('finish-expense-invoice', 'Church\CheckAndExpenses\CheckExpenseAccountController@finish');
         Route::get('edit-expense-invoice/{token}', 'Church\CheckAndExpenses\CheckExpenseAccountController@edit');

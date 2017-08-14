@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Church\CheckAndExpenses;
 
+use App\Entities\CheckExpense;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ExpenseAccountCreateRequest;
 use App\Repositories\CheckExpenseRepository;
@@ -9,6 +10,7 @@ use App\Repositories\CheckRepository;
 use App\Repositories\ExpenseAccountRepository;
 use App\Repositories\IncomeAccountRepository;
 use App\Traits\AccountDepartamentTraits;
+use App\Traits\DataViewerTraits;
 use Hamcrest\Thingy;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
@@ -17,6 +19,7 @@ class CheckExpenseAccountController extends Controller
 {
 
     use AccountDepartamentTraits;
+    use DataViewerTraits;
 
     /**
      * @var IncomeAccountRepository
@@ -60,6 +63,37 @@ class CheckExpenseAccountController extends Controller
     }
 
 
+    public function index()
+    {
+        return view('IncomesAndExpenses.accounts.listsCheckExpenses');
+    }
+
+
+    public function getData(Request $request)
+    {
+        $perPage = 10;
+        if ($request->has('perPage')) {
+            $perPage = $request->perPage;
+        }
+
+        $model = CheckExpense::searchPaginateAndOrder($perPage, $request->get('search'), true, 'expenseAccount',
+            'check');
+
+        $array = $this->myPages($model);
+
+        $columns = CheckExpense::$columns;
+        $model['per_page'] = $perPage;
+
+        $response = [
+            'model'    => $model,
+            'columns'  => $columns,
+            'my_pages' => $array
+        ];
+
+        return $response;
+    }
+
+
     public function create()
     {
         $accounts = $this->expenseAccountRepository->listSelects();
@@ -76,7 +110,7 @@ class CheckExpenseAccountController extends Controller
         $accounts = $this->expenseAccountRepository->listSelects();
         $check = $this->checkRepository->token($token);
         $expense = $this->checkExpenseRepository->filterChurchRelationNot('expenseAccount.incomeAccount.departament',
-                $check->id);
+            $check->id);
         $balance = $this->balanceNot($check->id);
 
         return view('IncomesAndExpenses.accounts.registroCheckExpense',
@@ -102,6 +136,7 @@ class CheckExpenseAccountController extends Controller
         $expense->fill($data);
         if ($expense->save()):
             $this->checkRepository->changeStatus($expense->check_id);
+
             return response()->json([
                 'success' => true,
                 'message' => 'Se creo con Exito!!!!',
@@ -128,7 +163,7 @@ class CheckExpenseAccountController extends Controller
     public function listsAplicado()
     {
         return $this->checkExpenseRepository->filterChurchRelationOk('expenseAccount.incomeAccount.departament',
-                'aplicado');
+            'aplicado');
     }
 
 
@@ -174,34 +209,34 @@ class CheckExpenseAccountController extends Controller
     public function finish(Request $request)
     {
         if ( ! $request->all()) {
-            $numeration=$list= $this->checkExpenseRepository->numeration();
+            $numeration = $list = $this->checkExpenseRepository->numeration();
             $this->checkExpenseRepository->getModel()->whereHas('expenseAccount.incomeAccount.departament',
                 function ($q) {
                     $q->where('church_id', 1);
-                })->where('status', 'no aplicado')->update([ 'status' => 'aplicado','reference'=>$numeration]);
+                })->where('status', 'no aplicado')->update([ 'status' => 'aplicado', 'reference' => $numeration ]);
 
-            return response()->json([ 'success' => true,'message'=>$numeration ], 200);
+            return response()->json([ 'success' => true, 'message' => $numeration ], 200);
         }
         if ($request->get('balance') == $this->balanceNot($request->get('id'))) {
-            $numeration=$list= $this->checkExpenseRepository->numeration();
+            $numeration = $list = $this->checkExpenseRepository->numeration();
             $this->checkRepository->getModel()->where('id', $request->get('id'))->update([ 'status' => 'aplicado' ]);
             $this->checkExpenseRepository->getModel()->where('check_id',
-                $request->get('id'))->update([ 'status' => 'aplicado','reference'=>$numeration ]);
+                $request->get('id'))->update([ 'status' => 'aplicado', 'reference' => $numeration ]);
 
-            return response()->json([ 'success' => true,'message'=>$numeration ], 200);
+            return response()->json([ 'success' => true, 'message' => $numeration ], 200);
         } elseif ($request->get('balance') > $this->balanceNot($request->get('id'))) {
             $balance = $request->get('balance') - $this->balanceNot($request->get('id'));
 
-            return response()->json([ 'success' => true,
-                                      'message' => 'Todavia debe registrar mas gastos por: '.number_format($balance,
-                                              2).' !!!'
+            return response()->json([
+                'success' => true,
+                'message' => 'Todavia debe registrar mas gastos por: '.number_format($balance, 2).' !!!'
             ], 422);
         } elseif ($request->get('balance') < $this->balanceNot($request->get('id'))) {
             $balance = $this->balanceNot($request->get('id')) - $request->get('balance');
 
-            return response()->json([ 'success' => true,
-                                      'message' => 'Se ha Excedido debe quitar gastos por: '.number_format($balance,
-                                              2).' !!!'
+            return response()->json([
+                'success' => true,
+                'message' => 'Se ha Excedido debe quitar gastos por: '.number_format($balance, 2).' !!!'
             ], 422);
         }
 

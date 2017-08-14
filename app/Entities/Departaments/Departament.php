@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Entities;
+namespace App\Entities\Departaments;
 
 
+use App\Entities\Entity;
 use App\Traits\DataViewerTraits;
 
 class Departament extends Entity
 {
-    protected $fillable = ['name','budget','token','church_id','percent_of_budget'];
+    protected $fillable = ['name','budget','balance','token','church_id','percent_of_budget'];
     public static $columns = [ 'name','budget','percent_of_budget' ];
 
     use DataViewerTraits;

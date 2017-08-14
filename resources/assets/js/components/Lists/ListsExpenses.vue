@@ -29,11 +29,11 @@
                         <thead>
                         <tr>
                             <th style="" data-field="id" tabindex="0">
-                                <div class="th-inner ">Cédula</div>
+                                <div class="th-inner ">Nombre del Gasto</div>
                                 <div class="fht-cell"></div>
                             </th>
                             <th style="" data-field="name" tabindex="0">
-                                <div class="th-inner ">Nombre Compelto</div>
+                                <div class="th-inner ">Acumulado a</div>
                                 <div class="fht-cell"></div>
                             </th>
                             <th style="" data-field="date" tabindex="0">
@@ -72,8 +72,8 @@
                 </div>
                 <div v-else class="fixed-table-body" >
                     <table  data-search="true" data-show-refresh="true" data-show-toggle="true"
-                           data-show-columns="true" data-sort-name="id"
-                           data-pagination="true" data-show-pagination-switch="true" class="table table-hover" style="margin-top: 0px;">
+                            data-show-columns="true" data-sort-name="id"
+                            data-pagination="true" data-show-pagination-switch="true" class="table table-hover" style="margin-top: 0px;">
                         <thead style="display: none;"></thead>
                         <tbody>
                         <tr v-for="(dato,index) in datos.data"  class="listStyle"  :data-index="index">
@@ -128,7 +128,8 @@
                             <li v-show="datos.prev_page_url" class="page-pre">
                                 <a href="" @click.prevent="pagePre(datos.prev_page_url)">‹</a>
                             </li>
-                            <li v-for='number in my_pages' class='page-number' :class="{'active': number == datos.current_page}">
+                            <li v-for='number in my_pages' class='page-number'
+                                :class="{'active': number == datos.current_page}">
                                 <a class="page-number" href='' @click.prevent='page(datos.path,number)'>{{ number }}</a>
                             </li>
                             <li v-show="datos.next_page_url" class="page-next">
@@ -166,22 +167,9 @@
                 self.my_pages = response.data.my_pages;
                 self.columns = response.data.columns;
             });
-            console.log(this.numberPaginate(self.datos.last_page))
+
         },
         methods: {
-            numberPaginate(number){
-              /*  var x;
-                for(x=0;x>number;x++){
-                    return (number[x]);
-                }
-           /* "<li v-for='(number, index) in datos.last_page' class='page-number active'
-                v-if='number === datos.current_page'>
-                    <a href='' @click.prevent='page(datos.path,number)'>number</a>
-                </li>";
-                <li v-else class="page-number">
-                    <a href="" @click.prevent="page(datos.path,number)">{{number}}</a>
-                </li>*/
-            },
             styleType() {
                 var self = this;
                 if (this.typeStyle) {
@@ -214,7 +202,7 @@
                 });
             },
             page(url, number) {
-                if(!isNaN(number)){
+                if (!isNaN(number)) {
                     var self = this;
                     url += '?page=' + number
                     url += '&perPage=' + this.datos.per_page

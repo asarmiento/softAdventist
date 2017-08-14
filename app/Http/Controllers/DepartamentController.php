@@ -2,18 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Entities\Departament;
+use App\Entities\Departaments\Departament;
 use App\Http\Requests\DepartamentCreateRequest;
+use App\Traits\DataViewerTraits;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Validator;
 
 class DepartamentController extends Controller
 {
+    use DataViewerTraits;
 
     public function index(){
         return view('departament.listsDepartaments');
     }
+
     public function create()
     {
         return view('departament.create');
@@ -22,19 +25,24 @@ class DepartamentController extends Controller
 
     public function getData(Request $request)
     {
-        $model = Departament::searchPaginateAndOrder(($request->get('all')) ? $request->get('all') : $request->get('perPage'),
-            $request->get('search'));
+        $perPage = 10;
+        if ($request->has('perPage')) {
+            $perPage = $request->perPage;
+        }
+
+        $model = Departament::searchPaginateAndOrder($perPage, $request->get('search'));
+
+        $array = $this->myPages($model);
 
         $columns = Departament::$columns;
-        $response = [
-            'model' => $model,
 
-            'columns' => $columns
+        $response = [
+            'model'    => $model,
+            'columns'  => $columns,
+            'my_pages' => $array
         ];
 
         return $response;
-
-        // response()->json($response);
     }
 
 
@@ -45,15 +53,17 @@ class DepartamentController extends Controller
             return response()->json([ 'name' => [ 'El Departamento: '.$data['name'].' ya Existe' ] ],
                 422); //return $this->errores();
         endif;
-        $data['church_id'] = 1;
-        $data['budget'] = '1';
+        $data['church_id'] = userChurch()->id;
+        $data['budget']=1;
+        $data['balance']=0;
         $data['token'] = Crypt::encrypt($data['name']);
 
         $departament = new Departament();
         $departament->fill($data);
         $departament->save();
 
-        return $this->exito('El Departamento: '.$departament->name);
+        return response()->json([ 'name' => [ 'El Departamento: '.$data['name'].' se registro con Exito' ],'data'=>$departament ],
+            200);
 
     }
 }

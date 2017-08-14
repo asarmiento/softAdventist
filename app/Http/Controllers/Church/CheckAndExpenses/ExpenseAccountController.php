@@ -9,13 +9,14 @@ use App\Repositories\CheckExpenseRepository;
 use App\Repositories\CheckRepository;
 use App\Repositories\ExpenseAccountRepository;
 use App\Repositories\IncomeAccountRepository;
+use App\Traits\DataViewerTraits;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 
 class ExpenseAccountController extends Controller
 {
     //
-
+    use DataViewerTraits;
     /**
      * @var IncomeAccountRepository
      */
@@ -68,19 +69,25 @@ class ExpenseAccountController extends Controller
 
     public function getData(Request $request)
     {
-        $model = ExpenseAccount::searchPaginateAndOrder(($request->get('all')) ? $request->get('all') : $request->get('perPage'),
-            $request->get('search'));
+        $perPage = 10;
+        if ($request->has('perPage')) {
+            $perPage = $request->perPage;
+        }
+
+        $model = ExpenseAccount::searchPaginateAndOrder($perPage, $request->get('search'));
+
+        $array = $this->myPages($model);
 
         $columns = ExpenseAccount::$columns;
-        $response = [
-            'model' => $model,
+        $model['per_page'] = $perPage;
 
-            'columns' => $columns
+        $response = [
+            'model'    => $model,
+            'columns'  => $columns,
+            'my_pages' => $array
         ];
 
         return $response;
-
-        // response()->json($response);
     }
 
     public function store(ExpenseAccountCreateRequest $request)
