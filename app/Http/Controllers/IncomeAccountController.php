@@ -23,7 +23,7 @@ class IncomeAccountController extends Controller
     }
 
     public function getData(Request $request)
-    {
+    { 
         $perPage = 10;
         if ($request->has('perPage')) {
             $perPage = $request->perPage;

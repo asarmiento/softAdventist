@@ -13,7 +13,7 @@
                                 <label>Nombre</label>
                                 <div class="input-group " >
                                     <span class="input-group-addon"><i class="fa fa-archive"></i></span>
-                                    <input type="text" v-model="data.name"   class="form-control" >
+                                    <v-select type="text" v-model="data.name"   class="form-control" ></v-select>
                                   </div>
                                 <small class="help-block"  >{{errors.name}}</small>
                             </div>
@@ -35,10 +35,9 @@
                         </div>
                     </div>
                 </div>
-                <data-table source="/tesoreria/lists-departament" title="Lista Departamentos de la Iglesia"></data-table>
+                <data-table source="/tesoreria/lists-departament"  title="Lista Departamentos de la Iglesia"></data-table>
             </div>
         </div>
-
 </template>
 
 <script>
