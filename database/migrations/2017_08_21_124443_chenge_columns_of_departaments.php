@@ -14,11 +14,11 @@ class ChengeColumnsOfDepartaments extends Migration
     public function up()
     {
         Schema::table('departaments', function(Blueprint $table) {
-            $table->dropColumn('name');
+           // $table->dropColumn('name');
             $table->integer('list_departament_id')->unsigned()->index()->after('id');
             $table->enum('status',['activo','desactivo'])->after('balance');
             $table->enum('authorized',['yes','no'])->after('status');
-
+            //
             $table->foreign('list_departament_id')->references('id')->on('list_departaments')->onDelete('no action');
 
         });

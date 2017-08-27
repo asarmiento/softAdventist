@@ -45,7 +45,7 @@ class LoginController extends Controller
         $member = Member::where('email',$request->get('email'))->first();
 
         if($member) {
-            $church=Church::find($member->church_id);
+            $church = Church::find($member->church_id);
             churchSession($church);
         }
         return [

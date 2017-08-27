@@ -13,7 +13,10 @@
                                 <label>Nombre</label>
                                 <div class="input-group " >
                                     <span class="input-group-addon"><i class="fa fa-archive"></i></span>
-                                    <v-select type="text" v-model="data.name"   class="form-control" ></v-select>
+                                    <v-select :options="departaments" v-model="data.name"   class="form-control"
+                                              placeholder="Seleccione un Departamento"
+                                    >
+                                    </v-select>
                                   </div>
                                 <small class="help-block"  >{{errors.name}}</small>
                             </div>
@@ -41,10 +44,11 @@
 </template>
 
 <script>
-    import dataTable from '../Lists/ListsDepartaments.vue'
+    import dataTable from '../Lists/ListsDepartaments.vue';
+    import vSelect from "vue-select";
     export default {
         props: ['title','url'],
-        components: {dataTable},
+        components: {dataTable, vSelect},
          data () {
              return   {
                  data: {
@@ -55,8 +59,15 @@
                      name: '',
                      percent_of_budget: '',
                  },
+                 departaments: [],
              }
          },
+        created(){
+            this.$http.get('/tesoreria/lista-de-departamentos').then((response) => {
+                this.departaments = response.data;
+            });
+            console.log(this.departaments)
+        },
         methods: {
             send: function (event) {
                 var self = this;

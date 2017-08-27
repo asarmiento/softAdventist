@@ -55,6 +55,7 @@ class DepartamentsTableSeeder extends Seeder
             ['name' => 'Jóvenes Adultos'],
         ];
         foreach ($data AS $datos) {
+            $datos['token'] = sha1(md5($datos['name']));
             \App\Entities\Departaments\ListDepartament::create($datos);
         }
     }

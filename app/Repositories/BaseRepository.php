@@ -48,6 +48,15 @@ abstract class BaseRepository {
         endforeach;
         return $contents;
     }
+    public function listSelectsSinFilterChurch()
+    {
+        $contents = [];
+        foreach ($this->newQuery()->get() AS $data):
+            $value = ['value'=>$data->token, 'label'=>$data->name];
+            array_push($contents,$value);
+        endforeach;
+        return $contents;
+    }
     public function listRelationSelects($relation)
     {
         $contents = [];

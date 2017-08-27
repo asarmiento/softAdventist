@@ -52242,6 +52242,8 @@ exports.push([module.i, "\n.mostrar[data-v-2641b7ee] {\n    display: block;\n}\n
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Lists_ListsDepartaments_vue__ = __webpack_require__(35);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Lists_ListsDepartaments_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__Lists_ListsDepartaments_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_select__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_select___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_vue_select__);
 //
 //
 //
@@ -52285,11 +52287,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['title', 'url'],
-    components: { dataTable: __WEBPACK_IMPORTED_MODULE_0__Lists_ListsDepartaments_vue___default.a },
+    components: { dataTable: __WEBPACK_IMPORTED_MODULE_0__Lists_ListsDepartaments_vue___default.a, vSelect: __WEBPACK_IMPORTED_MODULE_1_vue_select___default.a },
     data: function data() {
         return {
             data: {
@@ -52299,23 +52304,32 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             errors: {
                 name: '',
                 percent_of_budget: ''
-            }
+            },
+            departaments: []
         };
+    },
+    created: function created() {
+        var _this = this;
+
+        this.$http.get('/tesoreria/lista-de-departamentos').then(function (response) {
+            _this.departaments = response.data;
+        });
+        console.log(this.departaments);
     },
 
     methods: {
         send: function send(event) {
-            var _this = this;
+            var _this2 = this;
 
             var self = this;
             axios.post('/tesoreria/' + self.url, this.data).then(function (response) {
                 if (response.data.success = true) {
-                    _this.$alert({ title: 'Se Guardo con Exito!!!',
+                    _this2.$alert({ title: 'Se Guardo con Exito!!!',
                         message: response.data.message });
-                    _this.data.name = '';
-                    _this.data.percent_of_budget = '';
-                    _this.errors.name = '';
-                    _this.errors.percent_of_budget = '';
+                    _this2.data.name = '';
+                    _this2.data.percent_of_budget = '';
+                    _this2.errors.name = '';
+                    _this2.errors.percent_of_budget = '';
                 }
             }).catch(function (error) {
                 if (error.response) {
@@ -52994,27 +53008,20 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "panel-default "
   }, [_c('label', [_vm._v("Nombre")]), _vm._v(" "), _c('div', {
     staticClass: "input-group "
-  }, [_vm._m(0), _vm._v(" "), _c('input', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.data.name),
-      expression: "data.name"
-    }],
+  }, [_vm._m(0), _vm._v(" "), _c('v-select', {
     staticClass: "form-control",
     attrs: {
-      "type": "text"
+      "options": _vm.departaments,
+      "placeholder": "Seleccione un Departamento"
     },
-    domProps: {
-      "value": (_vm.data.name)
-    },
-    on: {
-      "input": function($event) {
-        if ($event.target.composing) { return; }
-        _vm.data.name = $event.target.value
-      }
+    model: {
+      value: (_vm.data.name),
+      callback: function($$v) {
+        _vm.data.name = $$v
+      },
+      expression: "data.name"
     }
-  })]), _vm._v(" "), _c('small', {
+  })], 1), _vm._v(" "), _c('small', {
     staticClass: "help-block"
   }, [_vm._v(_vm._s(_vm.errors.name))])])]), _vm._v(" "), _c('div', {
     staticClass: " col-lg-3 col-md-3  ",

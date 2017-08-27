@@ -4,24 +4,20 @@ namespace App\Http\Middleware;
 
 use Closure;
 
-class Tesoreria
+class Union
 {
-
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \Closure                 $next
-     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
      * @return mixed
      */
     public function handle($request, Closure $next)
     {
-        if (currentUser()->type_user == 'church') {
+        if (currentUser()->type_user == 'union') {
             return $next($request);
         }
-        //abort(403);
         return redirect('/home');
-
     }
 }

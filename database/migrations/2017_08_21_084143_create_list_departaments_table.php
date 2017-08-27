@@ -16,6 +16,7 @@ class CreateListDepartamentsTable extends Migration
         Schema::create('list_departaments', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name',200)->unique();
+            $table->text('token');
             $table->timestamps();
         });
     }

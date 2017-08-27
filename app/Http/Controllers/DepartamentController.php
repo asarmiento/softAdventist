@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Entities\Departaments\Departament;
+use App\Entities\Departaments\ListDepartament;
 use App\Http\Requests\DepartamentCreateRequest;
+use App\Repositories\Church\Departaments\ListDepartamentRepository;
 use App\Traits\DataViewerTraits;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
@@ -12,6 +14,19 @@ use Illuminate\Support\Facades\Validator;
 class DepartamentController extends Controller
 {
     use DataViewerTraits;
+
+    /**
+     * @var ListDepartamentRepository
+     */
+    private $listDepartamentRepository;
+
+
+    public function __construct(ListDepartamentRepository $listDepartamentRepository)
+    {
+        $this->listDepartamentRepository = $listDepartamentRepository;
+        $this->middleware('admin')->only('create');
+    }
+
 
     public function index(){
         return view('departament.listsDepartaments');
@@ -49,21 +64,48 @@ class DepartamentController extends Controller
     public function store(DepartamentCreateRequest $request)
     {
         $data = $request->all();
-        if (Departament::where('name', $data['name'])->count() > 0):
-            return response()->json([ 'name' => [ 'El Departamento: '.$data['name'].' ya Existe' ] ],
+        $newDepartamen = $this->listDepartamentRepository->token($data['name']['value']);
+        if (Departament::where('list_departament_id', $newDepartamen->id)->count() > 0):
+            return response()->json([ 'name' => [ 'El Departamento: '.$newDepartamen->name.' ya Existe' ] ],
                 422); //return $this->errores();
         endif;
         $data['church_id'] = userChurch()->id;
-        $data['budget']=1;
+        $data['budget']=$data['percent_of_budget'];
         $data['balance']=0;
-        $data['token'] = Crypt::encrypt($data['name']);
+        $data['list_departament_id']=$newDepartamen->id;
+        $data['token'] = Crypt::encrypt($data['name']['name']);
 
         $departament = new Departament();
         $departament->fill($data);
-        $departament->save();
+        if($departament->save()) {
 
-        return response()->json([ 'name' => [ 'El Departamento: '.$data['name'].' se registro con Exito' ],'data'=>$departament ],
-            200);
+            return response()->json([
+                'name' => [ 'El Departamento: '.$newDepartamen->name.' se registro con Exito' ],
+                'data' => $departament
+            ], 200);
+        }
+        return response()->json([ 'name' => [ 'El Departamento: '.$newDepartamen->name.' no se pudo registrar' ] ],
+            422);
+    }
 
+
+    /**
+     * ---------------------------------------------------------------------
+     * @Author     : Anwar Sarmiento "asarmiento@sistemasamigables.com"
+     * @Date       Create: 2017-08-24
+     * @Time       Create: 3:19pm
+     * @Date       Update: 0000-00-00
+     * ---------------------------------------------------------------------
+     * @Description: Obtenemos la lista de los departamentos que puede tener
+     *             una iglesia para que los puedan elegir los que cada
+     *             iglesia utilizaria en su tesoreria.
+     * @Pasos      :
+     * ----------------------------------------------------------------------
+     * @return array
+     * ----------------------------------------------------------------------
+     */
+    public function listDepartament()
+    {
+        return $this->listDepartamentRepository->listSelectsSinFilterChurch();
     }
 }

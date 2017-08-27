@@ -24,7 +24,7 @@ class MemberController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('cont')->only('create', 'edit', 'store', 'listMemberInfo');
+        $this->middleware('admin')->only('create', 'edit', 'store', 'listMemberInfo');
     }
 
 
