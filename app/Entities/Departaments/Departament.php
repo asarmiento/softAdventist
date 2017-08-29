@@ -19,11 +19,16 @@ class Departament extends Entity
         return $this->belongsTo(ListDepartament::getClass());
     }
 
-
+    public function incomeAccounts()
+    {
+        return $this->hasMany(IncomeAccount::getClass());
+    }
     public function scopeSearch($query, $search)
     {
         if (trim($search) != "") {
-            $query->where("name", "LIKE", "%$search%")->orWhere("budget", "LIKE",
+            $query->whereHas('listDepartament',function ($q) use($search){
+                $q->where("name", "LIKE", "%$search%");
+            })->orWhere("budget", "LIKE",
                     "%$search%")->orWhere("percent_of_budget", "LIKE", "%$search%");
         }
 

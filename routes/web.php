@@ -59,12 +59,14 @@ Route::post('contacto', ['uses'=>'Auth\RegisterController@contactPost','as'=>'co
         /**
          * Departamentos
          */
-        Route::get('lista-de-departamentos', 'DepartamentController@listDepartament');
-        Route::get('crear-departamento', ['uses'=>'DepartamentController@create','as'=>'create-departament']);
-        Route::get('lista-departament', ['uses'=>'DepartamentController@index','as'=>'lists-departament']);
-        Route::get('lists-departament', 'DepartamentController@getData');
-        Route::get('movimientos-departamento', ['uses'=>'DepartamentController@create','as'=>'move-departaments']);
-        Route::post('save-departament', 'DepartamentController@store');
+        Route::get('lista-de-departamentos', 'Departaments\DepartamentController@listDepartament');
+        Route::get('crear-departamento', ['uses'=>'Departaments\DepartamentController@create','as'=>'create-departament']);
+        Route::get('lista-departament', ['uses'=>'Departaments\DepartamentController@index','as'=>'lists-departament']);
+        Route::get('lists-departament', 'Departaments\DepartamentController@getData');
+        Route::get('lists-departament-inactive', 'Departaments\DepartamentController@inactiveDep');
+        Route::get('movimientos-departamento', ['uses'=>'Departaments\DepartamentController@create','as'=>'move-departaments']);
+        Route::post('delete-departament', 'Departaments\DepartamentController@remove');
+        Route::post('save-departament', 'Departaments\DepartamentController@store');
         /**
          * Cuentas Bancarias
          */

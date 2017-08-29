@@ -52167,7 +52167,7 @@ var Component = __webpack_require__(1)(
   /* styles */
   injectStyle,
   /* scopeId */
-  "data-v-2641b7ee",
+  null,
   /* moduleIdentifier (server only) */
   null
 )
@@ -52205,13 +52205,13 @@ var content = __webpack_require__(236);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(3)("cf5cea96", content, false);
+var update = __webpack_require__(3)("79c52968", content, false);
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
  if(!content.locals) {
-   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-2641b7ee\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./CreateDepartament.vue", function() {
-     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-2641b7ee\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./CreateDepartament.vue");
+   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-2641b7ee\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./CreateDepartament.vue", function() {
+     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-2641b7ee\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./CreateDepartament.vue");
      if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
      update(newContent);
    });
@@ -52229,7 +52229,7 @@ exports = module.exports = __webpack_require__(2)(undefined);
 
 
 // module
-exports.push([module.i, "\n.mostrar[data-v-2641b7ee] {\n    display: block;\n}\n", ""]);
+exports.push([module.i, "\n.box-info {\n    font-size: 24px;\n    margin: 0 auto;\n    background-color: #00b3ca;\n    border-color: #00bcd4;\n    color: #fff;\n    border-radius: 10px;\n}\n.box-list {\n    list-style-type: circle;\n    text-align: left;\n    font-weight: bold;\n    font-size: 14px;\n}\n.tittle-2 {\n    text-align: left !important;\n    font-weight: bold;\n    float: left;\n    min-width: 30%;\n}\n.value {\n    text-align: left !important;\n    float: right;\n    min-width: 70%;\n}\n\n", ""]);
 
 // exports
 
@@ -52289,6 +52289,89 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 
@@ -52299,22 +52382,36 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {
             data: {
                 name: '',
-                percent_of_budget: ''
+                percent_of_budget: '',
+                balnce: ''
             },
             errors: {
                 name: '',
-                percent_of_budget: ''
+                percent_of_budget: '',
+                balance: ''
             },
-            departaments: []
+            departaments: [],
+            txtSearch: '',
+            counts: ['5', '10', '20', '50'],
+            datos: [],
+            my_pages: [],
+            columns: [],
+            typeAll: true,
+            typeStyle: true
         };
     },
     created: function created() {
         var _this = this;
 
+        var self = this;
         this.$http.get('/tesoreria/lista-de-departamentos').then(function (response) {
             _this.departaments = response.data;
         });
-        console.log(this.departaments);
+        this.$http.get('/tesoreria/lists-departament-inactive').then(function (response) {
+            self.datos = response.data.model;
+            self.my_pages = response.data.my_pages;
+            self.columns = response.data.columns;
+        });
     },
 
     methods: {
@@ -52324,12 +52421,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var self = this;
             axios.post('/tesoreria/' + self.url, this.data).then(function (response) {
                 if (response.data.success = true) {
-                    _this2.$alert({ title: 'Se Guardo con Exito!!!',
-                        message: response.data.message });
+
+                    _this2.datos = response.data.dep;
+
+                    _this2.$alert({
+                        title: 'Se Guardo con Exito!!!',
+                        message: response.data.message
+                    });
                     _this2.data.name = '';
                     _this2.data.percent_of_budget = '';
+                    _this2.data.balances = '';
                     _this2.errors.name = '';
                     _this2.errors.percent_of_budget = '';
+                    _this2.errors.balance = '';
                 }
             }).catch(function (error) {
                 if (error.response) {
@@ -52356,6 +52460,100 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     console.log('Error', error.message);
                     alert("Error");
                 }
+            });
+        },
+        removeLine: function removeLine(event, index) {
+            var self = this;
+            axios.post('/tesoreria/delete-departament', event).then(function (response) {
+                self.datos.data.splice(index, 1);
+            }).catch(function (error) {
+                if (error.response) {
+                    var data = error.response.data;
+                    if (error.response.status === 422) {
+                        for (var index in data) {
+                            var messages = '';
+                            data[index].forEach(function (item) {
+                                messages += item + ' ';
+                            });
+                            self.errors[index] = messages;
+                        }
+                    } else if (error.response.status === 401) {
+                        self.errors.response.invalid = true;
+                        self.errors.response.msg = data.msg.message;
+                    } else {
+                        console.log(error);
+                        self.errors = data.message;
+                        alert("Error generic");
+                    }
+                } else if (error.request) {
+                    console.log(error.request);
+                    alert("Error empty");
+                } else {
+                    console.log('Error', error.message);
+                    alert("Error");
+                }
+            });
+        },
+        styleType: function styleType() {
+            var self = this;
+            if (this.typeStyle) {
+                this.typeStyle = false;
+            } else {
+                this.typeStyle = true;
+            }
+        },
+
+        sarch: function sarch(url) {
+            var self = this;
+            this.$http.get(url + '?search=' + this.txtSearch).then(function (response) {
+                self.datos = response.data.model;
+                self.my_pages = response.data.my_pages;
+            });
+        },
+        pagePre: function pagePre(url) {
+            url += '&perPage=' + this.datos.per_page;
+            var self = this;
+            this.$http.get(url).then(function (response) {
+                self.datos = response.data.model;
+                self.my_pages = response.data.my_pages;
+            });
+        },
+        pageNext: function pageNext(url) {
+            url += '&perPage=' + this.datos.per_page;
+            var self = this;
+            this.$http.get(url).then(function (response) {
+                self.datos = response.data.model;
+                self.my_pages = response.data.my_pages;
+            });
+        },
+        page: function page(url, number) {
+            if (!isNaN(number)) {
+                var self = this;
+                url += '?page=' + number;
+                url += '&perPage=' + this.datos.per_page;
+                this.$http.get(url).then(function (response) {
+                    self.datos = response.data.model;
+                    self.my_pages = response.data.my_pages;
+                });
+            }
+        },
+        perPage: function perPage(url, number) {
+            var self = this;
+            this.$http.get(url + '?perPage=' + number).then(function (response) {
+                self.datos = response.data.model;
+                self.my_pages = response.data.my_pages;
+            });
+        },
+        all: function all(url, total) {
+            var self = this;
+            if (this.typeAll) {
+                this.typeAll = false;
+            } else {
+                this.typeAll = true;
+            }
+            this.$http.get(url + '?all=' + total).then(function (response) {
+                self.datos = response.data.model;
+                self.my_pages = response.data.my_pages;
             });
         }
     }
@@ -52538,6 +52736,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['source', 'title'],
@@ -52559,6 +52764,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         var self = this;
         this.$http.get(this.source).then(function (response) {
             self.datos = response.data.model;
+            console.log(self.datos.data[0].list_departament);
             self.my_pages = response.data.my_pages;
             self.columns = response.data.columns;
         });
@@ -52745,7 +52951,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       attrs: {
         "href": "#"
       }
-    }, [_vm._v(" " + _vm._s(dato.name))])]), _vm._v(" "), _c('td', {}, [_c('a', {
+    }, [_vm._v(" " + _vm._s(dato.list_departament.name))])]), _vm._v(" "), _c('td', {}, [_c('a', {
       staticClass: "editable editable-click",
       attrs: {
         "href": "",
@@ -52753,7 +52959,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         "data-pk": "53431",
         "data-value": "dato.budget"
       }
-    }, [_vm._v(_vm._s(dato.budget) + "\n                            ")])]), _vm._v(" "), (dato.percent_of_budget > 0) ? _c('td', {}, [_vm._v(_vm._s(dato.percent_of_budget) + " %")]) : _c('td', {}, [_vm._v("-")]), _vm._v(" "), _vm._m(2, true)])
+    }, [_vm._v(_vm._s(dato.budget) + "\n                            ")])]), _vm._v(" "), (dato.percent_of_budget > 0) ? _c('td', {}, [_vm._v(_vm._s(dato.percent_of_budget) + " %")]) : _c('td', {}), _vm._v(" "), _vm._m(2, true), _vm._v(" "), _vm._m(3, true)])
   }))])]) : _c('div', {
     staticClass: "fixed-table-body"
   }, [_c('table', {
@@ -52786,7 +52992,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       staticClass: "tittle-2"
     }, [_vm._v("Departamento")]), _vm._v(" "), _c('div', {
       staticClass: "value"
-    }, [_vm._v(_vm._s(dato.name))])]), _vm._v(" "), _c('div', {
+    }, [_vm._v(_vm._s(dato.list_departament.name))])]), _vm._v(" "), _c('div', {
       staticClass: "card-view"
     }, [_c('div', {
       staticClass: "tittle-2"
@@ -52798,7 +53004,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       staticClass: "tittle-2"
     }, [_vm._v("Porcentaje del 60%")]), _vm._v(" "), _c('div', {
       staticClass: "value"
-    }, [_vm._v(_vm._s(dato.percent_of_budget))])]), _vm._v(" "), _vm._m(3, true)])])
+    }, [_vm._v(_vm._s(dato.percent_of_budget))])]), _vm._v(" "), _vm._m(4, true)])])
   }))])]), _vm._v(" "), _c('div', {
     staticClass: "fixed-table-pagination"
   }, [_c('div', {
@@ -52951,7 +53157,16 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('div', {
     staticClass: "th-inner "
-  }, [_vm._v("Ver Detalle")]), _vm._v(" "), _c('div', {
+  }, [_vm._v("Estado")]), _vm._v(" "), _c('div', {
+    staticClass: "fht-cell"
+  })]), _vm._v(" "), _c('th', {
+    attrs: {
+      "data-field": "amount",
+      "tabindex": "0"
+    }
+  }, [_c('div', {
+    staticClass: "th-inner "
+  }), _vm._v(" "), _c('div', {
     staticClass: "fht-cell"
   })])])])
 },function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -52960,8 +53175,21 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "text-align": "center"
     }
   }, [_c('div', {
-    staticClass: "label label-table label-success"
-  })])
+    staticClass: "label label-table label-danger"
+  }, [_vm._v("Inactivo")])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('td', {
+    staticStyle: {
+      "text-align": "center"
+    }
+  }, [_c('a', {
+    staticClass: "btn btn-danger",
+    attrs: {
+      "href": "#"
+    }
+  }, [_c('i', {
+    staticClass: "fa fa-remove"
+  })])])
 },function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "card-view"
@@ -53006,7 +53234,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('div', {
     staticClass: "panel-default "
-  }, [_c('label', [_vm._v("Nombre")]), _vm._v(" "), _c('div', {
+  }, [_c('label', [_vm._v("Nombre del Departamento")]), _vm._v(" "), _c('div', {
     staticClass: "input-group "
   }, [_vm._m(0), _vm._v(" "), _c('v-select', {
     staticClass: "form-control",
@@ -53041,7 +53269,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }],
     staticClass: "form-control",
     attrs: {
-      "type": "text"
+      "type": "number"
     },
     domProps: {
       "value": (_vm.data.percent_of_budget)
@@ -53055,6 +53283,37 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   })]), _vm._v(" "), _c('small', {
     staticClass: "help-block"
   }, [_vm._v(_vm._s(_vm.errors.percent_of_budget))])])]), _vm._v(" "), _c('div', {
+    staticClass: " col-lg-3 col-md-3  ",
+    class: {
+      'has-feedback has-error': _vm.errors.balance.length > 0
+    }
+  }, [_c('div', {
+    staticClass: "panel-default "
+  }, [_c('label', [_vm._v("Saldo Inicial")]), _vm._v(" "), _c('div', {
+    staticClass: "input-group "
+  }, [_vm._m(2), _vm._v(" "), _c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.data.balance),
+      expression: "data.balance"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "type": "number"
+    },
+    domProps: {
+      "value": (_vm.data.balance)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.data.balance = $event.target.value
+      }
+    }
+  })]), _vm._v(" "), _c('small', {
+    staticClass: "help-block"
+  }, [_vm._v(_vm._s(_vm.errors.balance))])])]), _vm._v(" "), _c('div', {
     staticClass: "col-lg-12 col-md-12  text-center"
   }, [_c('div', {
     staticClass: "btn"
@@ -53063,12 +53322,57 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "click": _vm.send
     }
-  }, [_vm._v("Guardar ")])])])])]), _vm._v(" "), _c('data-table', {
-    attrs: {
-      "source": "/tesoreria/lists-departament",
-      "title": "Lista Departamentos de la Iglesia"
+  }, [_vm._v("Guardar")])])]), _vm._v(" "), _vm._m(3)])]), _vm._v(" "), _c('div', {
+    staticClass: "panel-body"
+  }, [_c('div', {
+    staticClass: "bootstrap-table"
+  }, [_c('table', {
+    staticClass: "table table-striped"
+  }, [_vm._m(4), _vm._v(" "), _c('tbody', [_vm._l((_vm.datos.data), function(dato, index) {
+    return _c('tr', {
+      attrs: {
+        "data-index": index
+      }
+    }, [_c('td', {}, [_c('a', {
+      staticClass: "btn-link",
+      attrs: {
+        "href": "#"
+      }
+    }, [_vm._v(" " + _vm._s(dato.list_departament.name))])]), _vm._v(" "), _c('td', {}, [_c('a', {
+      staticClass: "editable editable-click",
+      attrs: {
+        "href": "",
+        "data-name": "name",
+        "data-pk": "53431",
+        "data-value": "dato.balance"
+      }
+    }, [_vm._v(_vm._s(dato.balance) + "\n                            ")])]), _vm._v(" "), (dato.percent_of_budget > 0) ? _c('td', {}, [_vm._v(_vm._s(dato.percent_of_budget) + " %")]) : _c('td', {}), _vm._v(" "), _vm._m(5, true), _vm._v(" "), (dato.income_accounts.length > 0) ? _c('td') : _c('td', {
+      staticStyle: {
+        "text-align": "center"
+      }
+    }, [_c('a', {
+      staticClass: "btn btn-danger",
+      attrs: {
+        "href": "#"
+      },
+      on: {
+        "click": function($event) {
+          _vm.removeLine(dato, index)
+        }
+      }
+    }, [_c('i', {
+      staticClass: "fa fa-remove"
+    })])])])
+  }), _vm._v(" "), _vm._m(6)], 2)]), _vm._v(" "), _c('div', {
+    staticClass: "col-lg-12 col-md-12  text-center"
+  }, [_c('div', {
+    staticClass: "btn"
+  }, [_c('button', {
+    staticClass: "btn btn-success",
+    on: {
+      "click": _vm.send
     }
-  })], 1)])
+  }, [_vm._v("Finalizar")])])])])])])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('span', {
     staticClass: "input-group-addon"
@@ -53081,6 +53385,81 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('i', {
     staticClass: "fa fa-archive"
   })])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('span', {
+    staticClass: "input-group-addon"
+  }, [_c('i', {
+    staticClass: "fa fa-archive"
+  })])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "col-lg-12 col-md-8  text-center "
+  }, [_c('p', {
+    staticClass: "box-info"
+  }, [_c('strong', [_vm._v("Nota: ")]), _vm._v(" "), _c('ul', {
+    staticClass: "box-list"
+  }, [_c('li', [_c('i', [_vm._v("Debe agregar a todos los departamentos que su Iglesia utiliza y el\n                            presupuestó que le tienen asignado a cada departamento. ")])]), _vm._v(" "), _c('li', [_c('i', [_vm._v("En caso que utilizan un fondo común\n                            solo debe agregar el departamentos de fondo de iglesia y asignarle el 100% a este\n                            departamento\n                        ")])])])])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('thead', [_c('tr', [_c('th', {
+    attrs: {
+      "data-field": "id",
+      "tabindex": "0"
+    }
+  }, [_c('div', {
+    staticClass: "th-inner "
+  }, [_vm._v("Departamento")]), _vm._v(" "), _c('div', {
+    staticClass: "fht-cell"
+  })]), _vm._v(" "), _c('th', {
+    attrs: {
+      "data-field": "name",
+      "tabindex": "0"
+    }
+  }, [_c('div', {
+    staticClass: "th-inner "
+  }, [_vm._v("Presupuesto Disponible")]), _vm._v(" "), _c('div', {
+    staticClass: "fht-cell"
+  })]), _vm._v(" "), _c('th', {
+    attrs: {
+      "data-field": "date",
+      "tabindex": "0"
+    }
+  }, [_c('div', {
+    staticClass: "th-inner "
+  }, [_vm._v("Porcentaje del 60%")]), _vm._v(" "), _c('div', {
+    staticClass: "fht-cell"
+  })]), _vm._v(" "), _c('th', {
+    attrs: {
+      "data-field": "amount",
+      "tabindex": "0"
+    }
+  }, [_c('div', {
+    staticClass: "th-inner "
+  }, [_vm._v("Estado")]), _vm._v(" "), _c('div', {
+    staticClass: "fht-cell"
+  })]), _vm._v(" "), _c('th', {
+    attrs: {
+      "data-field": "amount",
+      "tabindex": "0"
+    }
+  }, [_c('div', {
+    staticClass: "th-inner "
+  }), _vm._v(" "), _c('div', {
+    staticClass: "fht-cell"
+  })])])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('td', {
+    staticStyle: {
+      "text-align": "center"
+    }
+  }, [_c('div', {
+    staticClass: "label label-table label-danger"
+  }, [_vm._v("Inactivo")])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('tr', [_c('td', {
+    attrs: {
+      "colspan": "2"
+    }
+  }, [_vm._v("Total:")]), _vm._v(" "), _c('td', [_vm._v("Total:")])])
 }]}
 module.exports.render._withStripped = true
 if (false) {

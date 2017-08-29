@@ -42,22 +42,29 @@
                                 <div class="fht-cell"></div>
                             </th>
                             <th style="" data-field="amount" tabindex="0">
-                                <div class="th-inner ">Ver Detalle</div>
+                                <div class="th-inner ">Estado</div>
+                                <div class="fht-cell"></div>
+                            </th>
+                            <th style="" data-field="amount" tabindex="0">
+                                <div class="th-inner "></div>
                                 <div class="fht-cell"></div>
                             </th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr  v-for="(dato, index) in datos.data" :data-index="index">
-                            <td style=""><a href="#" class="btn-link"> {{dato.name}}</a></td>
+                            <td style=""><a href="#" class="btn-link"> {{dato.list_departament.name}}</a></td>
                             <td style="">
                                 <a href="" data-name="name" data-pk="53431"
                                             data-value="dato.budget" class="editable editable-click">{{dato.budget}}
                                 </a></td>
                             <td v-if="dato.percent_of_budget > 0" style="">{{dato.percent_of_budget}} %</td>
-                            <td v-else style="">-</td>
+                            <td v-else style=""></td>
                             <td style="text-align: center; ">
-                                <div class="label label-table label-success"></div>
+                                <div class="label label-table label-danger">Inactivo</div>
+                            </td>
+                            <td style="text-align: center; ">
+                                <a href="#" class="btn btn-danger"><i class="fa fa-remove"></i></a>
                             </td>
                         </tr>
                         </tbody>
@@ -73,7 +80,7 @@
                             <td>
                                 <div class="card-view">
                                     <div class="tittle-2">Departamento</div>
-                                    <div class="value">{{dato.name}}</div>
+                                    <div class="value">{{dato.list_departament.name}}</div>
                                 </div>
                                 <div class="card-view">
                                     <div class="tittle-2">Presupuesto Disponible</div>
@@ -149,6 +156,7 @@
             var self = this;
             this.$http.get(this.source).then((response) => {
                 self.datos = response.data.model;
+                console.log(self.datos.data[0].list_departament)
                 self.my_pages = response.data.my_pages;
                 self.columns = response.data.columns;
             });

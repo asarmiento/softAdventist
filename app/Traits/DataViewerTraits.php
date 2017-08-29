@@ -10,15 +10,13 @@ namespace App\Traits;
 
 trait DataViewerTraits
 {
-    public function scopeSearchPaginateAndOrder($query, $count, $search = null,$relation=false)
+    public function scopeSearchPaginateAndOrder($query, $count, $search = null,$otherFilters=false)
     {
-
-        if($relation){
-            return $query->search($search)->with('expenseAccount')->with('check')->paginate($count);
+        if($otherFilters){
+            return $query->search($search);
         }else{
             return $query->search($search)->paginate($count);
         }
-
     }
 
     /**
