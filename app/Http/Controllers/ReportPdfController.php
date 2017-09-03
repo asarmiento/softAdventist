@@ -85,8 +85,8 @@ class ReportPdfController extends Controller
     /**
      * ---------------------------------------------------------------------
      * @Author     : Anwar Sarmiento "asarmiento@sistemasamigables.com"
-     * @Date       Create: ${DATE}
-     * @Time       Create: ${TIME}
+     * @Date       Create: 2017-08-30
+     * @Time       Create: 9:36pm
      * @Date       Update: 0000-00-00
      * ---------------------------------------------------------------------
      * @Description: Con este reporte podemos ver el detalle de facturas
@@ -156,8 +156,8 @@ class ReportPdfController extends Controller
     /**
      * ---------------------------------------------------------------------
      * @Author     : Anwar Sarmiento "asarmiento@sistemasamigables.com"
-     * @Date       Create: 2017-07-
-     * @Time       Create: ${TIME}
+     * @Date       Create: 2017-07-30
+     * @Time       Create: 9:37pm
      * @Date       Update: 0000-00-00
      * ---------------------------------------------------------------------
      * @Description: Aqui tenemos el informe semanal en pdf para las iglesias
@@ -329,7 +329,24 @@ class ReportPdfController extends Controller
         return $pdf;
     }
 
+    public function headerChurch($orientacion = 'P',$page = 'letter',$title, $date)
+    {
+        $pdf = Fpdf::AddPage($orientacion, $page);
+        $pdf .= Fpdf::SetFont('Arial', 'B', 16);
+        $pdf .= Fpdf::Cell(0, 7, utf8_decode(userChurch()->name),
+            0, 1, 'C');
+        $pdf .= Fpdf::SetFont('Arial', '', 12);
+        $pdf .= Fpdf::Cell(0, 7, utf8_decode(userChurch()->address), 0, 1, 'C');
+        $pdf .= Fpdf::Cell(0, 7, utf8_decode(userChurch()->phone), 0, 1, 'C');
+        $pdf .= Fpdf::Cell(0, 7, utf8_decode(userChurch()->email), 0, 1, 'C');
+        $pdf .= Fpdf::SetFont('Arial', 'B', 16);
+        $pdf .= Fpdf::Cell(0, 7, utf8_decode($title), 0, 1, 'C');
+        $pdf .= Fpdf::SetFont('Arial', '', 12);
+        $pdf .= Fpdf::Setx(5);
+        $pdf .= Fpdf::Cell(0, 7, 'Fecha:  '.$date, 0, 1, 'C');
 
+        return $pdf;
+    }
     public function firmas($date)
     {
         //

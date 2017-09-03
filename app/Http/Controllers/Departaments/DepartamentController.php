@@ -69,7 +69,7 @@ class DepartamentController extends Controller
         }
 
         $model = Departament::searchPaginateAndOrder($perPage, $request->get('search'),
-            true)->with('listDepartament')->paginate($perPage);
+            true)->with('listDepartament')->where('status','activo')->paginate($perPage);
 
         $array = $this->myPages($model);
 
@@ -85,9 +85,26 @@ class DepartamentController extends Controller
     }
 
 
+    /**
+     * -----------------------------------------------------------------------
+     * @Author: Anwar Sarmiento <asarmiento@sistemasamigables.com>
+     * @DateCreate: 2017-08-30
+     * @TimeCreate: 11:59am
+     * @DateUpdate: 0000-00-00
+     * -----------------------------------------------------------------------
+     * @description:
+     * @pasos:
+     * ----------------------------------------------------------------------
+     * @param Request $request
+     * @var ${TYPE_NAME}
+     * ----------------------------------------------------------------------
+     *  @return array
+     * ----------------------------------------------------------------------
+     *
+     */
     public function inactiveDep(Request $request)
     {
-        $perPage = 10;
+        $perPage = 20;
         if ($request->has('perPage')) {
             $perPage = $request->perPage;
         }
@@ -95,7 +112,7 @@ class DepartamentController extends Controller
         $model = Departament::searchPaginateAndOrder($perPage, $request->get('search'),
             true)->with('incomeAccounts')->with('listDepartament')->where('status', 'inactivo')->paginate($perPage);
         $count = Departament::where('status', 'inactivo')->where('church_id',
-            userChurch()->id)->sum('percent_of_budget');
+            1)->sum('percent_of_budget');
         $array = $this->myPages($model);
 
         $columns = Departament::$columns;
@@ -136,9 +153,8 @@ class DepartamentController extends Controller
         if (Departament::where('list_departament_id', $newDepartamen->id)->count() > 0):
             return response()->json([ 'errors' => [ 'El Departamento: '.$newDepartamen->name.' ya Existe' ] ], 422);
         endif;
-        $data['church_id'] = userChurch()->id;
-        $data['budget'] = $data['percent_of_budget'];
-        $data['balance'] = $data['percent_of_budget'];
+        $data['church_id'] = 1;// userChurch()->id;
+        $data['budget'] = 0;
         $data['status'] = 'desactivo';
         $data['authorized'] = 'no';
         $data['list_departament_id'] = $newDepartamen->id;
@@ -149,6 +165,8 @@ class DepartamentController extends Controller
         if ($departament->save()) {
             return response()->json([
                 'message' => 'El Departamento: '.$newDepartamen->name.' se registro con Exito',
+                'count'=>   Departament::where('status', 'inactivo')->where('church_id',
+                    1)->sum('percent_of_budget'),
                 'dep'    => Departament::searchPaginateAndOrder(10, $request->get('search'),
                     true)->with('incomeAccounts')->with('listDepartament')->where('status', 'inactivo')->paginate(10)
             ], 200);
@@ -180,17 +198,72 @@ class DepartamentController extends Controller
     }
 
 
+    /**
+     * -----------------------------------------------------------------------
+     * @Author: Anwar Sarmiento <asarmiento@sistemasamigables.com>
+     * @DateCreate: 2017-08-30
+     * @TimeCreate: 12:01pm
+     * @DateUpdate: 0000-00-00
+     * -----------------------------------------------------------------------
+     * @description: Con este methodo eliminamos un departamento ligado a una
+     * iglesia siempre y cuando este recien creada
+     * @pasos:
+     * ----------------------------------------------------------------------
+     * @param Request $request
+     * @var ${TYPE_NAME}
+     * ----------------------------------------------------------------------
+     * @return \Illuminate\Http\JsonResponse
+     * ----------------------------------------------------------------------
+     * *
+     */
     public function remove(Request $request)
     {
         $departament = Departament::find($request->get('id'))->delete();
         if ($departament) {
             return response()->json([
                 'message' => 'Se elimino con exito',
-                'success' => true
+                'success' => true,
+                'count'=>   Departament::where('status', 'inactivo')->where('church_id',
+                1)->sum('percent_of_budget')
             ], 200);
         }
-
         return response()->json([ 'errors' => [ 'El Departamento tiene cuentas de ingreso y salidas ligadas, no se pudo registrar' ] ],
+            422);
+    }
+
+    /**
+     * -----------------------------------------------------------------------
+     * @Author: Anwar Sarmiento <asarmiento@sistemasamigables.com>
+     * @DateCreate: 2017-08-30
+     * @TimeCreate: 12:25pm
+     * @DateUpdate: 0000-00-00
+     * -----------------------------------------------------------------------
+     * @description: Aquí damos por finalizado la asignación de presupuesto a
+     * los departamentos y enviamos un email al primer anciano(a) y a la
+     * secretaria(o) para que aprueben o no la asignación de porcentajes digi-
+     * tados por el tesorero.
+     * @pasos: 1. Cambiar de status para activo
+     * 2. enviar un email a primer anciano y secretaria
+     * 3. redireccionar a la lista de departamentos
+     * ----------------------------------------------------------------------
+     *
+     * @var ${TYPE_NAME}
+     * ----------------------------------------------------------------------
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+     * ----------------------------------------------------------------------
+     *
+     */
+    public function applied()
+    {
+        $depChurch =  Departament::where('status', 'inactivo')->where('church_id',
+            1);
+        if($depChurch->sum('percent_of_budget') == 100){
+            $depChurch->update(['status'=>'activo']);
+            /** Queda Pendiente el envio de email para notificar */
+           return response()->json([ 'url' => '/tesoreria/lista-departament' ],
+               200);
+        }
+        return response()->json([ 'success'=>false,'errors' =>  'Debe tener 100 distribuido entre todos los departamentos'  ],
             422);
     }
 }

@@ -43,8 +43,9 @@
                             <small class="help-block">{{errors.balance}}</small>
                         </div>
                     </div>
-                    <div class="col-lg-12 col-md-12  text-center">
-                        <div class="btn">
+                    <div v-if="mTotal"></div>
+                    <div v-else class="col-lg-12 col-md-12  text-center">
+                        <div  class="btn">
                             <button v-on:click="send" class="btn btn-success">Guardar</button>
                         </div>
                     </div>
@@ -110,13 +111,13 @@
                         </tr>
                         <tr>
                             <td colspan="2">Total:</td>
-                            <td >Total:</td>
+                            <td >{{total}}</td>
                         </tr>
                         </tbody>
                     </table>
-                    <div class="col-lg-12 col-md-12  text-center">
+                    <div v-if="mTotal" class="col-lg-12 col-md-12  text-center">
                         <div class="btn">
-                            <button v-on:click="send" class="btn btn-success">Finalizar</button>
+                            <button v-on:click="applied" class="btn btn-success">Finalizar</button>
                         </div>
                     </div>
                 </div>
@@ -135,9 +136,9 @@
         data() {
             return {
                 data: {
-                    name: '',
+                    dep: '',
                     percent_of_budget: '',
-                    balnce: '',
+                    balance: '',
                 },
                 errors: {
                     name: '',
@@ -146,6 +147,7 @@
                 },
                 departaments: [],
                 txtSearch: '',
+                total: '',
                 counts: ['5', '10', '20', '50'],
                 datos: [],
                 my_pages: [],
@@ -163,24 +165,68 @@
                 self.datos = response.data.model;
                 self.my_pages = response.data.my_pages;
                 self.columns = response.data.columns;
+                self.total = response.data.count;
             });
+
+        },
+        computed:{
+            mTotal() {
+               if(this.total === '100.00'){
+                    return true;
+                }
+                return false;
+            },
         },
         methods: {
+
+            applied:function () {
+                var self = this;
+                axios.post('/tesoreria/applied-departament', event)
+                    .then((response) => {
+                        document.location =  response.data.url;
+
+
+                    }).catch(function (error) {
+                        console.log(error.response);
+                    if (error.response) {
+                        let data = error.response.data;
+                        if (error.response.status === 422) {
+                            self.$alert({
+                                title: 'Cuidado!!!',
+                                message: error.response.data.errors
+                            });
+                        } else if (error.response.status === 401) {
+                            self.errors.response.invalid = true;
+                            self.errors.response.msg = data.msg.message;
+                        } else {
+                            console.log(error);
+                            self.errors = data.message;
+                            alert("Error generic");
+                        }
+                    } else if (error.request) {
+                        console.log(error.request);
+                        alert("Error empty");
+                    } else {
+                        console.log('Error', error.message);
+                        alert("Error");
+                    }
+                });
+            },
             send: function (event) {
                 var self = this;
                 axios.post('/tesoreria/' + self.url, this.data)
                     .then(response => {
                         if (response.data.success = true) {
 
-                            this.datos = response.data.dep;
-
+                            self.datos = response.data.dep;
+                            self.total = response.data.count;
                             this.$alert({
                                 title: 'Se Guardo con Exito!!!',
                                 message: response.data.message
                             });
                             this.data.name = '';
                             this.data.percent_of_budget = '';
-                            this.data.balances = '';
+                            this.data.balance = '';
                             this.errors.name = '';
                             this.errors.percent_of_budget = '';
                             this.errors.balance = '';
@@ -217,6 +263,7 @@
                 axios.post('/tesoreria/delete-departament', event)
                     .then((response) => {
                         self.datos.data.splice(index, 1);
+                        self.total = response.data.count;
                     }).catch(function (error) {
                     if (error.response) {
                         let data = error.response.data;

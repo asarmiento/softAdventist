@@ -6,22 +6,63 @@ use App\Entities\Departaments\Departament;
 use App\Entities\Departaments\ExpenseAccount;
 use App\Entities\Departaments\IncomeAccount;
 use App\Entities\SummaryOfWeeklyEarning;
-use App\Entities\SummaryOfWeeklyEarnings;
 use App\Http\Requests\IncomeAccountCreateRequest;
 use App\Traits\DataViewerTraits;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * Class IncomeAccountController
+ * @package App\Http\Controllers
+ */
 class IncomeAccountController extends Controller
 {
     use DataViewerTraits;
     //
+
+    /**
+     * -----------------------------------------------------------------------
+     * Author: ${USER}
+     * DateCreate: ${DATE}
+     * TimeCreate: ${TIME}
+     * DateUpdate: 0000-00-00
+     * -----------------------------------------------------------------------
+     * @description:
+     * @pasos:
+     * ----------------------------------------------------------------------
+     *
+     * var: $VAR$
+     * ----------------------------------------------------------------------
+     *  * @return mixed
+     * ----------------------------------------------------------------------
+     * *
+     *
+     */
     public function index()
     {
         return view('departament.accounts.listsIncomeAccounts');
     }
 
+
+    /**
+     * -----------------------------------------------------------------------
+     * Author: ${USER}
+     * DateCreate: ${DATE}
+     * TimeCreate: ${TIME}
+     * DateUpdate: 0000-00-00
+     * -----------------------------------------------------------------------
+     * @description:
+     * @pasos:
+     * ----------------------------------------------------------------------
+     * * @param Request $request
+     * var: ${TYPE_NAME}
+     * ----------------------------------------------------------------------
+     *  * @return TYPE_NAME
+     * ----------------------------------------------------------------------
+     * *
+     *
+     */
     public function getData(Request $request)
     { 
         $perPage = 10;
@@ -29,18 +70,23 @@ class IncomeAccountController extends Controller
             $perPage = $request->perPage;
         }
 
+        /** @var TYPE_NAME $model */
         $model = IncomeAccount::searchPaginateAndOrder($perPage, $request->get('search'));
 
+        /** @var TYPE_NAME $array */
         $array = $this->myPages($model);
 
+        /** @var TYPE_NAME $columns */
         $columns = IncomeAccount::$columns;
 
+        /** @var TYPE_NAME $response */
         $response = [
             'model'    => $model,
             'columns'  => $columns,
             'my_pages' => $array
         ];
 
+        /** @var TYPE_NAME $response */
         return $response;
     }
 

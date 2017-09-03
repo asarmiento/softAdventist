@@ -67,6 +67,7 @@ Route::post('contacto', ['uses'=>'Auth\RegisterController@contactPost','as'=>'co
         Route::get('movimientos-departamento', ['uses'=>'Departaments\DepartamentController@create','as'=>'move-departaments']);
         Route::post('delete-departament', 'Departaments\DepartamentController@remove');
         Route::post('save-departament', 'Departaments\DepartamentController@store');
+        Route::post('applied-departament', 'Departaments\DepartamentController@applied');
         /**
          * Cuentas Bancarias
          */
@@ -169,6 +170,7 @@ Route::post('contacto', ['uses'=>'Auth\RegisterController@contactPost','as'=>'co
         //Reportes
         Route::get('reporte-semanal/{date}', ['uses'=>'ReportPdfController@infoSemanal','as'=>'reportWeekly']);
         Route::get('pdf-de-gastos/{token}', 'ReportPdfController@checkDetail');
+        Route::get('reporte-resumen-movimiento-departamento/{token}', 'ReportsPDF\ReportsDepartamentsController@pdfSummaryMoveDepartament');
         Route::get('reporte-estado-de-cuenta-actual/{token}', 'ReportPdfController@stateAccountNow');
 
 

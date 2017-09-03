@@ -46,25 +46,41 @@
                                 <div class="fht-cell"></div>
                             </th>
                             <th style="" data-field="amount" tabindex="0">
-                                <div class="th-inner "></div>
+                                <div class="th-inner ">Autorizado</div>
                                 <div class="fht-cell"></div>
+                            </th>
+                            <th style="" data-field="amount" tabindex="0">
+                                <div class="th-inner "></div>
+                                <div class="fht-cell">Resumen</div>
+                            </th>
+                            <th style="" data-field="amount" tabindex="0">
+                                <div class="th-inner "></div>
+                                <div class="fht-cell">Detalle</div>
                             </th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr  v-for="(dato, index) in datos.data" :data-index="index">
-                            <td style=""><a href="#" class="btn-link"> {{dato.list_departament.name}}</a></td>
+                            <td style=""><a v-if="datos.data.length > 0" href="#" class="btn-link"> {{dato.list_departament.name}}</a></td>
                             <td style="">
                                 <a href="" data-name="name" data-pk="53431"
-                                            data-value="dato.budget" class="editable editable-click">{{dato.budget}}
+                                            data-value="dato.budget" class="editable editable-click">{{dato.balance}}
                                 </a></td>
                             <td v-if="dato.percent_of_budget > 0" style="">{{dato.percent_of_budget}} %</td>
                             <td v-else style=""></td>
                             <td style="text-align: center; ">
-                                <div class="label label-table label-danger">Inactivo</div>
+                                <div v-if="dato.status === 'activo'" class="label label-table label-success">{{dato.status}}</div>
+                                <div v-else class="label label-table label-danger">{{dato.status}}</div>
                             </td>
                             <td style="text-align: center; ">
-                                <a href="#" class="btn btn-danger"><i class="fa fa-remove"></i></a>
+                                <div v-if="dato.authorized === 'yes'" class="label label-table label-success">Confirmado</div>
+                                <div v-else class="label label-table label-danger">Sin Confirmar</div>
+                            </td>
+                            <td style="text-align: center; ">
+                                <a @click="pdfAccountSummary(dato.token)" target="_blank"   class="btn btn-default"><i class="fa fa-file-pdf-o fa-2x btn-danger" aria-hidden="true"></i></a>
+                            </td>
+                            <td style="text-align: center; ">
+                                <a href="#" class="btn btn-default"><i class="fa fa-file-pdf-o fa-2x btn-danger" aria-hidden="true"></i></a>
                             </td>
                         </tr>
                         </tbody>
@@ -80,11 +96,11 @@
                             <td>
                                 <div class="card-view">
                                     <div class="tittle-2">Departamento</div>
-                                    <div class="value">{{dato.list_departament.name}}</div>
+                                    <div v-if="datos.data.length > 0" class="value">{{dato.list_departament.name}}</div>
                                 </div>
                                 <div class="card-view">
                                     <div class="tittle-2">Presupuesto Disponible</div>
-                                    <div class="value" >{{dato.budget}} </div>
+                                    <div class="value" >{{dato.balance}} </div>
                                 </div>
                                 <div class="card-view">
                                     <div class="tittle-2">Porcentaje del 60%</div>
@@ -156,13 +172,15 @@
             var self = this;
             this.$http.get(this.source).then((response) => {
                 self.datos = response.data.model;
-                console.log(self.datos.data[0].list_departament)
                 self.my_pages = response.data.my_pages;
                 self.columns = response.data.columns;
             });
 
         },
         methods: {
+            pdfAccountSummary(data){
+                document.location =  '/tesoreria/reporte-resumen-movimiento-departamento/'+data;
+            },
             styleType() {
                 var self = this;
                 if (this.typeStyle) {
