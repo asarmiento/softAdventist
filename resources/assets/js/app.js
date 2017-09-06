@@ -1,4 +1,3 @@
-
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -31,6 +30,11 @@ Vue.component('createChurchDeposits', require('./components/Creating/CreateChurc
 Vue.component('createLocalDeposits', require('./components/Creating/CreateLocalDeposits.vue'));
 Vue.component('createCheck', require('./components/Creating/CreateCheck.vue'));
 /**
+ * Editores de tablas
+ */
+
+Vue.component('editorsDepartament', require('./components/Editors/EditorDepartament.vue'));
+/**
  * Listas de datos en tablas tipo dataTable
  */
 Vue.component('listsIncomeAccounts', require('./components/Lists/ListsIncomeAccounts.vue'));
@@ -49,7 +53,6 @@ Vue.component('depositLocalField', require('./components/DepositLocalField.vue')
 Vue.component('registroExpenses', require('./components/RegistroExpenses.vue'));
 
 
-
 const app = new Vue({
-        el: '#app',
+    el: '#app',
 });

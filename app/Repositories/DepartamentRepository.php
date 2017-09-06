@@ -6,7 +6,7 @@
  * Time: 04:52 PM
  */
 
-namespace app\Repositories;
+namespace App\Repositories;
 
 
 use App\Entities\Departaments\Departament;
@@ -24,5 +24,10 @@ class DepartamentRepository extends BaseRepository
     public function getModel()
     {
         return new Departament();// TODO: Implement getModel() method.
+    }
+
+    public function balanceBudget()
+    {
+        return $this->newQuery()->where('church_id',userChurch()->id)->sum('percent_of_budget');
     }
 }

@@ -31,6 +31,23 @@ abstract class BaseRepository {
         return false;
     }
 
+    /**
+     * -----------------------------------------------------------------------
+     * @Author: Anwar Sarmiento <asarmiento@sistemasamigables.com>
+     * @DateCreate: 2017-09-05
+     * @TimeCreate: 9:07pm
+     * @DateUpdate: 0000-00-00
+     * -----------------------------------------------------------------------
+     * @description:
+     * @pasos:
+     * ----------------------------------------------------------------------
+     *
+     *  * @var ${TYPE_NAME}
+     * * ----------------------------------------------------------------------
+     *  * @return mixed
+     * ----------------------------------------------------------------------
+     * *
+     */
     public function newQuery() {
         return $this->getModel()->newQuery();
     }

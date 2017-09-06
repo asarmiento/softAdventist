@@ -3,13 +3,16 @@
 namespace App\Http\Controllers\Departaments;
 
 use App\Entities\Departaments\Departament;
-use App\Entities\Departaments\ListDepartament;
+use App\Entities\Departaments\ExpenseAccount;
+use App\Entities\Departaments\IncomeAccount;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DepartamentCreateRequest;
 use App\Repositories\Church\Departaments\ListDepartamentRepository;
+use App\Repositories\DepartamentRepository;
 use App\Traits\DataViewerTraits;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class DepartamentController extends Controller
@@ -21,16 +24,22 @@ class DepartamentController extends Controller
      * @var ListDepartamentRepository
      */
     private $listDepartamentRepository;
+    /**
+     * @var DepartamentRepository
+     */
+    private $departamentRepository;
 
 
     /**
      * DepartamentController constructor.
      *
      * @param ListDepartamentRepository $listDepartamentRepository
+     * @param DepartamentRepository $departamentRepository
      */
-    public function __construct(ListDepartamentRepository $listDepartamentRepository)
+    public function __construct(ListDepartamentRepository $listDepartamentRepository, DepartamentRepository $departamentRepository)
     {
         $this->listDepartamentRepository = $listDepartamentRepository;
+        $this->departamentRepository = $departamentRepository;
     }
 
 
@@ -57,7 +66,12 @@ class DepartamentController extends Controller
      */
     public function create()
     {
-        return view('departament.create');
+        $verify = $this->departamentRepository->balanceBudget();
+        $block = false;
+        if($verify == 100.00){
+            $block = true;
+        }
+        return view('departament.create',compact('block'));
     }
 
 
@@ -69,15 +83,15 @@ class DepartamentController extends Controller
         }
 
         $model = Departament::searchPaginateAndOrder($perPage, $request->get('search'),
-            true)->with('listDepartament')->where('status','activo')->paginate($perPage);
+            true)->with('listDepartament')->where('status', 'activo')->paginate($perPage);
 
         $array = $this->myPages($model);
 
         $columns = Departament::$columns;
 
         $response = [
-            'model'    => $model,
-            'columns'  => $columns,
+            'model' => $model,
+            'columns' => $columns,
             'my_pages' => $array
         ];
 
@@ -98,7 +112,7 @@ class DepartamentController extends Controller
      * @param Request $request
      * @var ${TYPE_NAME}
      * ----------------------------------------------------------------------
-     *  @return array
+     * @return array
      * ----------------------------------------------------------------------
      *
      */
@@ -118,10 +132,10 @@ class DepartamentController extends Controller
         $columns = Departament::$columns;
 
         $response = [
-            'model'    => $model,
-            'columns'  => $columns,
+            'model' => $model,
+            'columns' => $columns,
             'my_pages' => $array,
-            'count'    => $count
+            'count' => $count
         ];
 
         return $response;
@@ -133,47 +147,75 @@ class DepartamentController extends Controller
      * @Author     : Anwar Sarmiento "asarmiento@sistemasamigables.com"
      * @Date       Create: 2017-08-27
      * @Time       Create: 5:13pm
-     * @Date       Update: 0000-00-00
+     * @Date       Update: 2017-09-05
      * ---------------------------------------------------------------------
      * @Description: Aqui relacionamos un departamento con una iglesia
      *             y le ponemos el presupuesto que esta asignado.
-     * @Pasos      : 1. verificamos si el departamentos existe
-     *             2.
-     *
+     * @Pasos      :
+     * 1.   verificamos si el departamentos existe
+     * 2.   cargamos las variables faltantes
+     * 3.   creamos la cuenta de ingreso de base que se usara  para la
+     *      distribucion del 60% de ofrenda si tubiera presupuesto.
      * @param DepartamentCreateRequest $request
      * ----------------------------------------------------------------------
-     *
      * @return \Illuminate\Http\JsonResponse
      * ----------------------------------------------------------------------
      */
     public function store(DepartamentCreateRequest $request)
     {
-        $data = $request->all();
-        $newDepartamen = $this->listDepartamentRepository->token($data['name']['value']);
-        if (Departament::where('list_departament_id', $newDepartamen->id)->count() > 0):
-            return response()->json([ 'errors' => [ 'El Departamento: '.$newDepartamen->name.' ya Existe' ] ], 422);
-        endif;
-        $data['church_id'] = 1;// userChurch()->id;
-        $data['budget'] = 0;
-        $data['status'] = 'desactivo';
-        $data['authorized'] = 'no';
-        $data['list_departament_id'] = $newDepartamen->id;
-        $data['token'] = Crypt::encrypt($newDepartamen->name);
+        try {
+            DB::beginTransaction();
+            $data = $request->all();
+            $newDepartamen = $this->listDepartamentRepository->token($data['name']['value']);
+            if (Departament::where('list_departament_id', $newDepartamen->id)->count() > 0):
+                return response()->json(['errors' => ['El Departamento: ' . $newDepartamen->name . ' ya Existe']], 422);
+            endif;
+            $data['church_id'] = 1;// userChurch()->id;
+            $data['budget'] = 0;
+            $data['status'] = 'desactivo';
+            $data['authorized'] = 'no';
+            $data['list_departament_id'] = $newDepartamen->id;
+            $data['token'] = Crypt::encrypt($newDepartamen->name);
 
-        $departament = new Departament();
-        $departament->fill($data);
-        if ($departament->save()) {
-            return response()->json([
-                'message' => 'El Departamento: '.$newDepartamen->name.' se registro con Exito',
-                'count'=>   Departament::where('status', 'inactivo')->where('church_id',
-                    1)->sum('percent_of_budget'),
-                'dep'    => Departament::searchPaginateAndOrder(10, $request->get('search'),
-                    true)->with('incomeAccounts')->with('listDepartament')->where('status', 'inactivo')->paginate(10)
-            ], 200);
+            $departament = new Departament();
+            $departament->fill($data);
+            if ($departament->save()) {
+                $data['name'] = 'Ing-base-' . $departament->listDepartament->name;
+                $data['type'] = 'fix';
+                $data['departament_id'] = $departament->id;
+                $incomeAccount = new IncomeAccount();
+                $incomeAccount->fill($data);
+                if ($incomeAccount->save()):
+                    $data['name'] = 'Gto-base-' . $departament->listDepartament->name;
+                    $data['income_account_id'] = $incomeAccount->id;
+                    $expenseAccount = new ExpenseAccount();
+                    $expenseAccount->fill($data);
+                    if ($expenseAccount->save()) {
+                        DB::commit();
+                        return response()->json([
+                            'message' => 'El Departamento: ' . $newDepartamen->name . ' se registro con Exito',
+                            'count' => Departament::where('status', 'inactivo')->where('church_id',
+                                1)->sum('percent_of_budget'),
+                            'dep' => Departament::searchPaginateAndOrder(10, $request->get('search'),
+                                true)->with('incomeAccounts')->with('listDepartament')->where('status', 'inactivo')->paginate(10)
+                        ], 200);
+                    } else {
+                        DB::rollback();
+                        return response()->json(['success' => false, 'message' => 'Genero un error'], 422);
+                    }
+                else:
+                    DB::rollback();
+                    return response()->json(['success' => false, 'message' => 'Genero un error'], 422);
+                endif;
+            }
+            DB::rollback();
+            return response()->json(['errors' => ['El Departamento: ' . $newDepartamen->name . ' no se pudo registrar']],
+                422);
+        } catch (Exception $e) {
+            DB::rollback();
+            \Log::info(__FILE__ . ' ' . __FUNCTION__ . ' ' . __LINE__ . ' errors: ' . $e->getMessage() . ' line: ' . $e->getLine());
+            abort($e->getCode());
         }
-
-        return response()->json([ 'errors' => [ 'El Departamento: '.$newDepartamen->name.' no se pudo registrar' ] ],
-            422);
     }
 
 
@@ -223,11 +265,11 @@ class DepartamentController extends Controller
             return response()->json([
                 'message' => 'Se elimino con exito',
                 'success' => true,
-                'count'=>   Departament::where('status', 'inactivo')->where('church_id',
-                1)->sum('percent_of_budget')
+                'count' => Departament::where('status', 'inactivo')->where('church_id',
+                    1)->sum('percent_of_budget')
             ], 200);
         }
-        return response()->json([ 'errors' => [ 'El Departamento tiene cuentas de ingreso y salidas ligadas, no se pudo registrar' ] ],
+        return response()->json(['errors' => ['El Departamento tiene cuentas de ingreso y salidas ligadas, no se pudo registrar']],
             422);
     }
 
@@ -255,15 +297,15 @@ class DepartamentController extends Controller
      */
     public function applied()
     {
-        $depChurch =  Departament::where('status', 'inactivo')->where('church_id',
+        $depChurch = Departament::where('status', 'inactivo')->where('church_id',
             1);
-        if($depChurch->sum('percent_of_budget') == 100){
-            $depChurch->update(['status'=>'activo']);
+        if ($depChurch->sum('percent_of_budget') == 100) {
+            $depChurch->update(['status' => 'activo']);
             /** Queda Pendiente el envio de email para notificar */
-           return response()->json([ 'url' => '/tesoreria/lista-departament' ],
-               200);
+            return response()->json(['url' => '/tesoreria/lista-departament'],
+                200);
         }
-        return response()->json([ 'success'=>false,'errors' =>  'Debe tener 100 distribuido entre todos los departamentos'  ],
+        return response()->json(['success' => false, 'errors' => 'Debe tener 100 distribuido entre todos los departamentos'],
             422);
     }
 }

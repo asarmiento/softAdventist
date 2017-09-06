@@ -47,21 +47,20 @@ class IncomeAccountController extends Controller
 
     /**
      * -----------------------------------------------------------------------
-     * Author: ${USER}
-     * DateCreate: ${DATE}
-     * TimeCreate: ${TIME}
-     * DateUpdate: 0000-00-00
+     * @Author: Anwar Sarmiento <asarmiento@sistemasamigables.com>
+     * @DateCreate: 2017-09-05
+     * @TimeCreate: 8:50pm
+     * @DateUpdate: 0000-00-00
      * -----------------------------------------------------------------------
      * @description:
      * @pasos:
      * ----------------------------------------------------------------------
      * * @param Request $request
-     * var: ${TYPE_NAME}
-     * ----------------------------------------------------------------------
+     *  * @var ${TYPE_NAME}
+     * * ----------------------------------------------------------------------
      *  * @return TYPE_NAME
      * ----------------------------------------------------------------------
      * *
-     *
      */
     public function getData(Request $request)
     {
@@ -120,8 +119,8 @@ class IncomeAccountController extends Controller
      * ---------------------------------------------------------------------
      * @Author     : Anwar Sarmiento "asarmiento@sistemasamigables.com"
      * @Date       Create: 2017-06-23
-     * @Time       Create: ${TIME}
-     * @Date       Update: 0000-00-00
+     * @Time       Create: 8:51pm
+     * @Date       Update: 2017-09-05
      * ---------------------------------------------------------------------
      * @Description:
      * @Pasos      :

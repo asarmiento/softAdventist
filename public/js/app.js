@@ -28772,7 +28772,6 @@ module.exports = __webpack_require__(337);
 /* 156 */
 /***/ (function(module, exports, __webpack_require__) {
 
-
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -28803,6 +28802,11 @@ Vue.component('createBank', __webpack_require__(269));
 Vue.component('createChurchDeposits', __webpack_require__(274));
 Vue.component('createLocalDeposits', __webpack_require__(284));
 Vue.component('createCheck', __webpack_require__(289));
+/**
+ * Editores de tablas
+ */
+
+Vue.component('editorsDepartament', __webpack_require__(351));
 /**
  * Listas de datos en tablas tipo dataTable
  */
@@ -52441,13 +52445,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
 
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    props: ['title', 'url'],
+    props: ['title', 'url', 'block'],
     components: { dataTable: __WEBPACK_IMPORTED_MODULE_0__Lists_ListsDepartaments_vue___default.a, vSelect: __WEBPACK_IMPORTED_MODULE_1_vue_select___default.a },
     data: function data() {
         return {
@@ -52469,7 +52472,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             my_pages: [],
             columns: [],
             typeAll: true,
-            typeStyle: true
+            typeStyle: true,
+            status: ''
         };
     },
     created: function created() {
@@ -70222,6 +70226,580 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 338 */,
+/* 339 */,
+/* 340 */,
+/* 341 */,
+/* 342 */,
+/* 343 */,
+/* 344 */,
+/* 345 */,
+/* 346 */,
+/* 347 */,
+/* 348 */,
+/* 349 */,
+/* 350 */,
+/* 351 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(352)
+}
+var Component = __webpack_require__(1)(
+  /* script */
+  __webpack_require__(354),
+  /* template */
+  __webpack_require__(355),
+  /* styles */
+  injectStyle,
+  /* scopeId */
+  null,
+  /* moduleIdentifier (server only) */
+  null
+)
+Component.options.__file = "C:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Editors\\EditorDepartament.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] EditorDepartament.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-ac3f4d96", Component.options)
+  } else {
+    hotAPI.reload("data-v-ac3f4d96", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 352 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(353);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(3)("82e21ae6", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-ac3f4d96\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./EditorDepartament.vue", function() {
+     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-ac3f4d96\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./EditorDepartament.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 353 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(2)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, "\n.box-info {\n    font-size: 24px;\n    margin: 0 auto;\n    background-color: #00b3ca;\n    border-color: #00bcd4;\n    color: #fff;\n    border-radius: 10px;\n}\n.box-list {\n    list-style-type: circle;\n    text-align: left;\n    font-weight: bold;\n    font-size: 14px;\n}\n.tittle-2 {\n    text-align: left !important;\n    font-weight: bold;\n    float: left;\n    min-width: 30%;\n}\n.value {\n    text-align: left !important;\n    float: right;\n    min-width: 70%;\n}\n\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 354 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Lists_ListsDepartaments_vue__ = __webpack_require__(35);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Lists_ListsDepartaments_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__Lists_ListsDepartaments_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_select__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_select___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_vue_select__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: ['title', 'url', 'block'],
+    components: { dataTable: __WEBPACK_IMPORTED_MODULE_0__Lists_ListsDepartaments_vue___default.a, vSelect: __WEBPACK_IMPORTED_MODULE_1_vue_select___default.a },
+    data: function data() {
+        return {
+            data: {
+                dep: '',
+                percent_of_budget: '',
+                balance: ''
+            },
+            errors: {
+                name: '',
+                percent_of_budget: '',
+                balance: ''
+            },
+            departaments: [],
+            txtSearch: '',
+            total: '',
+            counts: ['5', '10', '20', '50'],
+            datos: [],
+            my_pages: [],
+            columns: [],
+            typeAll: true,
+            typeStyle: true,
+            status: ''
+        };
+    },
+    created: function created() {
+        var _this = this;
+
+        var self = this;
+        this.$http.get('/tesoreria/lista-de-departamentos').then(function (response) {
+            _this.departaments = response.data;
+        });
+        this.$http.get('/tesoreria/lists-departament-inactive').then(function (response) {
+            self.datos = response.data.model;
+            self.my_pages = response.data.my_pages;
+            self.columns = response.data.columns;
+            self.total = response.data.count;
+        });
+    },
+
+    computed: {
+        mTotal: function mTotal() {
+            if (this.total === '100.00') {
+                return true;
+            }
+            return false;
+        }
+    },
+    methods: {
+
+        applied: function applied() {
+            var self = this;
+            axios.post('/tesoreria/applied-departament', event).then(function (response) {
+                document.location = response.data.url;
+            }).catch(function (error) {
+                console.log(error.response);
+                if (error.response) {
+                    var data = error.response.data;
+                    if (error.response.status === 422) {
+                        self.$alert({
+                            title: 'Cuidado!!!',
+                            message: error.response.data.errors
+                        });
+                    } else if (error.response.status === 401) {
+                        self.errors.response.invalid = true;
+                        self.errors.response.msg = data.msg.message;
+                    } else {
+                        console.log(error);
+                        self.errors = data.message;
+                        alert("Error generic");
+                    }
+                } else if (error.request) {
+                    console.log(error.request);
+                    alert("Error empty");
+                } else {
+                    console.log('Error', error.message);
+                    alert("Error");
+                }
+            });
+        },
+        send: function send(event) {
+            var _this2 = this;
+
+            var self = this;
+            axios.post('/tesoreria/' + self.url, this.data).then(function (response) {
+                if (response.data.success = true) {
+
+                    self.datos = response.data.dep;
+                    self.total = response.data.count;
+                    _this2.$alert({
+                        title: 'Se Guardo con Exito!!!',
+                        message: response.data.message
+                    });
+                    _this2.data.name = '';
+                    _this2.data.percent_of_budget = '';
+                    _this2.data.balance = '';
+                    _this2.errors.name = '';
+                    _this2.errors.percent_of_budget = '';
+                    _this2.errors.balance = '';
+                }
+            }).catch(function (error) {
+                if (error.response) {
+                    var data = error.response.data;
+                    if (error.response.status === 422) {
+                        for (var index in data) {
+                            var messages = '';
+                            data[index].forEach(function (item) {
+                                messages += item + ' ';
+                            });
+                            self.errors[index] = messages;
+                        }
+                    } else if (error.response.status === 401) {
+                        self.errors.response.invalid = true;
+                        self.errors.response.msg = data.msg.message;
+                    } else {
+                        console.log(error);
+                        alert("Error generic");
+                    }
+                } else if (error.request) {
+                    console.log(error.request);
+                    alert("Error empty");
+                } else {
+                    console.log('Error', error.message);
+                    alert("Error");
+                }
+            });
+        },
+        removeLine: function removeLine(event, index) {
+            var self = this;
+            axios.post('/tesoreria/delete-departament', event).then(function (response) {
+                self.datos.data.splice(index, 1);
+                self.total = response.data.count;
+            }).catch(function (error) {
+                if (error.response) {
+                    var data = error.response.data;
+                    if (error.response.status === 422) {
+                        for (var index in data) {
+                            var messages = '';
+                            data[index].forEach(function (item) {
+                                messages += item + ' ';
+                            });
+                            self.errors[index] = messages;
+                        }
+                    } else if (error.response.status === 401) {
+                        self.errors.response.invalid = true;
+                        self.errors.response.msg = data.msg.message;
+                    } else {
+                        console.log(error);
+                        self.errors = data.message;
+                        alert("Error generic");
+                    }
+                } else if (error.request) {
+                    console.log(error.request);
+                    alert("Error empty");
+                } else {
+                    console.log('Error', error.message);
+                    alert("Error");
+                }
+            });
+        },
+        styleType: function styleType() {
+            var self = this;
+            if (this.typeStyle) {
+                this.typeStyle = false;
+            } else {
+                this.typeStyle = true;
+            }
+        },
+
+        sarch: function sarch(url) {
+            var self = this;
+            this.$http.get(url + '?search=' + this.txtSearch).then(function (response) {
+                self.datos = response.data.model;
+                self.my_pages = response.data.my_pages;
+            });
+        },
+        pagePre: function pagePre(url) {
+            url += '&perPage=' + this.datos.per_page;
+            var self = this;
+            this.$http.get(url).then(function (response) {
+                self.datos = response.data.model;
+                self.my_pages = response.data.my_pages;
+            });
+        },
+        pageNext: function pageNext(url) {
+            url += '&perPage=' + this.datos.per_page;
+            var self = this;
+            this.$http.get(url).then(function (response) {
+                self.datos = response.data.model;
+                self.my_pages = response.data.my_pages;
+            });
+        },
+        page: function page(url, number) {
+            if (!isNaN(number)) {
+                var self = this;
+                url += '?page=' + number;
+                url += '&perPage=' + this.datos.per_page;
+                this.$http.get(url).then(function (response) {
+                    self.datos = response.data.model;
+                    self.my_pages = response.data.my_pages;
+                });
+            }
+        },
+        perPage: function perPage(url, number) {
+            var self = this;
+            this.$http.get(url + '?perPage=' + number).then(function (response) {
+                self.datos = response.data.model;
+                self.my_pages = response.data.my_pages;
+            });
+        },
+        all: function all(url, total) {
+            var self = this;
+            if (this.typeAll) {
+                this.typeAll = false;
+            } else {
+                this.typeAll = true;
+            }
+            this.$http.get(url + '?all=' + total).then(function (response) {
+                self.datos = response.data.model;
+                self.my_pages = response.data.my_pages;
+            });
+        }
+    }
+});
+
+/***/ }),
+/* 355 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "row"
+  }, [_c('div', {
+    staticClass: "col-md-12 col-md-offset-0"
+  }, [_vm._m(0), _vm._v(" "), _c('div', {
+    staticClass: "panel-body"
+  }, [_c('div', {
+    staticClass: "bootstrap-table"
+  }, [_c('table', {
+    staticClass: "table table-striped"
+  }, [_vm._m(1), _vm._v(" "), _c('tbody', [_vm._l((_vm.datos.data), function(dato, index) {
+    return _c('tr', {
+      attrs: {
+        "data-index": index
+      }
+    }, [_c('td', {}, [_c('a', {
+      staticClass: "btn-link",
+      attrs: {
+        "href": "#"
+      }
+    }, [_vm._v(" " + _vm._s(dato.list_departament.name))])]), _vm._v(" "), _c('td', {}, [_c('a', {
+      staticClass: "editable editable-click",
+      attrs: {
+        "href": "",
+        "data-name": "name",
+        "data-pk": "53431",
+        "data-value": "dato.balance"
+      }
+    }, [_vm._v(_vm._s(dato.balance) + "\n                            ")])]), _vm._v(" "), (dato.percent_of_budget > 0) ? _c('td', {}, [_vm._v(_vm._s(dato.percent_of_budget) + " %")]) : _c('td', {}), _vm._v(" "), _vm._m(2, true), _vm._v(" "), (dato.income_accounts.length > 0) ? _c('td') : _c('td', {
+      staticStyle: {
+        "text-align": "center"
+      }
+    }, [_c('a', {
+      staticClass: "btn btn-danger",
+      attrs: {
+        "href": "#"
+      },
+      on: {
+        "click": function($event) {
+          _vm.removeLine(dato, index)
+        }
+      }
+    }, [_c('i', {
+      staticClass: "fa fa-remove"
+    })])])])
+  }), _vm._v(" "), _c('tr', [_c('td', {
+    attrs: {
+      "colspan": "2"
+    }
+  }, [_vm._v("Total:")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.total))])])], 2)]), _vm._v(" "), (_vm.mTotal) ? _c('div', {
+    staticClass: "col-lg-12 col-md-12  text-center"
+  }, [_c('div', {
+    staticClass: "btn"
+  }, [_c('button', {
+    staticClass: "btn btn-success",
+    on: {
+      "click": _vm.applied
+    }
+  }, [_vm._v("Finalizar")])])]) : _vm._e()])])])])
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "panel panel-default",
+    attrs: {
+      "id": "editMembers"
+    }
+  }, [_c('div', {
+    staticClass: "panel-heading"
+  }, [_c('div', {
+    staticClass: "text-center "
+  }, [_c('h1', [_vm._v(" Cambiar presupuestos de los Departamentos ")])])]), _vm._v(" "), _c('div', {
+    staticClass: "panel-body"
+  }, [_c('div', {
+    staticClass: "col-lg-12 col-md-8  text-center "
+  }, [_c('p', {
+    staticClass: "box-info"
+  }, [_c('strong', [_vm._v("Nota: ")]), _vm._v(" "), _c('ul', {
+    staticClass: "box-list"
+  }, [_c('li', [_c('i', [_vm._v("Debe agregar a todos los departamentos que su Iglesia utiliza y el\n                            presupuestó que le tienen asignado a cada departamento. ")])]), _vm._v(" "), _c('li', [_c('i', [_vm._v("En caso que utilizan un fondo común\n                            solo debe agregar el departamentos de fondo de iglesia y asignarle el 100% a este\n                            departamento\n                        ")])])])])])])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('thead', [_c('tr', [_c('th', {
+    attrs: {
+      "data-field": "id",
+      "tabindex": "0"
+    }
+  }, [_c('div', {
+    staticClass: "th-inner "
+  }, [_vm._v("Departamento")]), _vm._v(" "), _c('div', {
+    staticClass: "fht-cell"
+  })]), _vm._v(" "), _c('th', {
+    attrs: {
+      "data-field": "name",
+      "tabindex": "0"
+    }
+  }, [_c('div', {
+    staticClass: "th-inner "
+  }, [_vm._v("Presupuesto Disponible")]), _vm._v(" "), _c('div', {
+    staticClass: "fht-cell"
+  })]), _vm._v(" "), _c('th', {
+    attrs: {
+      "data-field": "date",
+      "tabindex": "0"
+    }
+  }, [_c('div', {
+    staticClass: "th-inner "
+  }, [_vm._v("Porcentaje del 60%")]), _vm._v(" "), _c('div', {
+    staticClass: "fht-cell"
+  })]), _vm._v(" "), _c('th', {
+    attrs: {
+      "data-field": "amount",
+      "tabindex": "0"
+    }
+  }, [_c('div', {
+    staticClass: "th-inner "
+  }, [_vm._v("Estado")]), _vm._v(" "), _c('div', {
+    staticClass: "fht-cell"
+  })]), _vm._v(" "), _c('th', {
+    attrs: {
+      "data-field": "amount",
+      "tabindex": "0"
+    }
+  }, [_c('div', {
+    staticClass: "th-inner "
+  }), _vm._v(" "), _c('div', {
+    staticClass: "fht-cell"
+  })])])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('td', {
+    staticStyle: {
+      "text-align": "center"
+    }
+  }, [_c('div', {
+    staticClass: "label label-table label-danger"
+  }, [_vm._v("Inactivo")])])
+}]}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-ac3f4d96", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

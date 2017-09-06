@@ -2,7 +2,11 @@
 
 @section('content')
 <div id="app">
-    <create-departament title="Nuevo Departamento" url="save-departament"  ></create-departament>
+    @if($block)
+    <editors-departament title="Nuevo Departamento" url="save-departament" block="{{json_encode($block)}}" ></editors-departament>
+    @else
+    <create-departament title="Nuevo Departamento" url="save-departament" block="{{json_encode($block)}}" ></create-departament>
+    @endif
 </div>
 @endsection
 @section('scripts')
