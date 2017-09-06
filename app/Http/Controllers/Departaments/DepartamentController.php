@@ -182,6 +182,7 @@ class DepartamentController extends Controller
             if ($departament->save()) {
                 $data['name'] = 'Ing-base-' . $departament->listDepartament->name;
                 $data['type'] = 'fix';
+                $data['balance'] = 0;
                 $data['departament_id'] = $departament->id;
                 $incomeAccount = new IncomeAccount();
                 $incomeAccount->fill($data);

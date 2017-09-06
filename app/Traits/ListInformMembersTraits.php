@@ -13,7 +13,7 @@ use App\Entities\InternalControl;
 use App\Entities\LocalFieldIncome;
 use App\Entities\LocalFieldIncomeAccount;
 use App\Entities\Member;
-use App\Entities\SummaryOfWeeklyEarnings;
+use App\Entities\SummaryOfWeeklyEarning;
 use App\Entities\TempIncomes;
 use App\Entities\TempLocalFieldIncome;
 use App\Entities\WeeklyIncome;
@@ -291,7 +291,7 @@ trait ListInformMembersTraits
      */
     public function numerationInfoPdf($date)
     {
-        $numeration = SummaryOfWeeklyEarnings::whereHas('internal_control',function ($q) use($date){
+        $numeration = SummaryOfWeeklyEarning::whereHas('internal_control',function ($q) use($date){
             $q->where('saturday',$date);
         })->max('number');
         if($numeration > 0 && $numeration < 10):
@@ -395,7 +395,7 @@ trait ListInformMembersTraits
 
     public function numerationInfo()
     {
-        $actual = SummaryOfWeeklyEarnings::max('number');
+        $actual = SummaryOfWeeklyEarning::max('number');
         if ($actual==null || $actual == ''):
             return 1;
         else:

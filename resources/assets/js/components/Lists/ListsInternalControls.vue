@@ -75,7 +75,7 @@
                                 <div v-else class="label label-table label-danger">{{dato.image}}</div>
                             </td>
                             <td style="text-align: center; ">
-                                <div v-if="dato.status === 'activo'" class="label label-table label-success">
+                                <div v-if="dato.status === 'aplicado'" class="label label-table label-success">
                                     {{dato.status}}
                                 </div>
                                 <div v-else class="label label-table label-danger"><a :href="weekly(dato.token)">{{dato.status}}</a></div>

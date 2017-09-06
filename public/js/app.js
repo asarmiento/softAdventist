@@ -67757,7 +67757,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       staticStyle: {
         "text-align": "center"
       }
-    }, [(dato.status === 'activo') ? _c('div', {
+    }, [(dato.status === 'aplicado') ? _c('div', {
       staticClass: "label label-table label-success"
     }, [_vm._v("\n                                " + _vm._s(dato.status) + "\n                            ")]) : _c('div', {
       staticClass: "label label-table label-danger"
