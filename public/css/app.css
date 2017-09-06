@@ -14826,6 +14826,22 @@ button.close {
   width: 100%;
 }
 
+.box-info {
+  font-size: 24px;
+  margin: 0 auto;
+  background-color: #00b3ca;
+  border-color: #00bcd4;
+  color: #fff;
+  border-radius: 10px;
+}
+
+.box-list {
+  list-style-type: circle;
+  text-align: left;
+  font-weight: bold;
+  font-size: 14px;
+}
+
 .custom-checkbox,
 .custom-radio {
   display: -webkit-box;

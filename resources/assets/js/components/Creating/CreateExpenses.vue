@@ -34,6 +34,16 @@
                                 <button   v-on:click="send"  class="btn btn-success">Guardar </button>
                             </div>
                         </div>
+                        <div class="col-lg-12 col-md-8  text-center ">
+                            <p class="box-info"><strong>Nota: </strong>
+                            <ul class="box-list">
+                                <li><i>Aqui puede crear las cuentas de Gastos que le quieran detallar a una cuenta de ingreso de su iglesia. </i></li>
+                                <li><i>Todas las cuentas de ingreso pueden tener mas de una cuenta de gasto si asi lo necesita la
+                                    iglesia.
+                                </i></li>
+                            </ul>
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -43,9 +53,10 @@
 
 <script>
     import vSelect from "vue-select"
+    import tableExpenses from "../Lists/ListsExpenses.vue"
     export default {
         props: ['title','url','accounts'],
-        components: {vSelect},
+        components: {vSelect,tableExpenses},
          data () {
              return   {
                  data: {
@@ -64,7 +75,12 @@
             },
         },
         created(){
-           console.log(JSON.parse(this.accounts));
+            this.$http.get('/tesoreria/lists-expenses').then((response) => {
+                self.datos = response.data.model;
+                self.my_pages = response.data.my_pages;
+                self.columns = response.data.columns;
+                self.total = response.data.count;
+            });
         },
         methods: {
             send: function (event) {

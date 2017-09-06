@@ -8,7 +8,7 @@
 
 namespace App\Repositories;
 
-use App\Entities\IncomeAccount;
+use App\Entities\Departaments\IncomeAccount;
 
 class IncomeAccountRepository extends BaseRepository
 {

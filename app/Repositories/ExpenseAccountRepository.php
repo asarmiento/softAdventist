@@ -8,8 +8,12 @@
 
 namespace App\Repositories;
 
-use App\Entities\ExpenseAccount;
+use App\Entities\Departaments\ExpenseAccount;
 
+/**
+ * Class ExpenseAccountRepository
+ * @package App\Repositories
+ */
 class ExpenseAccountRepository extends BaseRepository
 {
 

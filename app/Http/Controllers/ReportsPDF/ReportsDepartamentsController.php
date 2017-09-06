@@ -108,23 +108,45 @@ class ReportsDepartamentsController extends ReportPdfController
 
     public function pdfSummaryMoveDepartament($token)
     {
+        try {
+            $departamen = $this->departamentRepository->token($token);
+            $this->headerChurch('p', 'letter', 'Resumen Del Departamento '.$departamen->listDepartament->name, '2017-08-30');
 
-        $this->headerChurch('p', 'letter', 'Resumen', '2017-08-30');
-
-        $departamen = $this->departamentRepository->token($token);
-        Fpdf::Ln();
-        Fpdf::SetX(10);
-        Fpdf::Cell(100, 7, 'Departamento: '.$departamen->listDepartament->name, 0, 0, 'C');
-        Fpdf::Cell(40, 7, 'Saldo Disponible: '.number_format($departamen->balance,2), 0, 1, 'C');
-        foreach ($departamen->incomeAccounts AS $incomeAccount):
-        Fpdf::SetX(30);
-
-        Fpdf::Cell(80, 7, 'Cuentas de Ingresos: '.$incomeAccount->name, 0, 0, 'C');
-        Fpdf::Cell(40, 7, 'Saldo Ingresado: '.number_format($incomeAccount->balance,2), 0, 1, 'C');
-        endforeach;
-
-        $this->sacr();
-        Fpdf::Output('Informe-gastos.pdf', 'I');
-        exit;
+            $pdf = Fpdf::Ln();
+            $pdf .= Fpdf::SetX(5);
+            $pdf .= Fpdf::SetFont('Arial', 'B', 14);
+            $pdf .= Fpdf::Cell(160, 7, 'Departamento: ' . $departamen->listDepartament->name, 0, 0, 'L');
+            $pdf .= Fpdf::Cell(40, 7, 'Saldo Disponible: ' . number_format($departamen->balance, 2), 0, 1, 'R');
+            $pdf .= Fpdf::SetFont('Arial', 'B', 12);
+            $pdf .= Fpdf::Ln();
+            $pdf .= Fpdf::SetX(15);
+            $pdf .= Fpdf::Cell(100, 7, 'Nombre de Cuentas', 0, 0, 'L');
+            $pdf .= Fpdf::Cell(40, 7, 'Salidas', 0, 0, 'C');
+            $pdf .= Fpdf::Cell(40, 7, 'Ingresos', 0, 1, 'C');
+            foreach ($departamen->incomeAccounts AS $incomeAccount):
+                $pdf .= Fpdf::SetFont('Arial', 'I', 12);
+                foreach ($incomeAccount->expensesAccounts AS $expenseAccount):
+                    $pdf .= Fpdf::SetX(15);
+                    $pdf .= Fpdf::Cell(100, 7, $expenseAccount->name, 0, 0, 'L');
+                    $pdf .= Fpdf::Cell(40, 7, number_format($expenseAccount->balance, 2), 0, 0, 'C');
+                    $pdf .= Fpdf::Cell(40, 7, '', 0, 1, 'C');
+                endforeach;
+                $pdf .= Fpdf::SetX(25);
+                $pdf .= Fpdf::Cell(90, 7, $incomeAccount->name, 0, 0, 'L');
+                $pdf .= Fpdf::Cell(40, 7, '', 0, 0, 'C');
+                $pdf .= Fpdf::Cell(40, 7, number_format($incomeAccount->balance, 2), 0, 1, 'C');
+            endforeach;
+            $pdf .= Fpdf::SetFont('Arial', 'B', 13);
+            $pdf .= Fpdf::SetX(25);
+            $pdf .= Fpdf::Cell(90, 7, 'Total:', 0, 0, 'L');
+            $pdf .= Fpdf::Cell(40, 7, number_format($incomeAccount->expensesAccounts()->sum('balance'), 2), 0, 0, 'C');
+            $pdf .= Fpdf::Cell(40, 7, number_format($departamen->incomeAccounts()->sum('balance'), 2), 0, 1, 'C');
+            $this->sacr();
+            Fpdf::Output('Informe-gastos.pdf', 'I');
+            exit;
+        } catch (\Exception $e) {
+            echo json_encode($e->getMessage());
+            die;
+        }
     }
 }

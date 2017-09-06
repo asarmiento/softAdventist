@@ -112,6 +112,7 @@
                                 <li><a href="{{route('create-departament')}}">Nuevo Departamento</a></li>
                                 <li><a href="{{route('create-cta-ing')}}">Nueva Cuenta Ingreso</a></li>
                                 <li><a href="{{route('create-expenses')}}">Nueva Cuenta Gasto</a></li>
+                                <li><a href="{{route('lista-cuentas-expenses')}}">Lista de Cuenta Gastos</a></li>
                                 <li><a href="{{route('move-departaments')}}">Movimientos Depart.</a></li>
                                 <li class="list-divider"></li>
                             </ul>

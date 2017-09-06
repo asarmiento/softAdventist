@@ -87,16 +87,14 @@
                                 <ul class="list-unstyled">
                                     <li class="dropdown-header">Departamentos</li>
                                     <li><a href="{{route('create-departament')}}"><span class="pull-right label label-danger"></span>Crear Departamentos</a></li>
-                                    <li><a href="{{route('lists-departament')}}"></span>Lista de Departamentos</a></li>
-                                    <li><a href="{{route('change-status')}}">Activar o Desactivar Departamento</a></li>
+                                    <!--li><a href="{{route('change-status')}}">Activar o Desactivar Departamento</a></li-->
                                     <li><a href="{{route('create-incomes')}}">Crear Cuentas de Ingresos</a></li>
                                     <li><a href="{{route('create-expenses')}}">Crear Cuentas de Gastos</a></li>
                                     <li class="divider"></li>
-                                    <li class="dropdown-header">Informes</li>
-                                    <li><a href="">Informe Mensual</a></li>
-                                    <li><a href="{{route('list-info-weekly')}}">Informe Semanal</a></li>
-                                    <li><a href="#">Saldos por Departamentos</a></li>
-                                    <li><a href="#">Saldo por Cuentas</a></li>
+                                    <li><a href="{{route('lists-departament')}}"></span>Lista de Departamentos</a></li>
+                                    <li><a href="{{route('create-incomes')}}">Lista Cuentas de Ingresos</a></li>
+                                    <li><a href="{{route('lista-cuentas-expenses')}}">ListaCuentas de Gastos</a></li>
+
                                 </ul>
                             </div>
                             <div class="col-sm-4 col-md-3">
@@ -109,6 +107,11 @@
                                     <li><a href="{{route('list-expenses')}}">Lista de Gastos</a></li>
                                     <li><a href="#"></a></li>
                                     <li class="divider"></li>
+                                    <li class="dropdown-header">Informes</li>
+                                    <li><a href="">Informe Mensual</a></li>
+                                    <li><a href="{{route('list-info-weekly')}}">Informe Semanal</a></li>
+                                    <li><a href="#">Saldos por Departamentos</a></li>
+                                    <li><a href="#">Saldo por Cuentas</a></li>
                                     <!--li>
                                         <form role="form" class="form">
                                             <div class="form-group">

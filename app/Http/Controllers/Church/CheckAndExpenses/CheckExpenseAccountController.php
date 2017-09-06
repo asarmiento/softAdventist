@@ -69,6 +69,23 @@ class CheckExpenseAccountController extends Controller
     }
 
 
+    /**
+     * -----------------------------------------------------------------------
+     * @Author: Anwar Sarmiento <asarmiento@sistemasamigables.com>
+     * @DateCreate: ${DATE}
+     * @TimeCreate: $TIME$
+     * @DateUpdate: 0000-00-00
+     * -----------------------------------------------------------------------
+     * @description:
+     * @pasos:
+     * ----------------------------------------------------------------------
+     * * @param Request $request
+     *  * @var ${TYPE_NAME}
+     * * ----------------------------------------------------------------------
+     *  * @return array
+     * ----------------------------------------------------------------------
+     * *
+     */
     public function getData(Request $request)
     {
         $perPage = 10;

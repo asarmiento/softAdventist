@@ -8,6 +8,7 @@
 
 namespace App\Entities;
 
+use App\Entities\Departaments\ExpenseAccount;
 use App\Traits\DataViewerTraits;
 
 class CheckExpense extends Entity

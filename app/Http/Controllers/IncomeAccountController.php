@@ -19,25 +19,25 @@ use Illuminate\Support\Facades\DB;
 class IncomeAccountController extends Controller
 {
     use DataViewerTraits;
+
     //
 
     /**
      * -----------------------------------------------------------------------
-     * Author: ${USER}
-     * DateCreate: ${DATE}
-     * TimeCreate: ${TIME}
-     * DateUpdate: 0000-00-00
+     * @Author: Anwar Sarmiento <asarmiento@sistemasamigables.com>
+     * @DateCreate: ${DATE}
+     * @TimeCreate: $TIME$
+     * @DateUpdate: 0000-00-00
      * -----------------------------------------------------------------------
      * @description:
      * @pasos:
      * ----------------------------------------------------------------------
      *
-     * var: $VAR$
-     * ----------------------------------------------------------------------
-     *  * @return mixed
+     *  * @var ${TYPE_NAME}
+     * * ----------------------------------------------------------------------
+     *  * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * ----------------------------------------------------------------------
      * *
-     *
      */
     public function index()
     {
@@ -64,7 +64,7 @@ class IncomeAccountController extends Controller
      *
      */
     public function getData(Request $request)
-    { 
+    {
         $perPage = 10;
         if ($request->has('perPage')) {
             $perPage = $request->perPage;
@@ -81,8 +81,8 @@ class IncomeAccountController extends Controller
 
         /** @var TYPE_NAME $response */
         $response = [
-            'model'    => $model,
-            'columns'  => $columns,
+            'model' => $model,
+            'columns' => $columns,
             'my_pages' => $array
         ];
 
@@ -108,7 +108,7 @@ class IncomeAccountController extends Controller
         $contents = [];
         $departaments = Departament::where('church_id', 1)->get();
         foreach ($departaments AS $departament):
-            $value = [ 'value' => $departament->token, 'label' => $departament->name ];
+            $value = ['value' => $departament->token, 'label' => $departament->listDepartament->name];
             array_push($contents, $value);
         endforeach;
 
@@ -138,7 +138,7 @@ class IncomeAccountController extends Controller
         DB::beginTransaction();
         $departament = Departament::where('token', $data['departament_id']['value'])->first();
         $name = $data['name'];
-        $data['name'] = 'Ing-'.$name;
+        $data['name'] = 'Ing-' . $name;
         if ($data['checkedNames'] == true):
             $data['type'] = 'fix';
         endif;
@@ -146,7 +146,7 @@ class IncomeAccountController extends Controller
         if (IncomeAccount::where('name', $data['name'])->where('departament_id', $departament->id)->count() > 0):
             DB::rollback();
 
-            return response()->json([ 'name' => [ 'Ya existe ese nombre con ese Departamento' ] ], 500);
+            return response()->json(['name' => ['Ya existe ese nombre con ese Departamento']], 500);
         endif;
         $data['balance'] = '0';
         $data['token'] = Crypt::encrypt(substr($data['name'], 0, 30));
@@ -155,20 +155,19 @@ class IncomeAccountController extends Controller
         $incomeAccount = new IncomeAccount();
         $incomeAccount->fill($data);
         if ($incomeAccount->save()):
-            $data['name'] = 'Gto-'.$name;
+            $data['name'] = 'Gto-' . $name;
             $data['income_account_id'] = $incomeAccount->id;
             $expenseAccount = new ExpenseAccount();
             $expenseAccount->fill($data);
             if ($expenseAccount->save()) {
                 DB::commit();
 
-                return response()->json([ 'success' => true, 'message' => 'Se creo con Exito!!!!' ], 200);
-            }
-            else{
-                return response()->json([  'success' => false, 'message' => 'Genero un error' ], 422);
+                return response()->json(['success' => true, 'message' => 'Se creo con Exito!!!!'], 200);
+            } else {
+                return response()->json(['success' => false, 'message' => 'Genero un error'], 422);
             }
         else:
-            return response()->json([  'success' => false, 'message' => 'Genero un error' ], 422);
+            return response()->json(['success' => false, 'message' => 'Genero un error'], 422);
 
         endif;
 

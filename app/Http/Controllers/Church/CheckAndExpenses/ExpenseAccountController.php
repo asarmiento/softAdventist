@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Church\CheckAndExpenses;
 
-use App\Entities\ExpenseAccount;
+use App\Entities\Departaments\ExpenseAccount;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ExpenseAccountCreateRequest;
 use App\Repositories\CheckExpenseRepository;
@@ -12,6 +12,7 @@ use App\Repositories\IncomeAccountRepository;
 use App\Traits\DataViewerTraits;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
 
 class ExpenseAccountController extends Controller
 {
@@ -59,6 +60,10 @@ class ExpenseAccountController extends Controller
         $this->checkExpenseRepository = $checkExpenseRepository;
     }
 
+    public function index()
+    {
+        return view('departament.accounts.listsExpenseAccounts');
+    }
 
     public function create()
     {
@@ -67,6 +72,23 @@ class ExpenseAccountController extends Controller
     }
 
 
+    /**
+     * -----------------------------------------------------------------------
+     * @Author: Anwar Sarmiento <asarmiento@sistemasamigables.com>
+     * @DateCreate: ${DATE}
+     * @TimeCreate: $TIME$
+     * @DateUpdate: 0000-00-00
+     * -----------------------------------------------------------------------
+     * @description:
+     * @pasos:
+     * ----------------------------------------------------------------------
+     * * @param Request $request
+     *  * @var ${TYPE_NAME}
+     * * ----------------------------------------------------------------------
+     *  * @return array
+     * ----------------------------------------------------------------------
+     * *
+     */
     public function getData(Request $request)
     {
         $perPage = 10;
@@ -74,7 +96,13 @@ class ExpenseAccountController extends Controller
             $perPage = $request->perPage;
         }
 
-        $model = ExpenseAccount::searchPaginateAndOrder($perPage, $request->get('search'));
+        $model = ExpenseAccount::searchPaginateAndOrder($perPage, $request->get('search'),true)
+            ->select('expense_accounts.id','expense_accounts.name','expense_accounts.token','expense_accounts.balance',
+                'income_accounts.name AS income','list_departaments.name AS departament')
+            ->join('income_accounts','income_accounts.id','=','expense_accounts.income_account_id')
+            ->join('departaments','departaments.id','=','income_accounts.departament_id')
+            ->join('list_departaments','list_departaments.id','=','departaments.list_departament_id')
+            ->paginate($perPage);
 
         $array = $this->myPages($model);
 
@@ -111,5 +139,10 @@ class ExpenseAccountController extends Controller
         endif;
     }
 
+    public function moveExpense($token)
+    {
+        echo json_encode($token);
+        die;
+    }
 
 }

@@ -131,6 +131,9 @@ Route::post('contacto', ['uses'=>'Auth\RegisterController@contactPost','as'=>'co
         * Gastos
         */
         Route::get('crear-account-gastos', ['uses'=>'Church\CheckAndExpenses\ExpenseAccountController@create','as'=>'create-expenses']);
+        Route::get('lista-de-cuentas-de-gastos', ['uses'=>'Church\CheckAndExpenses\ExpenseAccountController@index','as'=>'lista-cuentas-expenses']);
+        Route::get('list-account-gastos', ['uses'=>'Church\CheckAndExpenses\ExpenseAccountController@getData','as'=>'list-expenses']);
+        Route::get('move-account-gastos/{token}', ['uses'=>'Church\CheckAndExpenses\ExpenseAccountController@moveExpense','as'=>'move-expenses']);
         Route::post('save-expense', 'Church\CheckAndExpenses\ExpenseAccountController@store');
 
         Route::get('registro-de-gastos', ['uses'=>'Church\CheckAndExpenses\CheckExpenseAccountController@create','as'=>'register-expenses']);

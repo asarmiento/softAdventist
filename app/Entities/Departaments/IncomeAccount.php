@@ -33,6 +33,27 @@ class IncomeAccount extends Entity
         return $this->belongsTo(Departament::getClass());
     }
 
+    /**
+     * -----------------------------------------------------------------------
+     * @Author: Anwar Sarmiento <asarmiento@sistemasamigables.com>
+     * @DateCreate: 2017-09-04
+     * @TimeCreate: 10:57am
+     * @DateUpdate: 0000-00-00
+     * -----------------------------------------------------------------------
+     * @description:
+     * @pasos:
+     * ----------------------------------------------------------------------
+     *
+     *  * @var ${TYPE_NAME}
+     * * ----------------------------------------------------------------------
+     *  * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * ----------------------------------------------------------------------
+     * *
+     */
+    public function expensesAccounts()
+    {
+        return $this->hasMany(ExpenseAccount::getClass());
+    }
 
     /**
      * ---------------------------------------------------------------------

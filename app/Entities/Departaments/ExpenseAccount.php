@@ -3,9 +3,14 @@
 namespace App\Entities\Departaments;
 
 
+use App\Entities\CheckExpense;
 use App\Entities\Entity;
 use App\Traits\DataViewerTraits;
 
+/**
+ * Class ExpenseAccount
+ * @package App\Entities\Departaments
+ */
 class ExpenseAccount extends Entity
 {
     protected $fillable = ['name', 'income_account_id', 'balance', 'token'];
@@ -33,6 +38,27 @@ class ExpenseAccount extends Entity
         return $this->belongsTo(IncomeAccount::getClass());
     }
 
+    /**
+     * -----------------------------------------------------------------------
+     * @Author: Anwar Sarmiento <asarmiento@sistemasamigables.com>
+     * @DateCreate: 2017-09-04
+     * @TimeCreate: 3:46pm
+     * @DateUpdate: 0000-00-00
+     * -----------------------------------------------------------------------
+     * @description:
+     * @pasos:
+     * ----------------------------------------------------------------------
+     *
+     *  * @var ${TYPE_NAME}
+     * * ----------------------------------------------------------------------
+     *  * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * ----------------------------------------------------------------------
+     * *
+     */
+    public function checkExpenses()
+    {
+        return $this->hasMany(CheckExpense::getClass());
+    }
 
     /**
      * ---------------------------------------------------------------------
