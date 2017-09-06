@@ -117,12 +117,12 @@
             </div>
         </div>
     </div>
-    </div>
 </template>
 
 <script>
     import vSelect from "vue-select";
     import {Confirm} from '@lassehaslev/vue-confirm';
+
     export default {
         props: ['title', 'url', 'internal_control'],
         components: {vSelect},

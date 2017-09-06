@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Entities\Departament;
-use App\Entities\IncomeAccount;
+use App\Entities\Departaments\IncomeAccount;
 use App\Entities\InternalControl;
 use App\Entities\LocalFieldIncome;
 use App\Entities\LocalFieldIncomeAccount;

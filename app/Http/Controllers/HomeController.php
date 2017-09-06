@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 
 class HomeController extends Controller
@@ -28,6 +29,14 @@ class HomeController extends Controller
     public function index()
     {
         return view('home');
+    }
+    public function image(Request $request,$month,$name)
+    {try {
+        return Storage::get('internalControls/Sep-17/' . $name);
+    }catch (\Exception $e){
+        echo json_encode($e->getMessage());
+        die;
+    }
     }
 
     public function help()

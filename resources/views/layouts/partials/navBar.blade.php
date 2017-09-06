@@ -91,6 +91,8 @@
                                     <li><a href="{{route('create-incomes')}}">Crear Cuentas de Ingresos</a></li>
                                     <li><a href="{{route('create-expenses')}}">Crear Cuentas de Gastos</a></li>
                                     <li class="divider"></li>
+                                    <li class="dropdown-header"> </li>
+                                    <li><a href="{{route('lista-internal-control')}}"></span>Lista de Controles Internos</a></li>
                                     <li><a href="{{route('lists-departament')}}"></span>Lista de Departamentos</a></li>
                                     <li><a href="{{route('create-incomes')}}">Lista Cuentas de Ingresos</a></li>
                                     <li><a href="{{route('lista-cuentas-expenses')}}">ListaCuentas de Gastos</a></li>

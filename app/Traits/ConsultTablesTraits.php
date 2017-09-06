@@ -51,6 +51,7 @@ trait ConsultTablesTraits
         endforeach;
         return $contents;
     }
+
     public function listInfosSinReport($internals)
     {
         $contents= [];

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Entities\IncomeAccount;
+use App\Entities\Departaments\IncomeAccount;
 use App\Entities\TempIncomes;
 use App\Http\Requests\TempIncomesRequest;
 use Illuminate\Http\Request;

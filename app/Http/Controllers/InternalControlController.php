@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Entities\InternalControl;
 use App\Http\Requests\InternalControlCreateRequest;
 use App\Repositories\InternalControlRepository;
+use App\Traits\DataViewerTraits;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
@@ -13,7 +14,7 @@ use Illuminate\Support\Facades\Storage;
 class InternalControlController extends Controller
 {
     //
-
+    use DataViewerTraits;
     /**
      * @var InternalControlRepository
      */
@@ -30,6 +31,70 @@ class InternalControlController extends Controller
 
         $this->internalControlRepository = $internalControlRepository;
     }
+
+    public function index()
+    {
+        $insternalControls  = $this->internalControlRepository->getModel()->where('church_id',userChurch()->id)->get();
+        return view('IncomesAndExpenses.ListInternalControl',compact('insternalControls'));
+    }
+
+    /**
+     * -----------------------------------------------------------------------
+     * @Author: Anwar Sarmiento <asarmiento@sistemasamigables.com>
+     * @DateCreate: ${DATE}
+     * @TimeCreate: $TIME$
+     * @DateUpdate: 0000-00-00
+     * -----------------------------------------------------------------------
+     * @description:
+     * @pasos:
+     * ----------------------------------------------------------------------
+     * * @param Request $request
+     *  * @var ${TYPE_NAME}
+     * * ----------------------------------------------------------------------
+     *  * @return array
+     * ----------------------------------------------------------------------
+     * *
+     */
+    public function getData(Request $request)
+    {
+        $perPage = 10;
+        if ($request->has('perPage')) {
+            $perPage = $request->perPage;
+        }
+
+        $model = InternalControl::searchPaginateAndOrder($perPage, $request->get('search'));
+
+        $array = $this->myPages($model);
+
+        $columns = InternalControl::$columns;
+        $model['per_page'] = $perPage;
+
+        $response = [
+            'model'    => $model,
+            'columns'  => $columns,
+            'my_pages' => $array
+        ];
+
+        return $response;
+    }
+
+    /**
+     * -----------------------------------------------------------------------
+     * @Author: Anwar Sarmiento <asarmiento@sistemasamigables.com>
+     * @DateCreate: 2017-09-06
+     * @TimeCreate: 2:07 pm
+     * @DateUpdate: 0000-00-00
+     * -----------------------------------------------------------------------
+     * @description:
+     * @pasos:
+     * ----------------------------------------------------------------------
+     *
+     *  * @var ${TYPE_NAME}
+     * * ----------------------------------------------------------------------
+     *  * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * ----------------------------------------------------------------------
+     * *
+     */
     public function create()
     {
         $insternalControls = InternalControl::all();
@@ -102,5 +167,13 @@ class InternalControlController extends Controller
     public function destroy(Request $request){
         $this->internalControlRepository->find($request->get('id'))->delete();
         return response()->json(['success'=>true,'message'=>'Eliminado con Exito'], 200);
+    }
+    public function image($month,$name)
+    {try {
+        return Storage::get('internalControls/'.$month.'/' . $name);
+    }catch (\Exception $e){
+        echo json_encode($e->getMessage());
+        die;
+    }
     }
 }

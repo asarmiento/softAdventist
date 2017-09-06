@@ -98,28 +98,32 @@
                                 </div>
                                 <div class="fixed-table-pagination" style="">
                                     <div class="pull-left pagination-detail">
-                                        <span class="pagination-info">Showing 1 to 5 of 25 rows</span>
-                                        <span class="page-list"><span class="btn-group dropup">
-                                            <button type="button" class="btn btn-default  dropdown-toggle" data-toggle="dropdown">
-                                                <span class="page-size">5</span>
-                                                <span class="caret"></span>
-                                            </button>
-                                            <ul class="dropdown-menu" role="menu">
-                                                <li class="active"><a href="javascript:void(0)">5</a></li>
-                                                <li><a href="javascript:void(0)">10</a></li>
-                                                <li><a href="javascript:void(0)">20</a></li>
-                                            </ul>
-                                        </span> records per page</span>
-                                    </div>
+                                        <span class="pagination-info">Mirando {{datos.from}} al {{datos.to}} de {{datos.total}} rows</span>
+                                        <span class="page-list"><span
+                                                class="btn-group dropup">
+                        <button type="button" class="btn btn-default  dropdown-toggle" data-toggle="dropdown">
+                        <span class="page-size">{{datos.per_page}}</span>
+                            <span class="caret"></span>
+                        </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li v-for="count in counts" v-if="count === datos.per_page" class="active">
+                            <a href="" @click.prevent="perPage(datos.path,count)">{{count}}</a>
+                        </li>
+                        <li v-else><a @click.prevent="perPage(datos.path,count)" href="">{{count}}</a></li>
+                    </ul>
+                    </span> Filas por páginas</span></div>
                                     <div class="pull-right pagination">
                                         <ul class="pagination">
-                                            <li class="page-pre"><a href="javascript:void(0)">‹</a></li>
-                                            <li class="page-number active"><a href="javascript:void(0)">1</a></li>
-                                            <li class="page-number"><a href="javascript:void(0)">2</a></li>
-                                            <li class="page-number"><a href="javascript:void(0)">3</a></li>
-                                            <li class="page-number"><a href="javascript:void(0)">4</a></li>
-                                            <li class="page-number"><a href="javascript:void(0)">5</a></li>
-                                            <li class="page-next"><a href="javascript:void(0)">›</a></li>
+                                            <li v-show="datos.prev_page_url" class="page-pre">
+                                                <a href="" @click.prevent="pagePre(datos.prev_page_url)">‹</a>
+                                            </li>
+                                            <li v-for='number in my_pages' class='page-number'
+                                                :class="{'active': number == datos.current_page}">
+                                                <a class="page-number" href='' @click.prevent='page(datos.path,number)'>{{ number }}</a>
+                                            </li>
+                                            <li v-show="datos.next_page_url" class="page-next">
+                                                <a href="" @click.prevent="pageNext(datos.next_page_url)">›</a>
+                                            </li>
                                         </ul>
                                     </div>
                                 </div>
@@ -172,6 +176,68 @@
            pdfInfo: function (saturday) {
                return "/tesoreria/reporte-semanal/"+saturday;
            },
+           styleType() {
+               var self = this;
+               if (this.typeStyle) {
+                   this.typeStyle = false;
+               } else {
+                   this.typeStyle = true;
+               }
+           },
+           sarch: function (url) {
+               var self = this;
+               this.$http.get(url + '?search=' + this.txtSearch).then((response) => {
+                   self.datos = response.data.model;
+                   self.my_pages = response.data.my_pages;
+               });
+           },
+           pagePre(url) {
+               url += '&perPage=' + this.datos.per_page
+               var self = this;
+               this.$http.get(url).then((response) => {
+                   self.datos = response.data.model;
+                   self.my_pages = response.data.my_pages;
+               });
+           },
+           pageNext(url) {
+               url += '&perPage=' + this.datos.per_page
+               var self = this;
+               this.$http.get(url).then((response) => {
+                   self.datos = response.data.model;
+                   self.my_pages = response.data.my_pages;
+               });
+           },
+           page(url, number) {
+               if (!isNaN(number)) {
+                   var self = this;
+                   url += '?page=' + number
+                   url += '&perPage=' + this.datos.per_page
+                   this.$http.get(url).then((response) => {
+                       self.datos = response.data.model;
+                       self.my_pages = response.data.my_pages;
+                   });
+               }
+           },
+           perPage(url, number) {
+               var self = this;
+               this.$http.get(url + '?perPage=' + number).then((response) => {
+                   self.datos = response.data.model;
+                   self.my_pages = response.data.my_pages;
+               });
+           },
+           all(url, total) {
+               var self = this;
+               if (this.typeAll) {
+                   this.typeAll = false;
+               } else {
+                   this.typeAll = true;
+               }
+               this.$http.get(url + '?all=' + total).then((response) => {
+                   self.datos = response.data.model;
+                   self.my_pages = response.data.my_pages;
+               });
+           }
+
        },
         filters:{
             moneyFormat: function(value){

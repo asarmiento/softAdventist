@@ -23,8 +23,9 @@ class LocalFieldIncomeAccountRepository extends BaseRepository
 
     public function sumTypeForEnvelope($envelope,$type)
     {
-        return $this->newQuery()->join('local_field_incomes','local_field_incomes.local_field_income_account_id','=','local_field_income_accounts.id')
-            ->where('type',$type)->where('envelope_number',$envelope)->sum('local_field_incomes.balance');
+        echo json_encode($this->newQuery()->join('local_field_incomes','local_field_incomes.local_field_income_account_id','=','local_field_income_accounts.id')
+            ->where('type',$type)->where('envelope_number',$envelope)->sum('local_field_incomes.balance'));
+        die;
     }
 
     public function sumTypeForInEnvelope($envelopes,$type)

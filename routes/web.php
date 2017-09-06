@@ -46,6 +46,7 @@ Route::post('contacto', ['uses'=>'Auth\RegisterController@contactPost','as'=>'co
     Route::group(['prefix'=>'tesoreria','middleware'=>'auth'],function (){
 
         Route::get('/', 'HomeController@index');
+        Route::get('/image/{month}/{name}', 'HomeController@image');
         Route::get('home', ['uses'=>'HomeController@index','as'=>'home']);
         Route::get('profile', ['uses'=>'HomeController@index','as'=>'profile']);
         //miembros
@@ -99,18 +100,19 @@ Route::post('contacto', ['uses'=>'Auth\RegisterController@contactPost','as'=>'co
         Route::get('lists-income-account', 'IncomeAccountController@getData');
         //controles internos
         Route::get('registro-control-interno', ['uses'=>'InternalControlController@create','as'=>'create-internal-control']);
+        Route::get('lista-control-interno', ['uses'=>'InternalControlController@index','as'=>'lista-internal-control']);
+        Route::get('image-control-interno/{month}/{name}', ['uses'=>'InternalControlController@index','as'=>'image-internal-control']);
+
         Route::post('save-internal-control', 'InternalControlController@store');
         Route::post('upload-internal-control', 'InternalControlController@upload');
         Route::post('delete-internal-control', 'InternalControlController@destroy');
-        Route::get('lista-info-sin-deposito', ['uses'=>'InternalControlController@listInfos','as'=>'list-infos-sin-deposito']);
-
-        /**
-         *  Controles Internos
-         */
         Route::post('balance-internal-control', 'InternalControlController@balanceInfo');
+        Route::post('save-register-incomes', 'InternalControlController@store');
+        // Listas para controles internos
+        Route::get('list-control-interno', ['uses'=>'InternalControlController@getData','as'=>'list-internal-control']);
         Route::get('lista-informes-reportados', ['uses'=>'InternalControlController@InfosReport','as'=>'list-reportados']);
         Route::get('lista-informes-sin-reportados', ['uses'=>'InternalControlController@InfosSinReport','as'=>'list-sin-reportados']);
-        Route::post('save-register-incomes', 'InternalControlController@store');
+        Route::get('lista-info-sin-deposito', ['uses'=>'InternalControlController@listInfos','as'=>'list-infos-sin-deposito']);
 
         /**
          * Informes semanales

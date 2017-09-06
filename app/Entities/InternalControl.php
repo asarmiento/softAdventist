@@ -2,8 +2,12 @@
 
 namespace App\Entities;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Traits\DataViewerTraits;
 
+/**
+ * Class InternalControl
+ * @package App\Entities
+ */
 class InternalControl extends Entity
 {
     protected $table = 'internal_controls';
@@ -18,6 +22,15 @@ class InternalControl extends Entity
         'image'
     ];
 
+    use DataViewerTraits;
+
+    public static $columns = [ 'number',
+        'balance',
+        'number_of_envelopes',
+        'saturday',
+        'token',
+        'church_id',
+        'image' ];
 
     public function localFieldIncomeAccounts()
     {
@@ -48,5 +61,18 @@ class InternalControl extends Entity
     public function summaryOfWeeklyEarning()
     {
         return $this->hasOne(SummaryOfWeeklyEarning::getClass());
+    }
+
+    public function scopeSearch($query, $search){
+        if(trim($search) != ""){
+            $query->where("name","LIKE","%$search%")
+                ->orWhere("last","LIKE","%$search%")
+                ->orWhere("bautizmoDate","LIKE","%$search%")
+                ->orWhere("birthdate","LIKE","%$search%")
+                ->orWhere("phone","LIKE","%$search%")
+                ->orWhere("email","LIKE","%$search%")
+                ->orWhere("charter","LIKE","%$search%");
+        }
+
     }
 }

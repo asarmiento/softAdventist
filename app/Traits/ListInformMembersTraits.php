@@ -8,7 +8,7 @@
 
 namespace App\Traits;
 
-use App\Entities\IncomeAccount;
+use App\Entities\Departaments\IncomeAccount;
 use App\Entities\InternalControl;
 use App\Entities\LocalFieldIncome;
 use App\Entities\LocalFieldIncomeAccount;
@@ -23,50 +23,14 @@ use App\Repositories\LocalFieldIncomeRepository;
 use App\Repositories\WeeklyincomeRepository;
 use Illuminate\Http\Request;
 
+/**
+ * Trait ListInformMembersTraits
+ * @package App\Traits
+ */
 trait ListInformMembersTraits
 {
 
-    /**
-     * @var LocalFieldIncomeAccountRepository
-     */
-    private $localFieldIncomeAccountRepository;
 
-    /**
-     * @var IncomeAccountRepository
-     */
-    private $incomeAccountRepository;
-
-    /**
-     * @var WeeklyincomeRepository
-     */
-    private $weeklyincomeRepository;
-
-    /**
-     * @var LocalFieldIncomeRepository
-     */
-    private $localFieldIncomeRepository;
-
-
-    /**
-     * ListInformMembersTraits constructor.
-     *
-     * @param LocalFieldIncomeAccountRepository $localFieldIncomeAccountRepository
-     * @param IncomeAccountRepository           $incomeAccountRepository
-     * @param WeeklyincomeRepository            $weeklyincomeRepository
-     * @param LocalFieldIncomeRepository        $localFieldIncomeRepository
-     */
-    public function __construct(
-        LocalFieldIncomeAccountRepository $localFieldIncomeAccountRepository,
-        IncomeAccountRepository $incomeAccountRepository,
-        WeeklyincomeRepository $weeklyincomeRepository,
-        LocalFieldIncomeRepository $localFieldIncomeRepository
-    )
-    {
-        $this->localFieldIncomeAccountRepository = $localFieldIncomeAccountRepository;
-        $this->incomeAccountRepository = $incomeAccountRepository;
-        $this->weeklyincomeRepository = $weeklyincomeRepository;
-        $this->localFieldIncomeRepository = $localFieldIncomeRepository;
-    }
 
 
     /**
@@ -96,62 +60,73 @@ trait ListInformMembersTraits
          * filtramos los datos de los miembros que estan siendo
          * usados en el informe semanal de ingresos
          */
-        $envelopes = $this->countEnvelopeList($date);
-        $data = [];
-        foreach ($envelopes AS $envelope):
+        try {
+            $envelopes = $this->countEnvelopeList($date);
 
-            $tithes = $this->localFieldIncomeAccountRepository->sumTypeForEnvelope($envelope,'diez');
-            $offering = $this->incomeAccountRepository->sumTypeForEnvelope($envelope,'fix')  +
-                        $this->localFieldIncomeAccountRepository->sumTypeForEnvelope($envelope,'offren');
-            $member = Member::whereHas('weeklyIncomes',function ($q) use($envelope){
-                $q->where('envelope_number',$envelope);
-            })->first();
+            $data = [];
+            foreach ($envelopes AS $envelope):
 
-            if(!$member):
-             $member = Member::whereHas('localFieldIncomes',function ($q) use($envelope){
-                    $q->where('envelope_number',$envelope);
+                $tithes = LocalFieldIncomeAccount::join('local_field_incomes','local_field_incomes.local_field_income_account_id','=','local_field_income_accounts.id')
+                    ->where('type','diez')->where('envelope_number',$envelope)->sum('local_field_incomes.balance');
+
+                $offering = IncomeAccount::join('weekly_incomes','weekly_incomes.income_account_id','=','income_accounts.id')
+                        ->where('type','fix')->where('envelope_number',$envelope)->sum('weekly_incomes.balance') +
+                    LocalFieldIncomeAccount::join('local_field_incomes','local_field_incomes.local_field_income_account_id','=','local_field_income_accounts.id')
+                        ->where('type','offren')->where('envelope_number',$envelope)->sum('local_field_incomes.balance') ;
+                $member = Member::whereHas('weeklyIncomes', function ($q) use ($envelope) {
+                    $q->where('envelope_number', $envelope);
                 })->first();
-            endif;
-            $total = $this->weeklyincomeRepository->sumEnvelope($envelope,'balance') + $this->localFieldIncomeRepository->sumEnvelope($envelope,'balance');
-            $datos = [
-                'envelope'=>$envelope,
-                'datos'=>[
-                    $member->nameComplete(),
-                    $envelope,
-                    ($total),
-                    number_format($tithes,2),
-                    number_format($offering,2)
-                ],
 
-            ];
-            $localfields = LocalFieldIncomeAccount::whereHas('localFieldIncomes',function ($q) use($envelopes){
-                $q->whereIn('envelope_number',$envelopes);
-            })->where('type','temp')->get();
-            //aqui agregamos en el array los datos de las cuentas que van para el campo local
-            foreach ($localfields AS $localfieldIncome):
-                $list = $localfieldIncome->localFieldIncomes()->where('envelope_number',$envelope)->select('balance','id')->sum('balance');
-                if($list > 0):
-                    $datos['datos'][] = number_format($list,2);
-                else:
-                    $datos['datos'][] =  number_format(0,2);
+                if (!$member):
+                    $member = Member::whereHas('localFieldIncomes', function ($q) use ($envelope) {
+                        $q->where('envelope_number', $envelope);
+                    })->first();
                 endif;
-            endforeach;
-            $incomeAccounts = IncomeAccount::whereHas('weeklyIncomes',function ($q) use($envelopes){
-                $q->whereIn('envelope_number',$envelopes);
-            })->where('type','temp')->get();
-            // aqui agregamos las cuentas de ingreso de locales de la iglesia
-            foreach ($incomeAccounts AS $churchIncome):
-                $list = $churchIncome->weeklyIncomes()->where('envelope_number',$envelope)->select('balance','id')->sum('balance');
-                if($list > 0):
-                    $datos['datos'][] = number_format($list,2);
-                else:
-                    $datos['datos'][] = number_format(0,2);
-                endif;
-            endforeach;
+                $total =  WeeklyIncome::where('envelope_number', $envelope)->sum('balance')  +
+                    LocalFieldIncome::where('envelope_number', $envelope)->sum('balance');
+                $datos = [
+                    'envelope' => $envelope,
+                    'datos' => [
+                        $member->nameComplete(),
+                        $envelope,
+                        ($total),
+                        number_format($tithes, 2),
+                        number_format($offering, 2)
+                    ],
 
-            array_push($data,$datos);
-        endforeach;
-       return $data;
+                ];
+                $localfields = LocalFieldIncomeAccount::whereHas('localFieldIncomes', function ($q) use ($envelopes) {
+                    $q->whereIn('envelope_number', $envelopes);
+                })->where('type', 'temp')->get();
+                //aqui agregamos en el array los datos de las cuentas que van para el campo local
+                foreach ($localfields AS $localfieldIncome):
+                    $list = $localfieldIncome->localFieldIncomes()->where('envelope_number', $envelope)->select('balance', 'id')->sum('balance');
+                    if ($list > 0):
+                        $datos['datos'][] = number_format($list, 2);
+                    else:
+                        $datos['datos'][] = number_format(0, 2);
+                    endif;
+                endforeach;
+                $incomeAccounts = IncomeAccount::whereHas('weeklyIncomes', function ($q) use ($envelopes) {
+                    $q->whereIn('envelope_number', $envelopes);
+                })->where('type', 'temp')->get();
+                // aqui agregamos las cuentas de ingreso de locales de la iglesia
+                foreach ($incomeAccounts AS $churchIncome):
+                    $list = $churchIncome->weeklyIncomes()->where('envelope_number', $envelope)->select('balance', 'id')->sum('balance');
+                    if ($list > 0):
+                        $datos['datos'][] = number_format($list, 2);
+                    else:
+                        $datos['datos'][] = number_format(0, 2);
+                    endif;
+                endforeach;
+
+                array_push($data, $datos);
+            endforeach;
+            return $data;
+        }catch (\Exception $e){
+            echo json_encode($e->getMessage());
+            die;
+        }
     }
 
 
@@ -340,56 +315,61 @@ trait ListInformMembersTraits
          */
          $data = [];
 
-        $tithes = $this->localFieldIncomeAccountRepository->sumTypeForEnvelope($envelope,'diez');
-        $offering = $this->incomeAccountRepository->sumTypeForEnvelope($envelope,'fix')  +
-                    $this->localFieldIncomeAccountRepository->sumTypeForEnvelope($envelope,'offren');
+        $tithes = LocalFieldIncomeAccount::join('local_field_incomes','local_field_incomes.local_field_income_account_id','=','local_field_income_accounts.id')
+            ->where('type','diez')->where('envelope_number',$envelope)->sum('local_field_incomes.balance');
 
-        $member = Member::whereHas('weeklyIncomes',function ($q) use($envelope){
-            $q->where('envelope_number',$envelope);
+        $offering = IncomeAccount::join('weekly_incomes','weekly_incomes.income_account_id','=','income_accounts.id')
+                ->where('type','fix')->where('envelope_number',$envelope)->sum('weekly_incomes.balance') +
+            LocalFieldIncomeAccount::join('local_field_incomes','local_field_incomes.local_field_income_account_id','=','local_field_income_accounts.id')
+                ->where('type','offren')->where('envelope_number',$envelope)->sum('local_field_incomes.balance') ;
+        $member = Member::whereHas('weeklyIncomes', function ($q) use ($envelope) {
+            $q->where('envelope_number', $envelope);
         })->first();
 
-        if(!$member):
-            $member = Member::whereHas('localFieldIncomes',function ($q) use($envelope){
-                $q->where('envelope_number',$envelope);
+        if (!$member):
+            $member = Member::whereHas('localFieldIncomes', function ($q) use ($envelope) {
+                $q->where('envelope_number', $envelope);
             })->first();
         endif;
+        $total =  WeeklyIncome::where('envelope_number', $envelope)->sum('balance')  +
+            LocalFieldIncome::where('envelope_number', $envelope)->sum('balance');
+        $datos = [
+            'envelope' => $envelope,
+            'datos' => [
+                $member->nameComplete(),
+                $envelope,
+                ($total),
+                number_format($tithes, 2),
+                number_format($offering, 2)
+            ],
 
-            $datos = [
-                'envelope'=>$envelope,
-                'datos'=>[
-                    $member->nameComplete(),
-                    $envelope,
-                    number_format($tithes,2),
-                    number_format($offering,2)
-                ],
+        ];
+        $localfields = LocalFieldIncomeAccount::whereHas('localFieldIncomes', function ($q) use ($envelope) {
+            $q->where('envelope_number', $envelope);
+        })->where('type', 'temp')->get();
+        //aqui agregamos en el array los datos de las cuentas que van para el campo local
+        foreach ($localfields AS $localfieldIncome):
+            $list = $localfieldIncome->localFieldIncomes()->where('envelope_number', $envelope)->select('balance', 'id')->sum('balance');
+            if ($list > 0):
+                $datos['datos'][] = number_format($list, 2);
+            else:
+                $datos['datos'][] = number_format(0, 2);
+            endif;
+        endforeach;
+        $incomeAccounts = IncomeAccount::whereHas('weeklyIncomes', function ($q) use ($envelope) {
+            $q->where('envelope_number', $envelope);
+        })->where('type', 'temp')->get();
+        // aqui agregamos las cuentas de ingreso de locales de la iglesia
+        foreach ($incomeAccounts AS $churchIncome):
+            $list = $churchIncome->weeklyIncomes()->where('envelope_number', $envelope)->select('balance', 'id')->sum('balance');
+            if ($list > 0):
+                $datos['datos'][] = number_format($list, 2);
+            else:
+                $datos['datos'][] = number_format(0, 2);
+            endif;
+        endforeach;
 
-            ];
-            $localfields = LocalFieldIncomeAccount::whereHas('localFieldIncomes',function ($q){
-                $q->where('status','no aplicado');
-            })->where('type','temp')->get();
-            //aqui agregamos en el array los datos de las cuentas que van para el campo local
-            foreach ($localfields AS $localfieldIncome):
-                $list = $localfieldIncome->localFieldIncomes()->where('envelope_number',$envelope)->select('balance','id')->where('status','no aplicado')->sum('balance');
-                if($list > 0):
-                    $datos['datos'][] = number_format($list,2);
-                else:
-                    $datos['datos'][] = '';
-                endif;
-            endforeach;
-            $incomeAccounts = IncomeAccount::whereHas('weeklyIncomes',function ($q){
-                $q->where('status','no aplicado');
-            })->where('type','temp')->get();
-            // aqui agregamos las cuentas de ingreso de locales de la iglesia
-            foreach ($incomeAccounts AS $churchIncome):
-                $list = $churchIncome->weeklyIncomes()->where('envelope_number',$envelope)->select('balance','id')->where('status','no aplicado')->sum('balance');
-                if($list > 0):
-                    $datos['datos'][] = number_format($list,2);
-                else:
-                    $datos['datos'][] = '';
-                endif;
-            endforeach;
-
-            array_push($data,$datos);
+        array_push($data, $datos);
 
         $title =  $this->titleInfo();
 

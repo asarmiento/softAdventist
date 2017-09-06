@@ -77,7 +77,7 @@
                                 <div v-else class="label label-table label-danger">Sin Confirmar</div>
                             </td>
                             <td style="text-align: center; ">
-                                <a  @click="pdfAccountSummary(dato.token)" target="_blank"   class="btn btn-default"><i class="fa fa-file-pdf-o fa-2x btn-danger" aria-hidden="true"></i></a>
+                                <a  :href="pdfAccountSummary(dato.token)" target="_blank"   class="btn btn-default"><i class="fa fa-file-pdf-o fa-2x btn-danger" aria-hidden="true"></i></a>
                             </td>
                             <td style="text-align: center; ">
                                 <a href="#" target="_blank" class="btn btn-default"><i class="fa fa-file-pdf-o fa-2x btn-danger" aria-hidden="true"></i></a>
@@ -179,8 +179,7 @@
         },
         methods: {
             pdfAccountSummary(data){
-               document.location=  '/tesoreria/reporte-resumen-movimiento-departamento/'+data;
-
+               return  '/tesoreria/reporte-resumen-movimiento-departamento/'+data;
             },
             styleType() {
                 var self = this;
