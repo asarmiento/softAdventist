@@ -204,11 +204,16 @@
                                     <!--<img class="img-circle img-user media-object" src="{{asset('img/av1.png')}}" alt="Profile Picture">-->
                                     <i class="pli-male ic-user"></i>
                                 </span>
+                        @if(currentUser())
                         <div class="username hidden-xs">{{currentUser()->name}}</div>
+                        @else
+                        <div class="username hidden-xs"></div>
+                        @endif
                     </a>
 
 
                     <div class="dropdown-menu dropdown-menu-md dropdown-menu-right panel-default">
+                    @if(currentUser())
                         @if(currentUser()->youngBoy()->count()>0)
                         <!-- Dropdown heading  -->
                         <div class="pad-all bord-btm">
@@ -229,7 +234,7 @@
                                     </div>
                                 </div>
                         @endif
-
+                    @endif
                         <!-- User dropdown menu -->
                         <ul class="head-list">
                             <li>

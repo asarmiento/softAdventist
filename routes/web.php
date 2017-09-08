@@ -43,6 +43,12 @@ Route::post('contacto', ['uses'=>'Auth\RegisterController@contactPost','as'=>'co
 
 });
 */
+
+Route::get('nueva-iglesia', ['uses'=>'Church\ChurchController@newChurch','as'=>'new-church']);
+Route::get('paises', ['uses'=>'CountryController@index','as'=>'country']);
+Route::get('list-unions-country/{token}', ['uses'=>'UnionController@index','as'=>'country']);
+Route::post('save-church-public', ['uses'=>'Church\ChurchController@store','as'=>'save-church-public']);
+
     Route::group(['prefix'=>'tesoreria','middleware'=>'auth'],function (){
 
         Route::get('/', 'HomeController@index');

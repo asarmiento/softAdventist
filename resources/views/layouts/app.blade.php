@@ -8,10 +8,9 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Tesoreria') }}</title>
+    <title>{{ config('app.name', 'SoftAdventist') }}</title>
 
     <!-- Font -->
-    <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&amp;subset=latin" rel="stylesheet">
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/nifty.min.css') }}" rel="stylesheet">
@@ -27,7 +26,7 @@
         ]) !!};
     </script>
 </head>
-<body onload="cambiar();">
+<body>
 
 @yield('content')
 
