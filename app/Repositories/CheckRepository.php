@@ -10,6 +10,10 @@ namespace App\Repositories;
 
 use App\Entities\Check;
 
+/**
+ * Class CheckRepository
+ * @package App\Repositories
+ */
 class CheckRepository extends BaseRepository
 {
 

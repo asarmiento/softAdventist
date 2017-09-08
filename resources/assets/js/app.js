@@ -29,6 +29,7 @@ Vue.component('createBank', require('./components/Creating/CreateBank.vue'));
 Vue.component('createChurchDeposits', require('./components/Creating/CreateChurchDeposits.vue'));
 Vue.component('createLocalDeposits', require('./components/Creating/CreateLocalDeposits.vue'));
 Vue.component('createCheck', require('./components/Creating/CreateCheck.vue'));
+Vue.component('createChurchPublic', require('./components/Creating/CreateChurchPublic.vue'));
 /**
  * Editores de tablas
  */

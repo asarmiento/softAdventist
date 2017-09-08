@@ -11,11 +11,12 @@
 @section('content')
 
     <div class="">
-
+        @if(currentUser())
         <h1>{{ currentUser()->nameComplete() }}</h1>
         <div class="">
             Cedula: {{ currentUser()->identification_card }}
         </div>
+            @endif
     </div>
 @endsection
 

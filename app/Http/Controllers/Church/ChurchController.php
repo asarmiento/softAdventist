@@ -19,6 +19,10 @@ class ChurchController extends Controller
         return view('church.create');
     }
 
+    public function newChurch()
+    {
+        return view('church.create');
+    }
 
     public function store(Request $request)
     {
