@@ -6,7 +6,7 @@
  * Time: 10:40 PM
  */
 
-namespace app\Entities;
+namespace App\Entities;
 
 
 /**
@@ -16,4 +16,8 @@ namespace app\Entities;
 class Union extends Entity
 {
 
+    public function country()
+    {
+        return $this->belongsTo(Country::class);
+    }
 }
