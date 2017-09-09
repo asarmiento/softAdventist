@@ -56062,7 +56062,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "page-list"
   }, [_vm._m(11), _vm._v(" Lineas por pagina")]) : _vm._e()]), _vm._v(" "), _vm._m(12)])])]), _vm._v(" "), _c('div', {
     staticClass: "clearfix"
-  })])]), _vm._v(" "), (_vm.result) ? _c('div', {
+  })])]), _vm._v(" "), _c('div', {
     staticClass: "col-lg-12 col-md-12  text-center"
   }, [_c('div', {
     staticClass: "btn"
@@ -56073,7 +56073,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.finish(_vm.rows.saturday)
       }
     }
-  }, [_vm._v("Finalizar Informe")])])]) : _vm._e()])])
+  }, [_vm._v("Finalizar Informe")])])])])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: " col-lg-12 col-md-12  "

@@ -205,7 +205,7 @@ trait ListInformMembersTraits
         $temp_LocalField_incomes = TempLocalFieldIncome::where('user_id',currentUser()->id)->with('localFieldIncomeAccount')->orderBy('id','DESC')->get();
         $temp_incomes = TempIncomes::where('user_id',currentUser()->id)->with('incomeAccount')->orderBy('id','DESC')->get();
         $totalBalance = WeeklyIncome::where('status', 'no aplicado')->sum('balance') +  LocalFieldIncome::where('status', 'no aplicado')->sum('balance');
-        $totalRows = count($this->countEnvelopeList());
+        $totalRows = count($this->countEnvelopeList($date));
         $totalRowsW = 'style="width:'.(($totalRows/$internal->number_of_envelopes)*100).'%"';
         return  (['infoWeeklys' => $data,
                   'title'=>$title,

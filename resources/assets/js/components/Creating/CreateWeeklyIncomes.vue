@@ -329,7 +329,7 @@
                 </div>
 
             </div>
-            <div v-if="result" class="col-lg-12 col-md-12  text-center">
+            <div  class="col-lg-12 col-md-12  text-center">
                 <div class="btn">
                     <button v-on:click="finish(rows.saturday)" class="btn btn-success">Finalizar Informe</button>
                 </div>
