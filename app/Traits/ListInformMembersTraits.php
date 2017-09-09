@@ -61,6 +61,7 @@ trait ListInformMembersTraits
          * usados en el informe semanal de ingresos
          */
         try {
+
             $envelopes = $this->countEnvelopeList($date);
 
             $data = [];
@@ -194,9 +195,10 @@ trait ListInformMembersTraits
      * @return array
      * ----------------------------------------------------------------------
      */
-    public function listEnvelopesCreate(){
-        $data = $this->listMemberInforme();
-        $title = $this->titleInfo();
+    public function listEnvelopesCreate($date){
+
+        $data = $this->listMemberInforme($date);
+        $title = $this->titleInfo($date);
 
         // lista de movimientos temporales
         $internal = InternalControl::where('status','no aplicado')->first();

@@ -75,11 +75,7 @@
 <script src="{{ asset('js/jquery.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.min.js') }}"></script>
 <script src="{{ asset('js/nifty.min.js') }}"></script>
-<script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
-</script>
-<script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDClVCEV3UMhas3dzM1prndnXnhgJr-Ntw&callback=initMap">
-</script>
+
 @yield('scripts')
 </body>
 </html>

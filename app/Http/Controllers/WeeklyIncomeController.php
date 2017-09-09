@@ -170,6 +170,8 @@ class WeeklyIncomeController extends Controller
                 'totalRows' => $datos['totalRows'], 'account' => $account, 'result' => $result], 200);
         }catch (Exception $e){
             DB::rollback();
+            echo json_encode($e->getMessage().' '.$e->getLine());
+            die;
         }
     }
 

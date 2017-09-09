@@ -394,7 +394,7 @@
             }
         },
         created() {
-            this.$http.get('/tesoreria/list-member-weekly')
+           this.$http.get('/tesoreria/list-member-weekly/'+this.rows.saturday)
                 .then((response) => {
                     this.listMembers = response.data.infoWeeklys;
                     this.totalBalance = response.data.totalBalance;

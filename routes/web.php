@@ -132,7 +132,7 @@ Route::post('save-church-public', ['uses'=>'Church\ChurchController@store','as'=
         Route::post('save-weekly-incomes', 'WeeklyIncomeController@store');
         Route::post('finish-info-income', 'WeeklyIncomeController@finish');
         Route::get('check-finish-info', 'WeeklyIncomeController@checkFinishInfo');
-        Route::get('list-member-weekly', 'MemberController@listMemberInfo');
+        Route::get('list-member-weekly/{date}', 'MemberController@listMemberInfo');
         //temporales
         Route::post('save-campo-temp-income', 'TempLocalFieldIncomeController@store');
         Route::post('remove-campo-temp-income', 'TempLocalFieldIncomeController@remove');

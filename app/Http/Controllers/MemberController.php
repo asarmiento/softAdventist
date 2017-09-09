@@ -81,7 +81,6 @@ class MemberController extends Controller
             'columns'  => $columns,
             'my_pages' => $array
         ];
-
         return $response;
     }
 
@@ -133,9 +132,9 @@ class MemberController extends Controller
     }
 
 
-    public function listMemberInfo()
+    public function listMemberInfo($date)
     {
-        return response()->json($this->listEnvelopesCreate());
+        return response()->json($this->listEnvelopesCreate($date));
     }
 
 }
