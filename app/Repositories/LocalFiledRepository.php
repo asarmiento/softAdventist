@@ -8,6 +8,8 @@
 
 namespace App\Repositories;
 
+use App\Entities\LocalFields\LocalField;
+
 class LocalFiledRepository extends BaseRepository
 {
 
@@ -16,6 +18,16 @@ class LocalFiledRepository extends BaseRepository
      */
     public function getModel()
     {
-        // TODO: Implement getModel() method.
+       return new LocalField(); // TODO: Implement getModel() method.
+    }
+
+    public function listSelectsSinFilterChurch()
+    {
+        $contents = [];
+        foreach ($this->newQuery()->with('union.country')->get() AS $data):
+            $value = ['value'=>$data->token, 'label'=>$data->name.' ('.$data->union->country->name.')'];
+            array_push($contents,$value);
+        endforeach;
+        return $contents;
     }
 }
