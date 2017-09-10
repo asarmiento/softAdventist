@@ -15,9 +15,7 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
-Route::get('/iglesias-adventistas', function () {
-    return view('gmaps');
-});
+Route::get('/iglesias-adventistas', 'GmapsController@index');
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 Auth::routes();
 Route::get('home', ['uses'=>'HomeController@index','as'=>'home']);

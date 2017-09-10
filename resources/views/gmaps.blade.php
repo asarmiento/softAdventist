@@ -19,10 +19,25 @@
     </style>
 </head>
 <body>
-<div id="map"></div>
+<div id="map" data-church="{{json_encode($churchs)}}" ></div>
 <script>
 
     function initMap() {
+
+        var churchs = '<?php echo $churchs; ?>';
+        var locations =[];
+         each (var item in churchs) {
+            locations += item;
+        }
+        console.log(churchs);
+//        var locations = [
+//            {lat: 9.43632230, lng: -84.12949780},
+//            {lat: 9.325817, lng: -83.951656},
+//            {lat: 14.090338, lng: -87.191919},
+//            {lat: 14.081646, lng: -87.166146},
+//            {lat: 15.509761, lng: -88.017277},
+//            {lat: 15.505088, lng: -88.028203},
+//        ]
 
         var map = new google.maps.Map(document.getElementById('map'), {
             zoom: 6,
@@ -47,14 +62,7 @@
         var markerCluster = new MarkerClusterer(map, markers,
             {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
     }
-    var locations = [
-        {lat: 9.43632230, lng: -84.12949780},
-        {lat: 9.325817, lng: -83.951656},
-        {lat: 14.090338, lng: -87.191919},
-        {lat: 14.081646, lng: -87.166146},
-        {lat: 15.509761, lng: -88.017277},
-        {lat: 15.505088, lng: -88.028203},
-    ]
+
 </script>
 <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
 </script>

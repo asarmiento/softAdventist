@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Entities\Church;
 use Illuminate\Http\Request;
 
 class GmapsController extends Controller
 {
     public function index()
     {
-        //configuaración
+      /*  //configuaración
         $config = array();
         $config['center'] = 'auto';
         $config['map_width'] = 400;
@@ -30,9 +31,11 @@ class GmapsController extends Controller
         $marker = array();
         \Gmaps::add_marker($marker);
 
-        $map = \Gmaps::create_map();
+        $map = \Gmaps::create_map();*/
+
+      $churchs = Church::select('longitud','latitud')->get();
 
         //Devolver vista con datos del mapa
-        return view('gmaps', compact('map'));
+        return view('gmaps', compact('churchs'));
     }
 }
