@@ -18,6 +18,7 @@ use App\Entities\TempIncomes;
 use App\Entities\TempLocalFieldIncome;
 use App\Entities\WeeklyIncome;
 use App\Repositories\IncomeAccountRepository;
+use App\Repositories\InternalControlRepository;
 use App\Repositories\LocalFieldIncomeAccountRepository;
 use App\Repositories\LocalFieldIncomeRepository;
 use App\Repositories\WeeklyincomeRepository;
@@ -29,8 +30,6 @@ use Illuminate\Http\Request;
  */
 trait ListInformMembersTraits
 {
-
-
 
 
     /**
@@ -54,7 +53,7 @@ trait ListInformMembersTraits
      * @return array
      * ----------------------------------------------------------------------
      */
-    public function listMemberInforme($date=false)
+    public function listMemberInforme($date = false)
     {
         /**
          * filtramos los datos de los miembros que estan siendo
@@ -67,13 +66,13 @@ trait ListInformMembersTraits
             $data = [];
             foreach ($envelopes AS $envelope):
 
-                $tithes = LocalFieldIncomeAccount::join('local_field_incomes','local_field_incomes.local_field_income_account_id','=','local_field_income_accounts.id')
-                    ->where('type','diez')->where('envelope_number',$envelope)->sum('local_field_incomes.balance');
+                $tithes = LocalFieldIncomeAccount::join('local_field_incomes', 'local_field_incomes.local_field_income_account_id', '=', 'local_field_income_accounts.id')
+                    ->where('type', 'diez')->where('envelope_number', $envelope)->sum('local_field_incomes.balance');
 
-                $offering = IncomeAccount::join('weekly_incomes','weekly_incomes.income_account_id','=','income_accounts.id')
-                        ->where('type','fix')->where('envelope_number',$envelope)->sum('weekly_incomes.balance') +
-                    LocalFieldIncomeAccount::join('local_field_incomes','local_field_incomes.local_field_income_account_id','=','local_field_income_accounts.id')
-                        ->where('type','offren')->where('envelope_number',$envelope)->sum('local_field_incomes.balance') ;
+                $offering = IncomeAccount::join('weekly_incomes', 'weekly_incomes.income_account_id', '=', 'income_accounts.id')
+                        ->where('type', 'fix')->where('envelope_number', $envelope)->sum('weekly_incomes.balance') +
+                    LocalFieldIncomeAccount::join('local_field_incomes', 'local_field_incomes.local_field_income_account_id', '=', 'local_field_income_accounts.id')
+                        ->where('type', 'offren')->where('envelope_number', $envelope)->sum('local_field_incomes.balance');
                 $member = Member::whereHas('weeklyIncomes', function ($q) use ($envelope) {
                     $q->where('envelope_number', $envelope);
                 })->first();
@@ -83,7 +82,7 @@ trait ListInformMembersTraits
                         $q->where('envelope_number', $envelope);
                     })->first();
                 endif;
-                $total =  WeeklyIncome::where('envelope_number', $envelope)->sum('balance')  +
+                $total = WeeklyIncome::where('envelope_number', $envelope)->sum('balance') +
                     LocalFieldIncome::where('envelope_number', $envelope)->sum('balance');
                 $datos = [
                     'envelope' => $envelope,
@@ -124,7 +123,7 @@ trait ListInformMembersTraits
                 array_push($data, $datos);
             endforeach;
             return $data;
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             echo json_encode($e->getMessage());
             die;
         }
@@ -146,38 +145,38 @@ trait ListInformMembersTraits
      * @return array
      * ----------------------------------------------------------------------
      */
-    public function totalesInforme($date=false)
+    public function totalesInforme($date = false)
     {
         /**
          * filtramos los datos de los miembros que estan siendo
          * usados en el informe semanal de ingresos
          */
         $envelopes = $this->countEnvelopeList($date);
-        $tithes = $this->localFieldIncomeAccountRepository->sumTypeForInEnvelope($envelopes,'diez');
-        $offering = $this->incomeAccountRepository->sumTypeForInEnvelope($envelopes,'fix')  +
-        $this->localFieldIncomeAccountRepository->sumTypeForInEnvelope($envelopes,'offren');
+        $tithes = $this->localFieldIncomeAccountRepository->sumTypeForInEnvelope($envelopes, 'diez');
+        $offering = $this->incomeAccountRepository->sumTypeForInEnvelope($envelopes, 'fix') +
+            $this->localFieldIncomeAccountRepository->sumTypeForInEnvelope($envelopes, 'offren');
         $total = $this->weeklyincomeRepository->sumInInfo($envelopes) + $this->localFieldIncomeRepository->sumInInfo($envelopes);
         $datos = [
-            number_format($total,2),
-            number_format($tithes,2),
-            number_format($offering,2)
-            ];
-            $localfields = $this->localFieldIncomeAccountRepository->getType('temp');
-            //aqui agregamos en el array los datos de las cuentas que van para el campo local
-            foreach ($localfields AS $localfieldIncome):
-                $list = $this->localFieldIncomeRepository->sumInEnvelope($envelopes,$localfieldIncome->id);
-                if($list > 0):
-                    $datos[] = number_format($list,2);
-                endif;
-            endforeach;
-            $incomeAccounts = $this->incomeAccountRepository->getType('temp');
-            // aqui agregamos las cuentas de ingreso de locales de la iglesia
-            foreach ($incomeAccounts AS $churchIncome):
-                $list = $this->weeklyincomeRepository->sumInEnvelope($envelopes,$churchIncome->id);
-                if($list > 0):
-                    $datos[] = number_format($list,2);
-                endif;
-            endforeach;
+            number_format($total, 2),
+            number_format($tithes, 2),
+            number_format($offering, 2)
+        ];
+        $localfields = $this->localFieldIncomeAccountRepository->getType('temp');
+        //aqui agregamos en el array los datos de las cuentas que van para el campo local
+        foreach ($localfields AS $localfieldIncome):
+            $list = $this->localFieldIncomeRepository->sumInEnvelope($envelopes, $localfieldIncome->id);
+            if ($list > 0):
+                $datos[] = number_format($list, 2);
+            endif;
+        endforeach;
+        $incomeAccounts = $this->incomeAccountRepository->getType('temp');
+        // aqui agregamos las cuentas de ingreso de locales de la iglesia
+        foreach ($incomeAccounts AS $churchIncome):
+            $list = $this->weeklyincomeRepository->sumInEnvelope($envelopes, $churchIncome->id);
+            if ($list > 0):
+                $datos[] = number_format($list, 2);
+            endif;
+        endforeach;
         return $datos;
     }
 
@@ -195,26 +194,34 @@ trait ListInformMembersTraits
      * @return array
      * ----------------------------------------------------------------------
      */
-    public function listEnvelopesCreate($date){
+    public function listEnvelopesCreate($date)
+    {
 
         $data = $this->listMemberInforme($date);
         $title = $this->titleInfo($date);
 
-        // lista de movimientos temporales
-        $internal = InternalControl::where('status','no aplicado')->first();
-        $temp_LocalField_incomes = TempLocalFieldIncome::where('user_id',currentUser()->id)->with('localFieldIncomeAccount')->orderBy('id','DESC')->get();
-        $temp_incomes = TempIncomes::where('user_id',currentUser()->id)->with('incomeAccount')->orderBy('id','DESC')->get();
-        $totalBalance = WeeklyIncome::where('status', 'no aplicado')->sum('balance') +  LocalFieldIncome::where('status', 'no aplicado')->sum('balance');
+        // traemos el control interno del sabado a consultar
+        $internal = InternalControl::where('status', 'no aplicado')->where('saturday', $date)->first();
+
+        $temp_LocalField_incomes = TempLocalFieldIncome::whereHas('localFieldIncomeAccount',function ($q) use($internal){
+          //  $q->whereHas();
+        })->where('user_id', currentUser()->id)
+            ->with('localFieldIncomeAccount')->orderBy('id', 'DESC')->get();
+        $temp_incomes = TempIncomes::where('user_id', currentUser()->id)->with('incomeAccount')->orderBy('id', 'DESC')->get();
+        //traemos el total del informe semanal a formar
+        $totalBalance = $this->totalBalance($internal->id);
         $totalRows = count($this->countEnvelopeList($date));
-        $totalRowsW = 'style="width:'.(($totalRows/$internal->number_of_envelopes)*100).'%"';
-        return  (['infoWeeklys' => $data,
-                  'title'=>$title,
-                  'totalBalance'=>$totalBalance,
-                  'totalRows'=>$totalRows,
-                  'totalRowsW'=>$totalRowsW,
-                  'tempIncomes'=>$temp_incomes,
-                  'tempLocalFieldIncomes'=>$temp_LocalField_incomes]);
+        $totalRowsW = 'style="width:' . (($totalRows / $internal->number_of_envelopes) * 100) . '%"';
+
+        return (['infoWeeklys' => $data,
+            'title' => $title,
+            'totalBalance' => $totalBalance,
+            'totalRows' => $totalRows,
+            'totalRowsW' => $totalRowsW,
+            'tempIncomes' => $temp_incomes,
+            'tempLocalFieldIncomes' => $temp_LocalField_incomes]);
     }
+
     /**
      * ---------------------------------------------------------------------
      * @Author     : Anwar Sarmiento "asarmiento@sistemasamigables.com"
@@ -230,28 +237,28 @@ trait ListInformMembersTraits
      * @return array
      * ----------------------------------------------------------------------
      */
-    public function countEnvelopeList($date=false)
+    public function countEnvelopeList($date = false)
     {
-        if($date):
-            $internalTemp = InternalControl::where('saturday',$date)->where('church_id',1)->first();
+        if ($date):
+            $internalTemp = InternalControl::where('saturday', $date)->where('church_id', 1)->first();
         else:
-            $internalTemp = InternalControl::where('status','no aplicado')->where('church_id',1)->first();
+            $internalTemp = InternalControl::where('status', 'no aplicado')->where('church_id', 1)->first();
         endif;
-        $churchs  =  WeeklyIncome::where('internal_control_id', $internalTemp->id)->distinct('envelope_number')->pluck('envelope_number');
-        $data =  [];
-           foreach ($churchs AS $church):
-               array_push($data,$church);
-               $locals =  LocalFieldIncome::where('internal_control_id', $internalTemp->id)->distinct('envelope_number')->pluck('envelope_number');
-               foreach ($locals AS $local):
-                 array_push($data,$local);
-               endforeach;
-           endforeach;
+        $churchs = WeeklyIncome::where('internal_control_id', $internalTemp->id)->distinct('envelope_number')->pluck('envelope_number');
+        $data = [];
+        foreach ($churchs AS $church):
+            array_push($data, $church);
+            $locals = LocalFieldIncome::where('internal_control_id', $internalTemp->id)->distinct('envelope_number')->pluck('envelope_number');
+            foreach ($locals AS $local):
+                array_push($data, $local);
+            endforeach;
+        endforeach;
         return array_unique($data);
     }
 
-    public function titleInfo($date=false)
+    public function titleInfo($date = false)
     {
-        $title =  [
+        $title = [
             'Nombres',
             'Recibos N°',
             'Total',
@@ -259,21 +266,20 @@ trait ListInformMembersTraits
             'Ofrenda'
         ];
         $envelope = $this->countEnvelopeList($date);
-        $localTitles = LocalFieldIncome::whereHas('localFieldIncomeAccount',function ($q){
-            $q->where('type','temp');
-        })->whereIn('envelope_number',$envelope)->distinct('local_field_income_account_id')->get();
+        $localTitles = LocalFieldIncome::whereHas('localFieldIncomeAccount', function ($q) {
+            $q->where('type', 'temp');
+        })->whereIn('envelope_number', $envelope)->distinct('local_field_income_account_id')->get();
         foreach ($localTitles AS $localTitle):
-            array_push($title,$localTitle->localFieldIncomeAccount->name);
+            array_push($title, $localTitle->localFieldIncomeAccount->name);
         endforeach;
-        $churchTitles = WeeklyIncome::whereHas('incomeAccount',function ($q){
-            $q->where('type','temp');
-        })->whereIn('envelope_number',$envelope)->distinct('income_account_id')->get();
+        $churchTitles = WeeklyIncome::whereHas('incomeAccount', function ($q) {
+            $q->where('type', 'temp');
+        })->whereIn('envelope_number', $envelope)->distinct('income_account_id')->get();
         foreach ($churchTitles AS $churchTitle):
-            array_push($title,$churchTitle->incomeAccount->name);
+            array_push($title, $churchTitle->incomeAccount->name);
         endforeach;
         return array_unique($title);
     }
-
 
 
     /**
@@ -293,17 +299,17 @@ trait ListInformMembersTraits
      */
     public function numerationInfoPdf($date)
     {
-        $numeration = SummaryOfWeeklyEarning::whereHas('internal_control',function ($q) use($date){
-            $q->where('saturday',$date);
+        $numeration = SummaryOfWeeklyEarning::whereHas('internal_control', function ($q) use ($date) {
+            $q->where('saturday', $date);
         })->max('number');
-        if($numeration > 0 && $numeration < 10):
-            return '0000'.$numeration;
+        if ($numeration > 0 && $numeration < 10):
+            return '0000' . $numeration;
         elseif ($numeration > 10 && $numeration < 100):
-            return '000'.$numeration;
+            return '000' . $numeration;
         elseif ($numeration > 100 && $numeration < 1000):
-            return '00'.$numeration;
+            return '00' . $numeration;
         elseif ($numeration > 1000 && $numeration < 10000):
-            return '0'.$numeration;
+            return '0' . $numeration;
         else:
             return $numeration;
         endif;
@@ -315,15 +321,15 @@ trait ListInformMembersTraits
          * filtramos los datos de los miembros que estan siendo
          * usados en el informe semanal de ingresos
          */
-         $data = [];
+        $data = [];
 
-        $tithes = LocalFieldIncomeAccount::join('local_field_incomes','local_field_incomes.local_field_income_account_id','=','local_field_income_accounts.id')
-            ->where('type','diez')->where('envelope_number',$envelope)->sum('local_field_incomes.balance');
+        $tithes = LocalFieldIncomeAccount::join('local_field_incomes', 'local_field_incomes.local_field_income_account_id', '=', 'local_field_income_accounts.id')
+            ->where('type', 'diez')->where('envelope_number', $envelope)->sum('local_field_incomes.balance');
 
-        $offering = IncomeAccount::join('weekly_incomes','weekly_incomes.income_account_id','=','income_accounts.id')
-                ->where('type','fix')->where('envelope_number',$envelope)->sum('weekly_incomes.balance') +
-            LocalFieldIncomeAccount::join('local_field_incomes','local_field_incomes.local_field_income_account_id','=','local_field_income_accounts.id')
-                ->where('type','offren')->where('envelope_number',$envelope)->sum('local_field_incomes.balance') ;
+        $offering = IncomeAccount::join('weekly_incomes', 'weekly_incomes.income_account_id', '=', 'income_accounts.id')
+                ->where('type', 'fix')->where('envelope_number', $envelope)->sum('weekly_incomes.balance') +
+            LocalFieldIncomeAccount::join('local_field_incomes', 'local_field_incomes.local_field_income_account_id', '=', 'local_field_income_accounts.id')
+                ->where('type', 'offren')->where('envelope_number', $envelope)->sum('local_field_incomes.balance');
         $member = Member::whereHas('weeklyIncomes', function ($q) use ($envelope) {
             $q->where('envelope_number', $envelope);
         })->first();
@@ -333,7 +339,7 @@ trait ListInformMembersTraits
                 $q->where('envelope_number', $envelope);
             })->first();
         endif;
-        $total =  WeeklyIncome::where('envelope_number', $envelope)->sum('balance')  +
+        $total = WeeklyIncome::where('envelope_number', $envelope)->sum('balance') +
             LocalFieldIncome::where('envelope_number', $envelope)->sum('balance');
         $datos = [
             'envelope' => $envelope,
@@ -373,24 +379,68 @@ trait ListInformMembersTraits
 
         array_push($data, $datos);
 
-        $title =  $this->titleInfo();
+        $title = $this->titleInfo();
 
-        $totalBalance = WeeklyIncome::where('status', 'no aplicado')->sum('balance') +  LocalFieldIncome::where('status', 'no aplicado')->sum('balance');
+        $totalBalance = $this->totalBalance();
         $totalRows = count($this->countEnvelopeList());
 
 
-        return ['data'=>$data,'title'=>$title,'totalBalance'=>$totalBalance,
-                'totalRows'=>$totalRows];
+        return ['data' => $data, 'title' => $title, 'totalBalance' => $totalBalance,
+            'totalRows' => $totalRows];
     }
 
-    public function finishInfo()
+    /**
+     * -----------------------------------------------------------------------
+     * @Author: Anwar Sarmiento <asarmiento@sistemasamigables.com>
+     * @DateCreate: 2017-09-11
+     * @TimeCreate: 1:23pm
+     * @DateUpdate: 0000-00-00
+     * -----------------------------------------------------------------------
+     * @description: Obtenemos el total del informe semanal segun los sobres
+     * agregados al sistema.
+     * @pasos:
+     * ----------------------------------------------------------------------
+     * * @param $internal
+     *  * @var ${TYPE_NAME}
+     * * ----------------------------------------------------------------------
+     *  * @return int
+     * ----------------------------------------------------------------------
+     * *
+     */
+    private function totalBalance($internal)
     {
-        $totalBalance = WeeklyIncome::where('status', 'no aplicado')->sum('balance') +  LocalFieldIncome::where('status', 'no aplicado')->sum('balance');
-        $internal = InternalControl::where('status','no aplicado')->sum('balance');
-        if($totalBalance == $internal):
-            return ['success'=>true, 'message'=>['listo']];
+      return  WeeklyIncome::where('status', 'no aplicado')->where('internal_control_id',$internal)->sum('balance') +
+        LocalFieldIncome::where('status', 'no aplicado')->where('internal_control_id',$internal)->sum('balance');
+
+    }
+
+    /**
+     * -----------------------------------------------------------------------
+     * @Author: Anwar Sarmiento <asarmiento@sistemasamigables.com>
+     * @DateCreate: ${DATE}
+     * @TimeCreate: $TIME$
+     * @DateUpdate: 0000-00-00
+     * -----------------------------------------------------------------------
+     * @description:
+     * @pasos:
+     * ----------------------------------------------------------------------
+     * * @param InternalControlRepository $internalControlRepository
+     * @param $token
+     *  * @var ${TYPE_NAME}
+     * * ----------------------------------------------------------------------
+     *  * @return array
+     * ----------------------------------------------------------------------
+     * *
+     */
+    public function finishInfo($token)
+    {
+        $internal = InternalControl::where('token',$token)->first();
+        $totalBalance = $this->totalBalance($internal->id);
+        $internal = $internal->balance;
+        if ($totalBalance == $internal):
+            return ['success' => true, 'message' => ['listo']];
         else:
-            return ['success'=>false, 'message'=>['falta']];
+            return ['success' => false, 'message' => ['falta']];
         endif;
 
     }
@@ -398,10 +448,10 @@ trait ListInformMembersTraits
     public function numerationInfo()
     {
         $actual = SummaryOfWeeklyEarning::max('number');
-        if ($actual==null || $actual == ''):
+        if ($actual == null || $actual == ''):
             return 1;
         else:
-            return ($actual +1);
+            return ($actual + 1);
         endif;
     }
 }

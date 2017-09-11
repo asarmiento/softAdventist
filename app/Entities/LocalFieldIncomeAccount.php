@@ -13,7 +13,7 @@ namespace App\Entities;
 class LocalFieldIncomeAccount extends Entity
 {
     //
-    protected $fillable = [];
+    protected $fillable = ['name','balance','type','local_field_id'];
 
     /**
      * -----------------------------------------------------------------------

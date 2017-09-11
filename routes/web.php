@@ -101,11 +101,14 @@ Route::post('save-church-public', ['uses'=>'Church\ChurchController@store','as'=
         Route::post('remove-deposit', 'Bank\ChurchDepositController@remove');
 
         /**
-         * Ingresos
+         * Cuentas de Ingresos
          */
         Route::get('registrar-ingresos', ['uses'=>'IncomeAccountController@create','as'=>'create-incomes']);
         Route::post('save-incomes', 'IncomeAccountController@store');
-        Route::get('lista-de-informes', ['uses'=>'IncomeAccountController@index','as'=>'list-info-weekly']);
+        /**
+         * listas Cuentas de Ingresos
+         */
+        Route::get('lista-de-cuentas-de-ingresos', ['uses'=>'IncomeAccountController@index','as'=>'lista-de-cuentas-de-ingresos']);
         Route::get('lists-income-account', 'IncomeAccountController@getData');
         //controles internos
         Route::get('registro-control-interno', ['uses'=>'InternalControlController@create','as'=>'create-internal-control']);
@@ -126,10 +129,12 @@ Route::post('save-church-public', ['uses'=>'Church\ChurchController@store','as'=
         /**
          * Informes semanales
          */
+        Route::get('lista-de-informes-semanales', ['uses'=>'WeeklyIncomeController@index','as'=>'lista-de-informes-semanales']);
+        Route::get('list-de-informes-semanales', 'WeeklyIncomeController@getData');
         Route::get('registro-de-ingresos/{token}', ['uses'=>'WeeklyIncomeController@create','as'=>'registro-de-ingresos']);
         Route::post('save-weekly-incomes', 'WeeklyIncomeController@store');
         Route::post('finish-info-income', 'WeeklyIncomeController@finish');
-        Route::get('check-finish-info', 'WeeklyIncomeController@checkFinishInfo');
+        Route::get('check-finish-info/{token}', 'WeeklyIncomeController@checkFinishInfo');
         Route::get('list-member-weekly/{date}', 'MemberController@listMemberInfo');
         //temporales
         Route::post('save-campo-temp-income', 'TempLocalFieldIncomeController@store');

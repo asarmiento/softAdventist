@@ -403,7 +403,7 @@
                     this.temp_incomes = response.data.tempIncomes;
                     this.titleMembers = response.data.title;
                 });
-            this.$http.get('/tesoreria/check-finish-info')
+            this.$http.get('/tesoreria/check-finish-info/'+this.rows.token)
                 .then((response) => {
                     this.result = response.data.success;
                 });

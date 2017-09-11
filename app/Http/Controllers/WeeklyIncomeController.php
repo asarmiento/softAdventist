@@ -13,6 +13,7 @@ use App\Entities\TempIncomes;
 use App\Entities\TempLocalFieldIncome;
 use App\Entities\WeeklyIncome;
 use App\Http\Requests\CreateWeeklyIncomeRequest;
+use App\Traits\DataViewerTraits;
 use App\Traits\ListInformMembersTraits;
 use Exception;
 use Illuminate\Http\Request;
@@ -26,8 +27,36 @@ use Illuminate\Support\Facades\DB;
 class WeeklyIncomeController extends Controller
 {
     use ListInformMembersTraits;
+    use DataViewerTraits;
     //
+    public function index()
+    {
+        $incomesWeeklys = SummaryOfWeeklyEarning::all();
+        return view('IncomesAndExpenses.infoWeekly',compact('incomesWeeklys'));
+    }
 
+    public function getData(Request $request)
+    {
+        $perPage = 10;
+        if ($request->has('perPage')) {
+            $perPage = $request->perPage;
+        }
+
+        $model = SummaryOfWeeklyEarning::searchPaginateAndOrder($perPage, $request->get('search'));
+
+        $array = $this->myPages($model);
+
+        $columns = SummaryOfWeeklyEarning::$columns;
+        $model['per_page'] = $perPage;
+
+        $response = [
+            'model'    => $model,
+            'columns'  => $columns,
+            'my_pages' => $array
+        ];
+
+        return $response;
+    }
     /**
      * -----------------------------------------------------------------------
      * @Author: Anwar Sarmiento <asarmiento@sistemasamigables.com>
@@ -161,8 +190,10 @@ class WeeklyIncomeController extends Controller
                     TempLocalFieldIncome::find($localFieldTemp->id)->delete();
                 endif;
             endforeach;
+            echo json_encode($dataLista);
+            die;
             $datos = ($this->newMember($id));
-            $result = $this->finishInfo();
+          //  $result = $this->finishInfo();
             $account = [];
             DB::commit();
             return response()->json(['success' => true, 'message' => 'Se creo con Exito!!!!', 'newMember' => $datos['data'],
@@ -242,10 +273,9 @@ class WeeklyIncomeController extends Controller
             ];
 
     }
-    public function checkFinishInfo()
+    public function checkFinishInfo($token)
     {
-
-        return  response()->json($this->finishInfo(),200);
+        return  response()->json($this->finishInfo($token),200);
     }
     public function finish(Request $request)
     {

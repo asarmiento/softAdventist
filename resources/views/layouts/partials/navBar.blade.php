@@ -94,8 +94,8 @@
                                     <li class="dropdown-header"> </li>
                                     <li><a href="{{route('lista-internal-control')}}"></span>Lista de Controles Internos</a></li>
                                     <li><a href="{{route('lists-departament')}}"></span>Lista de Departamentos</a></li>
-                                    <li><a href="{{route('create-incomes')}}">Lista Cuentas de Ingresos</a></li>
-                                    <li><a href="{{route('lista-cuentas-expenses')}}">ListaCuentas de Gastos</a></li>
+                                    <li><a href="{{route('lista-de-cuentas-de-ingresos')}}">Lista Cuentas de Ingresos</a></li>
+                                    <li><a href="{{route('lista-cuentas-expenses')}}">Lista Cuentas de Gastos</a></li>
 
                                 </ul>
                             </div>
@@ -111,7 +111,7 @@
                                     <li class="divider"></li>
                                     <li class="dropdown-header">Informes</li>
                                     <li><a href="">Informe Mensual</a></li>
-                                    <li><a href="{{route('list-info-weekly')}}">Informe Semanal</a></li>
+                                    <li><a href="{{route('lista-de-informes-semanales')}}">Informe Semanal</a></li>
                                     <li><a href="#">Saldos por Departamentos</a></li>
                                     <li><a href="#">Saldo por Cuentas</a></li>
                                     <!--li>

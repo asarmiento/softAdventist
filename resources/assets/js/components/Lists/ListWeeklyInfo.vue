@@ -62,7 +62,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr :data-index="index" v-for="(list, index) in lists">
+                                    <tr :data-index="index" v-for="(list, index) in datos">
                                         <td style="">
                                             <a href="#" class="btn-link">{{list.id}}</a>
                                         </td>
@@ -138,29 +138,33 @@
 </template>
 
 <script>
-    import vSelect from "vue-select";
     import { Confirm } from '@lassehaslev/vue-confirm';
     import numeral from 'numeral';
     export default {
         props: [
             'title',
-            'incomes_weeklys',
+            'source',
         ],
-        components: {vSelect},
+        components: {},
          data () {
              return   {
-                 data: {
-
-                 },
-                 errors: {
-                     member_id: '',
-                     envelope_number: '',
-                     tithes:'',
-                     offering:'',
-                 }
+                 txtSearch: '',
+                 counts: ['5', '10', '20', '50'],
+                 datos: [],
+                 my_pages: [],
+                 columns: [],
+                 typeAll: true,
+                 typeStyle: true,
              }
          },
-        created(){},
+        created(){
+            var self = this;
+            this.$http.get(this.source).then((response) => {
+                self.datos = response.data.model;
+                self.my_pages = response.data.my_pages;
+                self.columns = response.data.columns;
+            });
+        },
        computed:{
             lists(){
                return JSON.parse(this.incomes_weeklys);
@@ -237,7 +241,6 @@
                    self.my_pages = response.data.my_pages;
                });
            }
-
        },
         filters:{
             moneyFormat: function(value){
