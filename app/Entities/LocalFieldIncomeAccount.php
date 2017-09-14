@@ -36,5 +36,10 @@ class LocalFieldIncomeAccount extends Entity
     {
         return $this->hasMany(LocalFieldIncome::getClass());
     }
+
+    public function churchLFIncomeAccount()
+    {
+        return $this->hasMany(ChurchLocalFieldIncomeAccount::class,'l_f_income_account_id');
+    }
 }
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use app\Entities\ChurchLocalFieldIncomeAccount;
 use App\Entities\Departaments\Departament;
 use App\Entities\Departaments\IncomeAccount;
 use App\Entities\InternalControl;
@@ -13,6 +14,7 @@ use App\Entities\TempIncomes;
 use App\Entities\TempLocalFieldIncome;
 use App\Entities\WeeklyIncome;
 use App\Http\Requests\CreateWeeklyIncomeRequest;
+use App\Traits\ConsultTablesTraits;
 use App\Traits\DataViewerTraits;
 use App\Traits\ListInformMembersTraits;
 use Exception;
@@ -28,7 +30,13 @@ class WeeklyIncomeController extends Controller
 {
     use ListInformMembersTraits;
     use DataViewerTraits;
-    //
+
+
+    public function __construct()
+    {
+        
+    }
+    
     public function index()
     {
         $incomesWeeklys = SummaryOfWeeklyEarning::all();
@@ -135,6 +143,7 @@ class WeeklyIncomeController extends Controller
              * Variables y parametros nuevos
              */
             $dataLista = $this->createArray($data);
+
             /**
              * Aqui guardaremos los datos de 60% de la iglesia segun lo presupuestado
              */
@@ -182,7 +191,7 @@ class WeeklyIncomeController extends Controller
             foreach ($localFieldIncomes AS $localFieldTemp):
                 $campo = $dataLista['campoTemp'];
                 $campo['balance'] = $localFieldTemp->balance;
-                $campo['local_field_income_account_id'] = $localFieldTemp->local_field_income_account_id;
+                $campo['church_l_f_income_account_id'] = $localFieldTemp->church_l_f_income_account_id;
                 if ($campo['balance'] > 0):
                     $localFieldIncome = new LocalFieldIncome();
                     $localFieldIncome->fill($campo);
@@ -190,11 +199,12 @@ class WeeklyIncomeController extends Controller
                     TempLocalFieldIncome::find($localFieldTemp->id)->delete();
                 endif;
             endforeach;
-            echo json_encode($dataLista);
-            die;
-            $datos = ($this->newMember($id));
-          //  $result = $this->finishInfo();
+
+            $datos = ($this->newMember($id,$dataLista['internalToken']));
+           
+            $result = $this->finishInfo($dataLista['internalToken']);
             $account = [];
+
             DB::commit();
             return response()->json(['success' => true, 'message' => 'Se creo con Exito!!!!', 'newMember' => $datos['data'],
                 'title' => $datos['title'], 'totalBalance' => $datos['totalBalance'],
@@ -224,30 +234,37 @@ class WeeklyIncomeController extends Controller
      */
     public function createArray($data)
     {
+
         $forty= (($data['offering']+$data['background_inversion']) * 0.4);
         $sixty= (($data['offering']+$data['background_inversion']) * 0.6);
         $status = 'no aplicado';
+        $internalControl = InternalControl::where('id',$data['internal_control_id'])->first();
         $member = Member::where('token',$data['member_id'])->first()->id;
-        $accountFix = IncomeAccount::where('type','fix')->get();
-        $diezmo = LocalFieldIncomeAccount::where('type','diez')->first()->id;
-        $offering = LocalFieldIncomeAccount::where('type','offren')->first()->id;
-        $internalControl = InternalControl::where('id',$data['internal_control_id'])->first()->id;
+        $accountFix = IncomeAccount::whereHas('departament',function ($q)use($internalControl){
+            $q->where('church_id',$internalControl->church_id);
+        })->where('type','fix')->get();
+
+        // Consultamos los datos con type Diezmos
+        $diezmo =  $this->accountLocalField($internalControl->church_id,'diez')->first()->id;
+        //consultamos los datos con type offren
+        $offering = $this->accountLocalField($internalControl->church_id,'offren')->first()->id;
         $token = Crypt::encrypt($data['envelope_number']);
         return [
+            'internalToken'=>$internalControl->token,
             'accountFix'=>$accountFix,
             'sixty'=>$sixty,
             'church'=>[
                 'envelope_number'=>$data['envelope_number'],
                 'status'=>$status,
                 'member_id'=>$member,
-                'internal_control_id' =>$internalControl,
+                'internal_control_id' =>$internalControl->id,
                 'token'=>$token,
             ],
             'campoTemp'=>[
                 'envelope_number'=>$data['envelope_number'],
                 'status'=>$status,
                 'member_id'=>$member,
-                'internal_control_id' =>$internalControl,
+                'internal_control_id' =>$internalControl->id,
                 'token'=>$token
             ],
             'campo'=>[
@@ -255,8 +272,8 @@ class WeeklyIncomeController extends Controller
                     'envelope_number'=>$data['envelope_number'],
                     'status'=>$status,
                     'member_id'=>$member,
-                    'internal_control_id' =>$internalControl,
-                    'local_field_income_account_id'=>$diezmo,
+                    'internal_control_id' =>$internalControl->id,
+                    'church_l_f_income_account_id'=>$diezmo,
                     'balance'=>$data['tithes'],
                     'token'=>$token,
                 ],
@@ -264,8 +281,8 @@ class WeeklyIncomeController extends Controller
                     'envelope_number'=>$data['envelope_number'],
                     'status'=>$status,
                     'member_id'=>$member,
-                    'internal_control_id' =>$internalControl,
-                    'local_field_income_account_id'=>$offering,
+                    'internal_control_id' =>$internalControl->id,
+                    'church_l_f_income_account_id'=>$offering,
                     'balance'=>$forty,
                     'token'=>$token,
                 ]
@@ -273,6 +290,8 @@ class WeeklyIncomeController extends Controller
             ];
 
     }
+
+
     public function checkFinishInfo($token)
     {
         return  response()->json($this->finishInfo($token),200);
@@ -281,6 +300,8 @@ class WeeklyIncomeController extends Controller
     {
         try {
             DB::beginTransaction();
+            echo json_encode($request->all());
+            die;
             $sixty = WeeklyIncome::whereHas('incomeAccount', function ($q) {
                 $q->where('type', 'fix');
             })->where('status', 'no aplicado')->sum('balance');
@@ -309,7 +330,7 @@ class WeeklyIncomeController extends Controller
             $localAccounts = LocalFieldIncomeAccount::all();
             foreach ($localAccounts AS $localAccount):
                 LocalFieldIncomeAccount::where('id', $localAccount->id)
-                    ->update(['balance' => ($localAccount->balance + LocalFieldIncome::where('local_field_income_account_id', $localAccount->id)
+                    ->update(['balance' => ($localAccount->balance + LocalFieldIncome::where('church_l_f_income_account_id', $localAccount->id)
                             ->where('status', 'no aplicado')->sum('balance'))]);
             endforeach;
             $churchAccounts = IncomeAccount::all();

@@ -24,6 +24,22 @@ class LocalFieldIncomeRepository extends BaseRepository
     public function sumInEnvelope($envelope,$id)
     {
         return $this->newQuery()->whereIn('envelope_number', $envelope)
-            ->where('local_field_income_account_id', $id)->sum('balance');
+            ->where('church_l_f_income_account_id', $id)->sum('balance');
+    }
+
+    public function typeEnvelopeSum($envelope,$type){
+       return $this->newQuery()->whereHas('localFieldIncomeAccount',function ($q) use($type){
+           $q->whereHas('localFieldIncomeAccount',function ($r) use ($type){
+               $r->where('type',$type);
+           });
+       })->where('envelope_number', $envelope)->sum('local_field_incomes.balance');
+    }
+
+    public function typeEnvelopeAll($type){
+        return $this->newQuery()->whereHas('localFieldIncomeAccount',function ($q) use($type){
+            $q->whereHas('localFieldIncomeAccount',function ($r) use ($type){
+                $r->where('type',$type);
+            });
+        });
     }
 }

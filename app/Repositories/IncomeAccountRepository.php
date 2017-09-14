@@ -40,4 +40,10 @@ class IncomeAccountRepository extends BaseRepository
         return $this->newQuery()->join('weekly_incomes','weekly_incomes.income_account_id','=','income_accounts.id')
             ->where('type',$type)->whereIn('envelope_number',$envelope)->sum('weekly_incomes.balance');
     }
+
+    public function typeEnvelopeSum($envelope, $type)
+    {
+        return $this->newQuery()->join('weekly_incomes', 'weekly_incomes.income_account_id', '=', 'income_accounts.id')
+            ->where('type', $type)->where('envelope_number', $envelope)->sum('weekly_incomes.balance');
+    }
 }

@@ -68,7 +68,7 @@ class Member extends Entity
     public function localIncomesAccounts()
     {
         return $this->belongsToMany(LocalFieldIncomeAccount::getClass(),
-            'local_field_incomes')->withPivot('envelope_number', 'balance', 'status');
+            'local_field_incomes','church_l_f_income_account')->withPivot('envelope_number', 'balance', 'status');
     }
 
 

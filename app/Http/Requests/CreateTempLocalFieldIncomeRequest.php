@@ -25,7 +25,7 @@ class CreateTempLocalFieldIncomeRequest extends FormRequest
     {
         return [
             'balance'=>'required',
-            'local_field_income_account_id'=>'required'
+            'church_l_f_income_account_id'=>'required'
         ];
     }
 }
