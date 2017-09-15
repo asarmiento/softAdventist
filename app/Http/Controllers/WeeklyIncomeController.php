@@ -199,9 +199,10 @@ class WeeklyIncomeController extends Controller
                     TempLocalFieldIncome::find($localFieldTemp->id)->delete();
                 endif;
             endforeach;
+           // $date = InternalControl::find($data['internal_control_id'])->saturday;
 
             $datos = ($this->newMember($id,$dataLista['internalToken']));
-           
+
             $result = $this->finishInfo($dataLista['internalToken']);
             $account = [];
 
@@ -300,25 +301,51 @@ class WeeklyIncomeController extends Controller
     {
         try {
             DB::beginTransaction();
-            echo json_encode($request->all());
-            die;
+            $date = $request->get('saturday');
+
             $sixty = WeeklyIncome::whereHas('incomeAccount', function ($q) {
                 $q->where('type', 'fix');
+            })->whereHas('internalControl',function ($r)use($date){
+                $r->where('saturday',$date)->where('church_id',userChurch()->id);
             })->where('status', 'no aplicado')->sum('balance');
-            $forty = LocalFieldIncome::whereHas('localFieldIncomeAccount', function ($q) {
-                $q->where('type', 'offren');
+
+            $forty = LocalFieldIncome::whereHas('churchLFIncomeAccount', function ($q) {
+                $q->whereHas('localFieldIncomeAccount',function ($y){
+                    $y->where('type', 'offren');
+                });
+            })->whereHas('internalControl',function ($r)use($date){
+                $r->where('saturday',$date)->where('church_id',userChurch()->id);
             })->where('status', 'no aplicado')->sum('balance');
-            $tithes = LocalFieldIncome::whereHas('localFieldIncomeAccount', function ($q) {
-                $q->where('type', 'diez');
+
+
+            $tithes = LocalFieldIncome::whereHas('churchLFIncomeAccount', function ($q) {
+                $q->whereHas('localFieldIncomeAccount',function ($y){
+                    $y->where('type', 'diez');
+                })->where('church_id',userChurch()->id);
+            })->whereHas('internalControl',function ($r)use($date){
+                $r->where('saturday',$date)->where('church_id',userChurch()->id);
             })->where('status', 'no aplicado')->sum('balance');
+
+
 
             $otherChurch = WeeklyIncome::whereHas('incomeAccount', function ($q) {
                 $q->where('type', 'temp');
+            })->whereHas('internalControl',function ($r)use($date){
+                $r->where('saturday',$date)->where('church_id',userChurch()->id);
             })->where('status', 'no aplicado')->sum('balance');
-            $other = LocalFieldIncome::whereHas('localFieldIncomeAccount', function ($q) {
-                $q->where('type', 'temp');
+
+
+            $other = LocalFieldIncome::whereHas('churchLFIncomeAccount', function ($q) {
+                $q->whereHas('localFieldIncomeAccount',function ($y){
+                    $y->where('type', 'temp');
+                })->where('church_id',userChurch()->id);
+            })->whereHas('internalControl',function ($r)use($date){
+                $r->where('saturday',$date);
             })->where('status', 'no aplicado')->sum('balance');
-            $control = InternalControl::where('status', 'no aplicado')->first();
+
+
+            $control = InternalControl::where('status', 'no aplicado')->where('church_id',userChurch()->id)->where('saturday',$date)->first();
+            //traemos la numeración
             $numeration = $this->numerationInfo();
             $token = Crypt::encrypt($numeration);
             $data = ['number' => $numeration,
@@ -326,36 +353,56 @@ class WeeklyIncomeController extends Controller
                 'offering' => ($sixty + $forty),
                 'sixty' => $sixty, 'forty' => $forty,
                 'tithes' => $tithes, 'other_church' => $otherChurch, 'other' => $other, 'internal_control_id' => $control->id];
-            SummaryOfWeeklyEarning::create($data);
-            $localAccounts = LocalFieldIncomeAccount::all();
+
+             SummaryOfWeeklyEarning::create($data);
+
+            $localAccounts = ChurchLocalFieldIncomeAccount::where('church_id',userChurch()->id)->get();
             foreach ($localAccounts AS $localAccount):
-                LocalFieldIncomeAccount::where('id', $localAccount->id)
+                ChurchLocalFieldIncomeAccount::where('id', $localAccount->id)
                     ->update(['balance' => ($localAccount->balance + LocalFieldIncome::where('church_l_f_income_account_id', $localAccount->id)
-                            ->where('status', 'no aplicado')->sum('balance'))]);
+                            ->whereHas('internalControl',function ($r)use($date){
+                                $r->where('saturday',$date);
+                            })->where('status', 'no aplicado')->sum('balance'))]);
             endforeach;
-            $churchAccounts = IncomeAccount::all();
+
+
+            $churchAccounts = IncomeAccount::whereHas('departament',function ($r){
+                $r->where('church_id',userChurch()->id);
+            })->get();
             foreach ($churchAccounts AS $localAccount):
                 $balance = WeeklyIncome::where('income_account_id', $localAccount->id)
-                    ->where('status', 'no aplicado')->sum('balance');
+                    ->whereHas('internalControl',function ($r)use($date){
+                        $r->where('saturday',$date);
+                    })->where('status', 'no aplicado')->sum('balance');
                 IncomeAccount::where('id', $localAccount->id)
                     ->update(['balance' => ($localAccount->balance + $balance)]);
                 Departament::where('id', $localAccount->departament_id)->update(['balance' => (Departament::find($localAccount->departament_id)->balance + $balance)]);
             endforeach;
-            InternalControl::where('status', 'no aplicado')->update(['status' => 'aplicado']);
-            WeeklyIncome::where('status', 'no aplicado')->update(['status' => 'aplicado']);
-            LocalFieldIncome::where('status', 'no aplicado')->update(['status' => 'aplicado']);
+
+
+            $internal = InternalControl::where('church_id',userChurch()->id)->where('status', 'no aplicado')->where('saturday',$date);
+
+            WeeklyIncome::where('internal_control_id',$internal->first()->id)->where('status', 'no aplicado')->update(['status' => 'aplicado']);
+
+            LocalFieldIncome::where('internal_control_id',$internal->first()->id)->where('status', 'no aplicado')->update(['status' => 'aplicado']);
+
+            $internal->update(['status' => 'aplicado']);
             DB::commit();
             return response()->json(['success' => true, 'message' => 'listo'], 200);
         }catch (Exception $e){
+            echo json_encode($e->getMessage());
+            die;
             DB::rollback();
         }
     }
     public function removeLine(Request $request)
     {
+        $token = InternalControl::where('id',(WeeklyIncome::where('envelope_number',$request->get('envelope'))->first()->internal_control_id))->first()->token;
 
-        $delete= WeeklyIncome::where('envelope_number',$request->get('envelope'))->delete();
-         LocalFieldIncome::where('envelope_number',$request->get('envelope'))->delete();
-         $finish = $this->finishInfo();
+        $finish = $this->finishInfo($token);
+        WeeklyIncome::where('envelope_number',$request->get('envelope'))->delete();
+        LocalFieldIncome::where('envelope_number',$request->get('envelope'))->delete();
+
 
         return response()->json(['success'=>true, 'message'=>$finish],200);
 

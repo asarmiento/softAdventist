@@ -118,11 +118,35 @@ trait ConsultTablesTraits
         })->first();
     }
 
+    /**
+     * -----------------------------------------------------------------------
+     * @Author: Anwar Sarmiento <asarmiento@sistemasamigables.com>
+     * @DateCreate: 2017-09-15
+     * @TimeCreate: 11:08am
+     * @DateUpdate: 0000-00-00
+     * -----------------------------------------------------------------------
+     * @description:
+     * @pasos:
+     * ----------------------------------------------------------------------
+     * * @param $type
+     *  * @var ${TYPE_NAME}
+     * * ----------------------------------------------------------------------
+     *  * @return \Illuminate\Database\Eloquent\Builder|static
+     * ----------------------------------------------------------------------
+     * *
+     */
     public function typeEnvelopeAllLFI($type) {
        return LocalFieldIncome::whereHas('churchLFIncomeAccount',function ($q) use($type){
-            $q->whereHas('localFieldIncomeAccount',function ($r) use ($type){
-                $r->where('type',$type);
-            });
+           $q->whereHas('localFieldIncomeAccount',function ($r) use ($type){
+               $r->where('type',$type);
+           });
+       });
+    }
+
+    public function typeEnvelopeAllCLFI($type) {
+        return ChurchLocalFieldIncomeAccount::whereHas('localFieldIncomeAccount',function ($r) use ($type){
+            $r->where('type',$type);
+
         });
     }
 

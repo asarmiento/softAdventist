@@ -108,7 +108,7 @@
                                         <div class="list-group-item list-item-lg">
                                             <input type="number" id="demo-vs-definput" v-model="campo.balance"
                                                    placeholder="0.00" class="form-control border">
-                                            <v-select v-model="campo.local_field_income_account_id"
+                                            <v-select v-model="campo.church_l_f_income_account_id"
                                                       :options="data_account_local_fields"
                                                       placeholder="Seleccione una Cuenta"></v-select>
                                             <a class="demo-icon btn btn-success" v-on:click="sendCampo"><i
@@ -116,7 +116,7 @@
                                         </div>
                                         <div v-for="(listAccountCampo,index) in temp_local_field_incomes"
                                              class="list-group-item list-item-lg">
-                                            <label class="left " style="width: 60%">{{listAccountCampo.local_field_income_account.name}}</label>
+                                            <label class="left " style="width: 60%">{{listAccountCampo.church_l_f_income_account.local_field_income_account.name}}</label>
                                             <label style="width: 20%" class="right">{{listAccountCampo.balance}}</label>
                                             <a style="width: 10%" @click="removeCampo(listAccountCampo,index)"
                                                class="btn btn-danger"><span class="fa fa-remove"></span></a>
@@ -364,7 +364,7 @@
                 },
                 campo: {
                     balance: '',
-                    local_field_income_account_id: '',
+                    church_l_f_income_account_id: '',
                 },
                 church: {
                     balance: '',
@@ -390,6 +390,7 @@
                     tithes: '',
                     offering: '',
                     background_inversion: '',
+                    church_l_f_income_account_id: '',
                 }
             }
         },
@@ -437,7 +438,7 @@
                 axios.post('/tesoreria/save-weekly-incomes', this.data)
                     .then(response => {
                         if (response.data.success = true) {
-                            self.listMembers.push(response.data.newMember[0]);
+                            self.listMembers = (response.data.newMember);
                             self.titleMembers = response.data.title
                             self.totalBalance = response.data.totalBalance;
                             self.totalRows = response.data.totalRows;
@@ -495,11 +496,12 @@
                 var self = this;
                 axios.post('/tesoreria/save-campo-temp-income', this.campo)
                     .then(response => {
+                        console.log(response.data.account)
                         this.temp_local_field_incomes.push(response.data.account);
                         this.campo.balance = '';
-                        this.campo.local_field_income_account_id = '';
+                        this.campo.church_l_f_income_account_id = '';
                         this.errors.balance = '';
-                        this.errors.local_field_income_account_id = '';
+                        this.errors.church_l_f_income_account_id = '';
 
                     }).catch(function (error) {
                     if (error.response) {
@@ -697,7 +699,7 @@
             finish: function (saturday, event) {
 
                 var self = this;
-                axios.post('/tesoreria/finish-info-income', saturday)
+                axios.post('/tesoreria/finish-info-income', {'saturday':saturday})
                     .then(response => {
                         if (response.data.success) {
                             ///this.$route.route.go('tesoreria/registro-control-interno');

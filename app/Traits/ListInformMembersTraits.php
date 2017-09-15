@@ -8,6 +8,7 @@
 
 namespace App\Traits;
 
+use App\Entities\ChurchLocalFieldIncomeAccount;
 use App\Entities\Departaments\IncomeAccount;
 use App\Entities\InternalControl;
 use App\Entities\LocalFieldIncome;
@@ -87,14 +88,11 @@ trait ListInformMembersTraits
             $data = [];
             foreach ($envelopes AS $envelope):
 
-                $tithes = LocalFieldIncomeAccount::join('local_field_incomes', 'local_field_incomes.church_l_f_income_account_id', '=', 'local_field_income_accounts.id')
-                    ->where('type', 'diez')->where('envelope_number', $envelope)->sum('local_field_incomes.balance');
+                $tithes = $this->typeEnvelopeSumLFI( $envelope,'diez');
 
-                $offering = IncomeAccount::join('weekly_incomes', 'weekly_incomes.income_account_id', '=', 'income_accounts.id')
-                        ->where('type', 'fix')->where('envelope_number', $envelope)->sum('weekly_incomes.balance') +
-                    LocalFieldIncomeAccount::join('local_field_incomes', 'local_field_incomes.church_l_f_income_account_id', '=', 'local_field_income_accounts.id')
-                        ->where('type', 'offren')->where('envelope_number', $envelope)->sum('local_field_incomes.balance');
-                $member = Member::whereHas('weeklyIncomes', function ($q) use ($envelope) {
+                $offering =  $this->typeEnvelopeSum($envelope, 'fix') +
+                    $this->typeEnvelopeSumLFI($envelope, 'offren');
+                  $member = Member::whereHas('weeklyIncomes', function ($q) use ($envelope) {
                     $q->where('envelope_number', $envelope);
                 })->first();
 
@@ -116,9 +114,13 @@ trait ListInformMembersTraits
                     ],
 
                 ];
-                $localfields = LocalFieldIncomeAccount::whereHas('localFieldIncomes', function ($q) use ($envelopes) {
+
+                $localfields = ChurchLocalFieldIncomeAccount::whereHas('localFieldIncomes', function ($q) use ($envelopes) {
                     $q->whereIn('envelope_number', $envelopes);
-                })->where('type', 'temp')->get();
+                })->whereHas('localFieldIncomeAccount',function ($q){
+                    $q->where('type', 'temp');
+                })->get();
+
                 //aqui agregamos en el array los datos de las cuentas que van para el campo local
                 foreach ($localfields AS $localfieldIncome):
                     $list = $localfieldIncome->localFieldIncomes()->where('envelope_number', $envelope)->select('balance', 'id')->sum('balance');
@@ -219,6 +221,7 @@ trait ListInformMembersTraits
     {
 
         $data = $this->listMemberInforme($date);
+
         $title = $this->titleInfo($date);
 
         // traemos el control interno del sabado a consultar
@@ -227,7 +230,8 @@ trait ListInformMembersTraits
         $temp_LocalField_incomes = TempLocalFieldIncome::whereHas('ChurchLFIncomeAccount',function ($q) use($internal){
           //  $q->whereHas();
         })->where('user_id', currentUser()->id)
-            ->with('ChurchLFIncomeAccount')->orderBy('id', 'DESC')->get();
+            ->with('ChurchLFIncomeAccount.localFieldIncomeAccount')->orderBy('id', 'DESC')->get();
+
         $temp_incomes = TempIncomes::where('user_id', currentUser()->id)->with('incomeAccount')->orderBy('id', 'DESC')->get();
         //traemos el total del informe semanal a formar
         $totalBalance = $this->totalBalance($internal->id);
@@ -391,23 +395,29 @@ trait ListInformMembersTraits
                 ],
 
             ];
-            $localfields = $this->typeEnvelopeAllLFI($envelope,'temp')->get();
 
+
+
+            $localfields = $this->typeEnvelopeAllCLFI('temp')->get();
             //aqui agregamos en el array los datos de las cuentas que van para el campo local
             foreach ($localfields AS $localfieldIncome):
-                $list = $localfieldIncome->localFieldIncomes()->where('envelope_number', $envelope)->select('balance', 'id')->sum('balance');
+                $list = $localfieldIncome->localFieldIncomes()->where('envelope_number', $envelope)->select('balance', 'id')->sum('balance');//->localFieldIncomes()
                 if ($list > 0):
                     $datos['datos'][] = number_format($list, 2);
                 else:
                     $datos['datos'][] = number_format(0, 2);
                 endif;
             endforeach;
+
+
+
             $incomeAccounts = IncomeAccount::whereHas('weeklyIncomes', function ($q) use ($envelope) {
                 $q->where('envelope_number', $envelope);
             })->where('type', 'temp')->get();
+
             // aqui agregamos las cuentas de ingreso de locales de la iglesia
             foreach ($incomeAccounts AS $churchIncome):
-                $list = $churchIncome->weeklyIncomes()->where('envelope_number', $envelope)->select('balance', 'id')->sum('balance');
+               $list = $churchIncome->weeklyIncomes()->where('envelope_number', $envelope)->select('balance', 'id')->sum('balance');
                 if ($list > 0):
                     $datos['datos'][] = number_format($list, 2);
                 else:
@@ -420,6 +430,8 @@ trait ListInformMembersTraits
             $title = $this->titleInfo();
             $totalBalance = $this->totalBalance($this->token($token)->id);
             $totalRows = count($this->countEnvelopeList());
+
+
 
 
             return ['data' => $data, 'title' => $title, 'totalBalance' => $totalBalance,
@@ -488,7 +500,9 @@ trait ListInformMembersTraits
 
     public function numerationInfo()
     {
-        $actual = SummaryOfWeeklyEarning::max('number');
+        $actual = SummaryOfWeeklyEarning::whereHas('internal_control',function ($r){
+            $r->where('church_id',userChurch()->id);
+        })->max('number');
         if ($actual == null || $actual == ''):
             return 1;
         else:

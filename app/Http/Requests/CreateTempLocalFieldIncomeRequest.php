@@ -28,4 +28,12 @@ class CreateTempLocalFieldIncomeRequest extends FormRequest
             'church_l_f_income_account_id'=>'required'
         ];
     }
+
+    public function attributes()
+    {
+        return [
+            'balance'=>'Monto',
+            'church_l_f_income_account_id'=>'Cuenta Campo local'
+        ];
+    }
 }

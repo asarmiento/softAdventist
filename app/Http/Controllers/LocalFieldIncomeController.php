@@ -135,10 +135,10 @@ class LocalFieldIncomeController extends Controller
 
 
         } catch (Exception $e) {
-
+            echo json_encode($e->getMessage());
+            die;
         };
-        echo json_encode($request->all());
-        die;
+
     }
 
     public function upload(Request $request)

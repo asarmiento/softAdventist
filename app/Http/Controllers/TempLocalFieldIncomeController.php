@@ -34,16 +34,15 @@ class TempLocalFieldIncomeController extends Controller
     {
         $data = $request->all();
         //datos
-        $account = $this->firstAccountLocalField($data['local_field_income_account_id']);
+        $account = $this->firstAccountLocalField($data['church_l_f_income_account_id']);
         $data['church_l_f_income_account_id'] = $account->id;
         $data['user_id'] = currentUser()->id;
         //save
         $datos = new TempLocalFieldIncome();
         $datos->fill($data);
         $datos->save();
-        $datos = TempLocalFieldIncome::with('ChurchLocalFieldIncomeAccount.localFieldIncomeAccount')->find($datos->id);
-        echo json_encode($datos);
-        die;
+        $datos = TempLocalFieldIncome::with('ChurchLFIncomeAccount.localFieldIncomeAccount')->find($datos->id);
+
           return response()->json(['success'=>true, 'message'=>['Se creo con Exito!!!!'],'account'=>$datos],200);
     }
 
