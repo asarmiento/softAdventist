@@ -438,7 +438,7 @@
                 axios.post('/tesoreria/save-weekly-incomes', this.data)
                     .then(response => {
                         if (response.data.success = true) {
-                            self.listMembers = (response.data.newMember);
+                            self.listMembers.push(response.data.newMember[0]);
                             self.titleMembers = response.data.title
                             self.totalBalance = response.data.totalBalance;
                             self.totalRows = response.data.totalRows;

@@ -55257,7 +55257,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var self = this;
             axios.post('/tesoreria/save-weekly-incomes', this.data).then(function (response) {
                 if (response.data.success = true) {
-                    self.listMembers = response.data.newMember;
+                    self.listMembers.push(response.data.newMember[0]);
                     self.titleMembers = response.data.title;
                     self.totalBalance = response.data.totalBalance;
                     self.totalRows = response.data.totalRows;
