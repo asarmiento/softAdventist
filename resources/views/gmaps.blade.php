@@ -19,25 +19,28 @@
     </style>
 </head>
 <body>
-<div id="map" data-church="{{json_encode($churchs)}}" ></div>
+<div id="map"  ></div>
 <script>
 
     function initMap() {
 
-        var churchs = '<?php echo $churchs; ?>';
-        var address =[];
-         each (var item in churchs) {
-            address += item;
+var prueba = JSON.parse('<?php echo json_encode($churchs); ?>');
+var dataChurchs =[];
+        for(var items in prueba) {
+            dataChurchs.push({'lat' : parseFloat(prueba[items].lat),'lng':parseFloat(prueba[items].lng) })
+
         }
-        console.log(churchs);
-        var locations = [
+        console.log((dataChurchs));
+
+        var locations = dataChurchs /*[
             {lat: 9.43632230, lng: -84.12949780},
             {lat: 9.325817, lng: -83.951656},
             {lat: 14.090338, lng: -87.191919},
             {lat: 14.081646, lng: -87.166146},
             {lat: 15.509761, lng: -88.017277},
             {lat: 15.505088, lng: -88.028203},
-        ]
+        ]*/
+
 
         var map = new google.maps.Map(document.getElementById('map'), {
             zoom: 6,
@@ -66,6 +69,7 @@
 </script>
 <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
 </script>
+
 <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBs0c3WR4uEkaK428rjNUQtqsqv_bP424o&callback=initMap">
 </script>

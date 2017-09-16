@@ -33,7 +33,13 @@ class GmapsController extends Controller
 
         $map = \Gmaps::create_map();*/
 
-      $churchs = Church::select('longitud','latitud')->get();
+      $churches = Church::select('longitud','latitud')->get();
+        $churchs = [];
+      foreach ($churches AS $church){
+         array_push($churchs,['lat'=> $church->latitud, 'lng'=>$church->longitud]);
+      }
+
+
 
         //Devolver vista con datos del mapa
         return view('gmaps', compact('churchs'));
