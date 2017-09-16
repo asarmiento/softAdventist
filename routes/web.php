@@ -15,6 +15,10 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
+Route::get('/google954bee1fab08d971.html', function () {
+    return view('google954bee1fab08d971.html');
+});
+
 Route::get('/iglesias-adventistas', 'GmapsController@index');
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 Auth::routes();
