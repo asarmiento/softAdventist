@@ -30,9 +30,8 @@ var dataChurchs =[];
             dataChurchs.push({'lat' : parseFloat(prueba[items].lat),'lng':parseFloat(prueba[items].lng) })
 
         }
-        console.log((dataChurchs));
-
-        var locations = dataChurchs /*[
+               var locations = dataChurchs;
+        /*[
             {lat: 9.43632230, lng: -84.12949780},
             {lat: 9.325817, lng: -83.951656},
             {lat: 14.090338, lng: -87.191919},

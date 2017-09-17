@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Church;
 
 use App\Entities\Church;
+use App\Entities\Union;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -16,12 +17,14 @@ class ChurchController extends Controller
 
     public function create()
     {
+
         return view('church.create');
     }
 
     public function newChurch()
     {
-        return view('church.create');
+        $unions = Union::with('localFields')->get();
+        return view('church.create',compact('unions'));
     }
 
     public function store(Request $request)
