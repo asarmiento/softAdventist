@@ -99,7 +99,8 @@
                         <label for="altitud">Altitud y Longitud</label>
                         <div class="input-group ">
                             <span class="input-group-addon"><i class="fa fa-desktop"></i></span>
-                            <input id="altitud"  value="{{old('localizacion')}}" name="localizacion" type="text" placeholder="9.43632230" class="form-control">
+                            <input id="altitud"  value="{{old('localizacion')}}" name="localizacion" type="text"
+                                   placeholder="(9.43632230, -84.099484343)" class="form-control">
                         </div>
                     <small class="help-block {{$errors->has('latitud')?'alert alert-danger':''}} ">{{$errors->first('latitud',':message').' '. $errors->first('longitud',':message')}}</small>
                 </div>
@@ -121,6 +122,10 @@
                     </div>
                 </div>
 
+            </div>
+            <div class="col-lg-12 col-md-12  text-center">
+                <p class="alert alert-info">Nota: Solo debe elegir el campo local donde pertenece su iglesia, luego Buscar la iglesia que desea agregar en el campo que esta con el mapa
+                    <strong>Digite el lugar que busca</strong> Los otros campos se agregaran una vez encuentre su iglesia.</p>
             </div>
             <div class="col-lg-12 col-md-12  text-center">
                 <input id="pac-input" class="controls" type="text"
