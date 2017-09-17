@@ -11,7 +11,7 @@ namespace App\Entities;
 class Church extends Entity
 {
 
-    protected $fillable = [ 'name', 'address', 'longitud', 'latitud', 'district_id','url' ];
+    protected $fillable = [ 'name', 'address','phone', 'longitud', 'latitud', 'district_id','url','email','user_id' ];
 
 
     public function getRules()

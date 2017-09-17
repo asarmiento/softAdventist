@@ -51,6 +51,7 @@ Route::post('contacto', ['uses'=>'Auth\RegisterController@contactPost','as'=>'co
 */
 
 Route::get('nueva-iglesia', ['uses'=>'Church\ChurchController@newChurch','as'=>'new-church']);
+Route::post('nueva-iglesia', ['uses'=>'Church\ChurchController@store','as'=>'store-church']);
 Route::get('paises', ['uses'=>'CountryController@index','as'=>'country']);
 Route::get('list-localfields-all', ['uses'=>'LocalField\LocalFieldController@index','as'=>'union']);
 Route::get('list-unions-country/{token}', ['uses'=>'UnionController@index','as'=>'country']);

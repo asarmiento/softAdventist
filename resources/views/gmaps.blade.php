@@ -16,9 +16,45 @@
             margin: 0;
             padding: 0;
         }
+        .controls {
+            background-color: #5da2ff;
+            border-radius: 7px;
+            border: 1px solid transparent;
+
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            box-sizing: border-box;
+            color: #fff;
+            font-family: Roboto;
+            font-size: 15px;
+            font-weight: 300;
+            height: 29px;
+            margin-top: 200px;
+            padding: 10px;
+            text-overflow: ellipsis;
+            width: 400px;
+        }
+
+        .controls:hover {
+            background: #3c3fff;
+            border-color: #4d90fe;
+        }
+        .title {
+            font-weight: bold;
+        }
+
+        #infowindow-content {
+            display: none;
+        }
+        #map #infowindow-content {
+            display: inline;
+        }
     </style>
 </head>
 <body>
+<div class="panel-body" style="background: #b3ffb0; height: 50px; text-align: center; ">
+<a id="pac-input" href="{{route('new-church')}}" class="controls"
+   placeholder="Enter a location">Nueva Iglesia</a>
+</div>
 <div id="map"  ></div>
 <script>
 
@@ -39,11 +75,14 @@ var dataChurchs =[];
             {lat: 15.509761, lng: -88.017277},
             {lat: 15.505088, lng: -88.028203},
         ]*/
+        var latitud = parseFloat(JSON.parse('<?php echo json_encode($localizations['latitud']); ?>'));
+        var logintud = parseFloat(JSON.parse('<?php echo json_encode($localizations['longitud']); ?>'));
+
 
 
         var map = new google.maps.Map(document.getElementById('map'), {
             zoom: 6,
-            center: {lat: 12.385024, lng: -85.313273}
+            center: {lat: latitud, lng: logintud}
         });
 
         // Create an array of alphabetical characters used to label the markers.

@@ -14,59 +14,47 @@
         /* Always set the map height explicitly to define the size of the div
          * element that contains the map. */
         #map {
-            height: 500px;
+            height: 400px;
         }
-        .controls {
-            margin-top: 10px;
-            border: 1px solid transparent;
-            border-radius: 2px 0 0 2px;
-            box-sizing: border-box;
-            -moz-box-sizing: border-box;
-            height: 32px;
-            outline: none;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-        }
+        /* Optional: Makes the sample page fill the window. */
 
-        #pac-input {
+        .controls {
             background-color: #fff;
+            border-radius: 2px;
+            border: 1px solid transparent;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            box-sizing: border-box;
             font-family: Roboto;
             font-size: 15px;
             font-weight: 300;
-            margin-left: 12px;
+            height: 29px;
+            margin-left: 17px;
+            margin-top: 10px;
+            outline: none;
             padding: 0 11px 0 13px;
             text-overflow: ellipsis;
-            width: 300px;
+            width: 400px;
         }
 
-        #pac-input:focus {
+        .controls:focus {
             border-color: #4d90fe;
         }
-
-        .pac-container {
-            font-family: Roboto;
+        .title {
+            font-weight: bold;
         }
-
-        #type-selector {
-            color: #fff;
-            background-color: #4d90fe;
-            padding: 5px 11px 0px 11px;
+        #infowindow-content {
+            display: none;
         }
-
-        #type-selector label {
-            font-family: Roboto;
-            font-size: 13px;
-            font-weight: 300;
+        #map #infowindow-content {
+            display: inline;
         }
-        #target {
-            width: 345px;
-        }
-        /* Optional: Makes the sample page fill the window. */
 
     </style>
 </head>
 <body>
 <div class="row center">
     <div class="panel-body">
+        <form method="post" action="{{route('store-church')}}">
         <div id="newMembers" class="panel panel-default">
             <div class="panel-heading">
                 <div class="text-center ">
@@ -74,14 +62,15 @@
                 </div>
             </div>
             <div class="panel-body col-lg-12 col-md-12" >
+                    {{csrf_field()}}
                 <div class=" col-lg-5 col-md-5">
                     <div class="form-group  ">
                         <label for="localfield">Campo Local Al Cual pertenece Tu Iglesia</label>
-                        <div class="input-group ">
+                        <div class="input-group {{$errors->has('local_field_id')?'has-error':''}}">
                             <span class="input-group-addon"><i class="fa fa-bank"></i></span>
-                            <select id="localfield" name="localfield"
+                            <select id="localfield" name="local_field_id"
                                     class="form-control js-example-basic-single js-states">
-                                <option>Seleccione un Campo Local</option>
+                                <option value="">Seleccione un Campo Local</option>
                                 @foreach($unions AS $union)
                                     <optgroup class="bold content-box-green" label="{{$union->name}}">
                                         @foreach($union->localFields AS $localField)
@@ -91,54 +80,63 @@
                                 @endforeach
                             </select>
                         </div>
-                        <small class="help-block"></small>
+                        <small class="help-block {{$errors->has('local_field_id')?'alert alert-danger':''}} ">{{$errors->first('local_field_id',':message')}}</small>
                     </div>
                 </div>
                 <div class=" col-lg-5 col-md-5  ">
                     <div class="form-group">
                         <label for="name">Nombre de Tu Iglesia</label>
+                        <div class="input-group  {{$errors->has('name')?'has-error':''}}">
+                            <span class="input-group-addon"><i class="fa fa-desktop"></i></span>
+                            <input id="name" name="name" value="{{old('name')}}" type="text" placeholder="Iglesia Adventista de Quepos" class="form-control">
+                        </div>
+                        <small class="help-block {{$errors->has('name')?'alert alert-danger':''}} ">{{$errors->first('name',':message')}}</small>
+                    </div>
+                </div>
+                    <div class=" col-lg-3 col-md-3  "></div>
+                <div class=" col-lg-4 col-md-4  ">
+                    <div class="form-group {{$errors->has('latitud')?'has-error':''}}">
+                        <label for="altitud">Altitud y Longitud</label>
                         <div class="input-group ">
                             <span class="input-group-addon"><i class="fa fa-desktop"></i></span>
-                            <input id="name" type="text" placeholder="Iglesia Adventista de Quepos" class="form-control">
+                            <input id="altitud"  value="{{old('localizacion')}}" name="localizacion" type="text" placeholder="9.43632230" class="form-control">
                         </div>
-                        <small class="help-block"></small>
-                    </div>
+                    <small class="help-block {{$errors->has('latitud')?'alert alert-danger':''}} ">{{$errors->first('latitud',':message').' '. $errors->first('longitud',':message')}}</small>
+                </div>
                 </div>
                 <div class=" col-lg-4 col-md-4  ">
-                    <div class="form-group">
-                        <label for="name">Altitud</label>
+                    <div class="form-group {{$errors->has('address')?'has-error':''}}">
+                        <label for="altitud">Dirección</label>
                         <div class="input-group ">
                             <span class="input-group-addon"><i class="fa fa-desktop"></i></span>
-                            <input id="name" type="text" placeholder="9.43632230" class="form-control">
+                            <input id="address"  value="{{old('address')}}" name="address" type="text"
+                                   placeholder="Provincia de Puntarenas, Quepos, Costa Rica" class="form-control">
                         </div>
-                        <small class="help-block"></small>
+                        <small class="help-block {{$errors->has('address')?'alert alert-danger':''}} ">{{$errors->first('address',':message')}}</small>
                     </div>
                 </div>
-                <div class=" col-lg-4 col-md-4  ">
-                    <div class="form-group">
-                        <label for="name">Longitud</label>
-                        <div class="input-group ">
-                            <span class="input-group-addon"><i class="fa fa-desktop"></i></span>
-                            <input id="name" type="text" placeholder="-84.12949780" class="form-control">
-                        </div>
-                        <small class="help-block"></small>
-                    </div>
-                </div>
-                <div class="col-lg-12 col-md-12  text-center">
+               <div class="col-lg-12 col-md-12  text-center">
                     <div class="btn">
-                        <button v-on:click="send" class="btn btn-success">Guardar</button>
+                        <input type="submit"  class="btn btn-success" value="Guardar"/>
                     </div>
                 </div>
 
             </div>
             <div class="col-lg-12 col-md-12  text-center">
-                <input id="pac-input" class="controls" type="text" placeholder="Search Box">
-
+                <input id="pac-input" class="controls" type="text"
+                       placeholder="Digite el lugar que busca">
                 <div id="map"></div>
+                <div id="infowindow-content">
+
+                    <span id="place-name"  class="title"></span><br>
+                    Geolocalizacion <span id="geo-id"></span><br>
+                    Place ID <span id="place-id"></span><br>
+                    <span id="place-address"></span>
+                </div>
             </div>
         </div>
+        </form>
     </div>
-    <div id="map"></div>
 
 </div>
 
@@ -151,54 +149,71 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
 
 <script>
+    // This sample uses the Place Autocomplete widget to allow the user to search
+    // for and select a place. The sample then displays an info window containing
+    // the place ID and other information about the place that the user has
+    // selected.
 
-    // Note: This example requires that you consent to location sharing when
-    // prompted by your browser. If you see the error "The Geolocation service
-    // failed.", it means you probably did not give permission for the browser to
-    // locate you.
+    // This example requires the Places library. Include the libraries=places
+    // parameter when you first load the API. For example:
+    // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
 
     function initMap() {
         var map = new google.maps.Map(document.getElementById('map'), {
-            center: {lat: 9.43632230, lng: -84.12949780},
-            zoom: 10,
-            mapTypeId: 'roadmap'
+            center: {lat: 12.43632230, lng: -84.12949780},
+            zoom: 6
         });
-        var infoWindow = new google.maps.InfoWindow({map: map});
 
-        // Try HTML5 geolocation.
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function (position) {
-                var pos = {
-                    lat: position.coords.latitude,
-                    lng: position.coords.longitude
-                };
+        var input = document.getElementById('pac-input');
 
-                infoWindow.setPosition(pos);
-                infoWindow.setContent('Location found.');
-                map.setCenter(pos);
-            }, function () {
-                handleLocationError(true, infoWindow, map.getCenter());
+        var autocomplete = new google.maps.places.Autocomplete(input);
+        autocomplete.bindTo('bounds', map);
+
+        map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+        var infowindow = new google.maps.InfoWindow();
+        var marker = new google.maps.Marker({
+            map: map
+        });
+        marker.addListener('click', function() {
+            infowindow.open(map, marker);
+        });
+
+        autocomplete.addListener('place_changed', function() {
+            infowindow.close();
+            var place = autocomplete.getPlace();
+             if (!place.geometry) {
+                return;
+            }
+
+            if (place.geometry.viewport) {
+                map.fitBounds(place.geometry.viewport);
+            } else {
+                map.setCenter(place.geometry.location);
+                map.setZoom(17);
+            }
+
+            // Set the position of the marker using the place ID and location.
+            marker.setPlace({
+                placeId: place.place_id,
+                location: place.geometry.location
             });
-        } else {
-            // Browser doesn't support Geolocation
-            handleLocationError(false, infoWindow, map.getCenter());
-        }
+            marker.setVisible(true);
 
-
+            document.getElementById('place-name').textContent = place.name;
+            document.getElementById('place-id').textContent = place.place_id;
+            document.getElementById('geo-id').textContent = place.geometry.location;
+            document.getElementById('altitud').value = place.geometry.location;
+            document.getElementById('name').value = place.name;
+            document.getElementById('place-address').textContent =  place.formatted_address;
+            document.getElementById('address').value =  input.value;
+            infowindow.setContent(document.getElementById('infowindow-content'));
+            infowindow.open(map, marker);
+        });
     }
-
-    function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-        infoWindow.setPosition(pos);
-        infoWindow.setContent(browserHasGeolocation ?
-            'Error: The Geolocation service failed.' :
-            'Error: Your browser doesn\'t support geolocation.');
-    }
-
-
-
 </script>
-<script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBs0c3WR4uEkaK428rjNUQtqsqv_bP424o&callback=initMap">
-</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBs0c3WR4uEkaK428rjNUQtqsqv_bP424o&libraries=places&callback=initMap"
+        async defer></script>
+
 </body>
 </html>

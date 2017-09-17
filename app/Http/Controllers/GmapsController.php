@@ -38,10 +38,13 @@ class GmapsController extends Controller
       foreach ($churches AS $church){
          array_push($churchs,['lat'=> $church->latitud, 'lng'=>$church->longitud]);
       }
-
-
+      if(session('localizacion')) {
+          $localizations = session('localizacion');
+      }else {
+          $localizations = ['latitud'=>'12.385024','longitud'=>'-85.313273'];
+      }
 
         //Devolver vista con datos del mapa
-        return view('gmaps', compact('churchs'));
+        return view('gmaps', compact('churchs','localizations'));
     }
 }
