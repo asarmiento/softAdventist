@@ -23,7 +23,7 @@ class CreateChurchRequest extends FormRequest
      */
     public function rules()
     {
-        return ['name' => 'required', 'local_field_id' => 'required','localizacion'=>'required'];
+        return ['name' => 'required|unique:churches,name', 'local_field_id' => 'required','localizacion'=>'required'];
     }
 
     public function attributes()
