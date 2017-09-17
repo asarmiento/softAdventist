@@ -54,7 +54,6 @@
 <body>
 <div class="row center">
     <div class="panel-body">
-        <form method="post" action="{{route('store-church')}}">
         <div id="newMembers" class="panel panel-default">
             <div class="panel-heading">
                 <div class="text-center ">
@@ -62,7 +61,8 @@
                 </div>
             </div>
             <div class="panel-body col-lg-12 col-md-12" >
-                    {{csrf_field()}}
+                <form method="post" action="{{route('store-church')}}">
+                {{csrf_field()}}
                 <div class=" col-lg-5 col-md-5">
                     <div class="form-group  ">
                         <label for="localfield">Campo Local Al Cual pertenece Tu Iglesia</label>
@@ -121,7 +121,7 @@
                         <input type="submit"  class="btn btn-success" value="Guardar"/>
                     </div>
                 </div>
-
+        </form>
             </div>
             <div class="col-lg-12 col-md-12  text-center">
                 <p class="alert alert-info">Nota: Solo debe elegir el campo local donde pertenece su iglesia, luego Buscar la iglesia que desea agregar en el campo que esta con el mapa
@@ -140,7 +140,7 @@
                 </div>
             </div>
         </div>
-        </form>
+
     </div>
 
 </div>
