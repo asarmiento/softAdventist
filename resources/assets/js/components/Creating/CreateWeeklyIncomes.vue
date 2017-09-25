@@ -169,90 +169,17 @@
                     </div>
                 </div>
             </div>
-            <!--   <div class="col-lg-6">
 
-
-             <div v-for="member in listMembers" class="panel col-md-4 col-lg-4" >
-                    <div class="panel-body text-center bg-info">
-                        <img alt="Avatar" class="img-sm img-circle img-border mar-btm" src="img/profile-photos/10.png">
-
-                        <h4 class="mar-n">{{member.datos[0]}}</h4>
-                        <p class="text-sm"></p>
-                        <ul class="list-unstyled text-center pad-top mar-no row">
-                            <li class="col-xs-4">
-                                <span class="text-lg text-semibold">1,345</span>
-                                <p class="text-sm mar-no">Following</p>
-                            </li>
-                            <li class="col-xs-4">
-                                <span class="text-lg text-semibold">23K</span>
-                                <p class="text-sm mar-no">Followers</p>
-                            </li>
-                            <li class="col-xs-4">
-                                <span class="text-lg text-semibold">278</span>
-                                <p class="text-sm mar-no">Post</p>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="list-group bg-trans pad-btm">
-                        <a class="list-group-item" href="#"><i class="demo-pli-information icon-lg icon-fw"></i> User Details</a>
-                        <a class="list-group-item" href="#"><i class="demo-pli-mine icon-lg icon-fw"></i> Usage Profile</a>
-                        <a class="list-group-item" href="#"><span class="label label-info pull-right">New</span><i class="demo-pli-credit-card-2 icon-lg icon-fw"></i> Payment Options</a>
-                    </div>
-                </div>   </div> -->
 
 
             <div class="panel-heading">
                 <div class="panel-body">
                     <div class="bootstrap-table">
-                        <div class="fixed-table-toolbar">
-                            <div class="bars pull-left">
-                                <button id="demo-delete-row" class="btn btn-danger" disabled="">
-                                    <i class="demo-pli-cross"></i> Delete
-                                </button>
-                            </div>
-                            <div class="columns columns-right btn-group pull-right">
-                                <button class="btn btn-default" type="button" name="paginationSwitch"
-                                        title="Hide/Show pagination">
-                                    <i class="glyphicon demo-pli-arrow-down"></i>
-                                </button>
-                                <button class="btn btn-default" type="button" name="refresh" title="Refresh">
-                                    <i class="glyphicon demo-pli-repeat-2"></i>
-                                </button>
-                                <button class="btn btn-default" type="button" name="toggle" title="Toggle">
-                                    <i class="glyphicon demo-pli-layout-grid"></i>
-                                </button>
-                                <div class="keep-open btn-group" title="Columns">
-                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
-                                            aria-expanded="false">
-                                        <i class="glyphicon demo-pli-check"></i> <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu" role="menu">
-                                        <li><label><input type="checkbox" data-field="id" value="1" checked="checked">
-                                            ID</label></li>
-                                        <li><label><input type="checkbox" data-field="name" value="2" checked="checked">
-                                            Name</label></li>
-                                        <li><label><input type="checkbox" data-field="date" value="3" checked="checked">
-                                            Order date</label></li>
-                                        <li><label><input type="checkbox" data-field="amount" value="4"
-                                                          checked="checked"> Balance</label></li>
-                                        <li><label><input type="checkbox" data-field="status" value="5"
-                                                          checked="checked"> Status</label></li>
-                                        <li><label><input type="checkbox" data-field="track" value="6"
-                                                          checked="checked"> Tracking Number</label></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="pull-right search"><input class="form-control" type="text" placeholder="Search">
-                            </div>
-                        </div>
+
                         <div class="fixed-table-container" style="padding-bottom: 0px;">
-                            <div class="fixed-table-header" style="display: none;">
-                                <table></table>
-                            </div>
+
                             <div class="fixed-table-body">
-                                <div class="fixed-table-loading" style="top: 41px; display: none;">Loading, please
-                                    wait...
-                                </div>
+
                                 <table id="demo-custom-toolbar" class="demo-add-niftycheck table table-hover"
                                        data-toggle="table" data-url="data/bs-table.json" data-toolbar="#demo-delete-row"
                                        data-search="true" data-show-refresh="true" data-show-toggle="true"
@@ -261,12 +188,7 @@
                                        style="margin-top: 0px;">
                                     <thead style="">
                                     <tr>
-                                        <th class="bs-checkbox " style="width: 36px; " data-field="state" tabindex="0">
-                                            <div class="th-inner ">
-                                                <input v-if="btSelectAll" type="checkbox">
-                                            </div>
-                                            <div class="fht-cell"></div>
-                                        </th>
+                                        <th>Eliminar</th>
                                         <th v-for="(title, titleM) in titleMembers" style="" :data-field="titleM"
                                             tabindex="0">
                                             <div class="th-inner sortable both asc">{{title}}</div>
@@ -289,53 +211,23 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="fixed-table-footer" style="display: none;">
-                                <table>
-                                    <tbody>
-                                    <tr></tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="fixed-table-pagination" style="">
-                                <div class="pull-left pagination-detail">
-                                    <span class="pagination-info"
-                                          v-if="totalRows <= 5">Mostrando {{totalRows}} lineas</span>
-                                    <span class="pagination-info" v-else="">Mostrar 1 a 5 de {{totalRows}} lineas</span>
-                                    <span v-if="totalRows > 5" class="page-list">
-                                            <span class="btn-group dropup">
-                                            <button type="button" class="btn btn-default  dropdown-toggle"
-                                                    data-toggle="dropdown">
-                                                <span class="page-size">5</span>
-                                                <span class="caret"></span>
-                                            </button>
-                                            <ul class="dropdown-menu" role="menu">
-                                                <li class="active"><a href="javascript:void(0)">5</a></li>
-                                                <li><a href="javascript:void(0)">10</a></li>
-                                                <li><a href="javascript:void(0)">20</a></li>
-                                            </ul>
-                                        </span> Lineas por pagina</span>
-                                </div>
-                                <div class="pull-right pagination">
-                                    <ul class="pagination">
-                                        <li class="page-pre"><a href="javascript:void(0)">‹</a></li>
-                                        <li class="page-number active"><a href="javascript:void(0)">1</a></li>
-                                        <li class="page-next"><a href="javascript:void(0)">›</a></li>
-                                    </ul>
-                                </div>
-                            </div>
+
+
+                        </div>
+                    </div><div class="clearfix"></div>
+                    <div  class="row col-lg-12 col-md-12  text-center">
+                        <div class="btn">
+                            <button v-on:click="finish(rows.saturday)" class="btn btn-success">Finalizar Informe</button>
                         </div>
                     </div>
-                    <div class="clearfix"></div>
                 </div>
 
             </div>
-            <div  class="col-lg-12 col-md-12  text-center">
-                <div class="btn">
-                    <button v-on:click="finish(rows.saturday)" class="btn btn-success">Finalizar Informe</button>
-                </div>
-            </div>
+
         </div>
+
     </div>
+
 </template>
 
 <script>

@@ -397,7 +397,11 @@
                     .then(response => {
                         if (response.data.success = true) {
                             this.checks = response.data.list;
-                            document.location = 'registro-detalle-cheque/' + response.data.token;
+                            if (this.data.type.value === 'local_field') {
+                                document.location = '/tesoreria/depositos-al-campo-local/' ;
+                            }else{
+                                document.location = '/tesoreria/registro-detalle-cheque/' + response.data.token;
+                            }
                             this.data.number = '';
                             this.data.name = '';
                             this.data.balance = '';

@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\ReportsPDF;
 
 
+use App\Entities\Departaments\Departament;
 use App\Http\Controllers\ReportPdfController;
 use App\Repositories\CheckExpenseRepository;
 use App\Repositories\CheckRepository;
@@ -109,7 +110,8 @@ class ReportsDepartamentsController extends ReportPdfController
     public function pdfSummaryMoveDepartament($token)
     {
         try {
-            $departamen = $this->departamentRepository->token($token);
+            $departamen = Departament::where('token',$token)->first();
+
             $this->headerChurch('p', 'letter', 'Resumen Del Departamento '.$departamen->listDepartament->name, '2017-08-30');
 
             $pdf = Fpdf::Ln();
@@ -145,7 +147,7 @@ class ReportsDepartamentsController extends ReportPdfController
             Fpdf::Output('Informe-gastos.pdf', 'I');
             exit;
         } catch (\Exception $e) {
-            echo json_encode($e->getMessage());
+            echo json_encode($e->getMessage().' '.$e->getLine());
             die;
         }
     }

@@ -128,13 +128,15 @@ class InternalControlController extends Controller
         foreach ($request->all() AS $key => $internal):
             $controls = $this->internalControlRepository->getModel()
                 ->where('internal_controls.token',$internal['value']);
+
             foreach ($controls->get() AS $control):
+
                 if($controls->with('churchDeposit')->count()):
                     $churchDeposits = $this->internalControlRepository->sumJoinTablePivotDeposit($control->token);
 
-                    $total += ($control->balance - $churchDeposits);
+                    $total += ($control->localFieldIncome()->sum('balance') - $churchDeposits);
                 else:
-                    $total += $control->balance;
+                    $total += $control->localFieldIncome()->sum('balance');
                 endif;
 
             endforeach;

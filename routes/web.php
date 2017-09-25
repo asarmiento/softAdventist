@@ -192,7 +192,7 @@ Route::post('save-church-public', ['uses'=>'Church\ChurchController@store','as'=
         Route::get('lista-miembro4s', ['uses'=>'MemberController@index','as'=>'list-cta-gto']);
         Route::get('lista-miembro6s', ['uses'=>'MemberController@index','as'=>'list-info-week']);
         //Reportes
-        Route::get('reporte-semanal/{date}', ['uses'=>'ReportPdfController@infoSemanal','as'=>'reportWeekly']);
+        Route::get('reporte-semanal/{token}', ['uses'=>'ReportPdfController@infoSemanal','as'=>'reportWeekly']);
         Route::get('pdf-de-gastos/{token}', 'ReportPdfController@checkDetail');
         Route::get('reporte-resumen-movimiento-departamento/{token}', 'ReportsPDF\ReportsDepartamentsController@pdfSummaryMoveDepartament');
         Route::get('reporte-estado-de-cuenta-actual/{token}', 'ReportPdfController@stateAccountNow');

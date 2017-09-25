@@ -54,6 +54,10 @@
                                 <div class="th-inner "></div>
                                 <div class="fht-cell">Detalle</div>
                             </th>
+                            <th style="" data-field="amount" tabindex="0">
+                                <div class="th-inner "></div>
+                                <div class="fht-cell">Info Semanal</div>
+                            </th>
                         </tr>
                         </thead>
                         <tbody>
@@ -81,7 +85,7 @@
                                 <div v-else class="label label-table label-danger"><a :href="weekly(dato.token)">{{dato.status}}</a></div>
                             </td>
                             <td style="text-align: center; ">
-                                <a :href="pdfAccountSummary(dato.token)" target="_blank" class="btn btn-default"><i
+                                <a :href="pdfInfoWeekly(dato.token)" target="_blank" class="btn btn-default"><i
                                         class="fa fa-file-pdf-o fa-2x btn-danger" aria-hidden="true"></i></a>
                             </td>
                             <td style="text-align: center; ">
@@ -188,8 +192,8 @@
             weekly(token){
                 return '/tesoreria/registro-de-ingresos/'+token;
             },
-            pdfAccountSummary(data) {
-                return '/tesoreria/reporte-resumen-movimiento-departamento/' + data;
+            pdfInfoWeekly(data) {
+                return '/tesoreria/reporte-semanal/' + data;
             },
             styleType() {
                 var self = this;

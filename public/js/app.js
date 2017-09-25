@@ -54806,7 +54806,7 @@ exports = module.exports = __webpack_require__(2)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -54822,114 +54822,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lassehaslev_vue_confirm__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_numeral__ = __webpack_require__(12);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_numeral___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_numeral__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -55972,20 +55864,14 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "panel-body"
   }, [_c('div', {
     staticClass: "bootstrap-table"
-  }, [_vm._m(8), _vm._v(" "), _c('div', {
+  }, [_c('div', {
     staticClass: "fixed-table-container",
     staticStyle: {
       "padding-bottom": "0px"
     }
-  }, [_vm._m(9), _vm._v(" "), _c('div', {
-    staticClass: "fixed-table-body"
   }, [_c('div', {
-    staticClass: "fixed-table-loading",
-    staticStyle: {
-      "top": "41px",
-      "display": "none"
-    }
-  }, [_vm._v("Loading, please\n                                wait...\n                            ")]), _vm._v(" "), _c('table', {
+    staticClass: "fixed-table-body"
+  }, [_c('table', {
     staticClass: "demo-add-niftycheck table table-hover",
     staticStyle: {
       "margin-top": "0px"
@@ -56005,24 +55891,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "data-pagination": "true",
       "data-show-pagination-switch": "true"
     }
-  }, [_c('thead', {}, [_c('tr', [_c('th', {
-    staticClass: "bs-checkbox ",
-    staticStyle: {
-      "width": "36px"
-    },
-    attrs: {
-      "data-field": "state",
-      "tabindex": "0"
-    }
-  }, [_c('div', {
-    staticClass: "th-inner "
-  }, [(_vm.btSelectAll) ? _c('input', {
-    attrs: {
-      "type": "checkbox"
-    }
-  }) : _vm._e()]), _vm._v(" "), _c('div', {
-    staticClass: "fht-cell"
-  })]), _vm._v(" "), _vm._l((_vm.titleMembers), function(title, titleM) {
+  }, [_c('thead', {}, [_c('tr', [_c('th', [_vm._v("Eliminar")]), _vm._v(" "), _vm._l((_vm.titleMembers), function(title, titleM) {
     return _c('th', {
       attrs: {
         "data-field": titleM,
@@ -56052,20 +55921,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     })])]), _vm._v(" "), _vm._l((member.datos), function(dmember) {
       return _c('td', [_c('div', [_vm._v(_vm._s(dmember))])])
     })], 2)
-  }))])]), _vm._v(" "), _vm._m(10), _vm._v(" "), _c('div', {
-    staticClass: "fixed-table-pagination"
-  }, [_c('div', {
-    staticClass: "pull-left pagination-detail"
-  }, [(_vm.totalRows <= 5) ? _c('span', {
-    staticClass: "pagination-info"
-  }, [_vm._v("Mostrando " + _vm._s(_vm.totalRows) + " lineas")]) : _c('span', {
-    staticClass: "pagination-info"
-  }, [_vm._v("Mostrar 1 a 5 de " + _vm._s(_vm.totalRows) + " lineas")]), _vm._v(" "), (_vm.totalRows > 5) ? _c('span', {
-    staticClass: "page-list"
-  }, [_vm._m(11), _vm._v(" Lineas por pagina")]) : _vm._e()]), _vm._v(" "), _vm._m(12)])])]), _vm._v(" "), _c('div', {
+  }))])])])]), _c('div', {
     staticClass: "clearfix"
-  })])]), _vm._v(" "), _c('div', {
-    staticClass: "col-lg-12 col-md-12  text-center"
+  }), _vm._v(" "), _c('div', {
+    staticClass: "row col-lg-12 col-md-12  text-center"
   }, [_c('div', {
     staticClass: "btn"
   }, [_c('button', {
@@ -56075,7 +55934,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.finish(_vm.rows.saturday)
       }
     }
-  }, [_vm._v("Finalizar Informe")])])])])])
+  }, [_vm._v("Finalizar Informe")])])])])])])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: " col-lg-12 col-md-12  "
@@ -56122,191 +55981,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('h3', {
     staticClass: "panel-title"
   }, [_vm._v("Otros Ingresos para la Iglesia")])])
-},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "fixed-table-toolbar"
-  }, [_c('div', {
-    staticClass: "bars pull-left"
-  }, [_c('button', {
-    staticClass: "btn btn-danger",
-    attrs: {
-      "id": "demo-delete-row",
-      "disabled": ""
-    }
-  }, [_c('i', {
-    staticClass: "demo-pli-cross"
-  }), _vm._v(" Delete\n                            ")])]), _vm._v(" "), _c('div', {
-    staticClass: "columns columns-right btn-group pull-right"
-  }, [_c('button', {
-    staticClass: "btn btn-default",
-    attrs: {
-      "type": "button",
-      "name": "paginationSwitch",
-      "title": "Hide/Show pagination"
-    }
-  }, [_c('i', {
-    staticClass: "glyphicon demo-pli-arrow-down"
-  })]), _vm._v(" "), _c('button', {
-    staticClass: "btn btn-default",
-    attrs: {
-      "type": "button",
-      "name": "refresh",
-      "title": "Refresh"
-    }
-  }, [_c('i', {
-    staticClass: "glyphicon demo-pli-repeat-2"
-  })]), _vm._v(" "), _c('button', {
-    staticClass: "btn btn-default",
-    attrs: {
-      "type": "button",
-      "name": "toggle",
-      "title": "Toggle"
-    }
-  }, [_c('i', {
-    staticClass: "glyphicon demo-pli-layout-grid"
-  })]), _vm._v(" "), _c('div', {
-    staticClass: "keep-open btn-group",
-    attrs: {
-      "title": "Columns"
-    }
-  }, [_c('button', {
-    staticClass: "btn btn-default dropdown-toggle",
-    attrs: {
-      "type": "button",
-      "data-toggle": "dropdown",
-      "aria-expanded": "false"
-    }
-  }, [_c('i', {
-    staticClass: "glyphicon demo-pli-check"
-  }), _vm._v(" "), _c('span', {
-    staticClass: "caret"
-  })]), _vm._v(" "), _c('ul', {
-    staticClass: "dropdown-menu",
-    attrs: {
-      "role": "menu"
-    }
-  }, [_c('li', [_c('label', [_c('input', {
-    attrs: {
-      "type": "checkbox",
-      "data-field": "id",
-      "value": "1",
-      "checked": "checked"
-    }
-  }), _vm._v("\n                                        ID")])]), _vm._v(" "), _c('li', [_c('label', [_c('input', {
-    attrs: {
-      "type": "checkbox",
-      "data-field": "name",
-      "value": "2",
-      "checked": "checked"
-    }
-  }), _vm._v("\n                                        Name")])]), _vm._v(" "), _c('li', [_c('label', [_c('input', {
-    attrs: {
-      "type": "checkbox",
-      "data-field": "date",
-      "value": "3",
-      "checked": "checked"
-    }
-  }), _vm._v("\n                                        Order date")])]), _vm._v(" "), _c('li', [_c('label', [_c('input', {
-    attrs: {
-      "type": "checkbox",
-      "data-field": "amount",
-      "value": "4",
-      "checked": "checked"
-    }
-  }), _vm._v(" Balance")])]), _vm._v(" "), _c('li', [_c('label', [_c('input', {
-    attrs: {
-      "type": "checkbox",
-      "data-field": "status",
-      "value": "5",
-      "checked": "checked"
-    }
-  }), _vm._v(" Status")])]), _vm._v(" "), _c('li', [_c('label', [_c('input', {
-    attrs: {
-      "type": "checkbox",
-      "data-field": "track",
-      "value": "6",
-      "checked": "checked"
-    }
-  }), _vm._v(" Tracking Number")])])])])]), _vm._v(" "), _c('div', {
-    staticClass: "pull-right search"
-  }, [_c('input', {
-    staticClass: "form-control",
-    attrs: {
-      "type": "text",
-      "placeholder": "Search"
-    }
-  })])])
-},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "fixed-table-header",
-    staticStyle: {
-      "display": "none"
-    }
-  }, [_c('table')])
-},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "fixed-table-footer",
-    staticStyle: {
-      "display": "none"
-    }
-  }, [_c('table', [_c('tbody', [_c('tr')])])])
-},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('span', {
-    staticClass: "btn-group dropup"
-  }, [_c('button', {
-    staticClass: "btn btn-default  dropdown-toggle",
-    attrs: {
-      "type": "button",
-      "data-toggle": "dropdown"
-    }
-  }, [_c('span', {
-    staticClass: "page-size"
-  }, [_vm._v("5")]), _vm._v(" "), _c('span', {
-    staticClass: "caret"
-  })]), _vm._v(" "), _c('ul', {
-    staticClass: "dropdown-menu",
-    attrs: {
-      "role": "menu"
-    }
-  }, [_c('li', {
-    staticClass: "active"
-  }, [_c('a', {
-    attrs: {
-      "href": "javascript:void(0)"
-    }
-  }, [_vm._v("5")])]), _vm._v(" "), _c('li', [_c('a', {
-    attrs: {
-      "href": "javascript:void(0)"
-    }
-  }, [_vm._v("10")])]), _vm._v(" "), _c('li', [_c('a', {
-    attrs: {
-      "href": "javascript:void(0)"
-    }
-  }, [_vm._v("20")])])])])
-},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "pull-right pagination"
-  }, [_c('ul', {
-    staticClass: "pagination"
-  }, [_c('li', {
-    staticClass: "page-pre"
-  }, [_c('a', {
-    attrs: {
-      "href": "javascript:void(0)"
-    }
-  }, [_vm._v("‹")])]), _vm._v(" "), _c('li', {
-    staticClass: "page-number active"
-  }, [_c('a', {
-    attrs: {
-      "href": "javascript:void(0)"
-    }
-  }, [_vm._v("1")])]), _vm._v(" "), _c('li', {
-    staticClass: "page-next"
-  }, [_c('a', {
-    attrs: {
-      "href": "javascript:void(0)"
-    }
-  }, [_vm._v("›")])])])])
 }]}
 module.exports.render._withStripped = true
 if (false) {
@@ -61816,7 +61490,11 @@ __webpack_require__(293).polyfill();
             axios.post('/tesoreria/' + self.url, this.data).then(function (response) {
                 if (response.data.success = true) {
                     _this4.checks = response.data.list;
-                    document.location = 'registro-detalle-cheque/' + response.data.token;
+                    if (_this4.data.type.value === 'local_field') {
+                        document.location = '/tesoreria/depositos-al-campo-local/';
+                    } else {
+                        document.location = '/tesoreria/registro-detalle-cheque/' + response.data.token;
+                    }
                     _this4.data.number = '';
                     _this4.data.name = '';
                     _this4.data.balance = '';
@@ -67998,6 +67676,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['source', 'title'],
@@ -68028,8 +67710,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         weekly: function weekly(token) {
             return '/tesoreria/registro-de-ingresos/' + token;
         },
-        pdfAccountSummary: function pdfAccountSummary(data) {
-            return '/tesoreria/reporte-resumen-movimiento-departamento/' + data;
+        pdfInfoWeekly: function pdfInfoWeekly(data) {
+            return '/tesoreria/reporte-semanal/' + data;
         },
         styleType: function styleType() {
             var self = this;
@@ -68246,7 +67928,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }, [_c('a', {
       staticClass: "btn btn-default",
       attrs: {
-        "href": _vm.pdfAccountSummary(dato.token),
+        "href": _vm.pdfInfoWeekly(dato.token),
         "target": "_blank"
       }
     }, [_c('i', {
@@ -68472,7 +68154,16 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "th-inner "
   }), _vm._v(" "), _c('div', {
     staticClass: "fht-cell"
-  }, [_vm._v("Detalle")])])])])
+  }, [_vm._v("Detalle")])]), _vm._v(" "), _c('th', {
+    attrs: {
+      "data-field": "amount",
+      "tabindex": "0"
+    }
+  }, [_c('div', {
+    staticClass: "th-inner "
+  }), _vm._v(" "), _c('div', {
+    staticClass: "fht-cell"
+  }, [_vm._v("Info Semanal")])])])])
 },function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('td', {
     staticStyle: {

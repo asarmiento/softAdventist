@@ -119,7 +119,7 @@ trait ListInformMembersTraits
                     $q->whereIn('envelope_number', $envelopes);
                 })->whereHas('localFieldIncomeAccount',function ($q){
                     $q->where('type', 'temp');
-                })->get();
+                })->orderBy('id','ASC')->get();
 
                 //aqui agregamos en el array los datos de las cuentas que van para el campo local
                 foreach ($localfields AS $localfieldIncome):
@@ -133,6 +133,7 @@ trait ListInformMembersTraits
                 $incomeAccounts = IncomeAccount::whereHas('weeklyIncomes', function ($q) use ($envelopes) {
                     $q->whereIn('envelope_number', $envelopes);
                 })->where('type', 'temp')->get();
+
                 // aqui agregamos las cuentas de ingreso de locales de la iglesia
                 foreach ($incomeAccounts AS $churchIncome):
                     $list = $churchIncome->weeklyIncomes()->where('envelope_number', $envelope)->select('balance', 'id')->sum('balance');
@@ -175,15 +176,21 @@ trait ListInformMembersTraits
          * usados en el informe semanal de ingresos
          */
         $envelopes = $this->countEnvelopeList($date);
-        $tithes = $this->localFieldIncomeAccountRepository->sumTypeForInEnvelope($envelopes, 'diez');
-        $offering = $this->incomeAccountRepository->sumTypeForInEnvelope($envelopes, 'fix') +
-            $this->localFieldIncomeAccountRepository->sumTypeForInEnvelope($envelopes, 'offren');
+        $tithes = $this->typeInEnvelopeSumLFI( $envelopes,'diez');
+
+        $offering =  $this->typeInEnvelopeSum($envelopes, 'fix') +
+            $this->typeInEnvelopeSumLFI($envelopes, 'offren');
+
+
+
         $total = $this->weeklyincomeRepository->sumInInfo($envelopes) + $this->localFieldIncomeRepository->sumInInfo($envelopes);
+
         $datos = [
             number_format($total, 2),
             number_format($tithes, 2),
             number_format($offering, 2)
         ];
+
         $localfields = $this->localFieldIncomeAccountRepository->getType('temp');
         //aqui agregamos en el array los datos de las cuentas que van para el campo local
         foreach ($localfields AS $localfieldIncome):
@@ -230,9 +237,9 @@ trait ListInformMembersTraits
         $temp_LocalField_incomes = TempLocalFieldIncome::whereHas('ChurchLFIncomeAccount',function ($q) use($internal){
           //  $q->whereHas();
         })->where('user_id', currentUser()->id)
-            ->with('ChurchLFIncomeAccount.localFieldIncomeAccount')->orderBy('id', 'DESC')->get();
+            ->with('ChurchLFIncomeAccount.localFieldIncomeAccount')->orderBy('id', 'ASC')->get();
 
-        $temp_incomes = TempIncomes::where('user_id', currentUser()->id)->with('incomeAccount')->orderBy('id', 'DESC')->get();
+        $temp_incomes = TempIncomes::where('user_id', currentUser()->id)->with('incomeAccount')->orderBy('id', 'ASC')->get();
         //traemos el total del informe semanal a formar
         $totalBalance = $this->totalBalance($internal->id);
         $totalRows = count($this->countEnvelopeList($date));
@@ -309,14 +316,15 @@ trait ListInformMembersTraits
             'Ofrenda'
         ];
         $envelope = $this->countEnvelopeList($date);
+
         $localTitles = $this->typeEnvelopeAllLFI('temp')
-            ->whereIn('envelope_number', $envelope)->distinct('church_l_f_income_account_id')->get();
+            ->whereIn('envelope_number', $envelope)->distinct('church_l_f_income_account_id')->orderBy('church_l_f_income_account_id','ASC')->get();
         foreach ($localTitles AS $localTitle):
             array_push($title, $localTitle->churchLFIncomeAccount->localFieldIncomeAccount->name);
         endforeach;
         $churchTitles = WeeklyIncome::whereHas('incomeAccount', function ($q) {
             $q->where('type', 'temp');
-        })->whereIn('envelope_number', $envelope)->distinct('income_account_id')->get();
+        })->whereIn('envelope_number', $envelope)->distinct('income_account_id')->orderBy('income_account_id','ASC')->get();
         foreach ($churchTitles AS $churchTitle):
             array_push($title, $churchTitle->incomeAccount->name);
         endforeach;

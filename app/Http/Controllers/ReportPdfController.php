@@ -167,78 +167,92 @@ class ReportPdfController extends Controller
      * ----------------------------------------------------------------------
      * ----------------------------------------------------------------------
      */
-    public function infoSemanal($date)
+    public function infoSemanal($token)
     {
-        //$date = new Carbon($data);
+        try {
+            $internalControl = InternalControl::where('token', $token)->first();
+            $date = $internalControl->saturday;
 
-        $this->header($date);
-        $pdf = Fpdf::SetFont('Arial', 'B', 7);
-        $pdf .= Fpdf::SetX(5);
-        $pdf .= Fpdf::Cell(5, 7, utf8_decode('N°'), 1, 0, 'C');
-        $i = 0;
-        $fixs = $this->titleInfo($date);
-        foreach ($fixs AS $fix): $i++;
-            if ($fix == 'Nombres'):
-                $pdf .= Fpdf::Cell(40, 7, substr(utf8_decode($fix), 0, 8), 1, 0, 'C');
-            else:
-                $pdf .= Fpdf::Cell(13, 7, substr(utf8_decode($fix), 0, 8), 1, 0, 'C');
-            endif;
-        endforeach;
-        $pdf .= Fpdf::ln();
-        $e = 0;
-        $fin = 0;
-        /* NUMERACION DEL INFORME */
-        $numeration = $this->numerationInfoPdf($date);
-        $pdf .= Fpdf::SetFont('Arial', 'B', 17);
-        $pdf .= Fpdf::SetTextColor(242, 66, 21);
-        $pdf .= Fpdf::Text(158, 27, utf8_decode('N° ').$numeration, 'B', 7);
-        $pdf .= Fpdf::SetTextColor(0, 0, 0);
-        $pdf .= Fpdf::SetFont('Arial', 'I', 7);
-        /*CONTENIDO DE SOBRES Y MIEMBROS*/
-        $envelopes = $this->listMemberInforme($date);
-        foreach ($envelopes AS $envelope):
-            $pdf .= Fpdf::SetFont('Arial', 'I', 7);
-            $e++;
+            $this->header($internalControl);
+            $pdf = Fpdf::SetFont('Arial', 'B', 7);
             $pdf .= Fpdf::SetX(5);
-            $pdf .= Fpdf::Cell(5, 5, utf8_decode($e), 1, 0, 'C');
-            foreach ($envelope['datos'] AS $dato):
-                if (strlen($dato) > 10):
-                    $pdf .= Fpdf::Cell(40, 5, substr(utf8_decode($dato), 0, 31), 1, 0, 'L');
+            $pdf .= Fpdf::Cell(5, 7, utf8_decode('N°'), 1, 0, 'C');
+            $i = 0;
+            $fixs = $this->titleInfo($date);
+
+            foreach ($fixs AS $fix): $i++;
+                if ($fix == 'Nombres'):
+                    $pdf .= Fpdf::Cell(40, 7, substr(utf8_decode($fix), 0, 8), 1, 0, 'C');
                 else:
-                    $pdf .= Fpdf::Cell(13, 5, (utf8_decode($dato)), 1, 0, 'C');
+                    $pdf .= Fpdf::Cell(13, 7, substr(utf8_decode($fix), 0, 8), 1, 0, 'C');
                 endif;
             endforeach;
             $pdf .= Fpdf::ln();
-        endforeach;
-        /*fIN DE SOBRES Y MIEMBROS*/
-        $pdf .= Fpdf::SetFont('Arial', 'B', 6.5);
-        $pdf .= Fpdf::SetX(5);
-        $pdf .= Fpdf::Cell(58, 7, 'TOTALES _  _  _  _  _  _', 0, 0, 'R');
-        foreach ($this->totalesInforme($date) AS $total):
-            $pdf .= Fpdf::Cell(13, 7, ($total), 1, 0, 'C');
-        endforeach;
-        $pdf .= Fpdf::ln();
-        $pdf .= Fpdf::ln();
-        $Y = Fpdf::GetY();
+            $e = 0;
+            $fin = 0;
 
-        $y = Fpdf::GetY();
+            /* NUMERACION DEL INFORME */
+            $numeration = $this->numerationInfoPdf($date);
+            $pdf .= Fpdf::SetFont('Arial', 'B', 17);
+            $pdf .= Fpdf::SetTextColor(242, 66, 21);
+            $pdf .= Fpdf::Text(158, 27, utf8_decode('N° ') . $numeration, 'B', 7);
+            $pdf .= Fpdf::SetTextColor(0, 0, 0);
+            $pdf .= Fpdf::SetFont('Arial', 'I', 7);
 
-        if ($y >= 210 && $y <= 220):
+            /*CONTENIDO DE SOBRES Y MIEMBROS*/
+            $envelopes = $this->listMemberInforme($date);
+
+            foreach ($envelopes AS $envelope):
+                $pdf .= Fpdf::SetFont('Arial', 'I', 7);
+                $e++;
+                $pdf .= Fpdf::SetX(5);
+                $pdf .= Fpdf::Cell(5, 5, utf8_decode($e), 1, 0, 'C');
+                foreach ($envelope['datos'] AS $dato):
+                    if (strlen($dato) > 10):
+                        $pdf .= Fpdf::Cell(40, 5, substr(utf8_decode($dato), 0, 31), 1, 0, 'L');
+                    else:
+                        $pdf .= Fpdf::Cell(13, 5, (utf8_decode($dato)), 1, 0, 'C');
+                    endif;
+                endforeach;
+                $pdf .= Fpdf::ln();
+            endforeach;
+
+            /*fIN DE SOBRES Y MIEMBROS*/
+            $pdf .= Fpdf::SetFont('Arial', 'B', 6.5);
+            $pdf .= Fpdf::SetX(5);
+            $pdf .= Fpdf::Cell(58, 7, 'TOTALES _  _  _  _  _  _', 0, 0, 'R');
+            foreach ($this->totalesInforme($date) AS $total):
+                $pdf .= Fpdf::Cell(13, 7, ($total), 1, 0, 'C');
+            endforeach;
             $pdf .= Fpdf::ln();
             $pdf .= Fpdf::ln();
-            $pdf .= Fpdf::ln();
-            $pdf .= Fpdf::ln();
-            $pdf .= Fpdf::ln();
-            $pdf .= Fpdf::ln();
+            $Y = Fpdf::GetY();
+
             $y = Fpdf::GetY();
-        endif;
 
-        $pdf .= $this->footer($date);
-        Fpdf::SetY($Y);
-        $pdf .= $this->firmas($date);
-        $this->sacr();
-        Fpdf::Output('Informe-Semanal: '.$date.'.pdf', 'I');
-        exit;
+            if ($y >= 210 && $y <= 220):
+                $pdf .= Fpdf::ln();
+                $pdf .= Fpdf::ln();
+                $pdf .= Fpdf::ln();
+                $pdf .= Fpdf::ln();
+                $pdf .= Fpdf::ln();
+                $pdf .= Fpdf::ln();
+                $y = Fpdf::GetY();
+            endif;
+
+            $pdf .= $this->footer($date);
+            Fpdf::SetY($Y);
+            $pdf .= $this->firmas($date);
+            $this->sacr();
+            Fpdf::Output('Informe-Semanal: ' . $date . '.pdf', 'I');
+            exit;
+        }catch (\Exception $e){
+            echo json_encode($e->getLine().'- '.$e->getCode().'- '.$e->getMessage().' - '.$e->getTraceAsString());
+            die;
+            \Log::error($e->getLine().'- '.$e->getCode().'- '.$e->getMessage().' - '.$e->getTraceAsString());
+            abort(402);
+
+        }
     }
 
 
@@ -258,9 +272,9 @@ class ReportPdfController extends Controller
      * @return string
      * ----------------------------------------------------------------------
      */
-    public function header($date)
+    public function header($internal)
     {
-        $orientacion = $this->columnAccounts($date);
+        $orientacion = $this->columnAccounts($internal);
         $pdf = Fpdf::AddPage($orientacion, 'letter');
         $pdf .= Fpdf::SetFont('Arial', 'B', 16);
         $pdf .= Fpdf::Cell(0, 7, utf8_decode('Asociación Central Sur de Costa Rica de los Adventista del Séptimo Día'),
@@ -274,7 +288,7 @@ class ReportPdfController extends Controller
         $pdf .= Fpdf::SetFont('Arial', '', 12);
         $pdf .= Fpdf::Setx(5);
         $pdf .= Fpdf::Cell(0, 7,
-            'Iglesia:  Quepos                                                            Fecha:  '.$date, 0, 1, 'L');
+            'Iglesia: '.userChurch()->name.'                                                            Fecha:  '.$internal->saturday, 0, 1, 'L');
 
         return $pdf;
     }
@@ -301,9 +315,9 @@ class ReportPdfController extends Controller
         $envelopes = $this->countEnvelopeList($date);
         $pdf = Fpdf::SetFont('Arial', '', 8);
         $pdf .= Fpdf::Cell(45, 5, utf8_decode('DIEZMOS'), 0, 0, 'L');
-        $tithes = $this->localFieldIncomeAccountRepository->sumTypeForInEnvelope($envelopes, 'diez');
+        $tithes = $this->typeInEnvelopeSumLFI($envelopes, 'diez');
         $pdf .= Fpdf::Cell(30, 5, utf8_decode('¢ ').number_format($tithes, 2), 0, 1, 'L');
-        $offren = $this->localFieldIncomeAccountRepository->sumTypeForInEnvelope($envelopes, 'offren');
+        $offren = $this->typeInEnvelopeSumLFI($envelopes, 'offren');
         $pdf .= Fpdf::Cell(45, 5, utf8_decode('20% MUNDIAL'), 0, 0, 'L');
         $pdf .= Fpdf::Cell(30, 5, utf8_decode('¢ ').number_format($offren / 2, 2), 0, 1, 'L');
         $pdf .= Fpdf::Cell(45, 5, utf8_decode('20% DESARROLLO'), 0, 0, 'L');
@@ -368,7 +382,7 @@ class ReportPdfController extends Controller
         $i = 0;
         foreach ($titles as $title):$i++;
             if ($i > 5):
-                $pdf .= Fpdf::Cell(40, 7, substr(utf8_decode($title), 0, 8).' = '.utf8_decode($title), 0, 'L');
+                $pdf .= Fpdf::Cell(40, 7, substr(utf8_decode($title), 0, 8).' = '.utf8_decode($title), 0,1, 'L');
             endif;
         endforeach;
 
@@ -376,10 +390,10 @@ class ReportPdfController extends Controller
     }
 
 
-    private function columnAccounts($date)
+    private function columnAccounts($internal)
     {
-        $internal = InternalControl::where('church_id', 1)->where('saturday', $date)->first();
-        $fixs = $internal->localFieldIncomeAccounts()->groupBy('local_field_income_account_id')->count();
+
+        $fixs = $internal->localFieldIncomeAccounts()->groupBy('church_l_f_income_account_id')->count();
 
         if ($fixs <= 10):
             $orientacion = 'P';

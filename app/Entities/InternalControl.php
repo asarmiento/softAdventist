@@ -34,10 +34,14 @@ class InternalControl extends Entity
 
     public function localFieldIncomeAccounts()
     {
-        return $this->belongsToMany(LocalFieldIncomeAccount::getClass(),
-            'local_field_incomes')->withPivot('envelope_number', 'balance', 'status');
+        return $this->belongsToMany(ChurchLocalFieldIncomeAccount::class,
+            'local_field_incomes','internal_control_id','church_l_f_income_account_id')->withPivot('envelope_number', 'balance', 'status');
     }
 
+    public function localFieldIncome()
+    {
+        return $this->hasMany(LocalFieldIncome::class);
+    }
 
     public function churchDeposit()
     {

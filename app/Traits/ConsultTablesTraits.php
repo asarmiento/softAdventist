@@ -159,9 +159,43 @@ trait ConsultTablesTraits
         })->where('envelope_number', $envelope)->sum('local_field_incomes.balance');
     }
 
+    /**
+     * -----------------------------------------------------------------------
+     * @Author: Anwar Sarmiento <asarmiento@sistemasamigables.com>
+     * @DateCreate: ${DATE}
+     * @TimeCreate: $TIME$
+     * @DateUpdate: 0000-00-00
+     * -----------------------------------------------------------------------
+     * @description: Esta consulta traemos el total de todos los sobres del
+     * informe.
+     * @pasos:
+     * ----------------------------------------------------------------------
+     * * @param $envelope
+     * @param $type
+     *  * @var ${TYPE_NAME}
+     * * ----------------------------------------------------------------------
+     *  * @return mixed
+     * ----------------------------------------------------------------------
+     * *
+     */
+    public function typeInEnvelopeSumLFI($envelope, $type)
+    {
+        return LocalFieldIncome::whereHas('churchLFIncomeAccount',function ($q) use($type){
+            $q->whereHas('localFieldIncomeAccount',function ($r) use ($type){
+                $r->where('type',$type);
+            });
+        })->whereIn('envelope_number', $envelope)->sum('local_field_incomes.balance');
+    }
+
     public function typeEnvelopeSum($envelope, $type)
     {
         return IncomeAccount::join('weekly_incomes', 'weekly_incomes.income_account_id', '=', 'income_accounts.id')
             ->where('type', $type)->where('envelope_number', $envelope)->sum('weekly_incomes.balance');
+    }
+
+    public function typeInEnvelopeSum($envelope, $type)
+    {
+        return IncomeAccount::join('weekly_incomes', 'weekly_incomes.income_account_id', '=', 'income_accounts.id')
+            ->where('type', $type)->whereIn('envelope_number', $envelope)->sum('weekly_incomes.balance');
     }
 }

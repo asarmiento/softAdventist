@@ -37,7 +37,7 @@ class Departament extends Entity
      */
     public function listDepartament()
     {
-        return $this->belongsTo(ListDepartament::getClass());
+        return $this->belongsTo(ListDepartament::class);
     }
 
     /**

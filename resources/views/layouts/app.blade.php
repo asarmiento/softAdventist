@@ -11,6 +11,8 @@
     <title>{{ config('app.name', 'SoftAdventist') }}</title>
 
     <!-- Font -->
+    <!--Open Sans Font [ OPTIONAL ]-->
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/nifty.min.css') }}" rel="stylesheet">

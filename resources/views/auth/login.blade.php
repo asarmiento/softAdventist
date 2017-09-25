@@ -117,5 +117,7 @@
             function cambiar(){
                 document.getElementById("bg-overlay").style.backgroundImage= "url("+objetos[rand(14)-1]+")";
             }
+
+            cambiar();
  </script>
 @endsection
