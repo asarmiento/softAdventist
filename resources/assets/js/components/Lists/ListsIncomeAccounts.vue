@@ -14,7 +14,7 @@
                                 class="glyphicon demo-pli-layout-grid"></i></button>
                 </div>
                 <div class="pull-right search">
-                    <input class="form-control" @keyup="sarch(datos.path)"
+                    <input class="form-control" @keyup="searchs(datos.path)"
                            v-model="txtSearch" type="text" placeholder="Buscar">
                 </div>
             </div>
@@ -34,6 +34,10 @@
                             </th>
                             <th style="" data-field="id" tabindex="0">
                                 <div class="th-inner ">Nombre de Cuenta</div>
+                                <div class="fht-cell"></div>
+                            </th>
+                            <th style="" data-field="name" tabindex="0">
+                                <div class="th-inner ">Saldo Inicial</div>
                                 <div class="fht-cell"></div>
                             </th>
                             <th style="" data-field="name" tabindex="0">
@@ -60,13 +64,16 @@
                         </thead>
                         <tbody>
                         <tr  v-for="(dato, index) in datos.data" :data-index="index">
+                            <td style=""><a href="#" class="btn-link"> {{dato.departament.list_departament.name}}</a></td>
                             <td style=""><a href="#" class="btn-link"> {{dato.name}}</a></td>
-                            <td style=""><a href="" data-name="name" data-pk="53431"
-                                            data-value="Steve N. Horton" class="editable editable-click">{{dato.balance}}
-                                </a></td>
+                            <td style=""><a href="#" data-name="name" data-pk="53431"
+                                            :data-value="dato.initial" class="editable editable-click">{{dato.initial}}
+                                </a>
+
+                            </td>
                             <td style=""></td>
                             <td style=""></td>
-                            <td style=""></td>
+                            <td style="">{{dato.balance}}</td>
                             <td style="text-align: center; ">
                                 <div class="label label-table label-success"></div>
                             </td>
@@ -83,28 +90,28 @@
                         <tr v-for="(dato,index) in datos.data"  class="listStyle"  :data-index="index">
                             <td>
                                 <div class="card-view">
-                                    <div class="tittle-2">Cédula</div>
-                                    <div class="value">{{dato.name}}</div>
+                                    <div class="tittle-2">Departamento</div>
+                                    <div class="value">{{dato.departament.list_departament.name}}</div>
                                 </div>
                                 <div class="card-view">
-                                    <div class="tittle-2">Nombre Completo</div>
-                                    <div class="value" >{{dato.balance}} </div>
+                                    <div class="tittle-2">Nombre de Cuenta</div>
+                                    <div class="value" >{{dato.name}} </div>
                                 </div>
                                 <div class="card-view">
-                                    <div class="tittle-2">Fecha Nacimiento</div>
+                                    <div class="tittle-2">Saldo Inicial</div>
+                                    <div class="value">{{dato.initial}} </div>
+                                </div>
+                                <div class="card-view">
+                                    <div class="tittle-2">Ingresos</div>
                                     <div class="value"></div>
                                 </div>
                                 <div class="card-view">
-                                    <div class="tittle-2">Fecha Bautismo</div>
-                                    <div class="value"></div>
-                                </div>
-                                <div class="card-view">
-                                    <div class="tittle-2">Movimientos</div>
+                                    <div class="tittle-2">Salidas</div>
                                     <div class="value">Test</div>
                                 </div>
                                 <div class="card-view">
-                                    <div class="tittle-2">Mat. Esc. Pendiente</div>
-                                    <div class="value">Test</div>
+                                    <div class="tittle-2">Balance</div>
+                                    <div class="value">{{dato.balance}} </div>
                                 </div>
                             </td>
                         </tr>
@@ -182,7 +189,7 @@
                     this.typeStyle = true;
                 }
             },
-            sarch: function (url) {
+            searchs: function (url) {
                 var self = this;
                 this.$http.get(url + '?search=' + this.txtSearch).then((response) => {
                     self.datos = response.data.model;

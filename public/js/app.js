@@ -64759,6 +64759,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['source', 'title'],
@@ -64795,7 +64802,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
         },
 
-        sarch: function sarch(url) {
+        searchs: function searchs(url) {
             var self = this;
             this.$http.get(url + '?search=' + this.txtSearch).then(function (response) {
                 self.datos = response.data.model;
@@ -64928,7 +64935,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     },
     on: {
       "keyup": function($event) {
-        _vm.sarch(_vm.datos.path)
+        _vm.searchs(_vm.datos.path)
       },
       "input": function($event) {
         if ($event.target.composing) { return; }
@@ -64966,15 +64973,20 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       attrs: {
         "href": "#"
       }
+    }, [_vm._v(" " + _vm._s(dato.departament.list_departament.name))])]), _vm._v(" "), _c('td', {}, [_c('a', {
+      staticClass: "btn-link",
+      attrs: {
+        "href": "#"
+      }
     }, [_vm._v(" " + _vm._s(dato.name))])]), _vm._v(" "), _c('td', {}, [_c('a', {
       staticClass: "editable editable-click",
       attrs: {
-        "href": "",
+        "href": "#",
         "data-name": "name",
         "data-pk": "53431",
-        "data-value": "Steve N. Horton"
+        "data-value": dato.initial
       }
-    }, [_vm._v(_vm._s(dato.balance) + "\n                            ")])]), _vm._v(" "), _c('td', {}), _vm._v(" "), _c('td', {}), _vm._v(" "), _c('td', {}), _vm._v(" "), _vm._m(2, true)])
+    }, [_vm._v(_vm._s(dato.initial) + "\n                            ")])]), _vm._v(" "), _c('td', {}), _vm._v(" "), _c('td', {}), _vm._v(" "), _c('td', {}, [_vm._v(_vm._s(dato.balance))]), _vm._v(" "), _vm._m(2, true)])
   }))])]) : _c('div', {
     staticClass: "fixed-table-body"
   }, [_c('table', {
@@ -65005,15 +65017,27 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       staticClass: "card-view"
     }, [_c('div', {
       staticClass: "tittle-2"
-    }, [_vm._v("Cédula")]), _vm._v(" "), _c('div', {
+    }, [_vm._v("Departamento")]), _vm._v(" "), _c('div', {
       staticClass: "value"
-    }, [_vm._v(_vm._s(dato.name))])]), _vm._v(" "), _c('div', {
+    }, [_vm._v(_vm._s(dato.departament.list_departament.name))])]), _vm._v(" "), _c('div', {
       staticClass: "card-view"
     }, [_c('div', {
       staticClass: "tittle-2"
-    }, [_vm._v("Nombre Completo")]), _vm._v(" "), _c('div', {
+    }, [_vm._v("Nombre de Cuenta")]), _vm._v(" "), _c('div', {
       staticClass: "value"
-    }, [_vm._v(_vm._s(dato.balance) + " ")])]), _vm._v(" "), _vm._m(3, true), _vm._v(" "), _vm._m(4, true), _vm._v(" "), _vm._m(5, true), _vm._v(" "), _vm._m(6, true)])])
+    }, [_vm._v(_vm._s(dato.name) + " ")])]), _vm._v(" "), _c('div', {
+      staticClass: "card-view"
+    }, [_c('div', {
+      staticClass: "tittle-2"
+    }, [_vm._v("Saldo Inicial")]), _vm._v(" "), _c('div', {
+      staticClass: "value"
+    }, [_vm._v(_vm._s(dato.initial) + " ")])]), _vm._v(" "), _vm._m(3, true), _vm._v(" "), _vm._m(4, true), _vm._v(" "), _c('div', {
+      staticClass: "card-view"
+    }, [_c('div', {
+      staticClass: "tittle-2"
+    }, [_vm._v("Balance")]), _vm._v(" "), _c('div', {
+      staticClass: "value"
+    }, [_vm._v(_vm._s(dato.balance) + " ")])])])])
   }))])]), _vm._v(" "), _c('div', {
     staticClass: "fixed-table-pagination"
   }, [_c('div', {
@@ -65157,6 +65181,15 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('div', {
     staticClass: "th-inner "
+  }, [_vm._v("Saldo Inicial")]), _vm._v(" "), _c('div', {
+    staticClass: "fht-cell"
+  })]), _vm._v(" "), _c('th', {
+    attrs: {
+      "data-field": "name",
+      "tabindex": "0"
+    }
+  }, [_c('div', {
+    staticClass: "th-inner "
   }, [_vm._v("Ingresado")]), _vm._v(" "), _c('div', {
     staticClass: "fht-cell"
   })]), _vm._v(" "), _c('th', {
@@ -65212,7 +65245,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "card-view"
   }, [_c('div', {
     staticClass: "tittle-2"
-  }, [_vm._v("Fecha Nacimiento")]), _vm._v(" "), _c('div', {
+  }, [_vm._v("Ingresos")]), _vm._v(" "), _c('div', {
     staticClass: "value"
   })])
 },function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -65220,23 +65253,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "card-view"
   }, [_c('div', {
     staticClass: "tittle-2"
-  }, [_vm._v("Fecha Bautismo")]), _vm._v(" "), _c('div', {
-    staticClass: "value"
-  })])
-},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "card-view"
-  }, [_c('div', {
-    staticClass: "tittle-2"
-  }, [_vm._v("Movimientos")]), _vm._v(" "), _c('div', {
-    staticClass: "value"
-  }, [_vm._v("Test")])])
-},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "card-view"
-  }, [_c('div', {
-    staticClass: "tittle-2"
-  }, [_vm._v("Mat. Esc. Pendiente")]), _vm._v(" "), _c('div', {
+  }, [_vm._v("Salidas")]), _vm._v(" "), _c('div', {
     staticClass: "value"
   }, [_vm._v("Test")])])
 }]}

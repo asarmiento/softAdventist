@@ -52,8 +52,9 @@ class IncomeAccount extends Entity
      */
     public function expensesAccounts()
     {
-        return $this->hasMany(ExpenseAccount::getClass());
+        return $this->hasMany(ExpenseAccount::class);
     }
+
 
     /**
      * ---------------------------------------------------------------------
@@ -75,8 +76,11 @@ class IncomeAccount extends Entity
 
     public function scopeSearch($query, $search){
         if(trim($search) != ""){
-            $query->where("name","LIKE","%$search%")
-                ->orWhere("balance","LIKE","%$search%");
+            $query->whereHas('departament',function ($q) use($search){
+                $q->whereHas('listDepartament',function ($r) use($search){
+                    $r->Where("name","LIKE","%$search%");
+                });
+            })->orWhere("name","LIKE","%$search%")->orWhere("balance","LIKE","%$search%");
         }
 
     }
