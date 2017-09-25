@@ -179,7 +179,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
         Yajra\Datatables\DatatablesServiceProvider::class,
-        DaveJamesMiller\Breadcrumbs\ServiceProvider::class,
+     //   DaveJamesMiller\Breadcrumbs\ServiceProvider::class,
         Codedge\Fpdf\FpdfServiceProvider::class,
       //  GeneaLabs\Phpgmaps\PhpgmapsServiceProvider::class,
 

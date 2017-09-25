@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
 
 class Handler extends ExceptionHandler
 {
@@ -64,5 +65,28 @@ class Handler extends ExceptionHandler
         }
 
         return redirect()->guest(route('login'));
+    }
+
+    /**
+     * -----------------------------------------------------------------------
+     * @Author: Anwar Sarmiento <asarmiento@sistemasamigables.com>
+     * @DateCreate: ${DATE}
+     * @TimeCreate: $TIME$
+     * @DateUpdate: 0000-00-00
+     * -----------------------------------------------------------------------
+     * @description:
+     * @pasos:
+     * ----------------------------------------------------------------------
+     * * @param $request
+     * @param ValidationException $exception
+     *  * @var ${TYPE_NAME}
+     * * ----------------------------------------------------------------------
+     *  * @return \Illuminate\Http\JsonResponse
+     * ----------------------------------------------------------------------
+     * *
+     */
+    protected function invalidJson($request, ValidationException $exception)
+    {
+        return response()->json($exception->errors(), $exception->status);
     }
 }

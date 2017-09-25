@@ -13,7 +13,9 @@ class AddStatusOfChurch extends Migration
      */
     public function up()
     {
-        //
+        Schema::table('churches', function(Blueprint $table) {
+            $table->enum('status',['activo','inactivo'])->after('email');
+        });
     }
 
     /**
@@ -23,6 +25,8 @@ class AddStatusOfChurch extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('churches', function(Blueprint $table) {
+            $table->dropColumn('status');
+        });
     }
 }
