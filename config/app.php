@@ -182,6 +182,7 @@ return [
      //   DaveJamesMiller\Breadcrumbs\ServiceProvider::class,
         Codedge\Fpdf\FpdfServiceProvider::class,
       //  GeneaLabs\Phpgmaps\PhpgmapsServiceProvider::class,
+	    Laravel\Socialite\SocialiteServiceProvider::class,
 
     ],
 
@@ -235,6 +236,7 @@ return [
         'Fpdf' => Codedge\Fpdf\Facades\Fpdf::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         //'Gmaps' => GeneaLabs\Phpgmaps\Facades\PhpgmapsFacade::class,
+        'Socialite' => Laravel\Socialite\Facades\Socialite::class,
 
     ],
 

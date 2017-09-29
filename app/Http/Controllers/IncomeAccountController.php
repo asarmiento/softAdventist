@@ -71,7 +71,7 @@ class IncomeAccountController extends Controller
 
         /** @var TYPE_NAME $model */
         $model = IncomeAccount::searchPaginateAndOrder($perPage, $request->get('search'),
-            true)->with('departament.listDepartament')->with('expensesAccounts')->paginate($perPage);
+            true)->where('type', 'temp')->with('departament.listDepartament')->with('expensesAccounts')->paginate($perPage);
 
         /** @var TYPE_NAME $array */
         $array = $this->myPages($model);

@@ -14,6 +14,13 @@
 Route::get('/', function () {
     return view('auth.login');
 });
+Route::get('/ja', function () {
+    return view('auth.loginJa');
+});
+
+Route::get('auth/{provider}', 'Auth\SocialAuthController@redirectToProvider')->name('social.auth');
+Route::get('auth/{provider}/callback', 'Auth\SocialAuthController@handleProviderCallback');
+
 
 Route::get('/google954bee1fab08d971.html', function () {
     return view('google954bee1fab08d971.html');

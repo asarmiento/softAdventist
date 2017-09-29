@@ -40,4 +40,10 @@ return [
         'sms_from' => env('NEXMO_PHONE'),
     ],
 
+    'facebook' => [
+	    'client_id' => '1456431901099172',
+	    'client_secret' => 'cef5820fe1e884aef105bb9b1256e9c0',
+	    'redirect' => 'http://softadventist.dev/auth/facebook/callback'
+    ],
+
 ];
