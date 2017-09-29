@@ -356,7 +356,7 @@
                 this.data.type = val;
             },
             remove: function (data,index) {
-                axios.post('http://softadventist.dev/tesoreria/delete-check', data)
+                axios.post('http://contadventista.org/tesoreria/delete-check', data)
                     .then(response => {
                         this.checks.splice(index,1);
                         this.$alert({
@@ -479,7 +479,7 @@
                 this.itemsSizes = '';
             },
             onSubmit() {
-                axios.post('http://softadventist.dev/tesoreria/upload-check', this.formData)
+                axios.post('http://contadventista.org/tesoreria/upload-check', this.formData)
                     .then(response => {
                         this.data.ck = response.data
                         console.log(response.data)
