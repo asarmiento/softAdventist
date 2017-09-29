@@ -10,7 +10,7 @@ use App\Traits\DataViewerTraits;
 class IncomeAccount extends Entity
 {
     protected $table = 'income_accounts';
-    protected $fillable = ['name','departament_id','balance','token','type'];
+    protected $fillable = ['name','departament_id','balance','token','type','initial'];
     public static $columns = [ 'name','balance','departaments' ];
 
     use DataViewerTraits;
