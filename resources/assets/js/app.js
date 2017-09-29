@@ -43,6 +43,7 @@ Vue.component('listsExpenses', require('./components/Lists/ListsExpenses.vue'));
 Vue.component('listsExpenseAccounts', require('./components/Lists/ListsExpenseAccounts.vue'));
 Vue.component('listWeeklyInfo', require('./components/Lists/ListWeeklyInfo.vue'));
 Vue.component('listsMembers', require('./components/Lists/ListsMembers.vue'));
+Vue.component('listsChecks', require('./components/Lists/ListsChecks.vue'));
 Vue.component('listsInternalControls', require('./components/Lists/ListsInternalControls.vue'));
 Vue.component('listsDepartaments', require('./components/Lists/ListsDepartaments.vue'));
 Vue.component('listsCheckExpenses', require('./components/Lists/ListsCheckExpenses.vue'));

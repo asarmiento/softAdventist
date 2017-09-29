@@ -217,9 +217,10 @@
                                 <td class="sorting_1">
                                     <a v-if="check.status === 'aplicado'" @click="remove(check)" target="_blank">
                                         <span class="btn btn-danger fa fa-remove"></span></a>
+                                    <a v-else-if="check.type === 'local_field' " @click="remove(check)" target="_blank">
+                                        <span class="btn btn-danger fa fa-remove"></span></a>
                                     <a v-else :href="routeEdit(check.token)" target="_blank">
                                         <span class="btn btn-info fa fa-pencil"></span></a>
-
                                 </td>
                                 <td class="">{{check.number}}</td>
                                 <td>{{check.name}}</td>
@@ -228,9 +229,9 @@
                                 <td v-if="check.type === 'church'">Gastos de Iglesia</td>
                                 <td v-else>Informe Campo Local</td>
                                 <td></td>
-                                <td><a v-if="check.check_expenses.length > 0" :href="pdfInfo(check.token,index)" target='_blank'
-                                       class='btn btn-danger'>
-                                    <i class='fa fa-file-pdf-o'></i></a></td>
+                                <td><a v-if="check.check_expenses.length > 0" :href="pdfInfo(check.token,index)" target="_blank"
+                                       class="btn btn-danger">
+                                    <i class="fa fa-file-pdf-o"></i></a></td>
                             </tr>
                             </tbody>
                         </table>
@@ -241,17 +242,17 @@
                             <ul class="pagination">
                                 <li class="paginate_button previous disabled" aria-controls="demo-dt-delete"
                                     tabindex="0" id="demo-dt-delete_previous"><a href="#"><i
-                                        class="demo-psi-arrow-left"></i></a></li>
+		                                class="demo-psi-arrow-left"></i></a></li>
                                 <li class="paginate_button active" aria-controls="demo-dt-delete" tabindex="0"><a
-                                        href="#">1</a></li>
+		                                href="#">1</a></li>
                                 <li class="paginate_button " aria-controls="demo-dt-delete" tabindex="0"><a
-                                        href="#">2</a></li>
+		                                href="#">2</a></li>
                                 <li class="paginate_button " aria-controls="demo-dt-delete" tabindex="0"><a
-                                        href="#">3</a></li>
+		                                href="#">3</a></li>
                                 <li class="paginate_button disabled" aria-controls="demo-dt-delete" tabindex="0"
                                     id="demo-dt-delete_ellipsis"><a href="#">…</a></li>
                                 <li class="paginate_button " aria-controls="demo-dt-delete" tabindex="0"><a
-                                        href="#">6</a></li>
+		                                href="#">6</a></li>
                                 <li class="paginate_button next" aria-controls="demo-dt-delete" tabindex="0"
                                     id="demo-dt-delete_next"><a href="#"><i class="demo-psi-arrow-right"></i></a></li>
                             </ul>
@@ -266,258 +267,285 @@
 <script>
     import vSelect from "vue-select";
 
-    require('es6-promise').polyfill();
+    require( 'es6-promise' ).polyfill();
     export default {
-        props: ['title', 'url', 'banks'],
-        components: {vSelect},
-        data() {
-            return {
-                data: {
-                    number: '',
-                    bank: '',
-                    name: '',
-                    balance: '',
-                    type: '',
-                    detail: '',
-                    date: '',
-                    controls: [],
-                    ck: null,
-                    typeCk: '',
-                },
-                errors: {
-                    number: '',
-                    bank: '',
-                    name: '',
-                    balance: '',
-                    detail: '',
-                    type: '',
-                    date: '',
-                    controls: [],
-                },
-                option: [
-                    {'value': 'church', 'label': 'Gastos de Iglesia'},
-                    {'value': 'local_field', 'label': 'Reporte de informes al Campo Local'}
-                ],
-                checks: [],
-                internals: [],
-                active: false,
-                formData: '',
-                items: '',
-                itemsNames: '',
-                itemsSizes: '',
+	    props: [ 'title', 'url', 'banks' ],
+	    components: {vSelect},
+	    data()
+	    {
+		    return {
+			    data: {
+				    number: '',
+				    bank: '',
+				    name: '',
+				    balance: '',
+				    type: '',
+				    detail: '',
+				    date: '',
+				    controls: [],
+				    ck: null,
+				    typeCk: '',
+			    },
+			    errors: {
+				    number: '',
+				    bank: '',
+				    name: '',
+				    balance: '',
+				    detail: '',
+				    type: '',
+				    date: '',
+				    controls: [],
+			    },
+			    option: [
+				    {'value': 'church', 'label': 'Gastos de Iglesia'},
+				    {'value': 'local_field', 'label': 'Reporte de informes al Campo Local'}
+			    ],
+			    checks: [],
+			    internals: [],
+			    active: false,
+			    formData: '',
+			    items: '',
+			    itemsNames: '',
+			    itemsSizes: '',
 
-            }
-        },
-        computed: {
-            allBanks() {
-                return JSON.parse(this.banks);
-            },
+		    }
+	    },
+	    computed: {
+		    allBanks()
+		    {
+			    return JSON.parse( this.banks );
+		    },
 
 
-        },
-        created() {
-            this.$http.get('/tesoreria/lista-de-cheques').then((response) => {
-                this.checks = response.data;
-            });
-            this.$http.get('/tesoreria/lista-info-sin-deposito')
-                .then((response) => {
-                    this.internals = response.data;
-                });
+	    },
+	    created()
+	    {
+		    this.$http.get( '/tesoreria/lista-de-cheques' ).then( ( response ) =>
+		    {
+			    this.checks = response.data;
+		    } );
+		    this.$http.get( '/tesoreria/lista-info-sin-deposito' )
+			    .then( ( response ) =>
+			    {
+				    this.internals = response.data;
+			    } );
 
-        },
-        methods: {
-            urlImage(data){
-                return '../../storage/checks/'+data;
-            },
-            routeEdit: function (data) {
-                return 'registro-detalle-cheque/' + data
-            },
-            pdfInfo: function (data) {
-                return 'pdf-de-gastos/' + data
-            },
-            balance_info(val) {
-                var self = this;
-                if (val) {
-                    axios.post('/tesoreria/balance-internal-control', val)
-                        .then(response => {
-                            this.data.balance = response.data.balance;
-                            //   this.data.internal_controls = val;
-                        }).catch(function (error) {
-                    });
-                }
-            },
-            infoActive: function (val) {
-                if (val.value === 'local_field') {
-                    this.active = true;
-                    this.data.balance = 0;
-                } else {
-                    this.active = false
-                }
-                this.data.type = val;
-            },
-            remove: function (data,index) {
-                axios.post('http://contadventista.org/tesoreria/delete-check', data)
-                    .then(response => {
-                        this.checks.splice(index,1);
-                        this.$alert({
-                            title: 'Se Elimino con Exito!!!',
-                            message: response.data
-                        });
-                        console.log(response.data)
-                    }).catch(function (error) {
-                    if (error.response) {
-                        let data = error.response.data;
-                        if (error.response.status === 422) {
-                            for (var index in data) {
-                                var messages = '';
-                                data[index].forEach(function (item) {
-                                    messages += item + ' '
-                                });
-                                self.errors[index] = messages;
-                            }
-                        } else if (error.response.status === 401) {
-                            self.errors.response.invalid = true;
-                            self.errors.response.msg = data.msg.message;
-                        } else {
-                            console.log(error);
-                            alert("Error generic");
-                        }
-                    } else if (error.request) {
-                        console.log(error.request);
-                        alert("Error empty");
-                    } else {
-                        console.log('Error', error.message);
-                        alert("Error");
-                    }
-                });
-            },
-            send: function (event) {
-                var self = this;
-                axios.post('/tesoreria/' + self.url, this.data)
-                    .then(response => {
-                        if (response.data.success = true) {
-                            this.checks = response.data.list;
-                            if (this.data.type.value === 'local_field') {
-                                document.location = '/tesoreria/depositos-al-campo-local/' ;
-                            }else{
-                                document.location = '/tesoreria/registro-detalle-cheque/' + response.data.token;
-                            }
-                            this.data.number = '';
-                            this.data.name = '';
-                            this.data.balance = '';
-                            this.data.date = '';
-                            this.data.detail = '';
-                            this.data.type = '';
-                            this.data.bank = '';
-                            this.data.ck = '';
-                            this.data.typeCk = '';
-                            this.errors.number = '';
-                            this.errors.name = '';
-                            this.errors.balance = '';
-                            this.errors.date = '';
-                            this.errors.detail = '';
-                            this.errors.type = '';
-                            this.errors.bank = '';
-                            this.formData = '';
-                            this.items = '';
-                            this.itemsNames = '';
-                            this.itemsSizes = '';
-                        }
-                    }).catch(function (error) {
-                    if (error.response) {
-                        let data = error.response.data;
-                        if (error.response.status === 422) {
-                            for (var index in data) {
-                                var messages = '';
-                                data[index].forEach(function (item) {
-                                    messages += item + ' '
-                                });
-                                self.errors[index] = messages;
-                            }
-                        } else if (error.response.status === 401) {
-                            self.errors.response.invalid = true;
-                            self.errors.response.msg = data.msg.message;
-                        } else {
-                            console.log(error);
-                            alert("Error generic");
-                        }
-                    } else if (error.request) {
-                        console.log(error.request);
-                        alert("Error empty");
-                    } else {
-                        console.log('Error', error.message);
-                        alert("Error");
-                    }
-                });
-            },
-            bytesToSize(bytes) {
-                const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-                if (bytes === 0) return 'n/a';
-                let i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
-                if (i === 0) return bytes + ' ' + sizes[i];
-                return (bytes / Math.pow(1024, i)).toFixed(2) + ' ' + sizes[i];
-            },
-            onChange(e) {
-                this.formData = new FormData();
-                let files = e.target.files || e.dataTransfer.files;
-                let fileSizes = 0;
-                for (let fileIn in files) {
-                    if (!isNaN(fileIn)) {
-                        this.items = e.target.files[fileIn] || e.dataTransfer.files[fileIn];
-                        this.itemsNames = files[fileIn].name;
-                        this.data.typeCk = files[fileIn].type;
-                        this.itemsSizes = this.bytesToSize(files[fileIn].size);
-                        fileSizes = files[fileIn].size;
-                        this.formData.append('items', this.items);
-                        console.log(files[fileIn])
-                    }
-                }
-            },
-            removeItems() {
-                this.items = '';
-                this.itemsNames = '';
-                this.itemsSizes = '';
-            },
-            onSubmit() {
-                axios.post('http://contadventista.org/tesoreria/upload-check', this.formData)
-                    .then(response => {
-                        this.data.ck = response.data
-                        console.log(response.data)
-                    }).catch(function (error) {
-                    if (error.response) {
-                        let data = error.response.data;
-                        if (error.response.status === 422) {
-                            for (var index in data) {
-                                var messages = '';
-                                data[index].forEach(function (item) {
-                                    messages += item + ' '
-                                });
-                                self.errors[index] = messages;
-                            }
-                        } else if (error.response.status === 401) {
-                            self.errors.response.invalid = true;
-                            self.errors.response.msg = data.msg.message;
-                        } else {
-                            console.log(error);
-                            alert("Error generic");
-                        }
-                    } else if (error.request) {
-                        console.log(error.request);
-                        alert("Error empty");
-                    } else {
-                        console.log('Error', error.message);
-                        alert("Error");
-                    }
-                });
-            },
-        },
+	    },
+	    methods: {
+		    urlImage( data )
+		    {
+			    return '../../storage/checks/' + data;
+		    },
+		    routeEdit: function ( data )
+		    {
+			    return 'registro-detalle-cheque/' + data
+		    },
+		    pdfInfo: function ( data )
+		    {
+			    return 'pdf-de-gastos/' + data
+		    },
+		    balance_info( val )
+		    {
+			    var self = this;
+			    if ( val ) {
+				    axios.post( '/tesoreria/balance-internal-control', val )
+					    .then( response =>
+					    {
+						    this.data.balance = response.data.balance;
+						    //   this.data.internal_controls = val;
+					    } ).catch( function ( error )
+				    {
+				    } );
+			    }
+		    },
+		    infoActive: function ( val )
+		    {
+			    if ( val.value === 'local_field' ) {
+				    this.active = true;
+				    this.data.balance = 0;
+			    } else {
+				    this.active = false
+			    }
+			    this.data.type = val;
+		    },
+		    remove: function ( data, index )
+		    {
+			    axios.post( 'http://contadventista.org/tesoreria/delete-check', data )
+				    .then( response =>
+				    {
+					    this.checks.splice( index, 1 );
+					    this.$alert( {
+						    title: 'Se Elimino con Exito!!!',
+						    message: response.data
+					    } );
+					    console.log( response.data )
+				    } ).catch( function ( error )
+			    {
+				    if ( error.response ) {
+					    let data = error.response.data;
+					    if ( error.response.status === 422 ) {
+						    for ( var index in data ) {
+							    var messages = '';
+							    data[ index ].forEach( function ( item )
+							    {
+								    messages += item + ' '
+							    } );
+							    self.errors[ index ] = messages;
+						    }
+					    } else if ( error.response.status === 401 ) {
+						    self.errors.response.invalid = true;
+						    self.errors.response.msg = data.msg.message;
+					    } else {
+						    console.log( error );
+						    alert( "Error generic" );
+					    }
+				    } else if ( error.request ) {
+					    console.log( error.request );
+					    alert( "Error empty" );
+				    } else {
+					    console.log( 'Error', error.message );
+					    alert( "Error" );
+				    }
+			    } );
+		    },
+		    send: function ( event )
+		    {
+			    var self = this;
+			    axios.post( '/tesoreria/' + self.url, this.data )
+				    .then( response =>
+				    {
+					    if ( response.data.success = true ) {
+						    this.checks = response.data.list;
+						    if ( this.data.type.value === 'local_field' ) {
+							    document.location = '/tesoreria/depositos-al-campo-local/';
+						    } else {
+							    document.location = '/tesoreria/registro-detalle-cheque/' + response.data.token;
+						    }
+						    this.data.number = '';
+						    this.data.name = '';
+						    this.data.balance = '';
+						    this.data.date = '';
+						    this.data.detail = '';
+						    this.data.type = '';
+						    this.data.bank = '';
+						    this.data.ck = '';
+						    this.data.typeCk = '';
+						    this.errors.number = '';
+						    this.errors.name = '';
+						    this.errors.balance = '';
+						    this.errors.date = '';
+						    this.errors.detail = '';
+						    this.errors.type = '';
+						    this.errors.bank = '';
+						    this.formData = '';
+						    this.items = '';
+						    this.itemsNames = '';
+						    this.itemsSizes = '';
+					    }
+				    } ).catch( function ( error )
+			    {
+				    if ( error.response ) {
+					    let data = error.response.data;
+					    if ( error.response.status === 422 ) {
+						    for ( var index in data ) {
+							    var messages = '';
+							    data[ index ].forEach( function ( item )
+							    {
+								    messages += item + ' '
+							    } );
+							    self.errors[ index ] = messages;
+						    }
+					    } else if ( error.response.status === 401 ) {
+						    self.errors.response.invalid = true;
+						    self.errors.response.msg = data.msg.message;
+					    } else {
+						    console.log( error );
+						    alert( "Error generic" );
+					    }
+				    } else if ( error.request ) {
+					    console.log( error.request );
+					    alert( "Error empty" );
+				    } else {
+					    console.log( 'Error', error.message );
+					    alert( "Error" );
+				    }
+			    } );
+		    },
+		    bytesToSize( bytes )
+		    {
+			    const sizes = [ 'Bytes', 'KB', 'MB', 'GB', 'TB' ];
+			    if ( bytes === 0 ) return 'n/a';
+			    let i = parseInt( Math.floor( Math.log( bytes ) / Math.log( 1024 ) ) );
+			    if ( i === 0 ) return bytes + ' ' + sizes[ i ];
+			    return (bytes / Math.pow( 1024, i )).toFixed( 2 ) + ' ' + sizes[ i ];
+		    },
+		    onChange( e )
+		    {
+			    this.formData = new FormData();
+			    let files = e.target.files || e.dataTransfer.files;
+			    let fileSizes = 0;
+			    for ( let fileIn in files ) {
+				    if ( !isNaN( fileIn ) ) {
+					    this.items = e.target.files[ fileIn ] || e.dataTransfer.files[ fileIn ];
+					    this.itemsNames = files[ fileIn ].name;
+					    this.data.typeCk = files[ fileIn ].type;
+					    this.itemsSizes = this.bytesToSize( files[ fileIn ].size );
+					    fileSizes = files[ fileIn ].size;
+					    this.formData.append( 'items', this.items );
+					    console.log( files[ fileIn ] )
+				    }
+			    }
+		    },
+		    removeItems()
+		    {
+			    this.items = '';
+			    this.itemsNames = '';
+			    this.itemsSizes = '';
+		    },
+		    onSubmit()
+		    {
+			    axios.post( 'http://contadventista.org/tesoreria/upload-check', this.formData )
+				    .then( response =>
+				    {
+					    this.data.ck = response.data
+					    console.log( response.data )
+				    } ).catch( function ( error )
+			    {
+				    if ( error.response ) {
+					    let data = error.response.data;
+					    if ( error.response.status === 422 ) {
+						    for ( var index in data ) {
+							    var messages = '';
+							    data[ index ].forEach( function ( item )
+							    {
+								    messages += item + ' '
+							    } );
+							    self.errors[ index ] = messages;
+						    }
+					    } else if ( error.response.status === 401 ) {
+						    self.errors.response.invalid = true;
+						    self.errors.response.msg = data.msg.message;
+					    } else {
+						    console.log( error );
+						    alert( "Error generic" );
+					    }
+				    } else if ( error.request ) {
+					    console.log( error.request );
+					    alert( "Error empty" );
+				    } else {
+					    console.log( 'Error', error.message );
+					    alert( "Error" );
+				    }
+			    } );
+		    },
+	    },
     }
 </script>
 
 <style scoped>
 
     .mostrar {
-        display: block;
+	    display: block;
     }
 
     .desactive {

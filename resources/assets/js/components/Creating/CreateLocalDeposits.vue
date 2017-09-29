@@ -84,7 +84,7 @@
 
             <div class="panel">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Lista de Depositos Cuentas de la Iglesia</h3>
+                    <h3 class="panel-title">Lista de Depositos Cuentas del Campo Local</h3>
                 </div>
 
                 <div class="panel-body">

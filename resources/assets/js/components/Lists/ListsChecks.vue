@@ -1,6 +1,6 @@
 <template>
     <div class="row panel-body">
-        <h2>{{title}} Saldo Actual </h2>
+        <h2>{{title}}</h2>
         <div class="bootstrap-table">
             <div class="fixed-table-toolbar">
                 <div class="columns columns-right btn-group pull-right">

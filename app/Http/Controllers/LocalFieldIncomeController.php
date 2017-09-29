@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Repositories\BankLocalFieldRepository;
 use App\Repositories\CheckRepository;
 use App\Repositories\LocalFieldDespositRepository;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
 
 class LocalFieldIncomeController extends Controller
 {
@@ -91,6 +94,8 @@ class LocalFieldIncomeController extends Controller
             $type = explode('/', $data['typeCD']);
             $data['image'] = $date->format('M-y').'/'.$data['number'].'-'.$data['bank_local_field_id'].'.'.$type[1];
             $check = $this->checkRepository->token($data['check']['value']);
+	        echo json_encode($data);
+	        die;
             $localFieldDeposit = $this->localFieldDespositRepository->getModel();
             $localFieldDeposit->fill($data);
             if ($localFieldDeposit->save()):
@@ -109,16 +114,18 @@ class LocalFieldIncomeController extends Controller
                             $balance = $totalDeposito;
                             $totalDeposito -= $balance;
                         }
-                        $churchDeposit->internalControls()->attach($control->id,
-                            [ 'balance' => $balance, 'user_id' => currentUser()->id ]);
+                        //$localFieldDeposit->internalControls()->attach($control->id,
+                            //[ 'balance' => $balance, 'user_id' => currentUser()->id ]);
                     } else {
                         break;
                     }
                 endforeach;
-                $balanceBank = $churchDeposit->bank()->sum('balance') + $churchDeposit->balance;
-                $churchDeposit->bank()->update([ 'balance' => $balanceBank ]);
+              //  $balanceBank = $churchDeposit->bank()->sum('balance') + $churchDeposit->balance;
+            //    $churchDeposit->bank()->update([ 'balance' => $balanceBank ]);
+	            echo json_encode($localFieldDeposit);
+	            die;
                 //aqui movemos la imagen del cheque de la carpeta temporal a la carpeta del mes
-                Storage::move('churchDeposit/temp/'.$data['name'], 'churchDeposit/'.$churchDeposit->image);
+              //  Storage::move('churchDeposit/temp/'.$data['name'], 'churchDeposit/'.$churchDeposit->image);
 
                 DB::commit();
 
@@ -130,7 +137,7 @@ class LocalFieldIncomeController extends Controller
                 ], 200);
             else:
                 DB::rollback();
-                return response()->json($churchDeposit->errors, 422);
+              //  return response()->json($churchDeposit->errors, 422);
             endif;
 
 

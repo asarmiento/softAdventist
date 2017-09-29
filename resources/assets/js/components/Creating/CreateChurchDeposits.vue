@@ -412,7 +412,7 @@
                 this.itemsSizes = '';
             },
             onSubmit() {
-                axios.post('http://softadventist.dev/tesoreria/upload-church-deposit', this.formData)
+                axios.post('http://contadventista.org/tesoreria/upload-church-deposit', this.formData)
                     .then(response => {
                         this.data.name = response.data
                         console.log(response.data)
