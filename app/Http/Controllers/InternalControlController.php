@@ -155,9 +155,9 @@ class InternalControlController extends Controller
                 if($controls->with('churchDeposit')->count()):
                     $churchDeposits = $this->internalControlRepository->sumJoinTablePivotDeposit($control->token);
 
-                    $total += ($control->sum('balance') - $churchDeposits);
+                    $total += ($control->balance - $churchDeposits);
                 else:
-                    $total += $control->sum('balance');
+                    $total += $control->balance;
                 endif;
 
             endforeach;
