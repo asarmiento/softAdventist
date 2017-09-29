@@ -148,6 +148,7 @@ class IncomeAccountController extends Controller
 
             return response()->json(['name' => ['Ya existe ese nombre con ese Departamento']], 500);
         endif;
+        $data['initial'] = '0';
         $data['balance'] = '0';
         $data['token'] = Crypt::encrypt(substr($data['name'], 0, 30));
         $data['departament_id'] = $departament->id;
