@@ -348,7 +348,7 @@
 		    {
 			    var self = this;
 			    if ( val ) {
-				    axios.post( '/tesoreria/balance-internal-control', val )
+				    axios.post( '/tesoreria/balance-internal-control-check', val )
 					    .then( response =>
 					    {
 						    this.data.balance = response.data.balance;

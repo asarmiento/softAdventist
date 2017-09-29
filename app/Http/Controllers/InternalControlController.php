@@ -121,7 +121,28 @@ class InternalControlController extends Controller
         endif;
         return response()->json($internalControl->errors,422);
     }
-
+	public function balanceInfoCheck(Request $request)
+	{
+		$total =0;
+		foreach ($request->all() AS $key => $internal):
+			$controls = $this->internalControlRepository->getModel()
+				->where('internal_controls.token',$internal['value']);
+			
+			foreach ($controls->get() AS $control):
+				
+				if($controls->with('churchDeposit')->count()):
+					$churchDeposits = $this->internalControlRepository->sumJoinTablePivotDeposit($control->token);
+					
+					$total += ($control->localFieldIncome()->sum('balance') - $churchDeposits);
+				else:
+					$total += $control->localFieldIncome()->sum('balance');
+				endif;
+			
+			endforeach;
+		endforeach;
+		return response()->json(['balance'=>$total,'success'=>true],200);
+	}
+	
     public function balanceInfo(Request $request)
     {
         $total =0;
@@ -132,9 +153,8 @@ class InternalControlController extends Controller
             foreach ($controls->get() AS $control):
 
                 if($controls->with('churchDeposit')->count()):
-                    $churchDeposits = $this->internalControlRepository->sumJoinTablePivotDeposit($control->token);
-
-                    $total += ($control->localFieldIncome()->sum('balance') - $churchDeposits);
+                 
+                    $total += ($control->localFieldIncome()->sum('balance'));
                 else:
                     $total += $control->localFieldIncome()->sum('balance');
                 endif;

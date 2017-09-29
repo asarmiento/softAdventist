@@ -61432,7 +61432,7 @@ __webpack_require__(293).polyfill();
 
 			var self = this;
 			if (val) {
-				axios.post('/tesoreria/balance-internal-control', val).then(function (response) {
+				axios.post('/tesoreria/balance-internal-control-check', val).then(function (response) {
 					_this2.data.balance = response.data.balance;
 					//   this.data.internal_controls = val;
 				}).catch(function (error) {});

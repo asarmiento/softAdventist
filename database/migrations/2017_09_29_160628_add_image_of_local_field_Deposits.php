@@ -13,7 +13,9 @@ class AddImageOfLocalFieldDeposits extends Migration
      */
     public function up()
     {
-        //
+	    Schema::table('local_field_deposits', function(Blueprint $table) {
+		     $table->string('image',200)->after('balance');
+	    });
     }
 
     /**
@@ -23,6 +25,9 @@ class AddImageOfLocalFieldDeposits extends Migration
      */
     public function down()
     {
-        //
+	    Schema::table('local_field_deposits', function(Blueprint $table) {
+		    $table->dropColumn('avatar');
+	    });
+    
     }
 }

@@ -131,6 +131,7 @@ Route::post('save-church-public', ['uses'=>'Church\ChurchController@store','as'=
         Route::post('upload-internal-control', 'InternalControlController@upload');
         Route::post('delete-internal-control', 'InternalControlController@destroy');
         Route::post('balance-internal-control', 'InternalControlController@balanceInfo');
+        Route::post('balance-internal-control-check', 'InternalControlController@balanceInfoCheck');
         Route::post('save-register-incomes', 'InternalControlController@store');
         // Listas para controles internos
         Route::get('list-control-interno', ['uses'=>'InternalControlController@getData','as'=>'list-internal-control']);

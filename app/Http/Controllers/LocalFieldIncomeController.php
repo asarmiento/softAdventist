@@ -94,6 +94,8 @@ class LocalFieldIncomeController extends Controller
             $type = explode('/', $data['typeCD']);
             $data['image'] = $date->format('M-y').'/'.$data['number'].'-'.$data['bank_local_field_id'].'.'.$type[1];
             $check = $this->checkRepository->token($data['check']['value']);
+	
+	        $data['balance'] = $check->balance;
 	        echo json_encode($data);
 	        die;
             $localFieldDeposit = $this->localFieldDespositRepository->getModel();
