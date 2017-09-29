@@ -153,10 +153,11 @@ class InternalControlController extends Controller
             foreach ($controls->get() AS $control):
 
                 if($controls->with('churchDeposit')->count()):
-                 
-                    $total += ($control->localFieldIncome()->sum('balance'));
+                    $churchDeposits = $this->internalControlRepository->sumJoinTablePivotDeposit($control->token);
+
+                    $total += ($control->sum('balance') - $churchDeposits);
                 else:
-                    $total += $control->localFieldIncome()->sum('balance');
+                    $total += $control->sum('balance');
                 endif;
 
             endforeach;
