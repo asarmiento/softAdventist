@@ -115,6 +115,7 @@ class MemberController extends Controller
                 'last_name'           => $data['last'],
                 'email'               => $data['email'],
                 'status'              => 'activo',
+                'avatar'              => '',
                 'token'               => str_random(40),
                 'password'            => bcrypt(123456),
             ]);
