@@ -176,8 +176,9 @@
 				if (Departament::where('list_departament_id', $newDepartamen->id)->where('church_id',userChurch()->id)->count() > 0):
 					return response()->json(['errors' => ['El Departamento: ' . $newDepartamen->name . ' ya Existe']], 422);
 				endif;
-				$data['church_id'] = 1;// userChurch()->id;
+				$data['church_id'] =  userChurch()->id;
 				$data['budget'] = 0;
+				$data['initial'] = $data['balance'];
 				$data['status'] = 'desactivo';
 				$data['authorized'] = 'no';
 				$data['list_departament_id'] = $newDepartamen->id;
