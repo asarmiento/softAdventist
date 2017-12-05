@@ -244,7 +244,7 @@ class ReportPdfController extends Controller
             Fpdf::SetY($Y);
             $pdf .= $this->firmas($date);
             $this->sacr();
-            Fpdf::Output('Informe-Semanal: ' . $date . '.pdf', 'I');
+            Fpdf::Output('Informe-Semanal: ' . $date . '.pdf', 'D');
             exit;
         }catch (\Exception $e){
             echo json_encode($e->getLine().'- '.$e->getCode().'- '.$e->getMessage().' - '.$e->getTraceAsString());

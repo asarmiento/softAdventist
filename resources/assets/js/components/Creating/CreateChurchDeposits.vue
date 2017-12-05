@@ -175,16 +175,16 @@
                             </thead>
                             <tbody>
                             <tr v-for="(deposit, index) in all_depositos" role="row" class="odd">
-                                <td class="sorting_1"><a @click="remove_deposits(deposit, index)" target='_blank'
-                                                         class='btn btn-danger'>
-                                    <i class='fa fa-remove'></i></a></td>
+                                <td class="sorting_1"><a @click="remove_deposits(deposit, index)" target="_blank"
+                                                         class="btn btn-danger">
+                                    <i class="fa fa-remove"></i></a></td>
                                 <td>{{deposit.number}}</td>
                                 <td>{{deposit.date}}</td>
                                 <td>{{deposit.balance}}</td>
                                 <td>{{deposit.bank.code}}</td>
                                 <td>{{deposit.bank.name}}</td>
-                                <td><a :href="infos(deposit.token)" target='_blank' class='btn btn-danger'>
-                                    <i class='fa fa-file-pdf-o'></i></a></td>
+                                <td><a :href="infos(deposit.token)" target="_blank" class="btn btn-danger">
+                                    <i class="fa fa-file-pdf-o"></i></a></td>
                             </tr>
                             </tbody>
                         </table>
@@ -195,17 +195,17 @@
                             <ul class="pagination">
                                 <li class="paginate_button previous disabled" aria-controls="demo-dt-delete"
                                     tabindex="0" id="demo-dt-delete_previous"><a href="#"><i
-                                        class="demo-psi-arrow-left"></i></a></li>
+		                                class="demo-psi-arrow-left"></i></a></li>
                                 <li class="paginate_button active" aria-controls="demo-dt-delete" tabindex="0"><a
-                                        href="#">1</a></li>
+		                                href="#">1</a></li>
                                 <li class="paginate_button " aria-controls="demo-dt-delete" tabindex="0"><a
-                                        href="#">2</a></li>
+		                                href="#">2</a></li>
                                 <li class="paginate_button " aria-controls="demo-dt-delete" tabindex="0"><a
-                                        href="#">3</a></li>
+		                                href="#">3</a></li>
                                 <li class="paginate_button disabled" aria-controls="demo-dt-delete" tabindex="0"
                                     id="demo-dt-delete_ellipsis"><a href="#">…</a></li>
                                 <li class="paginate_button " aria-controls="demo-dt-delete" tabindex="0"><a
-                                        href="#">6</a></li>
+		                                href="#">6</a></li>
                                 <li class="paginate_button next" aria-controls="demo-dt-delete" tabindex="0"
                                     id="demo-dt-delete_next"><a href="#"><i class="demo-psi-arrow-right"></i></a></li>
                             </ul>
@@ -220,236 +220,284 @@
 
 <script>
     import vSelect from "vue-select";
-    import myDatepicker  from "vue-datepicker";
+    import myDatepicker from "vue-datepicker";
     import {Confirm} from '@lassehaslev/vue-confirm';
+
     export default {
-        props: ['title', 'url', 'banks'],
-        components: {vSelect, myDatepicker},
-        data () {
-            return {
-                data: {
-                    number: '',
-                    date: '',
-                    balance: '',
-                    internal_control_id: [],
-                    bank_id: '',
-                    total: '',
-                    typeCD:'',
-                    name:null
-                },
-                errors: {
-                    number: '',
-                    date: '',
-                    balance: '',
-                    internal_control_id: [],
-                    bank_id: '',
-                    total: '',
-                    typeCD:'',
-                    name:null
-                },
-                state: {
-                    highlighted: {
-                        days: [6], // Highlight Saturday's and Sunday's
-                    },
-                    disabled: {
-                        days: [0, 1, 2, 3, 4, 5],
-                    },
-                    format: 'yyyy-MM-dd',
-                    date: 'yyyy-MM-dd',
-                    bootstrapStyling: 'form-control',
-                },
-                internals: [],
-                all_depositos: [],
-                formData: '',
-                items: '',
-                itemsNames: '',
-                itemsSizes: '',
-            }
-        },
-        computed: {
-            all_banks(){
-                return JSON.parse(this.banks);
-            },
-        },
-        created(){
-            this.$http.get('/tesoreria/lista-info-sin-deposito')
-                .then((response) => {
-                    this.internals = response.data;
-                });
+	    props     : [
+		    'title',
+		    'url',
+		    'banks'
+	    ],
+	    components: {vSelect, myDatepicker},
+	    data()
+	    {
+		    return {
+			    data         : {
+				    number             : '',
+				    date               : '',
+				    balance            : '',
+				    internal_control_id: [],
+				    bank_id            : '',
+				    total              : '',
+				    typeCD             : '',
+				    name               : null
+			    },
+			    errors       : {
+				    number             : '',
+				    date               : '',
+				    balance            : '',
+				    internal_control_id: [],
+				    bank_id            : '',
+				    total              : '',
+				    typeCD             : '',
+				    name               : null
+			    },
+			    state        : {
+				    highlighted     : {
+					    days: [ 6 ], // Highlight Saturday's and Sunday's
+				    },
+				    disabled        : {
+					    days: [
+						    0,
+						    1,
+						    2,
+						    3,
+						    4,
+						    5
+					    ],
+				    },
+				    format          : 'yyyy-MM-dd',
+				    date            : 'yyyy-MM-dd',
+				    bootstrapStyling: 'form-control',
+			    },
+			    internals    : [],
+			    all_depositos: [],
+			    formData     : '',
+			    items        : '',
+			    itemsNames   : '',
+			    itemsSizes   : '',
+		    }
+	    },
+	    computed  : {
+		    all_banks()
+		    {
+			    return JSON.parse( this.banks );
+		    },
+	    },
+	    created()
+	    {
+		    this.$http.get( '/tesoreria/lista-info-sin-deposito' )
+			    .then( ( response ) =>
+			    {
+				    this.internals = response.data;
+			    } );
 
-            this.$http.get('/tesoreria/lista-depositos')
-                .then((response) => {
-                    this.all_depositos = response.data;
-                });
-        },
-        methods: {
-            infos: function (token, event) {
+		    this.$http.get( '/tesoreria/lista-depositos' )
+			    .then( ( response ) =>
+			    {
+				    this.all_depositos = response.data;
+			    } );
+	    },
+	    methods   : {
+		    infos          : function ( token, event )
+		    {
 
-            },
-            remove_deposits: function (token, index, event) {
-                var self = this;
-                axios.post('/tesoreria/remove-deposit', token)
-                    .then(response => {
-                        this.all_depositos.splice(index, 1);
-                    }).catch(function (error) {
-                    if (error.response) {
-                        let data = error.response.campo;
-                        if (error.response.status === 422) {
-                            for (var index in data) {
-                                var messages = '';
-                                data[index].forEach(function (item) {
-                                    messages += item + ' '
-                                });
-                                self.errors[index] = messages;
-                            }
-                        } else if (error.response.status === 401) {
-                            self.errors.response.invalid = true;
-                            self.errors.response.msg = data.msg.message;
-                        } else if (error.response.status === 500) {
-                            console.log(data);
-                            for (var index in data) {
-                                var messages = '';
-                                data[index].forEach(function (item) {
-                                    messages += item + ' '
-                                });
-                                self.errors[index] = messages;
-                            }
-                        }
-                    } else if (error.request) {
-                        console.log(error.request);
-                        alert("Error empty");
-                    } else {
-                        console.log('Error', error.message);
-                        alert("Error");
-                    }
-                });
-            },
-            balance_info(val) {
-                var self = this;
-                if (val) {
-                    axios.post('/tesoreria/balance-internal-control', val)
-                        .then(response => {
-                            this.data.total = response.data.balance;
-                        }).catch(function (error) {
-                    });
-                }
-            },
-            send: function (event) {
+		    },
+		    remove_deposits: function ( token, index, event )
+		    {
+			    var self = this;
+			    axios.post( '/tesoreria/remove-deposit', token )
+				    .then( response =>
+				    {
+					    this.all_depositos.splice( index, 1 );
+				    } ).catch( function ( error )
+			    {
+				    if ( error.response ) {
+					    let data = error.response.campo;
+					    if ( error.response.status === 422 ) {
+						    for ( var index in data ) {
+							    var messages = '';
+							    data[ index ].forEach( function ( item )
+							    {
+								    messages += item + ' '
+							    } );
+							    self.errors[ index ] = messages;
+						    }
+					    } else if ( error.response.status === 401 ) {
+						    self.errors.response.invalid = true;
+						    self.errors.response.msg     = data.msg.message;
+					    } else if ( error.response.status === 500 ) {
+						    console.log( data );
+						    for ( var index in data ) {
+							    var messages = '';
+							    data[ index ].forEach( function ( item )
+							    {
+								    messages += item + ' '
+							    } );
+							    self.errors[ index ] = messages;
+						    }
+					    }
+				    } else if ( error.request ) {
+					    console.log( error.request );
+					    alert( "Error empty" );
+				    } else {
+					    console.log( 'Error', error.message );
+					    alert( "Error" );
+				    }
+			    } );
+		    },
+		    balance_info( val )
+		    {
+			    var self = this;
+			    if ( val ) {
+				    axios.post( '/tesoreria/balance-internal-control', val )
+					    .then( response =>
+					    {
+						    this.data.total = response.data.balance;
+					    } ).catch( function ( error )
+				    {
+				    } );
+			    }
+		    },
+		    send           : function ( event )
+		    {
 
-                var self = this;
-                axios.post('/tesoreria/' + self.url, this.data)
-                    .then(response => {
-                        if (response.data.success = true) {
-                            this.internals = response.data.result;
-                            this.all_depositos = response.data.deposits;
-                            this.data.number = '';
-                            this.data.date = '';
-                            this.data.balance = '';
-                            this.data.internal_control_id = '';
-                            this.data.bank_id = '';
-                            this.data.total = '';
-                            this.errors.number = '';
-                            this.errors.date = '';
-                            this.errors.balance = '';
-                            this.errors.internal_control_id = '';
-                            this.errors.bank_id = '';
-                            this.errors.total = '';
-                            this.$alert({
-                                title: 'Se Guardo con Exito!!!',
-                                message: response.data.message
-                            });
-                        }
-                    }).catch(function (error) {
-                    if (error.response) {
+			    var self = this;
+			    axios.post( '/tesoreria/' + self.url, this.data )
+				    .then( response =>
+				    {
+					    if ( response.data.success = true ) {
+						    this.internals                  = response.data.result;
+						    this.all_depositos              = response.data.deposits;
+						    this.data.number                = '';
+						    this.data.date                  = '';
+						    this.data.balance               = '';
+						    this.data.internal_control_id   = '';
+						    this.data.bank_id               = '';
+						    this.data.total                 = '';
+						    this.errors.number              = '';
+						    this.errors.date                = '';
+						    this.errors.balance             = '';
+						    this.errors.internal_control_id = '';
+						    this.errors.bank_id             = '';
+						    this.errors.total               = '';
+						    this.internals                  = [];
+						    this.all_depositos              = [];
+						    this.formData                   = '';
+						    this.items                      = '';
+						    this.itemsNames                 = '';
+						    this.itemsSizes                 = '';
+						    this.$alert( {
+							    title  : 'Se Guardo con Exito!!!',
+							    message: response.data.message
+						    } );
+					    }
+				    } ).catch( function ( error )
+			    {
+				    if ( error.response ) {
 
-                        let data = error.response.data;
-                        if (error.response.status === 422) {
-                            self.$alert({
-                                title: 'Error al Intentar guardar!!!',
-                                message: error.response.data.message
-                            });
-                        } else if (error.response.status === 401) {
-                            self.errors.response.invalid = true;
-                            self.errors.response.msg = data.msg.message;
+					    let data = error.response.data;
+					    if ( error.response.status === 422 ) {
+						    self.$alert( {
+							    title  : 'Error al Intentar guardar!!!',
+							    message: error.response.data.message
+						    } );
+					    } else if ( error.response.status === 401 ) {
+						    self.errors.response.invalid = true;
+						    self.errors.response.msg     = data.msg.message;
 
-                        }
+					    }
 
-                    } else if (error.request) {
-                        console.log(error.request);
-                        alert("Error empty");
-                    } else {
-                        console.log('Error', error.message);
-                        alert("Error");
-                    }
-                });
-            },
-            bytesToSize(bytes) {
-                const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-                if (bytes === 0) return 'n/a';
-                let i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
-                if (i === 0) return bytes + ' ' + sizes[i];
-                return (bytes / Math.pow(1024, i)).toFixed(2) + ' ' + sizes[i];
-            },
-            onChange(e) {
-                this.formData = new FormData();
-                let files = e.target.files || e.dataTransfer.files;
-                let fileSizes = 0;
-                for (let fileIn in files) {
-                    if (!isNaN(fileIn)) {
-                        this.items = e.target.files[fileIn] || e.dataTransfer.files[fileIn];
-                        this.itemsNames = files[fileIn].name;
-                        this.data.typeCD = files[fileIn].type;
-                        this.itemsSizes = this.bytesToSize(files[fileIn].size);
-                        fileSizes = files[fileIn].size;
-                        this.formData.append('items', this.items);
-                        console.log(files[fileIn])
-                    }
-                }
-            },
-            removeItems() {
-                this.items = '';
-                this.itemsNames = '';
-                this.itemsSizes = '';
-            },
-            onSubmit() {
-                axios.post('http://contadventista.org/tesoreria/upload-church-deposit', this.formData)
-                    .then(response => {
-                        this.data.name = response.data
-                        console.log(response.data)
-                    }).catch(function (error) {
-                    if (error.response) {
-                        let data = error.response.data;
-                        if (error.response.status === 422) {
-                            for (var index in data) {
-                                var messages = '';
-                                data[index].forEach(function (item) {
-                                    messages += item + ' '
-                                });
-                                self.errors[index] = messages;
-                            }
-                        } else if (error.response.status === 401) {
-                            self.errors.response.invalid = true;
-                            self.errors.response.msg = data.msg.message;
-                        } else {
-                            console.log(error);
-                            alert("Error generic");
-                        }
-                    } else if (error.request) {
-                        console.log(error.request);
-                        alert("Error empty");
-                    } else {
-                        console.log('Error', error.message);
-                        alert("Error");
-                    }
-                });
-            },
-        },
+				    } else if ( error.request ) {
+					    console.log( error.request );
+					    alert( "Error empty" );
+				    } else {
+					    console.log( 'Error', error.message );
+					    alert( "Error" );
+				    }
+			    } );
+		    },
+		    bytesToSize( bytes )
+		    {
+			    const sizes = [
+				    'Bytes',
+				    'KB',
+				    'MB',
+				    'GB',
+				    'TB'
+			    ];
+			    if ( bytes === 0 ) return 'n/a';
+			    let i = parseInt( Math.floor( Math.log( bytes ) / Math.log( 1024 ) ) );
+			    if ( i === 0 ) return bytes + ' ' + sizes[ i ];
+			    return (bytes / Math.pow( 1024, i )).toFixed( 2 ) + ' ' + sizes[ i ];
+		    },
+		    onChange( e )
+		    {
+			    this.formData = new FormData();
+			    let files     = e.target.files || e.dataTransfer.files;
+			    let fileSizes = 0;
+			    for ( let fileIn in files ) {
+				    if ( !isNaN( fileIn ) ) {
+					    this.items       = e.target.files[ fileIn ] || e.dataTransfer.files[ fileIn ];
+					    this.itemsNames  = files[ fileIn ].name;
+					    this.data.typeCD = files[ fileIn ].type;
+					    this.itemsSizes  = this.bytesToSize( files[ fileIn ].size );
+					    fileSizes        = files[ fileIn ].size;
+					    this.formData.append( 'items', this.items );
+					    console.log( files[ fileIn ] )
+				    }
+			    }
+		    },
+		    removeItems()
+		    {
+			    this.items      = '';
+			    this.itemsNames = '';
+			    this.itemsSizes = '';
+		    },
+		    onSubmit()
+		    {
+			    axios.post( '/tesoreria/upload-church-deposit', this.formData )
+				    .then( response =>
+				    {
+					    this.data.name = response.data
+					    console.log( response.data )
+				    } ).catch( function ( error )
+			    {
+				    if ( error.response ) {
+					    let data = error.response.data;
+					    if ( error.response.status === 422 ) {
+						    for ( var index in data ) {
+							    var messages = '';
+							    data[ index ].forEach( function ( item )
+							    {
+								    messages += item + ' '
+							    } );
+							    self.errors[ index ] = messages;
+						    }
+					    } else if ( error.response.status === 401 ) {
+						    self.errors.response.invalid = true;
+						    self.errors.response.msg     = data.msg.message;
+					    } else {
+						    console.log( error );
+						    alert( "Error generic" );
+					    }
+				    } else if ( error.request ) {
+					    console.log( error.request );
+					    alert( "Error empty" );
+				    } else {
+					    console.log( 'Error', error.message );
+					    alert( "Error" );
+				    }
+			    } );
+		    },
+	    },
     }
 </script>
 
 <style scoped>
 
     .mostrar {
-        display: block;
+	    display: block;
     }
 </style>

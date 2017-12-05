@@ -63,7 +63,7 @@ class ChurchDepositController extends Controller
         $data = $request->all();
 
         try {
-            if ($data['balance'] > $data['total']):
+            if (number_format($data['balance'],2,'.','') > number_format($data['total'],2,'.','')):
                 return response()->json([
                     'success' => false,
                     'message' => 'El deposito es mayor que los informes seleccionados, debe elegir mas informes'
@@ -123,7 +123,7 @@ class ChurchDepositController extends Controller
                 DB::commit();
 
                 return response()->json([
-                    'success'  => false,
+                    'success'  => true,
                     'message'  => 'Se regitro con Exito!!!',
                     'result'   => $this->internalControlRepository->listPivotSelects(),
                     'deposits' => $this->lists()

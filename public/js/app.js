@@ -57710,7 +57710,7 @@ exports = module.exports = __webpack_require__(2)(undefined);
 
 
 // module
-exports.push([module.i, "\n.mostrar[data-v-788ece0e] {\n    display: block;\n}\n", ""]);
+exports.push([module.i, "\n.mostrar[data-v-788ece0e] {\n\t    display: block;\n}\n", ""]);
 
 // exports
 
@@ -57950,229 +57950,236 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
-    props: ['title', 'url', 'banks'],
-    components: { vSelect: __WEBPACK_IMPORTED_MODULE_0_vue_select___default.a, myDatepicker: __WEBPACK_IMPORTED_MODULE_1_vue_datepicker___default.a },
-    data: function data() {
-        return {
-            data: {
-                number: '',
-                date: '',
-                balance: '',
-                internal_control_id: [],
-                bank_id: '',
-                total: '',
-                typeCD: '',
-                name: null
-            },
-            errors: {
-                number: '',
-                date: '',
-                balance: '',
-                internal_control_id: [],
-                bank_id: '',
-                total: '',
-                typeCD: '',
-                name: null
-            },
-            state: {
-                highlighted: {
-                    days: [6] // Highlight Saturday's and Sunday's
-                },
-                disabled: {
-                    days: [0, 1, 2, 3, 4, 5]
-                },
-                format: 'yyyy-MM-dd',
-                date: 'yyyy-MM-dd',
-                bootstrapStyling: 'form-control'
-            },
-            internals: [],
-            all_depositos: [],
-            formData: '',
-            items: '',
-            itemsNames: '',
-            itemsSizes: ''
-        };
-    },
+	props: ['title', 'url', 'banks'],
+	components: { vSelect: __WEBPACK_IMPORTED_MODULE_0_vue_select___default.a, myDatepicker: __WEBPACK_IMPORTED_MODULE_1_vue_datepicker___default.a },
+	data: function data() {
+		return {
+			data: {
+				number: '',
+				date: '',
+				balance: '',
+				internal_control_id: [],
+				bank_id: '',
+				total: '',
+				typeCD: '',
+				name: null
+			},
+			errors: {
+				number: '',
+				date: '',
+				balance: '',
+				internal_control_id: [],
+				bank_id: '',
+				total: '',
+				typeCD: '',
+				name: null
+			},
+			state: {
+				highlighted: {
+					days: [6] // Highlight Saturday's and Sunday's
+				},
+				disabled: {
+					days: [0, 1, 2, 3, 4, 5]
+				},
+				format: 'yyyy-MM-dd',
+				date: 'yyyy-MM-dd',
+				bootstrapStyling: 'form-control'
+			},
+			internals: [],
+			all_depositos: [],
+			formData: '',
+			items: '',
+			itemsNames: '',
+			itemsSizes: ''
+		};
+	},
 
-    computed: {
-        all_banks: function all_banks() {
-            return JSON.parse(this.banks);
-        }
-    },
-    created: function created() {
-        var _this = this;
+	computed: {
+		all_banks: function all_banks() {
+			return JSON.parse(this.banks);
+		}
+	},
+	created: function created() {
+		var _this = this;
 
-        this.$http.get('/tesoreria/lista-info-sin-deposito').then(function (response) {
-            _this.internals = response.data;
-        });
+		this.$http.get('/tesoreria/lista-info-sin-deposito').then(function (response) {
+			_this.internals = response.data;
+		});
 
-        this.$http.get('/tesoreria/lista-depositos').then(function (response) {
-            _this.all_depositos = response.data;
-        });
-    },
+		this.$http.get('/tesoreria/lista-depositos').then(function (response) {
+			_this.all_depositos = response.data;
+		});
+	},
 
-    methods: {
-        infos: function infos(token, event) {},
-        remove_deposits: function remove_deposits(token, index, event) {
-            var _this2 = this;
+	methods: {
+		infos: function infos(token, event) {},
+		remove_deposits: function remove_deposits(token, index, event) {
+			var _this2 = this;
 
-            var self = this;
-            axios.post('/tesoreria/remove-deposit', token).then(function (response) {
-                _this2.all_depositos.splice(index, 1);
-            }).catch(function (error) {
-                if (error.response) {
-                    var data = error.response.campo;
-                    if (error.response.status === 422) {
-                        for (var index in data) {
-                            var messages = '';
-                            data[index].forEach(function (item) {
-                                messages += item + ' ';
-                            });
-                            self.errors[index] = messages;
-                        }
-                    } else if (error.response.status === 401) {
-                        self.errors.response.invalid = true;
-                        self.errors.response.msg = data.msg.message;
-                    } else if (error.response.status === 500) {
-                        console.log(data);
-                        for (var index in data) {
-                            var messages = '';
-                            data[index].forEach(function (item) {
-                                messages += item + ' ';
-                            });
-                            self.errors[index] = messages;
-                        }
-                    }
-                } else if (error.request) {
-                    console.log(error.request);
-                    alert("Error empty");
-                } else {
-                    console.log('Error', error.message);
-                    alert("Error");
-                }
-            });
-        },
-        balance_info: function balance_info(val) {
-            var _this3 = this;
+			var self = this;
+			axios.post('/tesoreria/remove-deposit', token).then(function (response) {
+				_this2.all_depositos.splice(index, 1);
+			}).catch(function (error) {
+				if (error.response) {
+					var data = error.response.campo;
+					if (error.response.status === 422) {
+						for (var index in data) {
+							var messages = '';
+							data[index].forEach(function (item) {
+								messages += item + ' ';
+							});
+							self.errors[index] = messages;
+						}
+					} else if (error.response.status === 401) {
+						self.errors.response.invalid = true;
+						self.errors.response.msg = data.msg.message;
+					} else if (error.response.status === 500) {
+						console.log(data);
+						for (var index in data) {
+							var messages = '';
+							data[index].forEach(function (item) {
+								messages += item + ' ';
+							});
+							self.errors[index] = messages;
+						}
+					}
+				} else if (error.request) {
+					console.log(error.request);
+					alert("Error empty");
+				} else {
+					console.log('Error', error.message);
+					alert("Error");
+				}
+			});
+		},
+		balance_info: function balance_info(val) {
+			var _this3 = this;
 
-            var self = this;
-            if (val) {
-                axios.post('/tesoreria/balance-internal-control', val).then(function (response) {
-                    _this3.data.total = response.data.balance;
-                }).catch(function (error) {});
-            }
-        },
+			var self = this;
+			if (val) {
+				axios.post('/tesoreria/balance-internal-control', val).then(function (response) {
+					_this3.data.total = response.data.balance;
+				}).catch(function (error) {});
+			}
+		},
 
-        send: function send(event) {
-            var _this4 = this;
+		send: function send(event) {
+			var _this4 = this;
 
-            var self = this;
-            axios.post('/tesoreria/' + self.url, this.data).then(function (response) {
-                if (response.data.success = true) {
-                    _this4.internals = response.data.result;
-                    _this4.all_depositos = response.data.deposits;
-                    _this4.data.number = '';
-                    _this4.data.date = '';
-                    _this4.data.balance = '';
-                    _this4.data.internal_control_id = '';
-                    _this4.data.bank_id = '';
-                    _this4.data.total = '';
-                    _this4.errors.number = '';
-                    _this4.errors.date = '';
-                    _this4.errors.balance = '';
-                    _this4.errors.internal_control_id = '';
-                    _this4.errors.bank_id = '';
-                    _this4.errors.total = '';
-                    _this4.$alert({
-                        title: 'Se Guardo con Exito!!!',
-                        message: response.data.message
-                    });
-                }
-            }).catch(function (error) {
-                if (error.response) {
+			var self = this;
+			axios.post('/tesoreria/' + self.url, this.data).then(function (response) {
+				if (response.data.success = true) {
+					_this4.internals = response.data.result;
+					_this4.all_depositos = response.data.deposits;
+					_this4.data.number = '';
+					_this4.data.date = '';
+					_this4.data.balance = '';
+					_this4.data.internal_control_id = '';
+					_this4.data.bank_id = '';
+					_this4.data.total = '';
+					_this4.errors.number = '';
+					_this4.errors.date = '';
+					_this4.errors.balance = '';
+					_this4.errors.internal_control_id = '';
+					_this4.errors.bank_id = '';
+					_this4.errors.total = '';
+					_this4.internals = [];
+					_this4.all_depositos = [];
+					_this4.formData = '';
+					_this4.items = '';
+					_this4.itemsNames = '';
+					_this4.itemsSizes = '';
+					_this4.$alert({
+						title: 'Se Guardo con Exito!!!',
+						message: response.data.message
+					});
+				}
+			}).catch(function (error) {
+				if (error.response) {
 
-                    var data = error.response.data;
-                    if (error.response.status === 422) {
-                        self.$alert({
-                            title: 'Error al Intentar guardar!!!',
-                            message: error.response.data.message
-                        });
-                    } else if (error.response.status === 401) {
-                        self.errors.response.invalid = true;
-                        self.errors.response.msg = data.msg.message;
-                    }
-                } else if (error.request) {
-                    console.log(error.request);
-                    alert("Error empty");
-                } else {
-                    console.log('Error', error.message);
-                    alert("Error");
-                }
-            });
-        },
-        bytesToSize: function bytesToSize(bytes) {
-            var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-            if (bytes === 0) return 'n/a';
-            var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
-            if (i === 0) return bytes + ' ' + sizes[i];
-            return (bytes / Math.pow(1024, i)).toFixed(2) + ' ' + sizes[i];
-        },
-        onChange: function onChange(e) {
-            this.formData = new FormData();
-            var files = e.target.files || e.dataTransfer.files;
-            var fileSizes = 0;
-            for (var fileIn in files) {
-                if (!isNaN(fileIn)) {
-                    this.items = e.target.files[fileIn] || e.dataTransfer.files[fileIn];
-                    this.itemsNames = files[fileIn].name;
-                    this.data.typeCD = files[fileIn].type;
-                    this.itemsSizes = this.bytesToSize(files[fileIn].size);
-                    fileSizes = files[fileIn].size;
-                    this.formData.append('items', this.items);
-                    console.log(files[fileIn]);
-                }
-            }
-        },
-        removeItems: function removeItems() {
-            this.items = '';
-            this.itemsNames = '';
-            this.itemsSizes = '';
-        },
-        onSubmit: function onSubmit() {
-            var _this5 = this;
+					var data = error.response.data;
+					if (error.response.status === 422) {
+						self.$alert({
+							title: 'Error al Intentar guardar!!!',
+							message: error.response.data.message
+						});
+					} else if (error.response.status === 401) {
+						self.errors.response.invalid = true;
+						self.errors.response.msg = data.msg.message;
+					}
+				} else if (error.request) {
+					console.log(error.request);
+					alert("Error empty");
+				} else {
+					console.log('Error', error.message);
+					alert("Error");
+				}
+			});
+		},
+		bytesToSize: function bytesToSize(bytes) {
+			var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+			if (bytes === 0) return 'n/a';
+			var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+			if (i === 0) return bytes + ' ' + sizes[i];
+			return (bytes / Math.pow(1024, i)).toFixed(2) + ' ' + sizes[i];
+		},
+		onChange: function onChange(e) {
+			this.formData = new FormData();
+			var files = e.target.files || e.dataTransfer.files;
+			var fileSizes = 0;
+			for (var fileIn in files) {
+				if (!isNaN(fileIn)) {
+					this.items = e.target.files[fileIn] || e.dataTransfer.files[fileIn];
+					this.itemsNames = files[fileIn].name;
+					this.data.typeCD = files[fileIn].type;
+					this.itemsSizes = this.bytesToSize(files[fileIn].size);
+					fileSizes = files[fileIn].size;
+					this.formData.append('items', this.items);
+					console.log(files[fileIn]);
+				}
+			}
+		},
+		removeItems: function removeItems() {
+			this.items = '';
+			this.itemsNames = '';
+			this.itemsSizes = '';
+		},
+		onSubmit: function onSubmit() {
+			var _this5 = this;
 
-            axios.post('http://contadventista.org/tesoreria/upload-church-deposit', this.formData).then(function (response) {
-                _this5.data.name = response.data;
-                console.log(response.data);
-            }).catch(function (error) {
-                if (error.response) {
-                    var data = error.response.data;
-                    if (error.response.status === 422) {
-                        for (var index in data) {
-                            var messages = '';
-                            data[index].forEach(function (item) {
-                                messages += item + ' ';
-                            });
-                            self.errors[index] = messages;
-                        }
-                    } else if (error.response.status === 401) {
-                        self.errors.response.invalid = true;
-                        self.errors.response.msg = data.msg.message;
-                    } else {
-                        console.log(error);
-                        alert("Error generic");
-                    }
-                } else if (error.request) {
-                    console.log(error.request);
-                    alert("Error empty");
-                } else {
-                    console.log('Error', error.message);
-                    alert("Error");
-                }
-            });
-        }
-    }
+			axios.post('/tesoreria/upload-church-deposit', this.formData).then(function (response) {
+				_this5.data.name = response.data;
+				console.log(response.data);
+			}).catch(function (error) {
+				if (error.response) {
+					var data = error.response.data;
+					if (error.response.status === 422) {
+						for (var index in data) {
+							var messages = '';
+							data[index].forEach(function (item) {
+								messages += item + ' ';
+							});
+							self.errors[index] = messages;
+						}
+					} else if (error.response.status === 401) {
+						self.errors.response.invalid = true;
+						self.errors.response.msg = data.msg.message;
+					} else {
+						console.log(error);
+						alert("Error generic");
+					}
+				} else if (error.request) {
+					console.log(error.request);
+					alert("Error empty");
+				} else {
+					console.log('Error', error.message);
+					alert("Error");
+				}
+			});
+		}
+	}
 });
 
 /***/ }),
@@ -61451,7 +61458,7 @@ __webpack_require__(293).polyfill();
 		remove: function remove(data, index) {
 			var _this3 = this;
 
-			axios.post('http://contadventista.org/tesoreria/delete-check', data).then(function (response) {
+			axios.post('/tesoreria/delete-check', data).then(function (response) {
 				_this3.checks.splice(index, 1);
 				_this3.$alert({
 					title: 'Se Elimino con Exito!!!',
@@ -61576,7 +61583,7 @@ __webpack_require__(293).polyfill();
 		onSubmit: function onSubmit() {
 			var _this5 = this;
 
-			axios.post('http://contadventista.org/tesoreria/upload-check', this.formData).then(function (response) {
+			axios.post('/tesoreria/upload-check', this.formData).then(function (response) {
 				_this5.data.ck = response.data;
 				console.log(response.data);
 			}).catch(function (error) {
@@ -68289,7 +68296,7 @@ exports = module.exports = __webpack_require__(2)(undefined);
 
 
 // module
-exports.push([module.i, "\n.tittle-2 {\n    text-align: left !important;\n    font-weight: bold;\n    float: left;\n    min-width: 30%;\n}\n.value {\n    text-align: left !important;\n    float: right;\n    min-width: 70%;\n}\n\n", ""]);
+exports.push([module.i, "\n.tittle-2 {\n\t    text-align: left !important;\n\t    font-weight: bold;\n\t    float: left;\n\t    min-width: 30%;\n}\n.value {\n\t    text-align: left !important;\n\t    float: right;\n\t    min-width: 70%;\n}\n\n", ""]);
 
 // exports
 
@@ -68467,100 +68474,105 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    props: ['source', 'title'],
-    components: {},
-    data: function data() {
-        return {
-            txtSearch: '',
-            counts: ['5', '10', '20', '50'],
-            datos: [],
-            my_pages: [],
-            columns: [],
-            typeAll: true,
-            typeStyle: true
-        };
-    },
+	props: ["source", "title"],
+	components: {},
+	data: function data() {
+		return {
+			txtSearch: "",
+			counts: ["5", "10", "20", "50"],
+			datos: [],
+			my_pages: [],
+			columns: [],
+			typeAll: true,
+			typeStyle: true
+		};
+	},
 
-    computed: {},
-    created: function created() {
-        var self = this;
-        this.$http.get(this.source).then(function (response) {
-            self.datos = response.data.model;
-            self.my_pages = response.data.my_pages;
-            self.columns = response.data.columns;
-        });
-    },
+	computed: {},
+	created: function created() {
+		var self = this;
+		this.$http.get(this.source).then(function (response) {
+			self.datos = response.data.model;
+			self.my_pages = response.data.my_pages;
+			self.columns = response.data.columns;
+		});
+	},
 
-    methods: {
-        weekly: function weekly(token) {
-            return '/tesoreria/registro-de-ingresos/' + token;
-        },
-        pdfInfoWeekly: function pdfInfoWeekly(data) {
-            return '/tesoreria/reporte-semanal/' + data;
-        },
-        styleType: function styleType() {
-            var self = this;
-            if (this.typeStyle) {
-                this.typeStyle = false;
-            } else {
-                this.typeStyle = true;
-            }
-        },
+	methods: {
+		image: function image(data) {
+			this.$http.get("/tesoreria/image/internalControls/" + data).then(function (response) {
+				return response.data;
+			});
+		},
+		weekly: function weekly(token) {
+			return "/tesoreria/registro-de-ingresos/" + token;
+		},
+		pdfInfoWeekly: function pdfInfoWeekly(data) {
+			return "/tesoreria/reporte-semanal/" + data;
+		},
+		styleType: function styleType() {
+			var self = this;
+			if (this.typeStyle) {
+				this.typeStyle = false;
+			} else {
+				this.typeStyle = true;
+			}
+		},
 
-        sarch: function sarch(url) {
-            var self = this;
-            this.$http.get(url + '?search=' + this.txtSearch).then(function (response) {
-                self.datos = response.data.model;
-                self.my_pages = response.data.my_pages;
-            });
-        },
-        pagePre: function pagePre(url) {
-            url += '&perPage=' + this.datos.per_page;
-            var self = this;
-            this.$http.get(url).then(function (response) {
-                self.datos = response.data.model;
-                self.my_pages = response.data.my_pages;
-            });
-        },
-        pageNext: function pageNext(url) {
-            url += '&perPage=' + this.datos.per_page;
-            var self = this;
-            this.$http.get(url).then(function (response) {
-                self.datos = response.data.model;
-                self.my_pages = response.data.my_pages;
-            });
-        },
-        page: function page(url, number) {
-            if (!isNaN(number)) {
-                var self = this;
-                url += '?page=' + number;
-                url += '&perPage=' + this.datos.per_page;
-                this.$http.get(url).then(function (response) {
-                    self.datos = response.data.model;
-                    self.my_pages = response.data.my_pages;
-                });
-            }
-        },
-        perPage: function perPage(url, number) {
-            var self = this;
-            this.$http.get(url + '?perPage=' + number).then(function (response) {
-                self.datos = response.data.model;
-                self.my_pages = response.data.my_pages;
-            });
-        },
-        all: function all(url, total) {
-            var self = this;
-            if (this.typeAll) {
-                this.typeAll = false;
-            } else {
-                this.typeAll = true;
-            }
-            this.$http.get(url + '?all=' + total).then(function (response) {
-                self.datos = response.data.model;
-                self.my_pages = response.data.my_pages;
-            });
-        }
-    }
+		sarch: function sarch(url) {
+			var self = this;
+			this.$http.get(url + "?search=" + this.txtSearch).then(function (response) {
+				self.datos = response.data.model;
+				self.my_pages = response.data.my_pages;
+			});
+		},
+		pagePre: function pagePre(url) {
+			url += "&perPage=" + this.datos.per_page;
+			var self = this;
+			this.$http.get(url).then(function (response) {
+				self.datos = response.data.model;
+				self.my_pages = response.data.my_pages;
+			});
+		},
+		pageNext: function pageNext(url) {
+			url += "&perPage=" + this.datos.per_page;
+			var self = this;
+			this.$http.get(url).then(function (response) {
+				self.datos = response.data.model;
+				self.my_pages = response.data.my_pages;
+			});
+		},
+		page: function page(url, number) {
+			if (!isNaN(number)) {
+				var self = this;
+				url += "?page=" + number;
+				url += "&perPage=" + this.datos.per_page;
+				this.$http.get(url).then(function (response) {
+					self.datos = response.data.model;
+					self.my_pages = response.data.my_pages;
+				});
+			}
+		},
+		perPage: function perPage(url, number) {
+			var self = this;
+			this.$http.get(url + "?perPage=" + number).then(function (response) {
+				self.datos = response.data.model;
+				self.my_pages = response.data.my_pages;
+			});
+		},
+		all: function all(url, total) {
+			var self = this;
+			if (this.typeAll) {
+				this.typeAll = false;
+			} else {
+				this.typeAll = true;
+			}
+			this.$http.get(url + "?all=" + total).then(function (response) {
+				self.datos = response.data.model;
+				self.my_pages = response.data.my_pages;
+			});
+		}
+	}
 });
 
 /***/ }),
@@ -68678,7 +68690,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       attrs: {
         "href": "#"
       }
-    }, [_vm._v("\n                            " + _vm._s(dato.saturday))])]), _vm._v(" "), _c('td', {}, [_c('a', {
+    }, [_vm._v("\n                                " + _vm._s(dato.saturday))])]), _vm._v(" "), _c('td', {}, [_c('a', {
       staticClass: "editable editable-click",
       attrs: {
         "href": "",
@@ -68686,13 +68698,19 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         "data-pk": "53431",
         "data-value": "dato.budget"
       }
-    }, [_vm._v(_vm._s(dato.number) + "\n                            ")])]), _vm._v(" "), _c('td', {}, [_vm._v(_vm._s(dato.number_of_envelopes) + " ")]), _vm._v(" "), _c('td', {}, [_vm._v(" " + _vm._s(dato.balance))]), _vm._v(" "), _c('td', {
+    }, [_vm._v(_vm._s(dato.number) + "\n                                ")])]), _vm._v(" "), _c('td', {}, [_vm._v(_vm._s(dato.number_of_envelopes) + " ")]), _vm._v(" "), _c('td', {}, [_vm._v(" " + _vm._s(dato.balance))]), _vm._v(" "), _c('td', {
       staticStyle: {
         "text-align": "center"
       }
     }, [(dato.image) ? _c('div', {
       staticClass: "label label-table label-success"
-    }, [_vm._v("\n                                " + _vm._s(dato.image) + "\n                            ")]) : _c('div', {
+    }, [_c('img', {
+      attrs: {
+        "src": "image(dato.image)",
+        "height": "30",
+        "width": "30"
+      }
+    })]) : _c('div', {
       staticClass: "label label-table label-danger"
     }, [_vm._v(_vm._s(dato.image))])]), _vm._v(" "), _c('td', {
       staticStyle: {
@@ -68700,7 +68718,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }, [(dato.status === 'aplicado') ? _c('div', {
       staticClass: "label label-table label-success"
-    }, [_vm._v("\n                                " + _vm._s(dato.status) + "\n                            ")]) : _c('div', {
+    }, [_vm._v("\n                                    " + _vm._s(dato.status) + "\n                                ")]) : _c('div', {
       staticClass: "label label-table label-danger"
     }, [_c('a', {
       attrs: {

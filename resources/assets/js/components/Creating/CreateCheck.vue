@@ -370,7 +370,7 @@
 		    },
 		    remove: function ( data, index )
 		    {
-			    axios.post( 'http://contadventista.org/tesoreria/delete-check', data )
+			    axios.post( '/tesoreria/delete-check', data )
 				    .then( response =>
 				    {
 					    this.checks.splice( index, 1 );
@@ -504,7 +504,7 @@
 		    },
 		    onSubmit()
 		    {
-			    axios.post( 'http://contadventista.org/tesoreria/upload-check', this.formData )
+			    axios.post( '/tesoreria/upload-check', this.formData )
 				    .then( response =>
 				    {
 					    this.data.ck = response.data

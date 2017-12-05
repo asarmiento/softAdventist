@@ -7,7 +7,7 @@ use App\Entities\Entity;
 
 class BankLocalField extends Entity
 {
-
+	protected $fillable = ['code','name','balance','token','local_field_id','user_id'];
     /**
      * ---------------------------------------------------------------------
      * @Author     : Anwar Sarmiento "asarmiento@sistemasamigables.com"

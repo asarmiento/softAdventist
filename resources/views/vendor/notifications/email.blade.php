@@ -1,58 +1,59 @@
 @component('mail::message')
-{{-- Greeting --}}
-@if (! empty($greeting))
-# {{ $greeting }}
-@else
-@if ($level == 'error')
-# Whoops!
-@else
-# Hola!
-@endif
-@endif
+	{{-- Greeting --}}
+	@if (! empty($greeting))
+		# {{ $greeting }}
+	@else
+		@if ($level == 'error')
+			# Whoops!
+		@else
+			# Hola!
+		@endif
+	@endif
 
-{{-- Intro Lines --}}
-@foreach ($introLines as $line)
-{{ $line }}
+	{{-- Intro Lines --}}
+	@foreach ($introLines as $line)
+		{{ $line }}
 
-@endforeach
+	@endforeach
 
-{{-- Action Button --}}
-@if (isset($actionText))
-<?php
-    switch ($level) {
-        case 'success':
-            $color = 'green';
-            break;
-        case 'error':
-            $color = 'red';
-            break;
-        default:
-            $color = 'blue';
-    }
-?>
-@component('mail::button', ['url' => $actionUrl, 'color' => $color])
-{{ $actionText }}
-@endcomponent
-@endif
+	{{-- Action Button --}}
+	@if (isset($actionText))
+		<?php
+		switch ($level)
+		{
+			case 'success':
+				$color = 'green';
+				break;
+			case 'error':
+				$color = 'red';
+				break;
+			default:
+				$color = 'blue';
+		}
+		?>
+		@component('mail::button', ['url' => $actionUrl, 'color' => $color])
+			{{ $actionText }}
+		@endcomponent
+	@endif
 
-{{-- Outro Lines --}}
-@foreach ($outroLines as $line)
-{{ $line }}
+	{{-- Outro Lines --}}
+	@foreach ($outroLines as $line)
+		{{ $line }}
 
-@endforeach
+	@endforeach
 
-<!-- Salutation -->
-@if (! empty($salutation))
-{{ $salutation }}
-@else
-Saludos,<br>{{ config('app.name') }}
-@endif
+	<!-- Salutation -->
+	@if (! empty($salutation))
+		{{ $salutation }}
+	@else
+		Saludos,<br>{{ config('app.name') }}
+	@endif
 
-<!-- Subcopy -->
-@if (isset($actionText))
-@component('mail::subcopy')
-Si tienes problemas para hacer clic en "{{ $actionText }}" Botón, copia y pega la URL a continuación
-En su navegador web: [{{ $actionUrl }}]({{ $actionUrl }}) "<a href="http://friendlypos.net">Sistemas Amigables de Costa Rica</a>"
-@endcomponent
-@endif
+	<!-- Subcopy -->
+	@if (isset($actionText))
+		@component('mail::subcopy')
+			Si tienes problemas para hacer clic en "{{ $actionText }}" Botón, copia y pega la URL a continuación
+			En su navegador web: [{{ $actionUrl }}]({{ $actionUrl }}) "<a href="http://sistemasamigables.com">Sistemas Amigables de Costa Rica</a>"
+		@endcomponent
+	@endif
 @endcomponent

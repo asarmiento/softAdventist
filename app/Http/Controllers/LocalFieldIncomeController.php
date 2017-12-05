@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Entities\LocalFields\BankLocalField;
+use App\Entities\LocalFields\CheckICByLF;
+use App\Mail\InfosChurchsLocalField;
+use App\Notifications\SendLocalFieldInfo;
 use App\Repositories\BankLocalFieldRepository;
 use App\Repositories\CheckRepository;
 use App\Repositories\LocalFieldDespositRepository;
@@ -9,6 +13,8 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 
 class LocalFieldIncomeController extends Controller
 {
@@ -87,6 +93,7 @@ class LocalFieldIncomeController extends Controller
 
             $data['bank_local_field_id'] = $bank->id;
             $data['user_id'] = currentUser()->id;
+            $data['number'] = ($data['number']);
             $data['token'] = Crypt::encrypt($data['number']);
             //carbamos la fecha del ck para poder crear la carpeta donde se guardara la imagen
             $date = new Carbon($data['date']);
@@ -96,52 +103,39 @@ class LocalFieldIncomeController extends Controller
             $check = $this->checkRepository->token($data['check']['value']);
 	
 	        $data['balance'] = $check->balance;
-	        echo json_encode($data);
-	        die;
+	        
             $localFieldDeposit = $this->localFieldDespositRepository->getModel();
             $localFieldDeposit->fill($data);
-            if ($localFieldDeposit->save()):
-                $totalDeposito = $localFieldDeposit->balance;
-                foreach ($data['internal_control_id'] AS $key => $internal):
-                    $control = $this->internalControlRepository->token($internal['value']);
-                    if ($totalDeposito > 0) {
-                        $balance = $control->balance;
-                        $deposit = $this->internalControlRepository->sumJoinTablePivotDeposit($control->token);
-                        if ($deposit > 0) {
-                            $balance = ($control->balance - $deposit);
-                        }
-                        if ($totalDeposito >= $balance) {
-                            $totalDeposito -= $balance;
-                        } else {
-                            $balance = $totalDeposito;
-                            $totalDeposito -= $balance;
-                        }
-                        //$localFieldDeposit->internalControls()->attach($control->id,
-                            //[ 'balance' => $balance, 'user_id' => currentUser()->id ]);
-                    } else {
-                        break;
-                    }
-                endforeach;
-              //  $balanceBank = $churchDeposit->bank()->sum('balance') + $churchDeposit->balance;
-            //    $churchDeposit->bank()->update([ 'balance' => $balanceBank ]);
-	            echo json_encode($localFieldDeposit);
-	            die;
+           
+	         
+               CheckICByLF::where('check_id',$check->id)->update(['status' => 'aplicado']);
+	            $check->update(['status' => 'aplicado']);
+               $balanceBank = $localFieldDeposit->bank()->sum('balance') + $data['balance'];
+	            BankLocalField::where('id',$localFieldDeposit->bank_local_field_id)->update([ 'balance' => $balanceBank ]);
+	            
                 //aqui movemos la imagen del cheque de la carpeta temporal a la carpeta del mes
-              //  Storage::move('churchDeposit/temp/'.$data['name'], 'churchDeposit/'.$churchDeposit->image);
-
+               Storage::move('localFieldDeposit/temp/'.$data['name'], 'localFieldDeposit/'.$data['image']);
+	        $localFieldDeposit->image = 'localFieldDeposit/'.$data['balance'];
+				
+	        if($localFieldDeposit->save()):
+		        
+		       Mail::to('anwarsarmiento@gmail.com','Anwar Sarmiento')->send(new InfosChurchsLocalField());
                 DB::commit();
 
                 return response()->json([
-                    'success'  => false,
-                    'message'  => 'Se regitro con Exito!!!',
-                    'result'   => $this->internalControlRepository->listPivotSelects(),
-                    'deposits' => $this->lists()
+                    'success'  => true,
+                    'message'  => 'Se regitro con Exito!!!'
                 ], 200);
             else:
                 DB::rollback();
               //  return response()->json($churchDeposit->errors, 422);
             endif;
-
+/*##MAIL_DRIVER=smtp
+##MAIL_HOST=mail.contadventista.org
+##MAIL_PORT=25
+##MAIL_USERNAME=info@contadventista.org
+##MAIL_PASSWORD=Az&O1tsUG@!2
+##MAIL_ENCRYPTION=null*/
 
         } catch (Exception $e) {
             echo json_encode($e->getMessage());

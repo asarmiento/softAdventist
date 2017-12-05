@@ -79,4 +79,9 @@ class InternalControl extends Entity
         }
 
     }
+    
+    public function getBalanceAttribute($balance)
+    {
+	    return  number_format($balance,2,'.','');
+    }
 }

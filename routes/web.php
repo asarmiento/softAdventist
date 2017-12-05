@@ -65,9 +65,12 @@ Route::get('list-unions-country/{token}', ['uses'=>'UnionController@index','as'=
 Route::post('save-church-public', ['uses'=>'Church\ChurchController@store','as'=>'save-church-public']);
 
     Route::group(['prefix'=>'tesoreria','middleware'=>'auth'],function (){
+	
+	
+	   
 
         Route::get('/', 'HomeController@index');
-        Route::get('/image/{month}/{name}', 'HomeController@image');
+        Route::get('/image/{type}/{month}/{name}', 'HomeController@image');
         Route::get('home', ['uses'=>'HomeController@index','as'=>'home']);
         Route::get('profile', ['uses'=>'HomeController@index','as'=>'profile']);
         //miembros
@@ -201,6 +204,7 @@ Route::post('save-church-public', ['uses'=>'Church\ChurchController@store','as'=
         Route::get('lista-miembro6s', ['uses'=>'MemberController@index','as'=>'list-info-week']);
         //Reportes
         Route::get('reporte-semanal/{token}', ['uses'=>'ReportPdfController@infoSemanal','as'=>'reportWeekly']);
+        Route::get('reporte-semanal-email/{token}', ['uses'=>'ReportPdfController@infoSemanalEmail','as'=>'reportWeeklyEmail']);
         Route::get('pdf-de-gastos/{token}', 'ReportPdfController@checkDetail');
         Route::get('reporte-resumen-movimiento-departamento/{token}', 'ReportsPDF\ReportsDepartamentsController@pdfSummaryMoveDepartament');
         Route::get('reporte-estado-de-cuenta-actual/{token}', 'ReportPdfController@stateAccountNow');

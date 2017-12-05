@@ -44,7 +44,13 @@ class InternalControlRepository extends BaseRepository
             'church_deposit_internal_controls.internal_control_id','=','internal_controls.id')
         ->sum('church_deposit_internal_controls.balance');
     }
-
+	public function sumJoinTablePivotDepositLF($token)
+	{
+		return $this->newQuery()->where('internal_controls.token',$token)
+			->join('church_deposit_internal_controls',
+			       'church_deposit_internal_controls.internal_control_id','=','internal_controls.id')
+			->sum('church_deposit_internal_controls.balance');
+	}
     public function joinTablePivotDeposit($token)
     {
         return $this->newQuery()->where('internal_controls.token',$token)

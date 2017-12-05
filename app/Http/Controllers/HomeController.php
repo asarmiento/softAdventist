@@ -30,9 +30,14 @@ class HomeController extends Controller
     {
         return view('home');
     }
-    public function image(Request $request,$month,$name)
+    public function image($type,$month,$name)
     {try {
-        return Storage::get('internalControls/Sep-17/' . $name);
+    	return response()->download(
+	        storage_path('app/'.$type.'/'.$month.'/' . $name),
+	        $name,
+	        [],
+	        ResponseHeaderBag::DISPOSITION_INLINE
+        );
     }catch (\Exception $e){
         echo json_encode($e->getMessage());
         die;

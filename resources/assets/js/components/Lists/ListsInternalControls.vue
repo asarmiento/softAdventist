@@ -13,7 +13,7 @@
                     <button class="btn btn-default" type="button" @click.prevet="styleType" name="toggle"
                             title="Toggle">
                         <i
-                                class="glyphicon demo-pli-layout-grid"></i></button>
+				                        class="glyphicon demo-pli-layout-grid"></i></button>
                 </div>
                 <div class="pull-right search">
                     <input class="form-control" @keyup="sarch(datos.path)"
@@ -63,18 +63,18 @@
                         <tbody>
                         <tr v-for="(dato, index) in datos.data" :data-index="index">
                             <td style="">
-                                <a  href="#" class="btn-link">
+                                <a href="#" class="btn-link">
                                 {{dato.saturday}}</a>
                             </td>
                             <td style="">
                                 <a href="" data-name="name" data-pk="53431"
                                    data-value="dato.budget" class="editable editable-click">{{dato.number}}
                                 </a></td>
-                            <td  style="">{{dato.number_of_envelopes}} </td>
-                            <td  style=""> {{dato.balance}}</td>
+                            <td style="">{{dato.number_of_envelopes}} </td>
+                            <td style=""> {{dato.balance}}</td>
                             <td style="text-align: center; ">
                                 <div v-if="dato.image" class="label label-table label-success">
-                                    {{dato.image}}
+                                    <img src="image(dato.image)" height="30" width="30">
                                 </div>
                                 <div v-else class="label label-table label-danger">{{dato.image}}</div>
                             </td>
@@ -86,11 +86,11 @@
                             </td>
                             <td style="text-align: center; ">
                                 <a :href="pdfInfoWeekly(dato.token)" target="_blank" class="btn btn-default"><i
-                                        class="fa fa-file-pdf-o fa-2x btn-danger" aria-hidden="true"></i></a>
+				                                class="fa fa-file-pdf-o fa-2x btn-danger" aria-hidden="true"></i></a>
                             </td>
                             <td style="text-align: center; ">
                                 <a href="#" target="_blank" class="btn btn-default"><i
-                                        class="fa fa-file-pdf-o fa-2x btn-danger" aria-hidden="true"></i></a>
+				                                class="fa fa-file-pdf-o fa-2x btn-danger" aria-hidden="true"></i></a>
                             </td>
                         </tr>
                         </tbody>
@@ -130,7 +130,7 @@
                     <div class="pull-left pagination-detail">
                         <span class="pagination-info">Mirando {{datos.from}} al {{datos.to}} de {{datos.total}} rows</span>
                         <span class="page-list"><span
-                                class="btn-group dropup">
+				                        class="btn-group dropup">
                         <button type="button" class="btn btn-default  dropdown-toggle" data-toggle="dropdown">
                         <span class="page-size">{{datos.per_page}}</span>
                             <span class="caret"></span>
@@ -147,9 +147,9 @@
                             <li v-show="datos.prev_page_url" class="page-pre">
                                 <a href="" @click.prevent="pagePre(datos.prev_page_url)">‹</a>
                             </li>
-                            <li v-for='number in my_pages' class='page-number'
+                            <li v-for="number in my_pages" class="page-number"
                                 :class="{'active': number == datos.current_page}">
-                                <a class="page-number" href='' @click.prevent='page(datos.path,number)'>{{ number }}</a>
+                                <a class="page-number" href="" @click.prevent="page(datos.path,number)">{{ number }}</a>
                             </li>
                             <li v-show="datos.next_page_url" class="page-next">
                                 <a href="" @click.prevent="pageNext(datos.next_page_url)">›</a>
@@ -165,114 +165,148 @@
 
 <script>
     export default {
-        props: ['source', 'title'],
-        components: {},
-        data() {
-            return {
-                txtSearch: '',
-                counts: ['5', '10', '20', '50'],
-                datos: [],
-                my_pages: [],
-                columns: [],
-                typeAll: true,
-                typeStyle: true,
-            }
-        },
-        computed: {},
-        created() {
-            var self = this;
-            this.$http.get(this.source).then((response) => {
-                self.datos = response.data.model;
-                self.my_pages = response.data.my_pages;
-                self.columns = response.data.columns;
-            });
-
-        },
-        methods: {
-            weekly(token){
-                return '/tesoreria/registro-de-ingresos/'+token;
-            },
-            pdfInfoWeekly(data) {
-                return '/tesoreria/reporte-semanal/' + data;
-            },
-            styleType() {
-                var self = this;
-                if (this.typeStyle) {
-                    this.typeStyle = false;
-                } else {
-                    this.typeStyle = true;
-                }
-            },
-            sarch: function (url) {
-                var self = this;
-                this.$http.get(url + '?search=' + this.txtSearch).then((response) => {
-                    self.datos = response.data.model;
-                    self.my_pages = response.data.my_pages;
-                });
-            },
-            pagePre(url) {
-                url += '&perPage=' + this.datos.per_page
-                var self = this;
-                this.$http.get(url).then((response) => {
-                    self.datos = response.data.model;
-                    self.my_pages = response.data.my_pages;
-                });
-            },
-            pageNext(url) {
-                url += '&perPage=' + this.datos.per_page
-                var self = this;
-                this.$http.get(url).then((response) => {
-                    self.datos = response.data.model;
-                    self.my_pages = response.data.my_pages;
-                });
-            },
-            page(url, number) {
-                if (!isNaN(number)) {
-                    var self = this;
-                    url += '?page=' + number
-                    url += '&perPage=' + this.datos.per_page
-                    this.$http.get(url).then((response) => {
-                        self.datos = response.data.model;
-                        self.my_pages = response.data.my_pages;
-                    });
-                }
-            },
-            perPage(url, number) {
-                var self = this;
-                this.$http.get(url + '?perPage=' + number).then((response) => {
-                    self.datos = response.data.model;
-                    self.my_pages = response.data.my_pages;
-                });
-            },
-            all(url, total) {
-                var self = this;
-                if (this.typeAll) {
-                    this.typeAll = false;
-                } else {
-                    this.typeAll = true;
-                }
-                this.$http.get(url + '?all=' + total).then((response) => {
-                    self.datos = response.data.model;
-                    self.my_pages = response.data.my_pages;
-                });
-            }
-        },
-    }
+	    props     : [
+		    "source",
+		    "title"
+	    ],
+	    components: {},
+	    data()
+	    {
+		    return {
+			    txtSearch: "",
+			    counts   : [
+				    "5",
+				    "10",
+				    "20",
+				    "50"
+			    ],
+			    datos    : [],
+			    my_pages : [],
+			    columns  : [],
+			    typeAll  : true,
+			    typeStyle: true,
+		    };
+	    },
+	    computed  : {},
+	    created()
+	    {
+		    var self = this;
+		    this.$http.get( this.source ).then( ( response ) =>
+		    {
+			    self.datos    = response.data.model;
+			    self.my_pages = response.data.my_pages;
+			    self.columns  = response.data.columns;
+		    } );
+		
+	    },
+	    methods   : {
+		    image( data )
+		    {
+			    this.$http.get( "/tesoreria/image/internalControls/" + data ).then( ( response ) =>
+			    {
+				    return response.data;
+				
+			    } );
+			
+		    }, weekly( token )
+		    {
+			    return "/tesoreria/registro-de-ingresos/" + token;
+		    },
+		    pdfInfoWeekly( data )
+		    {
+			    return "/tesoreria/reporte-semanal/" + data;
+		    },
+		    styleType()
+		    {
+			    var self = this;
+			    if ( this.typeStyle ) {
+				    this.typeStyle = false;
+			    } else {
+				    this.typeStyle = true;
+			    }
+		    },
+		    sarch: function ( url )
+		    {
+			    var self = this;
+			    this.$http.get( url + "?search=" + this.txtSearch ).then( ( response ) =>
+			    {
+				    self.datos    = response.data.model;
+				    self.my_pages = response.data.my_pages;
+			    } );
+		    },
+		    pagePre( url )
+		    {
+			    url += "&perPage=" + this.datos.per_page;
+			    var self = this;
+			    this.$http.get( url ).then( ( response ) =>
+			    {
+				    self.datos    = response.data.model;
+				    self.my_pages = response.data.my_pages;
+			    } );
+		    },
+		    pageNext( url )
+		    {
+			    url += "&perPage=" + this.datos.per_page;
+			    var self = this;
+			    this.$http.get( url ).then( ( response ) =>
+			    {
+				    self.datos    = response.data.model;
+				    self.my_pages = response.data.my_pages;
+			    } );
+		    },
+		    page( url, number )
+		    {
+			    if ( !isNaN( number ) ) {
+				    var self = this;
+				    url += "?page=" + number;
+				    url += "&perPage=" + this.datos.per_page;
+				    this.$http.get( url ).then( ( response ) =>
+				    {
+					    self.datos    = response.data.model;
+					    self.my_pages = response.data.my_pages;
+				    } );
+			    }
+		    },
+		    perPage( url, number )
+		    {
+			    var self = this;
+			    this.$http.get( url + "?perPage=" + number ).then( ( response ) =>
+			    {
+				    self.datos    = response.data.model;
+				    self.my_pages = response.data.my_pages;
+			    } );
+		    },
+		    all( url, total )
+		    {
+			    var self = this;
+			    if ( this.typeAll ) {
+				    this.typeAll = false;
+			    } else {
+				    this.typeAll = true;
+			    }
+			    this.$http.get( url + "?all=" + total ).then( ( response ) =>
+			    {
+				    self.datos    = response.data.model;
+				    self.my_pages = response.data.my_pages;
+			    } );
+		    }
+	    },
+    };
 </script>
 
 <style>
 
     .tittle-2 {
-        text-align: left !important;
-        font-weight: bold;
-        float: left;
-        min-width: 30%;
+	    text-align: left !important;
+	    font-weight: bold;
+	    float: left;
+	    min-width: 30%;
     }
 
     .value {
-        text-align: left !important;
-        float: right;
-        min-width: 70%;
+	    text-align: left !important;
+	    float: right;
+	    min-width: 70%;
     }
 
 </style>
