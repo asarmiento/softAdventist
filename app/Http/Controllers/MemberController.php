@@ -69,7 +69,7 @@ class MemberController extends Controller
             $perPage = $request->perPage;
         }
 
-        $model = Member::searchPaginateAndOrder($perPage, $request->get('search'));
+        $model = Member::where('church_id',userChurch()->id)->searchPaginateAndOrder($perPage, $request->get('search'));
 
         $array = $this->myPages($model);
 
@@ -96,7 +96,7 @@ class MemberController extends Controller
 
     public function edit()
     {
-        $member = Member::all();
+        $member = Member::where('church_id',userChurch()->id)->get();
 
         return view('members.create', compact('member'));
     }
@@ -107,7 +107,7 @@ class MemberController extends Controller
         $data = $request->all();
         $data = $this->CreacionArray($data, '');
         $user = User::where('email', $data['email'])->first();
-        $data['church_id'] = 1;
+        $data['church_id'] = userChurch()->id;
         if (count($user) == 0):
             $user = User::create([
                 'identification_card' => $data['charter'],
@@ -115,6 +115,7 @@ class MemberController extends Controller
                 'last_name'           => $data['last'],
                 'email'               => $data['email'],
                 'status'              => 'activo',
+                'avatar'              => '',
                 'token'               => str_random(40),
                 'password'            => bcrypt(123456),
             ]);

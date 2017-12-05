@@ -86,7 +86,8 @@
 			}
 			
 			$model = Departament::searchPaginateAndOrder($perPage, $request->get('search'),
-			                                             true)->with('listDepartament')->where('status', 'activo')->paginate($perPage);
+			                                             true)->with('listDepartament')->where('status', 'activo')
+                ->where('church_id', userChurch()->id)->paginate($perPage);
 			
 			$array = $this->myPages($model);
 			
@@ -172,11 +173,12 @@
 				DB::beginTransaction();
 				$data = $request->all();
 				$newDepartamen = $this->listDepartamentRepository->token($data['name']['value']);
-				if (Departament::where('list_departament_id', $newDepartamen->id)->count() > 0):
+				if (Departament::where('list_departament_id', $newDepartamen->id)->where('church_id',userChurch()->id)->count() > 0):
 					return response()->json(['errors' => ['El Departamento: ' . $newDepartamen->name . ' ya Existe']], 422);
 				endif;
-				$data['church_id'] = 1;// userChurch()->id;
+				$data['church_id'] =  userChurch()->id;
 				$data['budget'] = 0;
+				$data['initial'] = $data['balance'];
 				$data['status'] = 'desactivo';
 				$data['authorized'] = 'no';
 				$data['list_departament_id'] = $newDepartamen->id;
