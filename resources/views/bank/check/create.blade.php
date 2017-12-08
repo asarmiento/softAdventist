@@ -2,7 +2,7 @@
 
 @section('content')
 <div id="app">
-    <create-check title="Registro y Lista de Cheques" url="save-check" banks="{{json_encode($banks)}}" ></create-check>
+    <create-check title="Registro y Lista de Cheques" url="/save-check" banks="{{json_encode($banks)}}" ></create-check>
 </div>
 @endsection
 @section('scripts')

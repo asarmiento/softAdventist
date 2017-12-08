@@ -6628,7 +6628,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "C:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Lists\\ListsDepartaments.vue"
+Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Lists\\ListsDepartaments.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ListsDepartaments.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -6672,7 +6672,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "C:\\laragon\\www\\softAdventist\\node_modules\\vue-datepicker\\vue-datepicker.vue"
+Component.options.__file = "F:\\laragon\\www\\softAdventist\\node_modules\\vue-datepicker\\vue-datepicker.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] vue-datepicker.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -17550,7 +17550,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "C:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Creating\\CreateMember.vue"
+Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Creating\\CreateMember.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] CreateMember.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -17657,7 +17657,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "C:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Lists\\ListsExpenses.vue"
+Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Lists\\ListsExpenses.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ListsExpenses.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -52247,7 +52247,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "C:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Creating\\CreateDepartament.vue"
+Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Creating\\CreateDepartament.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] CreateDepartament.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -53670,7 +53670,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "C:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Creating\\CreateAccounts.vue"
+Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Creating\\CreateAccounts.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] CreateAccounts.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -54017,7 +54017,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "C:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Creating\\CreateInternalControl.vue"
+Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Creating\\CreateInternalControl.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] CreateInternalControl.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -54749,7 +54749,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "C:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Creating\\CreateWeeklyIncomes.vue"
+Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Creating\\CreateWeeklyIncomes.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] CreateWeeklyIncomes.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -56008,7 +56008,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "C:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Creating\\CreateExpenses.vue"
+Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Creating\\CreateExpenses.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] CreateExpenses.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -56983,7 +56983,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "C:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Creating\\CreateBank.vue"
+Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Creating\\CreateBank.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] CreateBank.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -57652,7 +57652,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "C:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Creating\\CreateChurchDeposits.vue"
+Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Creating\\CreateChurchDeposits.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] CreateChurchDeposits.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -60121,7 +60121,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "C:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Creating\\CreateLocalDeposits.vue"
+Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Creating\\CreateLocalDeposits.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] CreateLocalDeposits.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -61027,7 +61027,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "C:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Creating\\CreateCheck.vue"
+Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Creating\\CreateCheck.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] CreateCheck.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -61429,10 +61429,10 @@ __webpack_require__(293).polyfill();
 		},
 
 		routeEdit: function routeEdit(data) {
-			return 'registro-detalle-cheque/' + data;
+			return '/registro-detalle-cheque/' + data;
 		},
 		pdfInfo: function pdfInfo(data) {
-			return 'pdf-de-gastos/' + data;
+			return '/pdf-de-gastos/' + data;
 		},
 		balance_info: function balance_info(val) {
 			var _this2 = this;
@@ -63532,7 +63532,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "C:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Creating\\CreateChurchPublic.vue"
+Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Creating\\CreateChurchPublic.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] CreateChurchPublic.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -63999,7 +63999,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "C:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Editors\\EditorDepartament.vue"
+Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Editors\\EditorDepartament.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] EditorDepartament.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -64560,7 +64560,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "C:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Lists\\ListsIncomeAccounts.vue"
+Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Lists\\ListsIncomeAccounts.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ListsIncomeAccounts.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -65306,7 +65306,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "C:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Lists\\ListsExpenseAccounts.vue"
+Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Lists\\ListsExpenseAccounts.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ListsExpenseAccounts.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -66027,7 +66027,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "C:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Lists\\ListWeeklyInfo.vue"
+Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Lists\\ListWeeklyInfo.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ListWeeklyInfo.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -66768,7 +66768,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "C:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Lists\\ListsMembers.vue"
+Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Lists\\ListsMembers.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ListsMembers.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -67483,7 +67483,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "C:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Lists\\ListsChecks.vue"
+Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Lists\\ListsChecks.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ListsChecks.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -68238,7 +68238,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "C:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Lists\\ListsInternalControls.vue"
+Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Lists\\ListsInternalControls.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ListsInternalControls.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -69022,7 +69022,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "C:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Lists\\ListsCheckExpenses.vue"
+Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Lists\\ListsCheckExpenses.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ListsCheckExpenses.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -69744,7 +69744,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "C:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\TransferAccounts.vue"
+Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\TransferAccounts.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] TransferAccounts.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -70242,7 +70242,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "C:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\DepositLocalField.vue"
+Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\DepositLocalField.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] DepositLocalField.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -71264,7 +71264,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "C:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\RegistroExpenses.vue"
+Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\RegistroExpenses.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] RegistroExpenses.vue: functional components are not supported with templates, they should use render functions.")}
 

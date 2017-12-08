@@ -338,11 +338,11 @@
 		    },
 		    routeEdit: function ( data )
 		    {
-			    return 'registro-detalle-cheque/' + data
+			    return '/registro-detalle-cheque/' + data
 		    },
 		    pdfInfo: function ( data )
 		    {
-			    return 'pdf-de-gastos/' + data
+			    return '/pdf-de-gastos/' + data
 		    },
 		    balance_info( val )
 		    {
