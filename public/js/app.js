@@ -60,15 +60,15 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 155);
+/******/ 	return __webpack_require__(__webpack_require__.s = 159);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(module) {//! moment.js
-//! version : 2.18.1
+/* WEBPACK VAR INJECTION */(function(module) {var require;//! moment.js
+//! version : 2.20.1
 //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
 //! license : MIT
 //! momentjs.com
@@ -102,12 +102,17 @@ function isObject(input) {
 }
 
 function isObjectEmpty(obj) {
-    var k;
-    for (k in obj) {
-        // even if its not own property I'd still call it non-empty
-        return false;
+    if (Object.getOwnPropertyNames) {
+        return (Object.getOwnPropertyNames(obj).length === 0);
+    } else {
+        var k;
+        for (k in obj) {
+            if (obj.hasOwnProperty(k)) {
+                return false;
+            }
+        }
+        return true;
     }
-    return true;
 }
 
 function isUndefined(input) {
@@ -201,12 +206,10 @@ if (Array.prototype.some) {
     };
 }
 
-var some$1 = some;
-
 function isValid(m) {
     if (m._isValid == null) {
         var flags = getParsingFlags(m);
-        var parsedParts = some$1.call(flags.parsedDateParts, function (i) {
+        var parsedParts = some.call(flags.parsedDateParts, function (i) {
             return i != null;
         });
         var isNowValid = !isNaN(m._d.getTime()) &&
@@ -214,6 +217,7 @@ function isValid(m) {
             !flags.empty &&
             !flags.invalidMonth &&
             !flags.invalidWeekday &&
+            !flags.weekdayMismatch &&
             !flags.nullInput &&
             !flags.invalidFormat &&
             !flags.userInvalidated &&
@@ -479,8 +483,6 @@ if (Object.keys) {
     };
 }
 
-var keys$1 = keys;
-
 var defaultCalendar = {
     sameDay : '[Today at] LT',
     nextDay : '[Tomorrow at] LT',
@@ -606,56 +608,6 @@ function getPrioritizedUnits(unitsObj) {
     return units;
 }
 
-function makeGetSet (unit, keepTime) {
-    return function (value) {
-        if (value != null) {
-            set$1(this, unit, value);
-            hooks.updateOffset(this, keepTime);
-            return this;
-        } else {
-            return get(this, unit);
-        }
-    };
-}
-
-function get (mom, unit) {
-    return mom.isValid() ?
-        mom._d['get' + (mom._isUTC ? 'UTC' : '') + unit]() : NaN;
-}
-
-function set$1 (mom, unit, value) {
-    if (mom.isValid()) {
-        mom._d['set' + (mom._isUTC ? 'UTC' : '') + unit](value);
-    }
-}
-
-// MOMENTS
-
-function stringGet (units) {
-    units = normalizeUnits(units);
-    if (isFunction(this[units])) {
-        return this[units]();
-    }
-    return this;
-}
-
-
-function stringSet (units, value) {
-    if (typeof units === 'object') {
-        units = normalizeObjectUnits(units);
-        var prioritized = getPrioritizedUnits(units);
-        for (var i = 0; i < prioritized.length; i++) {
-            this[prioritized[i].unit](units[prioritized[i].unit]);
-        }
-    } else {
-        units = normalizeUnits(units);
-        if (isFunction(this[units])) {
-            return this[units](value);
-        }
-    }
-    return this;
-}
-
 function zeroFill(number, targetLength, forceSign) {
     var absNumber = '' + Math.abs(number),
         zerosToFill = targetLength - absNumber.length,
@@ -776,7 +728,7 @@ var matchTimestamp = /[+-]?\d+(\.\d{1,3})?/; // 123456789 123456789.123
 
 // any word (or two) characters or numbers including two/three word month in arabic.
 // includes scottish gaelic two word and hyphenated months
-var matchWord = /[0-9]*['a-z\u00A0-\u05FF\u0700-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+|[\u0600-\u06FF\/]+(\s*?[\u0600-\u06FF]+){1,2}/i;
+var matchWord = /[0-9]{0,256}['a-z\u00A0-\u05FF\u0700-\uD7FF\uF900-\uFDCF\uFDF0-\uFF07\uFF10-\uFFEF]{1,256}|[\u0600-\u06FF\/]{1,256}(\s*?[\u0600-\u06FF]{1,256}){1,2}/i;
 
 
 var regexes = {};
@@ -846,6 +798,131 @@ var MILLISECOND = 6;
 var WEEK = 7;
 var WEEKDAY = 8;
 
+// FORMATTING
+
+addFormatToken('Y', 0, 0, function () {
+    var y = this.year();
+    return y <= 9999 ? '' + y : '+' + y;
+});
+
+addFormatToken(0, ['YY', 2], 0, function () {
+    return this.year() % 100;
+});
+
+addFormatToken(0, ['YYYY',   4],       0, 'year');
+addFormatToken(0, ['YYYYY',  5],       0, 'year');
+addFormatToken(0, ['YYYYYY', 6, true], 0, 'year');
+
+// ALIASES
+
+addUnitAlias('year', 'y');
+
+// PRIORITIES
+
+addUnitPriority('year', 1);
+
+// PARSING
+
+addRegexToken('Y',      matchSigned);
+addRegexToken('YY',     match1to2, match2);
+addRegexToken('YYYY',   match1to4, match4);
+addRegexToken('YYYYY',  match1to6, match6);
+addRegexToken('YYYYYY', match1to6, match6);
+
+addParseToken(['YYYYY', 'YYYYYY'], YEAR);
+addParseToken('YYYY', function (input, array) {
+    array[YEAR] = input.length === 2 ? hooks.parseTwoDigitYear(input) : toInt(input);
+});
+addParseToken('YY', function (input, array) {
+    array[YEAR] = hooks.parseTwoDigitYear(input);
+});
+addParseToken('Y', function (input, array) {
+    array[YEAR] = parseInt(input, 10);
+});
+
+// HELPERS
+
+function daysInYear(year) {
+    return isLeapYear(year) ? 366 : 365;
+}
+
+function isLeapYear(year) {
+    return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+}
+
+// HOOKS
+
+hooks.parseTwoDigitYear = function (input) {
+    return toInt(input) + (toInt(input) > 68 ? 1900 : 2000);
+};
+
+// MOMENTS
+
+var getSetYear = makeGetSet('FullYear', true);
+
+function getIsLeapYear () {
+    return isLeapYear(this.year());
+}
+
+function makeGetSet (unit, keepTime) {
+    return function (value) {
+        if (value != null) {
+            set$1(this, unit, value);
+            hooks.updateOffset(this, keepTime);
+            return this;
+        } else {
+            return get(this, unit);
+        }
+    };
+}
+
+function get (mom, unit) {
+    return mom.isValid() ?
+        mom._d['get' + (mom._isUTC ? 'UTC' : '') + unit]() : NaN;
+}
+
+function set$1 (mom, unit, value) {
+    if (mom.isValid() && !isNaN(value)) {
+        if (unit === 'FullYear' && isLeapYear(mom.year()) && mom.month() === 1 && mom.date() === 29) {
+            mom._d['set' + (mom._isUTC ? 'UTC' : '') + unit](value, mom.month(), daysInMonth(value, mom.month()));
+        }
+        else {
+            mom._d['set' + (mom._isUTC ? 'UTC' : '') + unit](value);
+        }
+    }
+}
+
+// MOMENTS
+
+function stringGet (units) {
+    units = normalizeUnits(units);
+    if (isFunction(this[units])) {
+        return this[units]();
+    }
+    return this;
+}
+
+
+function stringSet (units, value) {
+    if (typeof units === 'object') {
+        units = normalizeObjectUnits(units);
+        var prioritized = getPrioritizedUnits(units);
+        for (var i = 0; i < prioritized.length; i++) {
+            this[prioritized[i].unit](units[prioritized[i].unit]);
+        }
+    } else {
+        units = normalizeUnits(units);
+        if (isFunction(this[units])) {
+            return this[units](value);
+        }
+    }
+    return this;
+}
+
+function mod(n, x) {
+    return ((n % x) + x) % x;
+}
+
 var indexOf;
 
 if (Array.prototype.indexOf) {
@@ -863,10 +940,13 @@ if (Array.prototype.indexOf) {
     };
 }
 
-var indexOf$1 = indexOf;
-
 function daysInMonth(year, month) {
-    return new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
+    if (isNaN(year) || isNaN(month)) {
+        return NaN;
+    }
+    var modMonth = mod(month, 12);
+    year += (month - modMonth) / 12;
+    return modMonth === 1 ? (isLeapYear(year) ? 29 : 28) : (31 - modMonth % 7 % 2);
 }
 
 // FORMATTING
@@ -955,26 +1035,26 @@ function handleStrictParse(monthName, format, strict) {
 
     if (strict) {
         if (format === 'MMM') {
-            ii = indexOf$1.call(this._shortMonthsParse, llc);
+            ii = indexOf.call(this._shortMonthsParse, llc);
             return ii !== -1 ? ii : null;
         } else {
-            ii = indexOf$1.call(this._longMonthsParse, llc);
+            ii = indexOf.call(this._longMonthsParse, llc);
             return ii !== -1 ? ii : null;
         }
     } else {
         if (format === 'MMM') {
-            ii = indexOf$1.call(this._shortMonthsParse, llc);
+            ii = indexOf.call(this._shortMonthsParse, llc);
             if (ii !== -1) {
                 return ii;
             }
-            ii = indexOf$1.call(this._longMonthsParse, llc);
+            ii = indexOf.call(this._longMonthsParse, llc);
             return ii !== -1 ? ii : null;
         } else {
-            ii = indexOf$1.call(this._longMonthsParse, llc);
+            ii = indexOf.call(this._longMonthsParse, llc);
             if (ii !== -1) {
                 return ii;
             }
-            ii = indexOf$1.call(this._shortMonthsParse, llc);
+            ii = indexOf.call(this._shortMonthsParse, llc);
             return ii !== -1 ? ii : null;
         }
     }
@@ -1131,72 +1211,6 @@ function computeMonthsParse () {
     this._monthsShortRegex = this._monthsRegex;
     this._monthsStrictRegex = new RegExp('^(' + longPieces.join('|') + ')', 'i');
     this._monthsShortStrictRegex = new RegExp('^(' + shortPieces.join('|') + ')', 'i');
-}
-
-// FORMATTING
-
-addFormatToken('Y', 0, 0, function () {
-    var y = this.year();
-    return y <= 9999 ? '' + y : '+' + y;
-});
-
-addFormatToken(0, ['YY', 2], 0, function () {
-    return this.year() % 100;
-});
-
-addFormatToken(0, ['YYYY',   4],       0, 'year');
-addFormatToken(0, ['YYYYY',  5],       0, 'year');
-addFormatToken(0, ['YYYYYY', 6, true], 0, 'year');
-
-// ALIASES
-
-addUnitAlias('year', 'y');
-
-// PRIORITIES
-
-addUnitPriority('year', 1);
-
-// PARSING
-
-addRegexToken('Y',      matchSigned);
-addRegexToken('YY',     match1to2, match2);
-addRegexToken('YYYY',   match1to4, match4);
-addRegexToken('YYYYY',  match1to6, match6);
-addRegexToken('YYYYYY', match1to6, match6);
-
-addParseToken(['YYYYY', 'YYYYYY'], YEAR);
-addParseToken('YYYY', function (input, array) {
-    array[YEAR] = input.length === 2 ? hooks.parseTwoDigitYear(input) : toInt(input);
-});
-addParseToken('YY', function (input, array) {
-    array[YEAR] = hooks.parseTwoDigitYear(input);
-});
-addParseToken('Y', function (input, array) {
-    array[YEAR] = parseInt(input, 10);
-});
-
-// HELPERS
-
-function daysInYear(year) {
-    return isLeapYear(year) ? 366 : 365;
-}
-
-function isLeapYear(year) {
-    return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
-}
-
-// HOOKS
-
-hooks.parseTwoDigitYear = function (input) {
-    return toInt(input) + (toInt(input) > 68 ? 1900 : 2000);
-};
-
-// MOMENTS
-
-var getSetYear = makeGetSet('FullYear', true);
-
-function getIsLeapYear () {
-    return isLeapYear(this.year());
 }
 
 function createDate (y, m, d, h, M, s, ms) {
@@ -1466,48 +1480,48 @@ function handleStrictParse$1(weekdayName, format, strict) {
 
     if (strict) {
         if (format === 'dddd') {
-            ii = indexOf$1.call(this._weekdaysParse, llc);
+            ii = indexOf.call(this._weekdaysParse, llc);
             return ii !== -1 ? ii : null;
         } else if (format === 'ddd') {
-            ii = indexOf$1.call(this._shortWeekdaysParse, llc);
+            ii = indexOf.call(this._shortWeekdaysParse, llc);
             return ii !== -1 ? ii : null;
         } else {
-            ii = indexOf$1.call(this._minWeekdaysParse, llc);
+            ii = indexOf.call(this._minWeekdaysParse, llc);
             return ii !== -1 ? ii : null;
         }
     } else {
         if (format === 'dddd') {
-            ii = indexOf$1.call(this._weekdaysParse, llc);
+            ii = indexOf.call(this._weekdaysParse, llc);
             if (ii !== -1) {
                 return ii;
             }
-            ii = indexOf$1.call(this._shortWeekdaysParse, llc);
+            ii = indexOf.call(this._shortWeekdaysParse, llc);
             if (ii !== -1) {
                 return ii;
             }
-            ii = indexOf$1.call(this._minWeekdaysParse, llc);
+            ii = indexOf.call(this._minWeekdaysParse, llc);
             return ii !== -1 ? ii : null;
         } else if (format === 'ddd') {
-            ii = indexOf$1.call(this._shortWeekdaysParse, llc);
+            ii = indexOf.call(this._shortWeekdaysParse, llc);
             if (ii !== -1) {
                 return ii;
             }
-            ii = indexOf$1.call(this._weekdaysParse, llc);
+            ii = indexOf.call(this._weekdaysParse, llc);
             if (ii !== -1) {
                 return ii;
             }
-            ii = indexOf$1.call(this._minWeekdaysParse, llc);
+            ii = indexOf.call(this._minWeekdaysParse, llc);
             return ii !== -1 ? ii : null;
         } else {
-            ii = indexOf$1.call(this._minWeekdaysParse, llc);
+            ii = indexOf.call(this._minWeekdaysParse, llc);
             if (ii !== -1) {
                 return ii;
             }
-            ii = indexOf$1.call(this._weekdaysParse, llc);
+            ii = indexOf.call(this._weekdaysParse, llc);
             if (ii !== -1) {
                 return ii;
             }
-            ii = indexOf$1.call(this._shortWeekdaysParse, llc);
+            ii = indexOf.call(this._shortWeekdaysParse, llc);
             return ii !== -1 ? ii : null;
         }
     }
@@ -1896,11 +1910,10 @@ function loadLocale(name) {
             module && module.exports) {
         try {
             oldLocale = globalLocale._abbr;
-            __webpack_require__(281)("./" + name);
-            // because defineLocale currently also sets the global locale, we
-            // want to undo that for lazy loaded locales
+            var aliasedRequire = require;
+            __webpack_require__(287)("./" + name);
             getSetGlobalLocale(oldLocale);
-        } catch (e) { }
+        } catch (e) {}
     }
     return locales[name];
 }
@@ -1976,10 +1989,11 @@ function defineLocale (name, config) {
 
 function updateLocale(name, config) {
     if (config != null) {
-        var locale, parentConfig = baseConfig;
+        var locale, tmpLocale, parentConfig = baseConfig;
         // MERGE
-        if (locales[name] != null) {
-            parentConfig = locales[name]._config;
+        tmpLocale = loadLocale(name);
+        if (tmpLocale != null) {
+            parentConfig = tmpLocale._config;
         }
         config = mergeConfigs(parentConfig, config);
         locale = new Locale(config);
@@ -2026,7 +2040,7 @@ function getLocale (key) {
 }
 
 function listLocales() {
-    return keys$1(locales);
+    return keys(locales);
 }
 
 function checkOverflow (m) {
@@ -2057,6 +2071,156 @@ function checkOverflow (m) {
     }
 
     return m;
+}
+
+// Pick the first defined of two or three arguments.
+function defaults(a, b, c) {
+    if (a != null) {
+        return a;
+    }
+    if (b != null) {
+        return b;
+    }
+    return c;
+}
+
+function currentDateArray(config) {
+    // hooks is actually the exported moment object
+    var nowValue = new Date(hooks.now());
+    if (config._useUTC) {
+        return [nowValue.getUTCFullYear(), nowValue.getUTCMonth(), nowValue.getUTCDate()];
+    }
+    return [nowValue.getFullYear(), nowValue.getMonth(), nowValue.getDate()];
+}
+
+// convert an array to a date.
+// the array should mirror the parameters below
+// note: all values past the year are optional and will default to the lowest possible value.
+// [year, month, day , hour, minute, second, millisecond]
+function configFromArray (config) {
+    var i, date, input = [], currentDate, expectedWeekday, yearToUse;
+
+    if (config._d) {
+        return;
+    }
+
+    currentDate = currentDateArray(config);
+
+    //compute day of the year from weeks and weekdays
+    if (config._w && config._a[DATE] == null && config._a[MONTH] == null) {
+        dayOfYearFromWeekInfo(config);
+    }
+
+    //if the day of the year is set, figure out what it is
+    if (config._dayOfYear != null) {
+        yearToUse = defaults(config._a[YEAR], currentDate[YEAR]);
+
+        if (config._dayOfYear > daysInYear(yearToUse) || config._dayOfYear === 0) {
+            getParsingFlags(config)._overflowDayOfYear = true;
+        }
+
+        date = createUTCDate(yearToUse, 0, config._dayOfYear);
+        config._a[MONTH] = date.getUTCMonth();
+        config._a[DATE] = date.getUTCDate();
+    }
+
+    // Default to current date.
+    // * if no year, month, day of month are given, default to today
+    // * if day of month is given, default month and year
+    // * if month is given, default only year
+    // * if year is given, don't default anything
+    for (i = 0; i < 3 && config._a[i] == null; ++i) {
+        config._a[i] = input[i] = currentDate[i];
+    }
+
+    // Zero out whatever was not defaulted, including time
+    for (; i < 7; i++) {
+        config._a[i] = input[i] = (config._a[i] == null) ? (i === 2 ? 1 : 0) : config._a[i];
+    }
+
+    // Check for 24:00:00.000
+    if (config._a[HOUR] === 24 &&
+            config._a[MINUTE] === 0 &&
+            config._a[SECOND] === 0 &&
+            config._a[MILLISECOND] === 0) {
+        config._nextDay = true;
+        config._a[HOUR] = 0;
+    }
+
+    config._d = (config._useUTC ? createUTCDate : createDate).apply(null, input);
+    expectedWeekday = config._useUTC ? config._d.getUTCDay() : config._d.getDay();
+
+    // Apply timezone offset from input. The actual utcOffset can be changed
+    // with parseZone.
+    if (config._tzm != null) {
+        config._d.setUTCMinutes(config._d.getUTCMinutes() - config._tzm);
+    }
+
+    if (config._nextDay) {
+        config._a[HOUR] = 24;
+    }
+
+    // check for mismatching day of week
+    if (config._w && typeof config._w.d !== 'undefined' && config._w.d !== expectedWeekday) {
+        getParsingFlags(config).weekdayMismatch = true;
+    }
+}
+
+function dayOfYearFromWeekInfo(config) {
+    var w, weekYear, week, weekday, dow, doy, temp, weekdayOverflow;
+
+    w = config._w;
+    if (w.GG != null || w.W != null || w.E != null) {
+        dow = 1;
+        doy = 4;
+
+        // TODO: We need to take the current isoWeekYear, but that depends on
+        // how we interpret now (local, utc, fixed offset). So create
+        // a now version of current config (take local/utc/offset flags, and
+        // create now).
+        weekYear = defaults(w.GG, config._a[YEAR], weekOfYear(createLocal(), 1, 4).year);
+        week = defaults(w.W, 1);
+        weekday = defaults(w.E, 1);
+        if (weekday < 1 || weekday > 7) {
+            weekdayOverflow = true;
+        }
+    } else {
+        dow = config._locale._week.dow;
+        doy = config._locale._week.doy;
+
+        var curWeek = weekOfYear(createLocal(), dow, doy);
+
+        weekYear = defaults(w.gg, config._a[YEAR], curWeek.year);
+
+        // Default to current week.
+        week = defaults(w.w, curWeek.week);
+
+        if (w.d != null) {
+            // weekday -- low day numbers are considered next week
+            weekday = w.d;
+            if (weekday < 0 || weekday > 6) {
+                weekdayOverflow = true;
+            }
+        } else if (w.e != null) {
+            // local weekday -- counting starts from begining of week
+            weekday = w.e + dow;
+            if (w.e < 0 || w.e > 6) {
+                weekdayOverflow = true;
+            }
+        } else {
+            // default to begining of week
+            weekday = dow;
+        }
+    }
+    if (week < 1 || week > weeksInYear(weekYear, dow, doy)) {
+        getParsingFlags(config)._overflowWeeks = true;
+    } else if (weekdayOverflow != null) {
+        getParsingFlags(config)._overflowWeekday = true;
+    } else {
+        temp = dayOfYearFromWeeks(weekYear, week, weekday, dow, doy);
+        config._a[YEAR] = temp.year;
+        config._dayOfYear = temp.dayOfYear;
+    }
 }
 
 // iso 8601 regex
@@ -2150,70 +2314,94 @@ function configFromISO(config) {
 }
 
 // RFC 2822 regex: For details see https://tools.ietf.org/html/rfc2822#section-3.3
-var basicRfcRegex = /^((?:Mon|Tue|Wed|Thu|Fri|Sat|Sun),?\s)?(\d?\d\s(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s(?:\d\d)?\d\d\s)(\d\d:\d\d)(\:\d\d)?(\s(?:UT|GMT|[ECMP][SD]T|[A-IK-Za-ik-z]|[+-]\d{4}))$/;
+var rfc2822 = /^(?:(Mon|Tue|Wed|Thu|Fri|Sat|Sun),?\s)?(\d{1,2})\s(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s(\d{2,4})\s(\d\d):(\d\d)(?::(\d\d))?\s(?:(UT|GMT|[ECMP][SD]T)|([Zz])|([+-]\d{4}))$/;
+
+function extractFromRFC2822Strings(yearStr, monthStr, dayStr, hourStr, minuteStr, secondStr) {
+    var result = [
+        untruncateYear(yearStr),
+        defaultLocaleMonthsShort.indexOf(monthStr),
+        parseInt(dayStr, 10),
+        parseInt(hourStr, 10),
+        parseInt(minuteStr, 10)
+    ];
+
+    if (secondStr) {
+        result.push(parseInt(secondStr, 10));
+    }
+
+    return result;
+}
+
+function untruncateYear(yearStr) {
+    var year = parseInt(yearStr, 10);
+    if (year <= 49) {
+        return 2000 + year;
+    } else if (year <= 999) {
+        return 1900 + year;
+    }
+    return year;
+}
+
+function preprocessRFC2822(s) {
+    // Remove comments and folding whitespace and replace multiple-spaces with a single space
+    return s.replace(/\([^)]*\)|[\n\t]/g, ' ').replace(/(\s\s+)/g, ' ').trim();
+}
+
+function checkWeekday(weekdayStr, parsedInput, config) {
+    if (weekdayStr) {
+        // TODO: Replace the vanilla JS Date object with an indepentent day-of-week check.
+        var weekdayProvided = defaultLocaleWeekdaysShort.indexOf(weekdayStr),
+            weekdayActual = new Date(parsedInput[0], parsedInput[1], parsedInput[2]).getDay();
+        if (weekdayProvided !== weekdayActual) {
+            getParsingFlags(config).weekdayMismatch = true;
+            config._isValid = false;
+            return false;
+        }
+    }
+    return true;
+}
+
+var obsOffsets = {
+    UT: 0,
+    GMT: 0,
+    EDT: -4 * 60,
+    EST: -5 * 60,
+    CDT: -5 * 60,
+    CST: -6 * 60,
+    MDT: -6 * 60,
+    MST: -7 * 60,
+    PDT: -7 * 60,
+    PST: -8 * 60
+};
+
+function calculateOffset(obsOffset, militaryOffset, numOffset) {
+    if (obsOffset) {
+        return obsOffsets[obsOffset];
+    } else if (militaryOffset) {
+        // the only allowed military tz is Z
+        return 0;
+    } else {
+        var hm = parseInt(numOffset, 10);
+        var m = hm % 100, h = (hm - m) / 100;
+        return h * 60 + m;
+    }
+}
 
 // date and time from ref 2822 format
 function configFromRFC2822(config) {
-    var string, match, dayFormat,
-        dateFormat, timeFormat, tzFormat;
-    var timezones = {
-        ' GMT': ' +0000',
-        ' EDT': ' -0400',
-        ' EST': ' -0500',
-        ' CDT': ' -0500',
-        ' CST': ' -0600',
-        ' MDT': ' -0600',
-        ' MST': ' -0700',
-        ' PDT': ' -0700',
-        ' PST': ' -0800'
-    };
-    var military = 'YXWVUTSRQPONZABCDEFGHIKLM';
-    var timezone, timezoneIndex;
-
-    string = config._i
-        .replace(/\([^\)]*\)|[\n\t]/g, ' ') // Remove comments and folding whitespace
-        .replace(/(\s\s+)/g, ' ') // Replace multiple-spaces with a single space
-        .replace(/^\s|\s$/g, ''); // Remove leading and trailing spaces
-    match = basicRfcRegex.exec(string);
-
+    var match = rfc2822.exec(preprocessRFC2822(config._i));
     if (match) {
-        dayFormat = match[1] ? 'ddd' + ((match[1].length === 5) ? ', ' : ' ') : '';
-        dateFormat = 'D MMM ' + ((match[2].length > 10) ? 'YYYY ' : 'YY ');
-        timeFormat = 'HH:mm' + (match[4] ? ':ss' : '');
-
-        // TODO: Replace the vanilla JS Date object with an indepentent day-of-week check.
-        if (match[1]) { // day of week given
-            var momentDate = new Date(match[2]);
-            var momentDay = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][momentDate.getDay()];
-
-            if (match[1].substr(0,3) !== momentDay) {
-                getParsingFlags(config).weekdayMismatch = true;
-                config._isValid = false;
-                return;
-            }
+        var parsedArray = extractFromRFC2822Strings(match[4], match[3], match[2], match[5], match[6], match[7]);
+        if (!checkWeekday(match[1], parsedArray, config)) {
+            return;
         }
 
-        switch (match[5].length) {
-            case 2: // military
-                if (timezoneIndex === 0) {
-                    timezone = ' +0000';
-                } else {
-                    timezoneIndex = military.indexOf(match[5][1].toUpperCase()) - 12;
-                    timezone = ((timezoneIndex < 0) ? ' -' : ' +') +
-                        (('' + timezoneIndex).replace(/^-?/, '0')).match(/..$/)[0] + '00';
-                }
-                break;
-            case 4: // Zone
-                timezone = timezones[match[5]];
-                break;
-            default: // UT or +/-9999
-                timezone = timezones[' GMT'];
-        }
-        match[5] = timezone;
-        config._i = match.splice(1).join('');
-        tzFormat = ' ZZ';
-        config._f = dayFormat + dateFormat + timeFormat + tzFormat;
-        configFromStringAndFormat(config);
+        config._a = parsedArray;
+        config._tzm = calculateOffset(match[8], match[9], match[10]);
+
+        config._d = createUTCDate.apply(null, config._a);
+        config._d.setUTCMinutes(config._d.getUTCMinutes() - config._tzm);
+
         getParsingFlags(config).rfc2822 = true;
     } else {
         config._isValid = false;
@@ -2256,149 +2444,6 @@ hooks.createFromInputFallback = deprecate(
         config._d = new Date(config._i + (config._useUTC ? ' UTC' : ''));
     }
 );
-
-// Pick the first defined of two or three arguments.
-function defaults(a, b, c) {
-    if (a != null) {
-        return a;
-    }
-    if (b != null) {
-        return b;
-    }
-    return c;
-}
-
-function currentDateArray(config) {
-    // hooks is actually the exported moment object
-    var nowValue = new Date(hooks.now());
-    if (config._useUTC) {
-        return [nowValue.getUTCFullYear(), nowValue.getUTCMonth(), nowValue.getUTCDate()];
-    }
-    return [nowValue.getFullYear(), nowValue.getMonth(), nowValue.getDate()];
-}
-
-// convert an array to a date.
-// the array should mirror the parameters below
-// note: all values past the year are optional and will default to the lowest possible value.
-// [year, month, day , hour, minute, second, millisecond]
-function configFromArray (config) {
-    var i, date, input = [], currentDate, yearToUse;
-
-    if (config._d) {
-        return;
-    }
-
-    currentDate = currentDateArray(config);
-
-    //compute day of the year from weeks and weekdays
-    if (config._w && config._a[DATE] == null && config._a[MONTH] == null) {
-        dayOfYearFromWeekInfo(config);
-    }
-
-    //if the day of the year is set, figure out what it is
-    if (config._dayOfYear != null) {
-        yearToUse = defaults(config._a[YEAR], currentDate[YEAR]);
-
-        if (config._dayOfYear > daysInYear(yearToUse) || config._dayOfYear === 0) {
-            getParsingFlags(config)._overflowDayOfYear = true;
-        }
-
-        date = createUTCDate(yearToUse, 0, config._dayOfYear);
-        config._a[MONTH] = date.getUTCMonth();
-        config._a[DATE] = date.getUTCDate();
-    }
-
-    // Default to current date.
-    // * if no year, month, day of month are given, default to today
-    // * if day of month is given, default month and year
-    // * if month is given, default only year
-    // * if year is given, don't default anything
-    for (i = 0; i < 3 && config._a[i] == null; ++i) {
-        config._a[i] = input[i] = currentDate[i];
-    }
-
-    // Zero out whatever was not defaulted, including time
-    for (; i < 7; i++) {
-        config._a[i] = input[i] = (config._a[i] == null) ? (i === 2 ? 1 : 0) : config._a[i];
-    }
-
-    // Check for 24:00:00.000
-    if (config._a[HOUR] === 24 &&
-            config._a[MINUTE] === 0 &&
-            config._a[SECOND] === 0 &&
-            config._a[MILLISECOND] === 0) {
-        config._nextDay = true;
-        config._a[HOUR] = 0;
-    }
-
-    config._d = (config._useUTC ? createUTCDate : createDate).apply(null, input);
-    // Apply timezone offset from input. The actual utcOffset can be changed
-    // with parseZone.
-    if (config._tzm != null) {
-        config._d.setUTCMinutes(config._d.getUTCMinutes() - config._tzm);
-    }
-
-    if (config._nextDay) {
-        config._a[HOUR] = 24;
-    }
-}
-
-function dayOfYearFromWeekInfo(config) {
-    var w, weekYear, week, weekday, dow, doy, temp, weekdayOverflow;
-
-    w = config._w;
-    if (w.GG != null || w.W != null || w.E != null) {
-        dow = 1;
-        doy = 4;
-
-        // TODO: We need to take the current isoWeekYear, but that depends on
-        // how we interpret now (local, utc, fixed offset). So create
-        // a now version of current config (take local/utc/offset flags, and
-        // create now).
-        weekYear = defaults(w.GG, config._a[YEAR], weekOfYear(createLocal(), 1, 4).year);
-        week = defaults(w.W, 1);
-        weekday = defaults(w.E, 1);
-        if (weekday < 1 || weekday > 7) {
-            weekdayOverflow = true;
-        }
-    } else {
-        dow = config._locale._week.dow;
-        doy = config._locale._week.doy;
-
-        var curWeek = weekOfYear(createLocal(), dow, doy);
-
-        weekYear = defaults(w.gg, config._a[YEAR], curWeek.year);
-
-        // Default to current week.
-        week = defaults(w.w, curWeek.week);
-
-        if (w.d != null) {
-            // weekday -- low day numbers are considered next week
-            weekday = w.d;
-            if (weekday < 0 || weekday > 6) {
-                weekdayOverflow = true;
-            }
-        } else if (w.e != null) {
-            // local weekday -- counting starts from begining of week
-            weekday = w.e + dow;
-            if (w.e < 0 || w.e > 6) {
-                weekdayOverflow = true;
-            }
-        } else {
-            // default to begining of week
-            weekday = dow;
-        }
-    }
-    if (week < 1 || week > weeksInYear(weekYear, dow, doy)) {
-        getParsingFlags(config)._overflowWeeks = true;
-    } else if (weekdayOverflow != null) {
-        getParsingFlags(config)._overflowWeekday = true;
-    } else {
-        temp = dayOfYearFromWeeks(weekYear, week, weekday, dow, doy);
-        config._a[YEAR] = temp.year;
-        config._dayOfYear = temp.dayOfYear;
-    }
-}
 
 // constant that refers to the ISO standard
 hooks.ISO_8601 = function () {};
@@ -2724,7 +2769,7 @@ var ordering = ['year', 'quarter', 'month', 'week', 'day', 'hour', 'minute', 'se
 
 function isDurationValid(m) {
     for (var key in m) {
-        if (!(ordering.indexOf(key) !== -1 && (m[key] == null || !isNaN(m[key])))) {
+        if (!(indexOf.call(ordering, key) !== -1 && (m[key] == null || !isNaN(m[key])))) {
             return false;
         }
     }
@@ -2775,7 +2820,7 @@ function Duration (duration) {
     // day when working around DST, we need to store them separately
     this._days = +days +
         weeks * 7;
-    // It is impossible translate months into days without knowing
+    // It is impossible to translate months into days without knowing
     // which months you are are talking about, so we have to store
     // it separately.
     this._months = +months +
@@ -3022,12 +3067,12 @@ function isUtc () {
 }
 
 // ASP.NET json date format regex
-var aspNetRegex = /^(\-)?(?:(\d*)[. ])?(\d+)\:(\d+)(?:\:(\d+)(\.\d*)?)?$/;
+var aspNetRegex = /^(\-|\+)?(?:(\d*)[. ])?(\d+)\:(\d+)(?:\:(\d+)(\.\d*)?)?$/;
 
 // from http://docs.closure-library.googlecode.com/git/closure_goog_date_date.js.source.html
 // somewhat more in line with 4.4.3.2 2004 spec, but allows decimal anywhere
 // and further modified to allow for strings containing both week and day
-var isoRegex = /^(-)?P(?:(-?[0-9,.]*)Y)?(?:(-?[0-9,.]*)M)?(?:(-?[0-9,.]*)W)?(?:(-?[0-9,.]*)D)?(?:T(?:(-?[0-9,.]*)H)?(?:(-?[0-9,.]*)M)?(?:(-?[0-9,.]*)S)?)?$/;
+var isoRegex = /^(-|\+)?P(?:([-+]?[0-9,.]*)Y)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)W)?(?:([-+]?[0-9,.]*)D)?(?:T(?:([-+]?[0-9,.]*)H)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)S)?)?$/;
 
 function createDuration (input, key) {
     var duration = input,
@@ -3061,7 +3106,7 @@ function createDuration (input, key) {
             ms : toInt(absRound(match[MILLISECOND] * 1000)) * sign // the millisecond decimal point is included in the match
         };
     } else if (!!(match = isoRegex.exec(input))) {
-        sign = (match[1] === '-') ? -1 : 1;
+        sign = (match[1] === '-') ? -1 : (match[1] === '+') ? 1 : 1;
         duration = {
             y : parseIso(match[2], sign),
             M : parseIso(match[3], sign),
@@ -3164,14 +3209,14 @@ function addSubtract (mom, duration, isAdding, updateOffset) {
 
     updateOffset = updateOffset == null ? true : updateOffset;
 
-    if (milliseconds) {
-        mom._d.setTime(mom._d.valueOf() + milliseconds * isAdding);
+    if (months) {
+        setMonth(mom, get(mom, 'Month') + months * isAdding);
     }
     if (days) {
         set$1(mom, 'Date', get(mom, 'Date') + days * isAdding);
     }
-    if (months) {
-        setMonth(mom, get(mom, 'Month') + months * isAdding);
+    if (milliseconds) {
+        mom._d.setTime(mom._d.valueOf() + milliseconds * isAdding);
     }
     if (updateOffset) {
         hooks.updateOffset(mom, days || months);
@@ -3281,22 +3326,18 @@ function diff (input, units, asFloat) {
 
     units = normalizeUnits(units);
 
-    if (units === 'year' || units === 'month' || units === 'quarter') {
-        output = monthDiff(this, that);
-        if (units === 'quarter') {
-            output = output / 3;
-        } else if (units === 'year') {
-            output = output / 12;
-        }
-    } else {
-        delta = this - that;
-        output = units === 'second' ? delta / 1e3 : // 1000
-            units === 'minute' ? delta / 6e4 : // 1000 * 60
-            units === 'hour' ? delta / 36e5 : // 1000 * 60 * 60
-            units === 'day' ? (delta - zoneDelta) / 864e5 : // 1000 * 60 * 60 * 24, negate dst
-            units === 'week' ? (delta - zoneDelta) / 6048e5 : // 1000 * 60 * 60 * 24 * 7, negate dst
-            delta;
+    switch (units) {
+        case 'year': output = monthDiff(this, that) / 12; break;
+        case 'month': output = monthDiff(this, that); break;
+        case 'quarter': output = monthDiff(this, that) / 3; break;
+        case 'second': output = (this - that) / 1e3; break; // 1000
+        case 'minute': output = (this - that) / 6e4; break; // 1000 * 60
+        case 'hour': output = (this - that) / 36e5; break; // 1000 * 60 * 60
+        case 'day': output = (this - that - zoneDelta) / 864e5; break; // 1000 * 60 * 60 * 24, negate dst
+        case 'week': output = (this - that - zoneDelta) / 6048e5; break; // 1000 * 60 * 60 * 24 * 7, negate dst
+        default: output = this - that;
     }
+
     return asFloat ? output : absFloor(output);
 }
 
@@ -3328,19 +3369,24 @@ function toString () {
     return this.clone().locale('en').format('ddd MMM DD YYYY HH:mm:ss [GMT]ZZ');
 }
 
-function toISOString() {
+function toISOString(keepOffset) {
     if (!this.isValid()) {
         return null;
     }
-    var m = this.clone().utc();
+    var utc = keepOffset !== true;
+    var m = utc ? this.clone().utc() : this;
     if (m.year() < 0 || m.year() > 9999) {
-        return formatMoment(m, 'YYYYYY-MM-DD[T]HH:mm:ss.SSS[Z]');
+        return formatMoment(m, utc ? 'YYYYYY-MM-DD[T]HH:mm:ss.SSS[Z]' : 'YYYYYY-MM-DD[T]HH:mm:ss.SSSZ');
     }
     if (isFunction(Date.prototype.toISOString)) {
         // native implementation is ~50x faster, use it when we can
-        return this.toDate().toISOString();
+        if (utc) {
+            return this.toDate().toISOString();
+        } else {
+            return new Date(this._d.valueOf()).toISOString().replace('Z', formatMoment(m, 'Z'));
+        }
     }
-    return formatMoment(m, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]');
+    return formatMoment(m, utc ? 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]' : 'YYYY-MM-DD[T]HH:mm:ss.SSSZ');
 }
 
 /**
@@ -3696,7 +3742,7 @@ addRegexToken('Do', function (isStrict, locale) {
 
 addParseToken(['D', 'DD'], DATE);
 addParseToken('Do', function (input, array) {
-    array[DATE] = toInt(input.match(match1to2)[0], 10);
+    array[DATE] = toInt(input.match(match1to2)[0]);
 });
 
 // MOMENTS
@@ -4274,6 +4320,10 @@ var asWeeks        = makeAs('w');
 var asMonths       = makeAs('M');
 var asYears        = makeAs('y');
 
+function clone$1 () {
+    return createDuration(this);
+}
+
 function get$2 (units) {
     units = normalizeUnits(units);
     return this.isValid() ? this[units + 's']() : NaN;
@@ -4383,6 +4433,10 @@ function humanize (withSuffix) {
 
 var abs$1 = Math.abs;
 
+function sign(x) {
+    return ((x > 0) - (x < 0)) || +x;
+}
+
 function toISOString$1() {
     // for ISO strings we do not use the normal bubbling rules:
     //  * milliseconds bubble up until they become hours
@@ -4417,7 +4471,7 @@ function toISOString$1() {
     var D = days;
     var h = hours;
     var m = minutes;
-    var s = seconds;
+    var s = seconds ? seconds.toFixed(3).replace(/\.?0+$/, '') : '';
     var total = this.asSeconds();
 
     if (!total) {
@@ -4426,15 +4480,19 @@ function toISOString$1() {
         return 'P0D';
     }
 
-    return (total < 0 ? '-' : '') +
-        'P' +
-        (Y ? Y + 'Y' : '') +
-        (M ? M + 'M' : '') +
-        (D ? D + 'D' : '') +
+    var totalSign = total < 0 ? '-' : '';
+    var ymSign = sign(this._months) !== sign(total) ? '-' : '';
+    var daysSign = sign(this._days) !== sign(total) ? '-' : '';
+    var hmsSign = sign(this._milliseconds) !== sign(total) ? '-' : '';
+
+    return totalSign + 'P' +
+        (Y ? ymSign + Y + 'Y' : '') +
+        (M ? ymSign + M + 'M' : '') +
+        (D ? daysSign + D + 'D' : '') +
         ((h || m || s) ? 'T' : '') +
-        (h ? h + 'H' : '') +
-        (m ? m + 'M' : '') +
-        (s ? s + 'S' : '');
+        (h ? hmsSign + h + 'H' : '') +
+        (m ? hmsSign + m + 'M' : '') +
+        (s ? hmsSign + s + 'S' : '');
 }
 
 var proto$2 = Duration.prototype;
@@ -4454,6 +4512,7 @@ proto$2.asMonths       = asMonths;
 proto$2.asYears        = asYears;
 proto$2.valueOf        = valueOf$1;
 proto$2._bubble        = bubble;
+proto$2.clone          = clone$1;
 proto$2.get            = get$2;
 proto$2.milliseconds   = milliseconds;
 proto$2.seconds        = seconds;
@@ -4495,7 +4554,7 @@ addParseToken('x', function (input, array, config) {
 // Side effect imports
 
 
-hooks.version = '2.18.1';
+hooks.version = '2.20.1';
 
 setHookCallback(createLocal);
 
@@ -4522,10 +4581,23 @@ hooks.updateLocale          = updateLocale;
 hooks.locales               = listLocales;
 hooks.weekdaysShort         = listWeekdaysShort;
 hooks.normalizeUnits        = normalizeUnits;
-hooks.relativeTimeRounding = getSetRelativeTimeRounding;
+hooks.relativeTimeRounding  = getSetRelativeTimeRounding;
 hooks.relativeTimeThreshold = getSetRelativeTimeThreshold;
 hooks.calendarFormat        = getCalendarFormat;
 hooks.prototype             = proto;
+
+// currently HTML5 input type only supports 24-hour formats
+hooks.HTML5_FMT = {
+    DATETIME_LOCAL: 'YYYY-MM-DDTHH:mm',             // <input type="datetime-local" />
+    DATETIME_LOCAL_SECONDS: 'YYYY-MM-DDTHH:mm:ss',  // <input type="datetime-local" step="1" />
+    DATETIME_LOCAL_MS: 'YYYY-MM-DDTHH:mm:ss.SSS',   // <input type="datetime-local" step="0.001" />
+    DATE: 'YYYY-MM-DD',                             // <input type="date" />
+    TIME: 'HH:mm',                                  // <input type="time" />
+    TIME_SECONDS: 'HH:mm:ss',                       // <input type="time" step="1" />
+    TIME_MS: 'HH:mm:ss.SSS',                        // <input type="time" step="0.001" />
+    WEEK: 'YYYY-[W]WW',                             // <input type="week" />
+    MONTH: 'YYYY-MM'                                // <input type="month" />
+};
 
 return hooks;
 
@@ -4732,7 +4804,7 @@ if (typeof DEBUG !== 'undefined' && DEBUG) {
   ) }
 }
 
-var listToStyles = __webpack_require__(232)
+var listToStyles = __webpack_require__(238)
 
 /*
 type StyleObject = {
@@ -4937,8 +5009,8 @@ function applyToTag (styleElement, obj) {
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
-!function(t,e){ true?module.exports=e():"function"==typeof define&&define.amd?define([],e):"object"==typeof exports?exports.VueSelect=e():t.VueSelect=e()}(this,function(){return function(t){function e(r){if(n[r])return n[r].exports;var o=n[r]={exports:{},id:r,loaded:!1};return t[r].call(o.exports,o,o.exports,e),o.loaded=!0,o.exports}var n={};return e.m=t,e.c=n,e.p="/",e(0)}([function(t,e,n){"use strict";function r(t){return t&&t.__esModule?t:{default:t}}Object.defineProperty(e,"__esModule",{value:!0}),e.mixins=e.VueSelect=void 0;var o=n(84),i=r(o),a=n(42),s=r(a);e.default=i.default,e.VueSelect=i.default,e.mixins=s.default},function(t,e){var n=t.exports="undefined"!=typeof window&&window.Math==Math?window:"undefined"!=typeof self&&self.Math==Math?self:Function("return this")();"number"==typeof __g&&(__g=n)},function(t,e,n){t.exports=!n(9)(function(){return 7!=Object.defineProperty({},"a",{get:function(){return 7}}).a})},function(t,e){var n={}.hasOwnProperty;t.exports=function(t,e){return n.call(t,e)}},function(t,e,n){var r=n(11),o=n(33),i=n(25),a=Object.defineProperty;e.f=n(2)?Object.defineProperty:function(t,e,n){if(r(t),e=i(e,!0),r(n),o)try{return a(t,e,n)}catch(t){}if("get"in n||"set"in n)throw TypeError("Accessors not supported!");return"value"in n&&(t[e]=n.value),t}},function(t,e,n){var r=n(59),o=n(16);t.exports=function(t){return r(o(t))}},function(t,e){var n=t.exports={version:"2.4.0"};"number"==typeof __e&&(__e=n)},function(t,e,n){var r=n(4),o=n(14);t.exports=n(2)?function(t,e,n){return r.f(t,e,o(1,n))}:function(t,e,n){return t[e]=n,t}},function(t,e,n){var r=n(23)("wks"),o=n(15),i=n(1).Symbol,a="function"==typeof i,s=t.exports=function(t){return r[t]||(r[t]=a&&i[t]||(a?i:o)("Symbol."+t))};s.store=r},function(t,e){t.exports=function(t){try{return!!t()}catch(t){return!0}}},function(t,e,n){var r=n(38),o=n(17);t.exports=Object.keys||function(t){return r(t,o)}},function(t,e,n){var r=n(13);t.exports=function(t){if(!r(t))throw TypeError(t+" is not an object!");return t}},function(t,e,n){var r=n(1),o=n(6),i=n(56),a=n(7),s="prototype",u=function(t,e,n){var l,c,f,p=t&u.F,d=t&u.G,h=t&u.S,b=t&u.P,v=t&u.B,y=t&u.W,g=d?o:o[e]||(o[e]={}),m=g[s],x=d?r:h?r[e]:(r[e]||{})[s];d&&(n=e);for(l in n)c=!p&&x&&void 0!==x[l],c&&l in g||(f=c?x[l]:n[l],g[l]=d&&"function"!=typeof x[l]?n[l]:v&&c?i(f,r):y&&x[l]==f?function(t){var e=function(e,n,r){if(this instanceof t){switch(arguments.length){case 0:return new t;case 1:return new t(e);case 2:return new t(e,n)}return new t(e,n,r)}return t.apply(this,arguments)};return e[s]=t[s],e}(f):b&&"function"==typeof f?i(Function.call,f):f,b&&((g.virtual||(g.virtual={}))[l]=f,t&u.R&&m&&!m[l]&&a(m,l,f)))};u.F=1,u.G=2,u.S=4,u.P=8,u.B=16,u.W=32,u.U=64,u.R=128,t.exports=u},function(t,e){t.exports=function(t){return"object"==typeof t?null!==t:"function"==typeof t}},function(t,e){t.exports=function(t,e){return{enumerable:!(1&t),configurable:!(2&t),writable:!(4&t),value:e}}},function(t,e){var n=0,r=Math.random();t.exports=function(t){return"Symbol(".concat(void 0===t?"":t,")_",(++n+r).toString(36))}},function(t,e){t.exports=function(t){if(void 0==t)throw TypeError("Can't call method on  "+t);return t}},function(t,e){t.exports="constructor,hasOwnProperty,isPrototypeOf,propertyIsEnumerable,toLocaleString,toString,valueOf".split(",")},function(t,e){t.exports={}},function(t,e){t.exports=!0},function(t,e){e.f={}.propertyIsEnumerable},function(t,e,n){var r=n(4).f,o=n(3),i=n(8)("toStringTag");t.exports=function(t,e,n){t&&!o(t=n?t:t.prototype,i)&&r(t,i,{configurable:!0,value:e})}},function(t,e,n){var r=n(23)("keys"),o=n(15);t.exports=function(t){return r[t]||(r[t]=o(t))}},function(t,e,n){var r=n(1),o="__core-js_shared__",i=r[o]||(r[o]={});t.exports=function(t){return i[t]||(i[t]={})}},function(t,e){var n=Math.ceil,r=Math.floor;t.exports=function(t){return isNaN(t=+t)?0:(t>0?r:n)(t)}},function(t,e,n){var r=n(13);t.exports=function(t,e){if(!r(t))return t;var n,o;if(e&&"function"==typeof(n=t.toString)&&!r(o=n.call(t)))return o;if("function"==typeof(n=t.valueOf)&&!r(o=n.call(t)))return o;if(!e&&"function"==typeof(n=t.toString)&&!r(o=n.call(t)))return o;throw TypeError("Can't convert object to primitive value")}},function(t,e,n){var r=n(1),o=n(6),i=n(19),a=n(27),s=n(4).f;t.exports=function(t){var e=o.Symbol||(o.Symbol=i?{}:r.Symbol||{});"_"==t.charAt(0)||t in e||s(e,t,{value:a.f(t)})}},function(t,e,n){e.f=n(8)},function(t,e){"use strict";t.exports={props:{loading:{type:Boolean,default:!1},onSearch:{type:Function,default:function(t,e){}}},data:function(){return{mutableLoading:!1}},watch:{search:function(){this.search.length>0&&(this.onSearch(this.search,this.toggleLoading),this.$emit("search",this.search,this.toggleLoading))},loading:function(t){this.mutableLoading=t}},methods:{toggleLoading:function(){var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:null;return null==t?this.mutableLoading=!this.mutableLoading:this.mutableLoading=t}}}},function(t,e){"use strict";t.exports={watch:{typeAheadPointer:function(){this.maybeAdjustScroll()}},methods:{maybeAdjustScroll:function(){var t=this.pixelsToPointerTop(),e=this.pixelsToPointerBottom();return t<=this.viewport().top?this.scrollTo(t):e>=this.viewport().bottom?this.scrollTo(this.viewport().top+this.pointerHeight()):void 0},pixelsToPointerTop:function t(){var t=0;if(this.$refs.dropdownMenu)for(var e=0;e<this.typeAheadPointer;e++)t+=this.$refs.dropdownMenu.children[e].offsetHeight;return t},pixelsToPointerBottom:function(){return this.pixelsToPointerTop()+this.pointerHeight()},pointerHeight:function(){var t=!!this.$refs.dropdownMenu&&this.$refs.dropdownMenu.children[this.typeAheadPointer];return t?t.offsetHeight:0},viewport:function(){return{top:this.$refs.dropdownMenu?this.$refs.dropdownMenu.scrollTop:0,bottom:this.$refs.dropdownMenu?this.$refs.dropdownMenu.offsetHeight+this.$refs.dropdownMenu.scrollTop:0}},scrollTo:function(t){return this.$refs.dropdownMenu?this.$refs.dropdownMenu.scrollTop=t:null}}}},function(t,e){"use strict";t.exports={data:function(){return{typeAheadPointer:-1}},watch:{filteredOptions:function(){this.typeAheadPointer=0}},methods:{typeAheadUp:function(){this.typeAheadPointer>0&&(this.typeAheadPointer--,this.maybeAdjustScroll&&this.maybeAdjustScroll())},typeAheadDown:function(){this.typeAheadPointer<this.filteredOptions.length-1&&(this.typeAheadPointer++,this.maybeAdjustScroll&&this.maybeAdjustScroll())},typeAheadSelect:function(){this.filteredOptions[this.typeAheadPointer]?this.select(this.filteredOptions[this.typeAheadPointer]):this.taggable&&this.search.length&&this.select(this.search),this.clearSearchOnSelect&&(this.search="")}}}},function(t,e){var n={}.toString;t.exports=function(t){return n.call(t).slice(8,-1)}},function(t,e,n){var r=n(13),o=n(1).document,i=r(o)&&r(o.createElement);t.exports=function(t){return i?o.createElement(t):{}}},function(t,e,n){t.exports=!n(2)&&!n(9)(function(){return 7!=Object.defineProperty(n(32)("div"),"a",{get:function(){return 7}}).a})},function(t,e,n){"use strict";var r=n(19),o=n(12),i=n(39),a=n(7),s=n(3),u=n(18),l=n(61),c=n(21),f=n(68),p=n(8)("iterator"),d=!([].keys&&"next"in[].keys()),h="@@iterator",b="keys",v="values",y=function(){return this};t.exports=function(t,e,n,g,m,x,w){l(n,e,g);var O,S,_,j=function(t){if(!d&&t in C)return C[t];switch(t){case b:return function(){return new n(this,t)};case v:return function(){return new n(this,t)}}return function(){return new n(this,t)}},k=e+" Iterator",P=m==v,A=!1,C=t.prototype,M=C[p]||C[h]||m&&C[m],E=M||j(m),T=m?P?j("entries"):E:void 0,V="Array"==e?C.entries||M:M;if(V&&(_=f(V.call(new t)),_!==Object.prototype&&(c(_,k,!0),r||s(_,p)||a(_,p,y))),P&&M&&M.name!==v&&(A=!0,E=function(){return M.call(this)}),r&&!w||!d&&!A&&C[p]||a(C,p,E),u[e]=E,u[k]=y,m)if(O={values:P?E:j(v),keys:x?E:j(b),entries:T},w)for(S in O)S in C||i(C,S,O[S]);else o(o.P+o.F*(d||A),e,O);return O}},function(t,e,n){var r=n(11),o=n(65),i=n(17),a=n(22)("IE_PROTO"),s=function(){},u="prototype",l=function(){var t,e=n(32)("iframe"),r=i.length,o="<",a=">";for(e.style.display="none",n(58).appendChild(e),e.src="javascript:",t=e.contentWindow.document,t.open(),t.write(o+"script"+a+"document.F=Object"+o+"/script"+a),t.close(),l=t.F;r--;)delete l[u][i[r]];return l()};t.exports=Object.create||function(t,e){var n;return null!==t?(s[u]=r(t),n=new s,s[u]=null,n[a]=t):n=l(),void 0===e?n:o(n,e)}},function(t,e,n){var r=n(38),o=n(17).concat("length","prototype");e.f=Object.getOwnPropertyNames||function(t){return r(t,o)}},function(t,e){e.f=Object.getOwnPropertySymbols},function(t,e,n){var r=n(3),o=n(5),i=n(55)(!1),a=n(22)("IE_PROTO");t.exports=function(t,e){var n,s=o(t),u=0,l=[];for(n in s)n!=a&&r(s,n)&&l.push(n);for(;e.length>u;)r(s,n=e[u++])&&(~i(l,n)||l.push(n));return l}},function(t,e,n){t.exports=n(7)},function(t,e,n){var r=n(16);t.exports=function(t){return Object(r(t))}},function(t,e,n){"use strict";function r(t){return t&&t.__esModule?t:{default:t}}Object.defineProperty(e,"__esModule",{value:!0});var o=n(44),i=r(o),a=n(47),s=r(a),u=n(48),l=r(u),c=n(29),f=r(c),p=n(30),d=r(p),h=n(28),b=r(h);e.default={mixins:[f.default,d.default,b.default],props:{value:{default:null},options:{type:Array,default:function(){return[]}},maxHeight:{type:String,default:"400px"},searchable:{type:Boolean,default:!0},multiple:{type:Boolean,default:!1},placeholder:{type:String,default:""},transition:{type:String,default:"fade"},clearSearchOnSelect:{type:Boolean,default:!0},label:{type:String,default:"label"},getOptionLabel:{type:Function,default:function(t){return"object"===("undefined"==typeof t?"undefined":(0,l.default)(t))&&this.label&&t[this.label]?t[this.label]:t}},onChange:{type:Function,default:function(t){this.$emit("input",t)}},taggable:{type:Boolean,default:!1},pushTags:{type:Boolean,default:!1},createOption:{type:Function,default:function(t){return"object"===(0,l.default)(this.mutableOptions[0])&&(t=(0,s.default)({},this.label,t)),this.$emit("option:created",t),t}},resetOnOptionsChange:{type:Boolean,default:!1},noDrop:{type:Boolean,default:!1}},data:function(){return{search:"",open:!1,mutableValue:null,mutableOptions:[]}},watch:{value:function(t){this.mutableValue=t},mutableValue:function(t,e){this.multiple?this.onChange?this.onChange(t):null:this.onChange&&t!==e?this.onChange(t):null},options:function(t){this.mutableOptions=t},mutableOptions:function(){!this.taggable&&this.resetOnOptionsChange&&(this.mutableValue=this.multiple?[]:null)},multiple:function(t){this.mutableValue=t?[]:null}},created:function(){this.mutableValue=this.value,this.mutableOptions=this.options.slice(0),this.mutableLoading=this.loading,this.$on("option:created",this.maybePushTag)},methods:{select:function(t){this.isOptionSelected(t)?this.deselect(t):(this.taggable&&!this.optionExists(t)&&(t=this.createOption(t)),this.multiple&&!this.mutableValue?this.mutableValue=[t]:this.multiple?this.mutableValue.push(t):this.mutableValue=t),this.onAfterSelect(t)},deselect:function(t){var e=this;if(this.multiple){var n=-1;this.mutableValue.forEach(function(r){(r===t||"object"===("undefined"==typeof r?"undefined":(0,l.default)(r))&&r[e.label]===t[e.label])&&(n=r)});var r=this.mutableValue.indexOf(n);this.mutableValue.splice(r,1)}else this.mutableValue=null},onAfterSelect:function(t){this.multiple||(this.open=!this.open,this.$refs.search.blur()),this.clearSearchOnSelect&&(this.search="")},toggleDropdown:function(t){t.target!==this.$refs.openIndicator&&t.target!==this.$refs.search&&t.target!==this.$refs.toggle&&t.target!==this.$el||(this.open?this.$refs.search.blur():(this.open=!0,this.$refs.search.focus()))},isOptionSelected:function(t){var e=this;if(this.multiple&&this.mutableValue){var n=!1;return this.mutableValue.forEach(function(r){"object"===("undefined"==typeof r?"undefined":(0,l.default)(r))&&r[e.label]===t[e.label]?n=!0:"object"===("undefined"==typeof r?"undefined":(0,l.default)(r))&&r[e.label]===t?n=!0:r===t&&(n=!0)}),n}return this.mutableValue===t},onEscape:function(){this.search.length?this.search="":this.$refs.search.blur()},onSearchBlur:function(){this.open=!1,this.$emit("search:blur")},onSearchFocus:function(){this.open=!0,this.$emit("search:focus")},maybeDeleteValue:function(){if(!this.$refs.search.value.length&&this.mutableValue)return this.multiple?this.mutableValue.pop():this.mutableValue=null},optionExists:function(t){var e=this,n=!1;return this.mutableOptions.forEach(function(r){"object"===("undefined"==typeof r?"undefined":(0,l.default)(r))&&r[e.label]===t?n=!0:r===t&&(n=!0)}),n},maybePushTag:function(t){this.pushTags&&this.mutableOptions.push(t)}},computed:{dropdownClasses:function(){return{open:this.dropdownOpen,searchable:this.searchable,unsearchable:!this.searchable,loading:this.mutableLoading}},dropdownOpen:function(){return!this.noDrop&&(this.open&&!this.mutableLoading)},searchPlaceholder:function(){if(this.isValueEmpty&&this.placeholder)return this.placeholder},filteredOptions:function(){var t=this,e=this.mutableOptions.filter(function(e){return"object"===("undefined"==typeof e?"undefined":(0,l.default)(e))&&e.hasOwnProperty(t.label)?e[t.label].toLowerCase().indexOf(t.search.toLowerCase())>-1:"object"!==("undefined"==typeof e?"undefined":(0,l.default)(e))||e.hasOwnProperty(t.label)?e.toLowerCase().indexOf(t.search.toLowerCase())>-1:console.warn('[vue-select warn]: Label key "option.'+t.label+'" does not exist in options object.\nhttp://sagalbot.github.io/vue-select/#ex-labels')});return this.taggable&&this.search.length&&!this.optionExists(this.search)&&e.unshift(this.search),e},isValueEmpty:function(){return!this.mutableValue||("object"===(0,l.default)(this.mutableValue)?!(0,i.default)(this.mutableValue).length:!this.mutableValue.length)},valueAsArray:function(){return this.multiple?this.mutableValue:this.mutableValue?[this.mutableValue]:[]}}}},function(t,e,n){"use strict";function r(t){return t&&t.__esModule?t:{default:t}}Object.defineProperty(e,"__esModule",{value:!0});var o=n(28),i=r(o),a=n(30),s=r(a),u=n(29),l=r(u);e.default={ajax:i.default,pointer:s.default,pointerScroll:l.default}},function(t,e,n){t.exports={default:n(49),__esModule:!0}},function(t,e,n){t.exports={default:n(50),__esModule:!0}},function(t,e,n){t.exports={default:n(51),__esModule:!0}},function(t,e,n){t.exports={default:n(52),__esModule:!0}},function(t,e,n){"use strict";function r(t){return t&&t.__esModule?t:{default:t}}e.__esModule=!0;var o=n(43),i=r(o);e.default=function(t,e,n){return e in t?(0,i.default)(t,e,{value:n,enumerable:!0,configurable:!0,writable:!0}):t[e]=n,t}},function(t,e,n){"use strict";function r(t){return t&&t.__esModule?t:{default:t}}e.__esModule=!0;var o=n(46),i=r(o),a=n(45),s=r(a),u="function"==typeof s.default&&"symbol"==typeof i.default?function(t){return typeof t}:function(t){return t&&"function"==typeof s.default&&t.constructor===s.default&&t!==s.default.prototype?"symbol":typeof t};e.default="function"==typeof s.default&&"symbol"===u(i.default)?function(t){return"undefined"==typeof t?"undefined":u(t)}:function(t){return t&&"function"==typeof s.default&&t.constructor===s.default&&t!==s.default.prototype?"symbol":"undefined"==typeof t?"undefined":u(t)}},function(t,e,n){n(74);var r=n(6).Object;t.exports=function(t,e,n){return r.defineProperty(t,e,n)}},function(t,e,n){n(75),t.exports=n(6).Object.keys},function(t,e,n){n(78),n(76),n(79),n(80),t.exports=n(6).Symbol},function(t,e,n){n(77),n(81),t.exports=n(27).f("iterator")},function(t,e){t.exports=function(t){if("function"!=typeof t)throw TypeError(t+" is not a function!");return t}},function(t,e){t.exports=function(){}},function(t,e,n){var r=n(5),o=n(72),i=n(71);t.exports=function(t){return function(e,n,a){var s,u=r(e),l=o(u.length),c=i(a,l);if(t&&n!=n){for(;l>c;)if(s=u[c++],s!=s)return!0}else for(;l>c;c++)if((t||c in u)&&u[c]===n)return t||c||0;return!t&&-1}}},function(t,e,n){var r=n(53);t.exports=function(t,e,n){if(r(t),void 0===e)return t;switch(n){case 1:return function(n){return t.call(e,n)};case 2:return function(n,r){return t.call(e,n,r)};case 3:return function(n,r,o){return t.call(e,n,r,o)}}return function(){return t.apply(e,arguments)}}},function(t,e,n){var r=n(10),o=n(37),i=n(20);t.exports=function(t){var e=r(t),n=o.f;if(n)for(var a,s=n(t),u=i.f,l=0;s.length>l;)u.call(t,a=s[l++])&&e.push(a);return e}},function(t,e,n){t.exports=n(1).document&&document.documentElement},function(t,e,n){var r=n(31);t.exports=Object("z").propertyIsEnumerable(0)?Object:function(t){return"String"==r(t)?t.split(""):Object(t)}},function(t,e,n){var r=n(31);t.exports=Array.isArray||function(t){return"Array"==r(t)}},function(t,e,n){"use strict";var r=n(35),o=n(14),i=n(21),a={};n(7)(a,n(8)("iterator"),function(){return this}),t.exports=function(t,e,n){t.prototype=r(a,{next:o(1,n)}),i(t,e+" Iterator")}},function(t,e){t.exports=function(t,e){return{value:e,done:!!t}}},function(t,e,n){var r=n(10),o=n(5);t.exports=function(t,e){for(var n,i=o(t),a=r(i),s=a.length,u=0;s>u;)if(i[n=a[u++]]===e)return n}},function(t,e,n){var r=n(15)("meta"),o=n(13),i=n(3),a=n(4).f,s=0,u=Object.isExtensible||function(){return!0},l=!n(9)(function(){return u(Object.preventExtensions({}))}),c=function(t){a(t,r,{value:{i:"O"+ ++s,w:{}}})},f=function(t,e){if(!o(t))return"symbol"==typeof t?t:("string"==typeof t?"S":"P")+t;if(!i(t,r)){if(!u(t))return"F";if(!e)return"E";c(t)}return t[r].i},p=function(t,e){if(!i(t,r)){if(!u(t))return!0;if(!e)return!1;c(t)}return t[r].w},d=function(t){return l&&h.NEED&&u(t)&&!i(t,r)&&c(t),t},h=t.exports={KEY:r,NEED:!1,fastKey:f,getWeak:p,onFreeze:d}},function(t,e,n){var r=n(4),o=n(11),i=n(10);t.exports=n(2)?Object.defineProperties:function(t,e){o(t);for(var n,a=i(e),s=a.length,u=0;s>u;)r.f(t,n=a[u++],e[n]);return t}},function(t,e,n){var r=n(20),o=n(14),i=n(5),a=n(25),s=n(3),u=n(33),l=Object.getOwnPropertyDescriptor;e.f=n(2)?l:function(t,e){if(t=i(t),e=a(e,!0),u)try{return l(t,e)}catch(t){}if(s(t,e))return o(!r.f.call(t,e),t[e])}},function(t,e,n){var r=n(5),o=n(36).f,i={}.toString,a="object"==typeof window&&window&&Object.getOwnPropertyNames?Object.getOwnPropertyNames(window):[],s=function(t){try{return o(t)}catch(t){return a.slice()}};t.exports.f=function(t){return a&&"[object Window]"==i.call(t)?s(t):o(r(t))}},function(t,e,n){var r=n(3),o=n(40),i=n(22)("IE_PROTO"),a=Object.prototype;t.exports=Object.getPrototypeOf||function(t){return t=o(t),r(t,i)?t[i]:"function"==typeof t.constructor&&t instanceof t.constructor?t.constructor.prototype:t instanceof Object?a:null}},function(t,e,n){var r=n(12),o=n(6),i=n(9);t.exports=function(t,e){var n=(o.Object||{})[t]||Object[t],a={};a[t]=e(n),r(r.S+r.F*i(function(){n(1)}),"Object",a)}},function(t,e,n){var r=n(24),o=n(16);t.exports=function(t){return function(e,n){var i,a,s=String(o(e)),u=r(n),l=s.length;return u<0||u>=l?t?"":void 0:(i=s.charCodeAt(u),i<55296||i>56319||u+1===l||(a=s.charCodeAt(u+1))<56320||a>57343?t?s.charAt(u):i:t?s.slice(u,u+2):(i-55296<<10)+(a-56320)+65536)}}},function(t,e,n){var r=n(24),o=Math.max,i=Math.min;t.exports=function(t,e){return t=r(t),t<0?o(t+e,0):i(t,e)}},function(t,e,n){var r=n(24),o=Math.min;t.exports=function(t){return t>0?o(r(t),9007199254740991):0}},function(t,e,n){"use strict";var r=n(54),o=n(62),i=n(18),a=n(5);t.exports=n(34)(Array,"Array",function(t,e){this._t=a(t),this._i=0,this._k=e},function(){var t=this._t,e=this._k,n=this._i++;return!t||n>=t.length?(this._t=void 0,o(1)):"keys"==e?o(0,n):"values"==e?o(0,t[n]):o(0,[n,t[n]])},"values"),i.Arguments=i.Array,r("keys"),r("values"),r("entries")},function(t,e,n){var r=n(12);r(r.S+r.F*!n(2),"Object",{defineProperty:n(4).f})},function(t,e,n){var r=n(40),o=n(10);n(69)("keys",function(){return function(t){return o(r(t))}})},function(t,e){},function(t,e,n){"use strict";var r=n(70)(!0);n(34)(String,"String",function(t){this._t=String(t),this._i=0},function(){var t,e=this._t,n=this._i;return n>=e.length?{value:void 0,done:!0}:(t=r(e,n),this._i+=t.length,{value:t,done:!1})})},function(t,e,n){"use strict";var r=n(1),o=n(3),i=n(2),a=n(12),s=n(39),u=n(64).KEY,l=n(9),c=n(23),f=n(21),p=n(15),d=n(8),h=n(27),b=n(26),v=n(63),y=n(57),g=n(60),m=n(11),x=n(5),w=n(25),O=n(14),S=n(35),_=n(67),j=n(66),k=n(4),P=n(10),A=j.f,C=k.f,M=_.f,E=r.Symbol,T=r.JSON,V=T&&T.stringify,L="prototype",$=d("_hidden"),F=d("toPrimitive"),N={}.propertyIsEnumerable,B=c("symbol-registry"),D=c("symbols"),I=c("op-symbols"),z=Object[L],R="function"==typeof E,H=r.QObject,U=!H||!H[L]||!H[L].findChild,W=i&&l(function(){return 7!=S(C({},"a",{get:function(){return C(this,"a",{value:7}).a}})).a})?function(t,e,n){var r=A(z,e);r&&delete z[e],C(t,e,n),r&&t!==z&&C(z,e,r)}:C,J=function(t){var e=D[t]=S(E[L]);return e._k=t,e},G=R&&"symbol"==typeof E.iterator?function(t){return"symbol"==typeof t}:function(t){return t instanceof E},K=function(t,e,n){return t===z&&K(I,e,n),m(t),e=w(e,!0),m(n),o(D,e)?(n.enumerable?(o(t,$)&&t[$][e]&&(t[$][e]=!1),n=S(n,{enumerable:O(0,!1)})):(o(t,$)||C(t,$,O(1,{})),t[$][e]=!0),W(t,e,n)):C(t,e,n)},Y=function(t,e){m(t);for(var n,r=y(e=x(e)),o=0,i=r.length;i>o;)K(t,n=r[o++],e[n]);return t},Q=function(t,e){return void 0===e?S(t):Y(S(t),e)},Z=function(t){var e=N.call(this,t=w(t,!0));return!(this===z&&o(D,t)&&!o(I,t))&&(!(e||!o(this,t)||!o(D,t)||o(this,$)&&this[$][t])||e)},q=function(t,e){if(t=x(t),e=w(e,!0),t!==z||!o(D,e)||o(I,e)){var n=A(t,e);return!n||!o(D,e)||o(t,$)&&t[$][e]||(n.enumerable=!0),n}},X=function(t){for(var e,n=M(x(t)),r=[],i=0;n.length>i;)o(D,e=n[i++])||e==$||e==u||r.push(e);return r},tt=function(t){for(var e,n=t===z,r=M(n?I:x(t)),i=[],a=0;r.length>a;)!o(D,e=r[a++])||n&&!o(z,e)||i.push(D[e]);return i};R||(E=function(){if(this instanceof E)throw TypeError("Symbol is not a constructor!");var t=p(arguments.length>0?arguments[0]:void 0),e=function(n){this===z&&e.call(I,n),o(this,$)&&o(this[$],t)&&(this[$][t]=!1),W(this,t,O(1,n))};return i&&U&&W(z,t,{configurable:!0,set:e}),J(t)},s(E[L],"toString",function(){return this._k}),j.f=q,k.f=K,n(36).f=_.f=X,n(20).f=Z,n(37).f=tt,i&&!n(19)&&s(z,"propertyIsEnumerable",Z,!0),h.f=function(t){return J(d(t))}),a(a.G+a.W+a.F*!R,{Symbol:E});for(var et="hasInstance,isConcatSpreadable,iterator,match,replace,search,species,split,toPrimitive,toStringTag,unscopables".split(","),nt=0;et.length>nt;)d(et[nt++]);for(var et=P(d.store),nt=0;et.length>nt;)b(et[nt++]);a(a.S+a.F*!R,"Symbol",{for:function(t){return o(B,t+="")?B[t]:B[t]=E(t)},keyFor:function(t){if(G(t))return v(B,t);throw TypeError(t+" is not a symbol!")},useSetter:function(){U=!0},useSimple:function(){U=!1}}),a(a.S+a.F*!R,"Object",{create:Q,defineProperty:K,defineProperties:Y,getOwnPropertyDescriptor:q,getOwnPropertyNames:X,getOwnPropertySymbols:tt}),T&&a(a.S+a.F*(!R||l(function(){var t=E();return"[null]"!=V([t])||"{}"!=V({a:t})||"{}"!=V(Object(t))})),"JSON",{stringify:function(t){if(void 0!==t&&!G(t)){for(var e,n,r=[t],o=1;arguments.length>o;)r.push(arguments[o++]);return e=r[1],"function"==typeof e&&(n=e),!n&&g(e)||(e=function(t,e){if(n&&(e=n.call(this,t,e)),!G(e))return e}),r[1]=e,V.apply(T,r)}}}),E[L][F]||n(7)(E[L],F,E[L].valueOf),f(E,"Symbol"),f(Math,"Math",!0),f(r.JSON,"JSON",!0)},function(t,e,n){n(26)("asyncIterator")},function(t,e,n){n(26)("observable")},function(t,e,n){n(73);for(var r=n(1),o=n(7),i=n(18),a=n(8)("toStringTag"),s=["NodeList","DOMTokenList","MediaList","StyleSheetList","CSSRuleList"],u=0;u<5;u++){var l=s[u],c=r[l],f=c&&c.prototype;f&&!f[a]&&o(f,a,l),i[l]=i.Array}},function(t,e,n){e=t.exports=n(83)(),e.push([t.id,'.v-select{position:relative;font-family:sans-serif}.v-select,.v-select *{box-sizing:border-box}.v-select .open-indicator{position:absolute;bottom:6px;right:10px;display:inline-block;cursor:pointer;pointer-events:all;transition:all .15s cubic-bezier(1,-.115,.975,.855);transition-timing-function:cubic-bezier(1,-.115,.975,.855);opacity:1;transition:opacity .1s;height:20px;width:10px}.v-select .open-indicator:before{border-color:rgba(60,60,60,.5);border-style:solid;border-width:3px 3px 0 0;content:"";display:inline-block;height:10px;width:10px;vertical-align:top;transform:rotate(133deg);transition:all .15s cubic-bezier(1,-.115,.975,.855);transition-timing-function:cubic-bezier(1,-.115,.975,.855);box-sizing:inherit}.v-select.open .open-indicator:before{transform:rotate(315deg)}.v-select.loading .open-indicator{opacity:0}.v-select.open .open-indicator{bottom:1px}.v-select .dropdown-toggle{-webkit-appearance:none;-moz-appearance:none;appearance:none;display:block;padding:0;background:none;border:1px solid rgba(60,60,60,.26);border-radius:4px;white-space:normal;transition:border-radius .25s}.v-select .dropdown-toggle:after{visibility:hidden;display:block;font-size:0;content:" ";clear:both;height:0}.v-select.searchable .dropdown-toggle{cursor:text}.v-select.unsearchable .dropdown-toggle{cursor:pointer}.v-select.open .dropdown-toggle{border-bottom-color:transparent;border-bottom-left-radius:0;border-bottom-right-radius:0}.v-select .dropdown-menu{display:block;position:absolute;top:100%;left:0;z-index:1000;min-width:160px;padding:5px 0;margin:0;width:100%;overflow-y:scroll;border:1px solid rgba(0,0,0,.26);box-shadow:0 3px 6px 0 rgba(0,0,0,.15);border-top:none;border-radius:0 0 4px 4px;text-align:left;list-style:none;background:#fff}.v-select .no-options{text-align:center}.v-select .selected-tag{color:#333;background-color:#f0f0f0;border:1px solid #ccc;border-radius:4px;height:26px;margin:4px 1px 0 3px;padding:1px .25em;float:left;line-height:24px}.v-select .selected-tag .close{float:none;margin-right:0;font-size:20px;appearance:none;padding:0;cursor:pointer;background:0 0;border:0;font-weight:700;line-height:1;color:#000;text-shadow:0 1px 0 #fff;filter:alpha(opacity=20);opacity:.2}.v-select input[type=search]::-webkit-search-cancel-button,.v-select input[type=search]::-webkit-search-decoration,.v-select input[type=search]::-webkit-search-results-button,.v-select input[type=search]::-webkit-search-results-decoration{display:none}.v-select input[type=search]::-ms-clear{display:none}.v-select input[type=search],.v-select input[type=search]:focus{appearance:none;-webkit-appearance:none;-moz-appearance:none;line-height:1.42857143;font-size:1em;height:34px;display:inline-block;border:none;outline:none;margin:0;padding:0 .5em;width:10em;max-width:100%;background:none;position:relative;box-shadow:none;float:left;clear:none}.v-select.unsearchable input[type=search]{max-width:1px}.v-select li{line-height:1.42857143}.v-select li>a{display:block;padding:3px 20px;clear:both;color:#333;white-space:nowrap}.v-select li:hover{cursor:pointer}.v-select .dropdown-menu .active>a{color:#333;background:rgba(50,50,50,.1)}.v-select .dropdown-menu>.highlight>a{background:#5897fb;color:#fff}.v-select .highlight:not(:last-child){margin-bottom:0}.v-select .spinner{opacity:0;position:absolute;top:5px;right:10px;font-size:5px;text-indent:-9999em;overflow:hidden;border-top:.9em solid hsla(0,0%,39%,.1);border-right:.9em solid hsla(0,0%,39%,.1);border-bottom:.9em solid hsla(0,0%,39%,.1);border-left:.9em solid rgba(60,60,60,.45);transform:translateZ(0);animation:vSelectSpinner 1.1s infinite linear;transition:opacity .1s}.v-select .spinner,.v-select .spinner:after{border-radius:50%;width:5em;height:5em}.v-select.loading .spinner{opacity:1}@-webkit-keyframes vSelectSpinner{0%{transform:rotate(0deg)}to{transform:rotate(1turn)}}@keyframes vSelectSpinner{0%{transform:rotate(0deg)}to{transform:rotate(1turn)}}.fade-enter-active,.fade-leave-active{transition:opacity .15s cubic-bezier(1,.5,.8,1)}.fade-enter,.fade-leave-to{opacity:0}',""])},function(t,e){t.exports=function(){var t=[];return t.toString=function(){for(var t=[],e=0;e<this.length;e++){var n=this[e];n[2]?t.push("@media "+n[2]+"{"+n[1]+"}"):t.push(n[1])}return t.join("")},t.i=function(e,n){"string"==typeof e&&(e=[[null,e,""]]);for(var r={},o=0;o<this.length;o++){var i=this[o][0];"number"==typeof i&&(r[i]=!0)}for(o=0;o<e.length;o++){var a=e[o];"number"==typeof a[0]&&r[a[0]]||(n&&!a[2]?a[2]=n:n&&(a[2]="("+a[2]+") and ("+n+")"),t.push(a))}},t}},function(t,e,n){n(88);var r=n(85)(n(41),n(86),null,null);t.exports=r.exports},function(t,e){t.exports=function(t,e,n,r){var o,i=t=t||{},a=typeof t.default;"object"!==a&&"function"!==a||(o=t,i=t.default);var s="function"==typeof i?i.options:i;if(e&&(s.render=e.render,s.staticRenderFns=e.staticRenderFns),n&&(s._scopeId=n),r){var u=s.computed||(s.computed={});Object.keys(r).forEach(function(t){var e=r[t];u[t]=function(){return e}})}return{esModule:o,exports:i,options:s}}},function(t,e){t.exports={render:function(){var t=this,e=t.$createElement,n=t._self._c||e;return n("div",{staticClass:"dropdown v-select",class:t.dropdownClasses},[n("div",{ref:"toggle",staticClass:"dropdown-toggle",on:{mousedown:function(e){e.preventDefault(),t.toggleDropdown(e)}}},[t._l(t.valueAsArray,function(e){return n("span",{key:e.index,staticClass:"selected-tag"},[t._v("\n      "+t._s(t.getOptionLabel(e))+"\n      "),t.multiple?n("button",{staticClass:"close",attrs:{type:"button"},on:{click:function(n){t.deselect(e)}}},[n("span",{attrs:{"aria-hidden":"true"}},[t._v("×")])]):t._e()])}),t._v(" "),n("input",{directives:[{name:"model",rawName:"v-model",value:t.search,expression:"search"}],ref:"search",staticClass:"form-control",style:{width:t.isValueEmpty?"100%":"auto"},attrs:{type:"search",placeholder:t.searchPlaceholder,readonly:!t.searchable},domProps:{value:t.search},on:{keydown:[function(e){return t._k(e.keyCode,"delete",[8,46])?null:void t.maybeDeleteValue(e)},function(e){return t._k(e.keyCode,"up",38)?null:(e.preventDefault(),void t.typeAheadUp(e))},function(e){return t._k(e.keyCode,"down",40)?null:(e.preventDefault(),void t.typeAheadDown(e))}],keyup:[function(e){return t._k(e.keyCode,"esc",27)?null:void t.onEscape(e)},function(e){return t._k(e.keyCode,"enter",13)?null:(e.preventDefault(),void t.typeAheadSelect(e))}],blur:t.onSearchBlur,focus:t.onSearchFocus,input:function(e){e.target.composing||(t.search=e.target.value)}}}),t._v(" "),t.noDrop?t._e():n("i",{ref:"openIndicator",staticClass:"open-indicator",attrs:{role:"presentation"}}),t._v(" "),t._t("spinner",[n("div",{directives:[{name:"show",rawName:"v-show",value:t.mutableLoading,expression:"mutableLoading"}],staticClass:"spinner"},[t._v("Loading...")])])],2),t._v(" "),n("transition",{attrs:{name:t.transition}},[t.dropdownOpen?n("ul",{ref:"dropdownMenu",staticClass:"dropdown-menu",style:{"max-height":t.maxHeight}},[t._l(t.filteredOptions,function(e,r){return n("li",{key:r,class:{active:t.isOptionSelected(e),highlight:r===t.typeAheadPointer},on:{mouseover:function(e){t.typeAheadPointer=r}}},[n("a",{on:{mousedown:function(n){n.preventDefault(),t.select(e)}}},[t._v("\n          "+t._s(t.getOptionLabel(e))+"\n        ")])])}),t._v(" "),t.filteredOptions.length?t._e():n("li",{staticClass:"no-options"},[t._t("no-options",[t._v("Sorry, no matching options.")])],2)],2):t._e()])],1)},staticRenderFns:[]}},function(t,e,n){function r(t,e){for(var n=0;n<t.length;n++){var r=t[n],o=f[r.id];if(o){o.refs++;for(var i=0;i<o.parts.length;i++)o.parts[i](r.parts[i]);for(;i<r.parts.length;i++)o.parts.push(u(r.parts[i],e))}else{for(var a=[],i=0;i<r.parts.length;i++)a.push(u(r.parts[i],e));f[r.id]={id:r.id,refs:1,parts:a}}}}function o(t){for(var e=[],n={},r=0;r<t.length;r++){var o=t[r],i=o[0],a=o[1],s=o[2],u=o[3],l={css:a,media:s,sourceMap:u};n[i]?n[i].parts.push(l):e.push(n[i]={id:i,parts:[l]})}return e}function i(t,e){var n=h(),r=y[y.length-1];if("top"===t.insertAt)r?r.nextSibling?n.insertBefore(e,r.nextSibling):n.appendChild(e):n.insertBefore(e,n.firstChild),y.push(e);else{if("bottom"!==t.insertAt)throw new Error("Invalid value for parameter 'insertAt'. Must be 'top' or 'bottom'.");n.appendChild(e)}}function a(t){t.parentNode.removeChild(t);var e=y.indexOf(t);e>=0&&y.splice(e,1)}function s(t){var e=document.createElement("style");return e.type="text/css",i(t,e),e}function u(t,e){var n,r,o;if(e.singleton){var i=v++;n=b||(b=s(e)),r=l.bind(null,n,i,!1),o=l.bind(null,n,i,!0)}else n=s(e),r=c.bind(null,n),o=function(){a(n)};return r(t),function(e){if(e){if(e.css===t.css&&e.media===t.media&&e.sourceMap===t.sourceMap)return;
-r(t=e)}else o()}}function l(t,e,n,r){var o=n?"":r.css;if(t.styleSheet)t.styleSheet.cssText=g(e,o);else{var i=document.createTextNode(o),a=t.childNodes;a[e]&&t.removeChild(a[e]),a.length?t.insertBefore(i,a[e]):t.appendChild(i)}}function c(t,e){var n=e.css,r=e.media,o=e.sourceMap;if(r&&t.setAttribute("media",r),o&&(n+="\n/*# sourceURL="+o.sources[0]+" */",n+="\n/*# sourceMappingURL=data:application/json;base64,"+btoa(unescape(encodeURIComponent(JSON.stringify(o))))+" */"),t.styleSheet)t.styleSheet.cssText=n;else{for(;t.firstChild;)t.removeChild(t.firstChild);t.appendChild(document.createTextNode(n))}}var f={},p=function(t){var e;return function(){return"undefined"==typeof e&&(e=t.apply(this,arguments)),e}},d=p(function(){return/msie [6-9]\b/.test(window.navigator.userAgent.toLowerCase())}),h=p(function(){return document.head||document.getElementsByTagName("head")[0]}),b=null,v=0,y=[];t.exports=function(t,e){e=e||{},"undefined"==typeof e.singleton&&(e.singleton=d()),"undefined"==typeof e.insertAt&&(e.insertAt="bottom");var n=o(t);return r(n,e),function(t){for(var i=[],a=0;a<n.length;a++){var s=n[a],u=f[s.id];u.refs--,i.push(u)}if(t){var l=o(t);r(l,e)}for(var a=0;a<i.length;a++){var u=i[a];if(0===u.refs){for(var c=0;c<u.parts.length;c++)u.parts[c]();delete f[u.id]}}}};var g=function(){var t=[];return function(e,n){return t[e]=n,t.filter(Boolean).join("\n")}}()},function(t,e,n){var r=n(82);"string"==typeof r&&(r=[[t.id,r,""]]);n(87)(r,{});r.locals&&(t.exports=r.locals)}])});
+!function(t,e){ true?module.exports=e():"function"==typeof define&&define.amd?define([],e):"object"==typeof exports?exports.VueSelect=e():t.VueSelect=e()}(this,function(){return function(t){function e(r){if(n[r])return n[r].exports;var o=n[r]={exports:{},id:r,loaded:!1};return t[r].call(o.exports,o,o.exports,e),o.loaded=!0,o.exports}var n={};return e.m=t,e.c=n,e.p="/",e(0)}([function(t,e,n){"use strict";function r(t){return t&&t.__esModule?t:{default:t}}Object.defineProperty(e,"__esModule",{value:!0}),e.mixins=e.VueSelect=void 0;var o=n(83),i=r(o),a=n(42),s=r(a);e.default=i.default,e.VueSelect=i.default,e.mixins=s.default},function(t,e){var n=t.exports="undefined"!=typeof window&&window.Math==Math?window:"undefined"!=typeof self&&self.Math==Math?self:Function("return this")();"number"==typeof __g&&(__g=n)},function(t,e,n){t.exports=!n(9)(function(){return 7!=Object.defineProperty({},"a",{get:function(){return 7}}).a})},function(t,e){var n={}.hasOwnProperty;t.exports=function(t,e){return n.call(t,e)}},function(t,e,n){var r=n(11),o=n(33),i=n(25),a=Object.defineProperty;e.f=n(2)?Object.defineProperty:function(t,e,n){if(r(t),e=i(e,!0),r(n),o)try{return a(t,e,n)}catch(t){}if("get"in n||"set"in n)throw TypeError("Accessors not supported!");return"value"in n&&(t[e]=n.value),t}},function(t,e){var n=t.exports={version:"2.5.2"};"number"==typeof __e&&(__e=n)},function(t,e,n){var r=n(4),o=n(14);t.exports=n(2)?function(t,e,n){return r.f(t,e,o(1,n))}:function(t,e,n){return t[e]=n,t}},function(t,e,n){var r=n(59),o=n(16);t.exports=function(t){return r(o(t))}},function(t,e,n){var r=n(23)("wks"),o=n(15),i=n(1).Symbol,a="function"==typeof i,s=t.exports=function(t){return r[t]||(r[t]=a&&i[t]||(a?i:o)("Symbol."+t))};s.store=r},function(t,e){t.exports=function(t){try{return!!t()}catch(t){return!0}}},function(t,e){t.exports=function(t){return"object"==typeof t?null!==t:"function"==typeof t}},function(t,e,n){var r=n(10);t.exports=function(t){if(!r(t))throw TypeError(t+" is not an object!");return t}},function(t,e,n){var r=n(1),o=n(5),i=n(56),a=n(6),s="prototype",u=function(t,e,n){var l,c,f,p=t&u.F,d=t&u.G,h=t&u.S,b=t&u.P,v=t&u.B,g=t&u.W,y=d?o:o[e]||(o[e]={}),m=y[s],x=d?r:h?r[e]:(r[e]||{})[s];d&&(n=e);for(l in n)c=!p&&x&&void 0!==x[l],c&&l in y||(f=c?x[l]:n[l],y[l]=d&&"function"!=typeof x[l]?n[l]:v&&c?i(f,r):g&&x[l]==f?function(t){var e=function(e,n,r){if(this instanceof t){switch(arguments.length){case 0:return new t;case 1:return new t(e);case 2:return new t(e,n)}return new t(e,n,r)}return t.apply(this,arguments)};return e[s]=t[s],e}(f):b&&"function"==typeof f?i(Function.call,f):f,b&&((y.virtual||(y.virtual={}))[l]=f,t&u.R&&m&&!m[l]&&a(m,l,f)))};u.F=1,u.G=2,u.S=4,u.P=8,u.B=16,u.W=32,u.U=64,u.R=128,t.exports=u},function(t,e,n){var r=n(38),o=n(17);t.exports=Object.keys||function(t){return r(t,o)}},function(t,e){t.exports=function(t,e){return{enumerable:!(1&t),configurable:!(2&t),writable:!(4&t),value:e}}},function(t,e){var n=0,r=Math.random();t.exports=function(t){return"Symbol(".concat(void 0===t?"":t,")_",(++n+r).toString(36))}},function(t,e){t.exports=function(t){if(void 0==t)throw TypeError("Can't call method on  "+t);return t}},function(t,e){t.exports="constructor,hasOwnProperty,isPrototypeOf,propertyIsEnumerable,toLocaleString,toString,valueOf".split(",")},function(t,e){t.exports={}},function(t,e){t.exports=!0},function(t,e){e.f={}.propertyIsEnumerable},function(t,e,n){var r=n(4).f,o=n(3),i=n(8)("toStringTag");t.exports=function(t,e,n){t&&!o(t=n?t:t.prototype,i)&&r(t,i,{configurable:!0,value:e})}},function(t,e,n){var r=n(23)("keys"),o=n(15);t.exports=function(t){return r[t]||(r[t]=o(t))}},function(t,e,n){var r=n(1),o="__core-js_shared__",i=r[o]||(r[o]={});t.exports=function(t){return i[t]||(i[t]={})}},function(t,e){var n=Math.ceil,r=Math.floor;t.exports=function(t){return isNaN(t=+t)?0:(t>0?r:n)(t)}},function(t,e,n){var r=n(10);t.exports=function(t,e){if(!r(t))return t;var n,o;if(e&&"function"==typeof(n=t.toString)&&!r(o=n.call(t)))return o;if("function"==typeof(n=t.valueOf)&&!r(o=n.call(t)))return o;if(!e&&"function"==typeof(n=t.toString)&&!r(o=n.call(t)))return o;throw TypeError("Can't convert object to primitive value")}},function(t,e,n){var r=n(1),o=n(5),i=n(19),a=n(27),s=n(4).f;t.exports=function(t){var e=o.Symbol||(o.Symbol=i?{}:r.Symbol||{});"_"==t.charAt(0)||t in e||s(e,t,{value:a.f(t)})}},function(t,e,n){e.f=n(8)},function(t,e){"use strict";t.exports={props:{loading:{type:Boolean,default:!1},onSearch:{type:Function,default:function(t,e){}}},data:function(){return{mutableLoading:!1}},watch:{search:function(){this.search.length>0&&(this.onSearch(this.search,this.toggleLoading),this.$emit("search",this.search,this.toggleLoading))},loading:function(t){this.mutableLoading=t}},methods:{toggleLoading:function(){var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:null;return null==t?this.mutableLoading=!this.mutableLoading:this.mutableLoading=t}}}},function(t,e){"use strict";t.exports={watch:{typeAheadPointer:function(){this.maybeAdjustScroll()}},methods:{maybeAdjustScroll:function(){var t=this.pixelsToPointerTop(),e=this.pixelsToPointerBottom();return t<=this.viewport().top?this.scrollTo(t):e>=this.viewport().bottom?this.scrollTo(this.viewport().top+this.pointerHeight()):void 0},pixelsToPointerTop:function t(){var t=0;if(this.$refs.dropdownMenu)for(var e=0;e<this.typeAheadPointer;e++)t+=this.$refs.dropdownMenu.children[e].offsetHeight;return t},pixelsToPointerBottom:function(){return this.pixelsToPointerTop()+this.pointerHeight()},pointerHeight:function(){var t=!!this.$refs.dropdownMenu&&this.$refs.dropdownMenu.children[this.typeAheadPointer];return t?t.offsetHeight:0},viewport:function(){return{top:this.$refs.dropdownMenu?this.$refs.dropdownMenu.scrollTop:0,bottom:this.$refs.dropdownMenu?this.$refs.dropdownMenu.offsetHeight+this.$refs.dropdownMenu.scrollTop:0}},scrollTo:function(t){return this.$refs.dropdownMenu?this.$refs.dropdownMenu.scrollTop=t:null}}}},function(t,e){"use strict";t.exports={data:function(){return{typeAheadPointer:-1}},watch:{filteredOptions:function(){this.typeAheadPointer=0}},methods:{typeAheadUp:function(){this.typeAheadPointer>0&&(this.typeAheadPointer--,this.maybeAdjustScroll&&this.maybeAdjustScroll())},typeAheadDown:function(){this.typeAheadPointer<this.filteredOptions.length-1&&(this.typeAheadPointer++,this.maybeAdjustScroll&&this.maybeAdjustScroll())},typeAheadSelect:function(){this.filteredOptions[this.typeAheadPointer]?this.select(this.filteredOptions[this.typeAheadPointer]):this.taggable&&this.search.length&&this.select(this.search),this.clearSearchOnSelect&&(this.search="")}}}},function(t,e){var n={}.toString;t.exports=function(t){return n.call(t).slice(8,-1)}},function(t,e,n){var r=n(10),o=n(1).document,i=r(o)&&r(o.createElement);t.exports=function(t){return i?o.createElement(t):{}}},function(t,e,n){t.exports=!n(2)&&!n(9)(function(){return 7!=Object.defineProperty(n(32)("div"),"a",{get:function(){return 7}}).a})},function(t,e,n){"use strict";var r=n(19),o=n(12),i=n(39),a=n(6),s=n(3),u=n(18),l=n(61),c=n(21),f=n(67),p=n(8)("iterator"),d=!([].keys&&"next"in[].keys()),h="@@iterator",b="keys",v="values",g=function(){return this};t.exports=function(t,e,n,y,m,x,w){l(n,e,y);var S,O,_,j=function(t){if(!d&&t in M)return M[t];switch(t){case b:return function(){return new n(this,t)};case v:return function(){return new n(this,t)}}return function(){return new n(this,t)}},k=e+" Iterator",P=m==v,A=!1,M=t.prototype,L=M[p]||M[h]||m&&M[m],C=L||j(m),T=m?P?j("entries"):C:void 0,E="Array"==e?M.entries||L:L;if(E&&(_=f(E.call(new t)),_!==Object.prototype&&_.next&&(c(_,k,!0),r||s(_,p)||a(_,p,g))),P&&L&&L.name!==v&&(A=!0,C=function(){return L.call(this)}),r&&!w||!d&&!A&&M[p]||a(M,p,C),u[e]=C,u[k]=g,m)if(S={values:P?C:j(v),keys:x?C:j(b),entries:T},w)for(O in S)O in M||i(M,O,S[O]);else o(o.P+o.F*(d||A),e,S);return S}},function(t,e,n){var r=n(11),o=n(64),i=n(17),a=n(22)("IE_PROTO"),s=function(){},u="prototype",l=function(){var t,e=n(32)("iframe"),r=i.length,o="<",a=">";for(e.style.display="none",n(58).appendChild(e),e.src="javascript:",t=e.contentWindow.document,t.open(),t.write(o+"script"+a+"document.F=Object"+o+"/script"+a),t.close(),l=t.F;r--;)delete l[u][i[r]];return l()};t.exports=Object.create||function(t,e){var n;return null!==t?(s[u]=r(t),n=new s,s[u]=null,n[a]=t):n=l(),void 0===e?n:o(n,e)}},function(t,e,n){var r=n(38),o=n(17).concat("length","prototype");e.f=Object.getOwnPropertyNames||function(t){return r(t,o)}},function(t,e){e.f=Object.getOwnPropertySymbols},function(t,e,n){var r=n(3),o=n(7),i=n(55)(!1),a=n(22)("IE_PROTO");t.exports=function(t,e){var n,s=o(t),u=0,l=[];for(n in s)n!=a&&r(s,n)&&l.push(n);for(;e.length>u;)r(s,n=e[u++])&&(~i(l,n)||l.push(n));return l}},function(t,e,n){t.exports=n(6)},function(t,e,n){var r=n(16);t.exports=function(t){return Object(r(t))}},function(t,e,n){"use strict";function r(t){return t&&t.__esModule?t:{default:t}}Object.defineProperty(e,"__esModule",{value:!0});var o=n(44),i=r(o),a=n(47),s=r(a),u=n(48),l=r(u),c=n(29),f=r(c),p=n(30),d=r(p),h=n(28),b=r(h);e.default={mixins:[f.default,d.default,b.default],props:{value:{default:null},options:{type:Array,default:function(){return[]}},disabled:{type:Boolean,default:!1},maxHeight:{type:String,default:"400px"},searchable:{type:Boolean,default:!0},multiple:{type:Boolean,default:!1},placeholder:{type:String,default:""},transition:{type:String,default:"fade"},clearSearchOnSelect:{type:Boolean,default:!0},closeOnSelect:{type:Boolean,default:!0},label:{type:String,default:"label"},getOptionLabel:{type:Function,default:function(t){return"object"===("undefined"==typeof t?"undefined":(0,l.default)(t))&&this.label&&t[this.label]?t[this.label]:t}},onChange:{type:Function,default:function(t){this.$emit("input",t)}},taggable:{type:Boolean,default:!1},tabindex:{type:Number,default:null},pushTags:{type:Boolean,default:!1},filterable:{type:Boolean,default:!0},createOption:{type:Function,default:function(t){return"object"===(0,l.default)(this.mutableOptions[0])&&(t=(0,s.default)({},this.label,t)),this.$emit("option:created",t),t}},resetOnOptionsChange:{type:Boolean,default:!1},noDrop:{type:Boolean,default:!1},inputId:{type:String},dir:{type:String,default:"auto"}},data:function(){return{search:"",open:!1,mutableValue:null,mutableOptions:[]}},watch:{value:function(t){this.mutableValue=t},mutableValue:function(t,e){this.multiple?this.onChange?this.onChange(t):null:this.onChange&&t!==e?this.onChange(t):null},options:function(t){this.mutableOptions=t},mutableOptions:function(){!this.taggable&&this.resetOnOptionsChange&&(this.mutableValue=this.multiple?[]:null)},multiple:function(t){this.mutableValue=t?[]:null}},created:function(){this.mutableValue=this.value,this.mutableOptions=this.options.slice(0),this.mutableLoading=this.loading,this.$on("option:created",this.maybePushTag)},methods:{select:function(t){this.isOptionSelected(t)?this.deselect(t):(this.taggable&&!this.optionExists(t)&&(t=this.createOption(t)),this.multiple&&!this.mutableValue?this.mutableValue=[t]:this.multiple?this.mutableValue.push(t):this.mutableValue=t),this.onAfterSelect(t)},deselect:function(t){var e=this;if(this.multiple){var n=-1;this.mutableValue.forEach(function(r){(r===t||"object"===("undefined"==typeof r?"undefined":(0,l.default)(r))&&r[e.label]===t[e.label])&&(n=r)});var r=this.mutableValue.indexOf(n);this.mutableValue.splice(r,1)}else this.mutableValue=null},onAfterSelect:function(t){this.closeOnSelect&&(this.open=!this.open,this.$refs.search.blur()),this.clearSearchOnSelect&&(this.search="")},toggleDropdown:function(t){t.target!==this.$refs.openIndicator&&t.target!==this.$refs.search&&t.target!==this.$refs.toggle&&t.target!==this.$el||(this.open?this.$refs.search.blur():this.disabled||(this.open=!0,this.$refs.search.focus()))},isOptionSelected:function(t){var e=this;if(this.multiple&&this.mutableValue){var n=!1;return this.mutableValue.forEach(function(r){"object"===("undefined"==typeof r?"undefined":(0,l.default)(r))&&r[e.label]===t[e.label]?n=!0:"object"===("undefined"==typeof r?"undefined":(0,l.default)(r))&&r[e.label]===t?n=!0:r===t&&(n=!0)}),n}return this.mutableValue===t},onEscape:function(){this.search.length?this.search="":this.$refs.search.blur()},onSearchBlur:function(){this.clearSearchOnBlur&&(this.search=""),this.open=!1,this.$emit("search:blur")},onSearchFocus:function(){this.open=!0,this.$emit("search:focus")},maybeDeleteValue:function(){if(!this.$refs.search.value.length&&this.mutableValue)return this.multiple?this.mutableValue.pop():this.mutableValue=null},optionExists:function(t){var e=this,n=!1;return this.mutableOptions.forEach(function(r){"object"===("undefined"==typeof r?"undefined":(0,l.default)(r))&&r[e.label]===t?n=!0:r===t&&(n=!0)}),n},maybePushTag:function(t){this.pushTags&&this.mutableOptions.push(t)}},computed:{dropdownClasses:function(){return{open:this.dropdownOpen,single:!this.multiple,searching:this.searching,searchable:this.searchable,unsearchable:!this.searchable,loading:this.mutableLoading,rtl:"rtl"===this.dir,disabled:this.disabled}},clearSearchOnBlur:function(){return this.clearSearchOnSelect&&!this.multiple},searching:function(){return!!this.search},dropdownOpen:function(){return!this.noDrop&&(this.open&&!this.mutableLoading)},searchPlaceholder:function(){if(this.isValueEmpty&&this.placeholder)return this.placeholder},filteredOptions:function(){var t=this;if(!this.filterable&&!this.taggable)return this.mutableOptions.slice();var e=this.mutableOptions.filter(function(e){return"object"===("undefined"==typeof e?"undefined":(0,l.default)(e))&&e.hasOwnProperty(t.label)?e[t.label].toLowerCase().indexOf(t.search.toLowerCase())>-1:"object"!==("undefined"==typeof e?"undefined":(0,l.default)(e))||e.hasOwnProperty(t.label)?e.toLowerCase().indexOf(t.search.toLowerCase())>-1:console.warn('[vue-select warn]: Label key "option.'+t.label+'" does not exist in options object.\nhttp://sagalbot.github.io/vue-select/#ex-labels')});return this.taggable&&this.search.length&&!this.optionExists(this.search)&&e.unshift(this.search),e},isValueEmpty:function(){return!this.mutableValue||("object"===(0,l.default)(this.mutableValue)?!(0,i.default)(this.mutableValue).length:!this.mutableValue.length)},valueAsArray:function(){return this.multiple?this.mutableValue:this.mutableValue?[this.mutableValue]:[]}}}},function(t,e,n){"use strict";function r(t){return t&&t.__esModule?t:{default:t}}Object.defineProperty(e,"__esModule",{value:!0});var o=n(28),i=r(o),a=n(30),s=r(a),u=n(29),l=r(u);e.default={ajax:i.default,pointer:s.default,pointerScroll:l.default}},function(t,e,n){t.exports={default:n(49),__esModule:!0}},function(t,e,n){t.exports={default:n(50),__esModule:!0}},function(t,e,n){t.exports={default:n(51),__esModule:!0}},function(t,e,n){t.exports={default:n(52),__esModule:!0}},function(t,e,n){"use strict";function r(t){return t&&t.__esModule?t:{default:t}}e.__esModule=!0;var o=n(43),i=r(o);e.default=function(t,e,n){return e in t?(0,i.default)(t,e,{value:n,enumerable:!0,configurable:!0,writable:!0}):t[e]=n,t}},function(t,e,n){"use strict";function r(t){return t&&t.__esModule?t:{default:t}}e.__esModule=!0;var o=n(46),i=r(o),a=n(45),s=r(a),u="function"==typeof s.default&&"symbol"==typeof i.default?function(t){return typeof t}:function(t){return t&&"function"==typeof s.default&&t.constructor===s.default&&t!==s.default.prototype?"symbol":typeof t};e.default="function"==typeof s.default&&"symbol"===u(i.default)?function(t){return"undefined"==typeof t?"undefined":u(t)}:function(t){return t&&"function"==typeof s.default&&t.constructor===s.default&&t!==s.default.prototype?"symbol":"undefined"==typeof t?"undefined":u(t)}},function(t,e,n){n(73);var r=n(5).Object;t.exports=function(t,e,n){return r.defineProperty(t,e,n)}},function(t,e,n){n(74),t.exports=n(5).Object.keys},function(t,e,n){n(77),n(75),n(78),n(79),t.exports=n(5).Symbol},function(t,e,n){n(76),n(80),t.exports=n(27).f("iterator")},function(t,e){t.exports=function(t){if("function"!=typeof t)throw TypeError(t+" is not a function!");return t}},function(t,e){t.exports=function(){}},function(t,e,n){var r=n(7),o=n(71),i=n(70);t.exports=function(t){return function(e,n,a){var s,u=r(e),l=o(u.length),c=i(a,l);if(t&&n!=n){for(;l>c;)if(s=u[c++],s!=s)return!0}else for(;l>c;c++)if((t||c in u)&&u[c]===n)return t||c||0;return!t&&-1}}},function(t,e,n){var r=n(53);t.exports=function(t,e,n){if(r(t),void 0===e)return t;switch(n){case 1:return function(n){return t.call(e,n)};case 2:return function(n,r){return t.call(e,n,r)};case 3:return function(n,r,o){return t.call(e,n,r,o)}}return function(){return t.apply(e,arguments)}}},function(t,e,n){var r=n(13),o=n(37),i=n(20);t.exports=function(t){var e=r(t),n=o.f;if(n)for(var a,s=n(t),u=i.f,l=0;s.length>l;)u.call(t,a=s[l++])&&e.push(a);return e}},function(t,e,n){var r=n(1).document;t.exports=r&&r.documentElement},function(t,e,n){var r=n(31);t.exports=Object("z").propertyIsEnumerable(0)?Object:function(t){return"String"==r(t)?t.split(""):Object(t)}},function(t,e,n){var r=n(31);t.exports=Array.isArray||function(t){return"Array"==r(t)}},function(t,e,n){"use strict";var r=n(35),o=n(14),i=n(21),a={};n(6)(a,n(8)("iterator"),function(){return this}),t.exports=function(t,e,n){t.prototype=r(a,{next:o(1,n)}),i(t,e+" Iterator")}},function(t,e){t.exports=function(t,e){return{value:e,done:!!t}}},function(t,e,n){var r=n(15)("meta"),o=n(10),i=n(3),a=n(4).f,s=0,u=Object.isExtensible||function(){return!0},l=!n(9)(function(){return u(Object.preventExtensions({}))}),c=function(t){a(t,r,{value:{i:"O"+ ++s,w:{}}})},f=function(t,e){if(!o(t))return"symbol"==typeof t?t:("string"==typeof t?"S":"P")+t;if(!i(t,r)){if(!u(t))return"F";if(!e)return"E";c(t)}return t[r].i},p=function(t,e){if(!i(t,r)){if(!u(t))return!0;if(!e)return!1;c(t)}return t[r].w},d=function(t){return l&&h.NEED&&u(t)&&!i(t,r)&&c(t),t},h=t.exports={KEY:r,NEED:!1,fastKey:f,getWeak:p,onFreeze:d}},function(t,e,n){var r=n(4),o=n(11),i=n(13);t.exports=n(2)?Object.defineProperties:function(t,e){o(t);for(var n,a=i(e),s=a.length,u=0;s>u;)r.f(t,n=a[u++],e[n]);return t}},function(t,e,n){var r=n(20),o=n(14),i=n(7),a=n(25),s=n(3),u=n(33),l=Object.getOwnPropertyDescriptor;e.f=n(2)?l:function(t,e){if(t=i(t),e=a(e,!0),u)try{return l(t,e)}catch(t){}if(s(t,e))return o(!r.f.call(t,e),t[e])}},function(t,e,n){var r=n(7),o=n(36).f,i={}.toString,a="object"==typeof window&&window&&Object.getOwnPropertyNames?Object.getOwnPropertyNames(window):[],s=function(t){try{return o(t)}catch(t){return a.slice()}};t.exports.f=function(t){return a&&"[object Window]"==i.call(t)?s(t):o(r(t))}},function(t,e,n){var r=n(3),o=n(40),i=n(22)("IE_PROTO"),a=Object.prototype;t.exports=Object.getPrototypeOf||function(t){return t=o(t),r(t,i)?t[i]:"function"==typeof t.constructor&&t instanceof t.constructor?t.constructor.prototype:t instanceof Object?a:null}},function(t,e,n){var r=n(12),o=n(5),i=n(9);t.exports=function(t,e){var n=(o.Object||{})[t]||Object[t],a={};a[t]=e(n),r(r.S+r.F*i(function(){n(1)}),"Object",a)}},function(t,e,n){var r=n(24),o=n(16);t.exports=function(t){return function(e,n){var i,a,s=String(o(e)),u=r(n),l=s.length;return u<0||u>=l?t?"":void 0:(i=s.charCodeAt(u),i<55296||i>56319||u+1===l||(a=s.charCodeAt(u+1))<56320||a>57343?t?s.charAt(u):i:t?s.slice(u,u+2):(i-55296<<10)+(a-56320)+65536)}}},function(t,e,n){var r=n(24),o=Math.max,i=Math.min;t.exports=function(t,e){return t=r(t),t<0?o(t+e,0):i(t,e)}},function(t,e,n){var r=n(24),o=Math.min;t.exports=function(t){return t>0?o(r(t),9007199254740991):0}},function(t,e,n){"use strict";var r=n(54),o=n(62),i=n(18),a=n(7);t.exports=n(34)(Array,"Array",function(t,e){this._t=a(t),this._i=0,this._k=e},function(){var t=this._t,e=this._k,n=this._i++;return!t||n>=t.length?(this._t=void 0,o(1)):"keys"==e?o(0,n):"values"==e?o(0,t[n]):o(0,[n,t[n]])},"values"),i.Arguments=i.Array,r("keys"),r("values"),r("entries")},function(t,e,n){var r=n(12);r(r.S+r.F*!n(2),"Object",{defineProperty:n(4).f})},function(t,e,n){var r=n(40),o=n(13);n(68)("keys",function(){return function(t){return o(r(t))}})},function(t,e){},function(t,e,n){"use strict";var r=n(69)(!0);n(34)(String,"String",function(t){this._t=String(t),this._i=0},function(){var t,e=this._t,n=this._i;return n>=e.length?{value:void 0,done:!0}:(t=r(e,n),this._i+=t.length,{value:t,done:!1})})},function(t,e,n){"use strict";var r=n(1),o=n(3),i=n(2),a=n(12),s=n(39),u=n(63).KEY,l=n(9),c=n(23),f=n(21),p=n(15),d=n(8),h=n(27),b=n(26),v=n(57),g=n(60),y=n(11),m=n(10),x=n(7),w=n(25),S=n(14),O=n(35),_=n(66),j=n(65),k=n(4),P=n(13),A=j.f,M=k.f,L=_.f,C=r.Symbol,T=r.JSON,E=T&&T.stringify,V="prototype",F=d("_hidden"),$=d("toPrimitive"),B={}.propertyIsEnumerable,N=c("symbol-registry"),D=c("symbols"),I=c("op-symbols"),R=Object[V],z="function"==typeof C,H=r.QObject,G=!H||!H[V]||!H[V].findChild,U=i&&l(function(){return 7!=O(M({},"a",{get:function(){return M(this,"a",{value:7}).a}})).a})?function(t,e,n){var r=A(R,e);r&&delete R[e],M(t,e,n),r&&t!==R&&M(R,e,r)}:M,W=function(t){var e=D[t]=O(C[V]);return e._k=t,e},J=z&&"symbol"==typeof C.iterator?function(t){return"symbol"==typeof t}:function(t){return t instanceof C},K=function(t,e,n){return t===R&&K(I,e,n),y(t),e=w(e,!0),y(n),o(D,e)?(n.enumerable?(o(t,F)&&t[F][e]&&(t[F][e]=!1),n=O(n,{enumerable:S(0,!1)})):(o(t,F)||M(t,F,S(1,{})),t[F][e]=!0),U(t,e,n)):M(t,e,n)},Y=function(t,e){y(t);for(var n,r=v(e=x(e)),o=0,i=r.length;i>o;)K(t,n=r[o++],e[n]);return t},q=function(t,e){return void 0===e?O(t):Y(O(t),e)},Q=function(t){var e=B.call(this,t=w(t,!0));return!(this===R&&o(D,t)&&!o(I,t))&&(!(e||!o(this,t)||!o(D,t)||o(this,F)&&this[F][t])||e)},Z=function(t,e){if(t=x(t),e=w(e,!0),t!==R||!o(D,e)||o(I,e)){var n=A(t,e);return!n||!o(D,e)||o(t,F)&&t[F][e]||(n.enumerable=!0),n}},X=function(t){for(var e,n=L(x(t)),r=[],i=0;n.length>i;)o(D,e=n[i++])||e==F||e==u||r.push(e);return r},tt=function(t){for(var e,n=t===R,r=L(n?I:x(t)),i=[],a=0;r.length>a;)!o(D,e=r[a++])||n&&!o(R,e)||i.push(D[e]);return i};z||(C=function(){if(this instanceof C)throw TypeError("Symbol is not a constructor!");var t=p(arguments.length>0?arguments[0]:void 0),e=function(n){this===R&&e.call(I,n),o(this,F)&&o(this[F],t)&&(this[F][t]=!1),U(this,t,S(1,n))};return i&&G&&U(R,t,{configurable:!0,set:e}),W(t)},s(C[V],"toString",function(){return this._k}),j.f=Z,k.f=K,n(36).f=_.f=X,n(20).f=Q,n(37).f=tt,i&&!n(19)&&s(R,"propertyIsEnumerable",Q,!0),h.f=function(t){return W(d(t))}),a(a.G+a.W+a.F*!z,{Symbol:C});for(var et="hasInstance,isConcatSpreadable,iterator,match,replace,search,species,split,toPrimitive,toStringTag,unscopables".split(","),nt=0;et.length>nt;)d(et[nt++]);for(var rt=P(d.store),ot=0;rt.length>ot;)b(rt[ot++]);a(a.S+a.F*!z,"Symbol",{for:function(t){return o(N,t+="")?N[t]:N[t]=C(t)},keyFor:function(t){if(!J(t))throw TypeError(t+" is not a symbol!");for(var e in N)if(N[e]===t)return e},useSetter:function(){G=!0},useSimple:function(){G=!1}}),a(a.S+a.F*!z,"Object",{create:q,defineProperty:K,defineProperties:Y,getOwnPropertyDescriptor:Z,getOwnPropertyNames:X,getOwnPropertySymbols:tt}),T&&a(a.S+a.F*(!z||l(function(){var t=C();return"[null]"!=E([t])||"{}"!=E({a:t})||"{}"!=E(Object(t))})),"JSON",{stringify:function(t){for(var e,n,r=[t],o=1;arguments.length>o;)r.push(arguments[o++]);if(n=e=r[1],(m(e)||void 0!==t)&&!J(t))return g(e)||(e=function(t,e){if(n&&(e=n.call(this,t,e)),!J(e))return e}),r[1]=e,E.apply(T,r)}}),C[V][$]||n(6)(C[V],$,C[V].valueOf),f(C,"Symbol"),f(Math,"Math",!0),f(r.JSON,"JSON",!0)},function(t,e,n){n(26)("asyncIterator")},function(t,e,n){n(26)("observable")},function(t,e,n){n(72);for(var r=n(1),o=n(6),i=n(18),a=n(8)("toStringTag"),s="CSSRuleList,CSSStyleDeclaration,CSSValueList,ClientRectList,DOMRectList,DOMStringList,DOMTokenList,DataTransferItemList,FileList,HTMLAllCollection,HTMLCollection,HTMLFormElement,HTMLSelectElement,MediaList,MimeTypeArray,NamedNodeMap,NodeList,PaintRequestList,Plugin,PluginArray,SVGLengthList,SVGNumberList,SVGPathSegList,SVGPointList,SVGStringList,SVGTransformList,SourceBufferList,StyleSheetList,TextTrackCueList,TextTrackList,TouchList".split(","),u=0;u<s.length;u++){var l=s[u],c=r[l],f=c&&c.prototype;f&&!f[a]&&o(f,a,l),i[l]=i.Array}},function(t,e,n){e=t.exports=n(82)(),e.push([t.id,'.v-select{position:relative;font-family:sans-serif}.v-select,.v-select *{box-sizing:border-box}.v-select.rtl .open-indicator{left:10px;right:auto}.v-select.rtl .selected-tag{float:right;margin-right:3px;margin-left:1px}.v-select.rtl .dropdown-menu{text-align:right}.v-select .open-indicator{position:absolute;bottom:6px;right:10px;cursor:pointer;pointer-events:all;opacity:1;height:20px}.v-select .open-indicator,.v-select .open-indicator:before{display:inline-block;transition:all .15s cubic-bezier(1,-.115,.975,.855);transition-timing-function:cubic-bezier(1,-.115,.975,.855);width:10px}.v-select .open-indicator:before{border-color:rgba(60,60,60,.5);border-style:solid;border-width:3px 3px 0 0;content:"";height:10px;vertical-align:top;transform:rotate(133deg);box-sizing:inherit}.v-select.open .open-indicator:before{transform:rotate(315deg)}.v-select.loading .open-indicator{opacity:0}.v-select.open .open-indicator{bottom:1px}.v-select .dropdown-toggle{-webkit-appearance:none;-moz-appearance:none;appearance:none;display:block;padding:0;background:none;border:1px solid rgba(60,60,60,.26);border-radius:4px;white-space:normal}.v-select .dropdown-toggle:after{visibility:hidden;display:block;font-size:0;content:" ";clear:both;height:0}.v-select.searchable .dropdown-toggle{cursor:text}.v-select.unsearchable .dropdown-toggle{cursor:pointer}.v-select.open .dropdown-toggle{border-bottom-color:transparent;border-bottom-left-radius:0;border-bottom-right-radius:0}.v-select .dropdown-menu{display:block;position:absolute;top:100%;left:0;z-index:1000;min-width:160px;padding:5px 0;margin:0;width:100%;overflow-y:scroll;border:1px solid rgba(0,0,0,.26);box-shadow:0 3px 6px 0 rgba(0,0,0,.15);border-top:none;border-radius:0 0 4px 4px;text-align:left;list-style:none;background:#fff}.v-select .no-options{text-align:center}.v-select .selected-tag{color:#333;background-color:#f0f0f0;border:1px solid #ccc;border-radius:4px;height:26px;margin:4px 1px 0 3px;padding:1px .25em;float:left;line-height:24px}.v-select.single .selected-tag{background-color:transparent;border-color:transparent}.v-select.single.open .selected-tag{position:absolute;opacity:.5}.v-select.single.loading .selected-tag,.v-select.single.open.searching .selected-tag{display:none}.v-select .selected-tag .close{float:none;margin-right:0;font-size:20px;appearance:none;padding:0;cursor:pointer;background:0 0;border:0;font-weight:700;line-height:1;color:#000;text-shadow:0 1px 0 #fff;filter:alpha(opacity=20);opacity:.2}.v-select.single.searching:not(.open):not(.loading) input[type=search]{opacity:.2}.v-select input[type=search]::-webkit-search-cancel-button,.v-select input[type=search]::-webkit-search-decoration,.v-select input[type=search]::-webkit-search-results-button,.v-select input[type=search]::-webkit-search-results-decoration{display:none}.v-select input[type=search]::-ms-clear{display:none}.v-select input[type=search],.v-select input[type=search]:focus{appearance:none;-webkit-appearance:none;-moz-appearance:none;line-height:1.42857143;font-size:1em;height:34px;display:inline-block;border:none;outline:none;margin:0;padding:0 .5em;width:10em;max-width:100%;background:none;position:relative;box-shadow:none;float:left;clear:none}.v-select li{line-height:1.42857143}.v-select li>a{display:block;padding:3px 20px;clear:both;color:#333;white-space:nowrap}.v-select li:hover{cursor:pointer}.v-select .dropdown-menu .active>a{color:#333;background:rgba(50,50,50,.1)}.v-select .dropdown-menu>.highlight>a{background:#5897fb;color:#fff}.v-select .highlight:not(:last-child){margin-bottom:0}.v-select .spinner{opacity:0;position:absolute;top:5px;right:10px;font-size:5px;text-indent:-9999em;overflow:hidden;border-top:.9em solid hsla(0,0%,39%,.1);border-right:.9em solid hsla(0,0%,39%,.1);border-bottom:.9em solid hsla(0,0%,39%,.1);border-left:.9em solid rgba(60,60,60,.45);transform:translateZ(0);animation:vSelectSpinner 1.1s infinite linear;transition:opacity .1s}.v-select .spinner,.v-select .spinner:after{border-radius:50%;width:5em;height:5em}.v-select.disabled .dropdown-toggle,.v-select.disabled .dropdown-toggle input,.v-select.disabled .open-indicator,.v-select.disabled .selected-tag .close{cursor:not-allowed;background-color:#f8f8f8}.v-select.loading .spinner{opacity:1}@-webkit-keyframes vSelectSpinner{0%{transform:rotate(0deg)}to{transform:rotate(1turn)}}@keyframes vSelectSpinner{0%{transform:rotate(0deg)}to{transform:rotate(1turn)}}.fade-enter-active,.fade-leave-active{transition:opacity .15s cubic-bezier(1,.5,.8,1)}.fade-enter,.fade-leave-to{opacity:0}',""])},function(t,e){t.exports=function(){var t=[];return t.toString=function(){for(var t=[],e=0;e<this.length;e++){var n=this[e];n[2]?t.push("@media "+n[2]+"{"+n[1]+"}"):t.push(n[1])}return t.join("")},t.i=function(e,n){"string"==typeof e&&(e=[[null,e,""]]);for(var r={},o=0;o<this.length;o++){var i=this[o][0];"number"==typeof i&&(r[i]=!0)}for(o=0;o<e.length;o++){var a=e[o];"number"==typeof a[0]&&r[a[0]]||(n&&!a[2]?a[2]=n:n&&(a[2]="("+a[2]+") and ("+n+")"),t.push(a))}},t}},function(t,e,n){n(87);var r=n(84)(n(41),n(85),null,null);t.exports=r.exports},function(t,e){t.exports=function(t,e,n,r){var o,i=t=t||{},a=typeof t.default;"object"!==a&&"function"!==a||(o=t,i=t.default);var s="function"==typeof i?i.options:i;if(e&&(s.render=e.render,s.staticRenderFns=e.staticRenderFns),n&&(s._scopeId=n),r){var u=s.computed||(s.computed={});Object.keys(r).forEach(function(t){var e=r[t];u[t]=function(){return e}})}return{esModule:o,exports:i,options:s}}},function(t,e){t.exports={render:function(){var t=this,e=t.$createElement,n=t._self._c||e;return n("div",{staticClass:"dropdown v-select",class:t.dropdownClasses,attrs:{dir:t.dir}},[n("div",{ref:"toggle",class:["dropdown-toggle","clearfix"],on:{mousedown:function(e){e.preventDefault(),t.toggleDropdown(e)}}},[t._l(t.valueAsArray,function(e){return n("span",{key:e.index,staticClass:"selected-tag"},[t._t("selected-option",[t._v("\n        "+t._s(t.getOptionLabel(e))+"\n      ")],null,e),t._v(" "),t.multiple?n("button",{staticClass:"close",attrs:{disabled:t.disabled,type:"button","aria-label":"Remove option"},on:{click:function(n){t.deselect(e)}}},[n("span",{attrs:{"aria-hidden":"true"}},[t._v("×")])]):t._e()],2)}),t._v(" "),n("input",{directives:[{name:"model",rawName:"v-model",value:t.search,expression:"search"}],ref:"search",staticClass:"form-control",style:{width:t.isValueEmpty?"100%":"auto"},attrs:{type:"search",autocomplete:"false",disabled:t.disabled,placeholder:t.searchPlaceholder,tabindex:t.tabindex,readonly:!t.searchable,id:t.inputId,"aria-label":"Search for option"},domProps:{value:t.search},on:{keydown:[function(e){return"button"in e||!t._k(e.keyCode,"delete",[8,46],e.key)?void t.maybeDeleteValue(e):null},function(e){return"button"in e||!t._k(e.keyCode,"up",38,e.key)?(e.preventDefault(),void t.typeAheadUp(e)):null},function(e){return"button"in e||!t._k(e.keyCode,"down",40,e.key)?(e.preventDefault(),void t.typeAheadDown(e)):null},function(e){return"button"in e||!t._k(e.keyCode,"enter",13,e.key)?(e.preventDefault(),void t.typeAheadSelect(e)):null}],keyup:function(e){return"button"in e||!t._k(e.keyCode,"esc",27,e.key)?void t.onEscape(e):null},blur:t.onSearchBlur,focus:t.onSearchFocus,input:function(e){e.target.composing||(t.search=e.target.value)}}}),t._v(" "),t.noDrop?t._e():n("i",{ref:"openIndicator",staticClass:"open-indicator",attrs:{role:"presentation"}}),t._v(" "),t._t("spinner",[n("div",{directives:[{name:"show",rawName:"v-show",value:t.mutableLoading,expression:"mutableLoading"}],staticClass:"spinner"},[t._v("Loading...")])])],2),t._v(" "),n("transition",{attrs:{name:t.transition}},[t.dropdownOpen?n("ul",{ref:"dropdownMenu",staticClass:"dropdown-menu",style:{"max-height":t.maxHeight}},[t._l(t.filteredOptions,function(e,r){return n("li",{
+key:r,class:{active:t.isOptionSelected(e),highlight:r===t.typeAheadPointer},on:{mouseover:function(e){t.typeAheadPointer=r}}},[n("a",{on:{mousedown:function(n){n.preventDefault(),t.select(e)}}},[t._t("option",[t._v("\n          "+t._s(t.getOptionLabel(e))+"\n        ")],null,e)],2)])}),t._v(" "),t.filteredOptions.length?t._e():n("li",{staticClass:"no-options"},[t._t("no-options",[t._v("Sorry, no matching options.")])],2)],2):t._e()])],1)},staticRenderFns:[]}},function(t,e,n){function r(t,e){for(var n=0;n<t.length;n++){var r=t[n],o=f[r.id];if(o){o.refs++;for(var i=0;i<o.parts.length;i++)o.parts[i](r.parts[i]);for(;i<r.parts.length;i++)o.parts.push(u(r.parts[i],e))}else{for(var a=[],i=0;i<r.parts.length;i++)a.push(u(r.parts[i],e));f[r.id]={id:r.id,refs:1,parts:a}}}}function o(t){for(var e=[],n={},r=0;r<t.length;r++){var o=t[r],i=o[0],a=o[1],s=o[2],u=o[3],l={css:a,media:s,sourceMap:u};n[i]?n[i].parts.push(l):e.push(n[i]={id:i,parts:[l]})}return e}function i(t,e){var n=h(),r=g[g.length-1];if("top"===t.insertAt)r?r.nextSibling?n.insertBefore(e,r.nextSibling):n.appendChild(e):n.insertBefore(e,n.firstChild),g.push(e);else{if("bottom"!==t.insertAt)throw new Error("Invalid value for parameter 'insertAt'. Must be 'top' or 'bottom'.");n.appendChild(e)}}function a(t){t.parentNode.removeChild(t);var e=g.indexOf(t);e>=0&&g.splice(e,1)}function s(t){var e=document.createElement("style");return e.type="text/css",i(t,e),e}function u(t,e){var n,r,o;if(e.singleton){var i=v++;n=b||(b=s(e)),r=l.bind(null,n,i,!1),o=l.bind(null,n,i,!0)}else n=s(e),r=c.bind(null,n),o=function(){a(n)};return r(t),function(e){if(e){if(e.css===t.css&&e.media===t.media&&e.sourceMap===t.sourceMap)return;r(t=e)}else o()}}function l(t,e,n,r){var o=n?"":r.css;if(t.styleSheet)t.styleSheet.cssText=y(e,o);else{var i=document.createTextNode(o),a=t.childNodes;a[e]&&t.removeChild(a[e]),a.length?t.insertBefore(i,a[e]):t.appendChild(i)}}function c(t,e){var n=e.css,r=e.media,o=e.sourceMap;if(r&&t.setAttribute("media",r),o&&(n+="\n/*# sourceURL="+o.sources[0]+" */",n+="\n/*# sourceMappingURL=data:application/json;base64,"+btoa(unescape(encodeURIComponent(JSON.stringify(o))))+" */"),t.styleSheet)t.styleSheet.cssText=n;else{for(;t.firstChild;)t.removeChild(t.firstChild);t.appendChild(document.createTextNode(n))}}var f={},p=function(t){var e;return function(){return"undefined"==typeof e&&(e=t.apply(this,arguments)),e}},d=p(function(){return/msie [6-9]\b/.test(window.navigator.userAgent.toLowerCase())}),h=p(function(){return document.head||document.getElementsByTagName("head")[0]}),b=null,v=0,g=[];t.exports=function(t,e){e=e||{},"undefined"==typeof e.singleton&&(e.singleton=d()),"undefined"==typeof e.insertAt&&(e.insertAt="bottom");var n=o(t);return r(n,e),function(t){for(var i=[],a=0;a<n.length;a++){var s=n[a],u=f[s.id];u.refs--,i.push(u)}if(t){var l=o(t);r(l,e)}for(var a=0;a<i.length;a++){var u=i[a];if(0===u.refs){for(var c=0;c<u.parts.length;c++)u.parts[c]();delete f[u.id]}}}};var y=function(){var t=[];return function(e,n){return t[e]=n,t.filter(Boolean).join("\n")}}()},function(t,e,n){var r=n(81);"string"==typeof r&&(r=[[t.id,r,""]]);n(86)(r,{});r.locals&&(t.exports=r.locals)}])});
 //# sourceMappingURL=vue-select.js.map
 
 /***/ }),
@@ -4948,8 +5020,8 @@ r(t=e)}else o()}}function l(t,e,n,r){var o=n?"":r.css;if(t.styleSheet)t.styleShe
 "use strict";
 
 
-var bind = __webpack_require__(29);
-var isBuffer = __webpack_require__(213);
+var bind = __webpack_require__(30);
+var isBuffer = __webpack_require__(219);
 
 /*global toString:true*/
 
@@ -5255,9 +5327,9 @@ module.exports = {
 /* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Symbol = __webpack_require__(21),
-    getRawTag = __webpack_require__(175),
-    objectToString = __webpack_require__(176);
+var Symbol = __webpack_require__(22),
+    getRawTag = __webpack_require__(181),
+    objectToString = __webpack_require__(182);
 
 /** `Object#toString` result references. */
 var nullTag = '[object Null]',
@@ -5326,7 +5398,7 @@ module.exports = isObjectLike;
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_BaseConfirm__ = __webpack_require__(36);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_Confirm__ = __webpack_require__(255);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_Confirm__ = __webpack_require__(261);
 /* unused harmony reexport Confirm */
 
 
@@ -5336,6 +5408,33 @@ module.exports = isObjectLike;
 
 /***/ }),
 /* 9 */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+/* 10 */
 /***/ (function(module, exports) {
 
 /**
@@ -5372,33 +5471,6 @@ module.exports = isObject;
 
 
 /***/ }),
-/* 10 */
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
-/***/ }),
 /* 11 */
 /***/ (function(module, exports) {
 
@@ -5428,6 +5500,196 @@ module.exports = function(module) {
 
 /***/ }),
 /* 12 */
+/***/ (function(module, exports) {
+
+// shim for using process in browser
+var process = module.exports = {};
+
+// cached from whatever global is present so that test runners that stub it
+// don't break things.  But we need to wrap it in a try catch in case it is
+// wrapped in strict mode code which doesn't define any globals.  It's inside a
+// function because try/catches deoptimize in certain engines.
+
+var cachedSetTimeout;
+var cachedClearTimeout;
+
+function defaultSetTimout() {
+    throw new Error('setTimeout has not been defined');
+}
+function defaultClearTimeout () {
+    throw new Error('clearTimeout has not been defined');
+}
+(function () {
+    try {
+        if (typeof setTimeout === 'function') {
+            cachedSetTimeout = setTimeout;
+        } else {
+            cachedSetTimeout = defaultSetTimout;
+        }
+    } catch (e) {
+        cachedSetTimeout = defaultSetTimout;
+    }
+    try {
+        if (typeof clearTimeout === 'function') {
+            cachedClearTimeout = clearTimeout;
+        } else {
+            cachedClearTimeout = defaultClearTimeout;
+        }
+    } catch (e) {
+        cachedClearTimeout = defaultClearTimeout;
+    }
+} ())
+function runTimeout(fun) {
+    if (cachedSetTimeout === setTimeout) {
+        //normal enviroments in sane situations
+        return setTimeout(fun, 0);
+    }
+    // if setTimeout wasn't available but was latter defined
+    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+        cachedSetTimeout = setTimeout;
+        return setTimeout(fun, 0);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedSetTimeout(fun, 0);
+    } catch(e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+            return cachedSetTimeout.call(null, fun, 0);
+        } catch(e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
+        }
+    }
+
+
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) {
+        //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
+
+
+
+}
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
+    draining = false;
+    if (currentQueue.length) {
+        queue = currentQueue.concat(queue);
+    } else {
+        queueIndex = -1;
+    }
+    if (queue.length) {
+        drainQueue();
+    }
+}
+
+function drainQueue() {
+    if (draining) {
+        return;
+    }
+    var timeout = runTimeout(cleanUpNextTick);
+    draining = true;
+
+    var len = queue.length;
+    while(len) {
+        currentQueue = queue;
+        queue = [];
+        while (++queueIndex < len) {
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
+            }
+        }
+        queueIndex = -1;
+        len = queue.length;
+    }
+    currentQueue = null;
+    draining = false;
+    runClearTimeout(timeout);
+}
+
+process.nextTick = function (fun) {
+    var args = new Array(arguments.length - 1);
+    if (arguments.length > 1) {
+        for (var i = 1; i < arguments.length; i++) {
+            args[i - 1] = arguments[i];
+        }
+    }
+    queue.push(new Item(fun, args));
+    if (queue.length === 1 && !draining) {
+        runTimeout(drainQueue);
+    }
+};
+
+// v8 likes predictible objects
+function Item(fun, array) {
+    this.fun = fun;
+    this.array = array;
+}
+Item.prototype.run = function () {
+    this.fun.apply(null, this.array);
+};
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+process.version = ''; // empty string to avoid regexp issues
+process.versions = {};
+
+function noop() {}
+
+process.on = noop;
+process.addListener = noop;
+process.once = noop;
+process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
+process.emit = noop;
+process.prependListener = noop;
+process.prependOnceListener = noop;
+
+process.listeners = function (name) { return [] }
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+};
+
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+process.umask = function() { return 0; };
+
+
+/***/ }),
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! @preserve
@@ -6450,11 +6712,11 @@ return numeral;
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseGetTag = __webpack_require__(6),
-    isObject = __webpack_require__(9);
+    isObject = __webpack_require__(10);
 
 /** `Object#toString` result references. */
 var asyncTag = '[object AsyncFunction]',
@@ -6493,10 +6755,10 @@ module.exports = isFunction;
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var freeGlobal = __webpack_require__(22);
+var freeGlobal = __webpack_require__(23);
 
 /** Detect free variable `self`. */
 var freeSelf = typeof self == 'object' && self && self.Object === Object && self;
@@ -6508,14 +6770,14 @@ module.exports = root;
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {
 
 var utils = __webpack_require__(5);
-var normalizeHeaderName = __webpack_require__(215);
+var normalizeHeaderName = __webpack_require__(221);
 
 var DEFAULT_CONTENT_TYPE = {
   'Content-Type': 'application/x-www-form-urlencoded'
@@ -6605,22 +6867,22 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 
 module.exports = defaults;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(30)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12)))
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(239)
+  __webpack_require__(245)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(241),
+  __webpack_require__(247),
   /* template */
-  __webpack_require__(242),
+  __webpack_require__(248),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -6628,7 +6890,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Lists\\ListsDepartaments.vue"
+Component.options.__file = "/var/www/html/softAdventist/resources/assets/js/components/Lists/ListsDepartaments.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ListsDepartaments.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -6652,19 +6914,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(278)
+  __webpack_require__(284)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(280),
+  __webpack_require__(286),
   /* template */
-  __webpack_require__(282),
+  __webpack_require__(288),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -6672,7 +6934,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "F:\\laragon\\www\\softAdventist\\node_modules\\vue-datepicker\\vue-datepicker.vue"
+Component.options.__file = "/var/www/html/softAdventist/node_modules/vue-datepicker/vue-datepicker.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] vue-datepicker.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -6696,18 +6958,20 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(global) {/*!
- * Vue.js v2.4.2
+/* WEBPACK VAR INJECTION */(function(global, setImmediate) {/*!
+ * Vue.js v2.5.13
  * (c) 2014-2017 Evan You
  * Released under the MIT License.
  */
 
 
 /*  */
+
+var emptyObject = Object.freeze({});
 
 // these helpers produces better vm code in JS engines due to their
 // explicitness and function inlining
@@ -6734,6 +6998,8 @@ function isPrimitive (value) {
   return (
     typeof value === 'string' ||
     typeof value === 'number' ||
+    // $flow-disable-line
+    typeof value === 'symbol' ||
     typeof value === 'boolean'
   )
 }
@@ -6747,7 +7013,14 @@ function isObject (obj) {
   return obj !== null && typeof obj === 'object'
 }
 
+/**
+ * Get the raw type string of a value e.g. [object Object]
+ */
 var _toString = Object.prototype.toString;
+
+function toRawType (value) {
+  return _toString.call(value).slice(8, -1)
+}
 
 /**
  * Strict object type check. Only returns true
@@ -6765,7 +7038,7 @@ function isRegExp (v) {
  * Check if val is a valid array index.
  */
 function isValidArrayIndex (val) {
-  var n = parseFloat(val);
+  var n = parseFloat(String(val));
   return n >= 0 && Math.floor(n) === n && isFinite(val)
 }
 
@@ -6815,7 +7088,7 @@ var isBuiltInTag = makeMap('slot,component', true);
 /**
  * Check if a attribute is a reserved attribute.
  */
-var isReservedAttribute = makeMap('key,ref,slot,is');
+var isReservedAttribute = makeMap('key,ref,slot,slot-scope,is');
 
 /**
  * Remove an item from an array
@@ -6866,12 +7139,9 @@ var capitalize = cached(function (str) {
 /**
  * Hyphenate a camelCase string.
  */
-var hyphenateRE = /([^-])([A-Z])/g;
+var hyphenateRE = /\B([A-Z])/g;
 var hyphenate = cached(function (str) {
-  return str
-    .replace(hyphenateRE, '$1-$2')
-    .replace(hyphenateRE, '$1-$2')
-    .toLowerCase()
+  return str.replace(hyphenateRE, '-$1').toLowerCase()
 });
 
 /**
@@ -7028,7 +7298,8 @@ var LIFECYCLE_HOOKS = [
   'beforeDestroy',
   'destroyed',
   'activated',
-  'deactivated'
+  'deactivated',
+  'errorCaptured'
 ];
 
 /*  */
@@ -7037,6 +7308,7 @@ var config = ({
   /**
    * Option merge strategies (used in core/util/options)
    */
+  // $flow-disable-line
   optionMergeStrategies: Object.create(null),
 
   /**
@@ -7077,6 +7349,7 @@ var config = ({
   /**
    * Custom user key aliases for v-on
    */
+  // $flow-disable-line
   keyCodes: Object.create(null),
 
   /**
@@ -7121,8 +7394,6 @@ var config = ({
 
 /*  */
 
-var emptyObject = Object.freeze({});
-
 /**
  * Check if a string starts with $ or _
  */
@@ -7163,134 +7434,23 @@ function parsePath (path) {
 
 /*  */
 
-var warn = noop;
-var tip = noop;
-var formatComponentName = (null); // work around flow check
-
-if (true) {
-  var hasConsole = typeof console !== 'undefined';
-  var classifyRE = /(?:^|[-_])(\w)/g;
-  var classify = function (str) { return str
-    .replace(classifyRE, function (c) { return c.toUpperCase(); })
-    .replace(/[-_]/g, ''); };
-
-  warn = function (msg, vm) {
-    var trace = vm ? generateComponentTrace(vm) : '';
-
-    if (config.warnHandler) {
-      config.warnHandler.call(null, msg, vm, trace);
-    } else if (hasConsole && (!config.silent)) {
-      console.error(("[Vue warn]: " + msg + trace));
-    }
-  };
-
-  tip = function (msg, vm) {
-    if (hasConsole && (!config.silent)) {
-      console.warn("[Vue tip]: " + msg + (
-        vm ? generateComponentTrace(vm) : ''
-      ));
-    }
-  };
-
-  formatComponentName = function (vm, includeFile) {
-    if (vm.$root === vm) {
-      return '<Root>'
-    }
-    var name = typeof vm === 'string'
-      ? vm
-      : typeof vm === 'function' && vm.options
-        ? vm.options.name
-        : vm._isVue
-          ? vm.$options.name || vm.$options._componentTag
-          : vm.name;
-
-    var file = vm._isVue && vm.$options.__file;
-    if (!name && file) {
-      var match = file.match(/([^/\\]+)\.vue$/);
-      name = match && match[1];
-    }
-
-    return (
-      (name ? ("<" + (classify(name)) + ">") : "<Anonymous>") +
-      (file && includeFile !== false ? (" at " + file) : '')
-    )
-  };
-
-  var repeat = function (str, n) {
-    var res = '';
-    while (n) {
-      if (n % 2 === 1) { res += str; }
-      if (n > 1) { str += str; }
-      n >>= 1;
-    }
-    return res
-  };
-
-  var generateComponentTrace = function (vm) {
-    if (vm._isVue && vm.$parent) {
-      var tree = [];
-      var currentRecursiveSequence = 0;
-      while (vm) {
-        if (tree.length > 0) {
-          var last = tree[tree.length - 1];
-          if (last.constructor === vm.constructor) {
-            currentRecursiveSequence++;
-            vm = vm.$parent;
-            continue
-          } else if (currentRecursiveSequence > 0) {
-            tree[tree.length - 1] = [last, currentRecursiveSequence];
-            currentRecursiveSequence = 0;
-          }
-        }
-        tree.push(vm);
-        vm = vm.$parent;
-      }
-      return '\n\nfound in\n\n' + tree
-        .map(function (vm, i) { return ("" + (i === 0 ? '---> ' : repeat(' ', 5 + i * 2)) + (Array.isArray(vm)
-            ? ((formatComponentName(vm[0])) + "... (" + (vm[1]) + " recursive calls)")
-            : formatComponentName(vm))); })
-        .join('\n')
-    } else {
-      return ("\n\n(found in " + (formatComponentName(vm)) + ")")
-    }
-  };
-}
-
-/*  */
-
-function handleError (err, vm, info) {
-  if (config.errorHandler) {
-    config.errorHandler.call(null, err, vm, info);
-  } else {
-    if (true) {
-      warn(("Error in " + info + ": \"" + (err.toString()) + "\""), vm);
-    }
-    /* istanbul ignore else */
-    if (inBrowser && typeof console !== 'undefined') {
-      console.error(err);
-    } else {
-      throw err
-    }
-  }
-}
-
-/*  */
-/* globals MutationObserver */
 
 // can we use __proto__?
 var hasProto = '__proto__' in {};
 
 // Browser environment sniffing
 var inBrowser = typeof window !== 'undefined';
+var inWeex = typeof WXEnvironment !== 'undefined' && !!WXEnvironment.platform;
+var weexPlatform = inWeex && WXEnvironment.platform.toLowerCase();
 var UA = inBrowser && window.navigator.userAgent.toLowerCase();
 var isIE = UA && /msie|trident/.test(UA);
 var isIE9 = UA && UA.indexOf('msie 9.0') > 0;
 var isEdge = UA && UA.indexOf('edge/') > 0;
-var isAndroid = UA && UA.indexOf('android') > 0;
-var isIOS = UA && /iphone|ipad|ipod|ios/.test(UA);
+var isAndroid = (UA && UA.indexOf('android') > 0) || (weexPlatform === 'android');
+var isIOS = (UA && /iphone|ipad|ipod|ios/.test(UA)) || (weexPlatform === 'ios');
 var isChrome = UA && /chrome\/\d+/.test(UA) && !isEdge;
 
-// Firefix has a "watch" function on Object.prototype...
+// Firefox has a "watch" function on Object.prototype...
 var nativeWatch = ({}).watch;
 
 var supportsPassive = false;
@@ -7336,94 +7496,8 @@ var hasSymbol =
   typeof Symbol !== 'undefined' && isNative(Symbol) &&
   typeof Reflect !== 'undefined' && isNative(Reflect.ownKeys);
 
-/**
- * Defer a task to execute it asynchronously.
- */
-var nextTick = (function () {
-  var callbacks = [];
-  var pending = false;
-  var timerFunc;
-
-  function nextTickHandler () {
-    pending = false;
-    var copies = callbacks.slice(0);
-    callbacks.length = 0;
-    for (var i = 0; i < copies.length; i++) {
-      copies[i]();
-    }
-  }
-
-  // the nextTick behavior leverages the microtask queue, which can be accessed
-  // via either native Promise.then or MutationObserver.
-  // MutationObserver has wider support, however it is seriously bugged in
-  // UIWebView in iOS >= 9.3.3 when triggered in touch event handlers. It
-  // completely stops working after triggering a few times... so, if native
-  // Promise is available, we will use it:
-  /* istanbul ignore if */
-  if (typeof Promise !== 'undefined' && isNative(Promise)) {
-    var p = Promise.resolve();
-    var logError = function (err) { console.error(err); };
-    timerFunc = function () {
-      p.then(nextTickHandler).catch(logError);
-      // in problematic UIWebViews, Promise.then doesn't completely break, but
-      // it can get stuck in a weird state where callbacks are pushed into the
-      // microtask queue but the queue isn't being flushed, until the browser
-      // needs to do some other work, e.g. handle a timer. Therefore we can
-      // "force" the microtask queue to be flushed by adding an empty timer.
-      if (isIOS) { setTimeout(noop); }
-    };
-  } else if (typeof MutationObserver !== 'undefined' && (
-    isNative(MutationObserver) ||
-    // PhantomJS and iOS 7.x
-    MutationObserver.toString() === '[object MutationObserverConstructor]'
-  )) {
-    // use MutationObserver where native Promise is not available,
-    // e.g. PhantomJS IE11, iOS7, Android 4.4
-    var counter = 1;
-    var observer = new MutationObserver(nextTickHandler);
-    var textNode = document.createTextNode(String(counter));
-    observer.observe(textNode, {
-      characterData: true
-    });
-    timerFunc = function () {
-      counter = (counter + 1) % 2;
-      textNode.data = String(counter);
-    };
-  } else {
-    // fallback to setTimeout
-    /* istanbul ignore next */
-    timerFunc = function () {
-      setTimeout(nextTickHandler, 0);
-    };
-  }
-
-  return function queueNextTick (cb, ctx) {
-    var _resolve;
-    callbacks.push(function () {
-      if (cb) {
-        try {
-          cb.call(ctx);
-        } catch (e) {
-          handleError(e, ctx, 'nextTick');
-        }
-      } else if (_resolve) {
-        _resolve(ctx);
-      }
-    });
-    if (!pending) {
-      pending = true;
-      timerFunc();
-    }
-    if (!cb && typeof Promise !== 'undefined') {
-      return new Promise(function (resolve, reject) {
-        _resolve = resolve;
-      })
-    }
-  }
-})();
-
 var _Set;
-/* istanbul ignore if */
+/* istanbul ignore if */ // $flow-disable-line
 if (typeof Set !== 'undefined' && isNative(Set)) {
   // use native Set when available.
   _Set = Set;
@@ -7445,6 +7519,100 @@ if (typeof Set !== 'undefined' && isNative(Set)) {
 
     return Set;
   }());
+}
+
+/*  */
+
+var warn = noop;
+var tip = noop;
+var generateComponentTrace = (noop); // work around flow check
+var formatComponentName = (noop);
+
+if (true) {
+  var hasConsole = typeof console !== 'undefined';
+  var classifyRE = /(?:^|[-_])(\w)/g;
+  var classify = function (str) { return str
+    .replace(classifyRE, function (c) { return c.toUpperCase(); })
+    .replace(/[-_]/g, ''); };
+
+  warn = function (msg, vm) {
+    var trace = vm ? generateComponentTrace(vm) : '';
+
+    if (config.warnHandler) {
+      config.warnHandler.call(null, msg, vm, trace);
+    } else if (hasConsole && (!config.silent)) {
+      console.error(("[Vue warn]: " + msg + trace));
+    }
+  };
+
+  tip = function (msg, vm) {
+    if (hasConsole && (!config.silent)) {
+      console.warn("[Vue tip]: " + msg + (
+        vm ? generateComponentTrace(vm) : ''
+      ));
+    }
+  };
+
+  formatComponentName = function (vm, includeFile) {
+    if (vm.$root === vm) {
+      return '<Root>'
+    }
+    var options = typeof vm === 'function' && vm.cid != null
+      ? vm.options
+      : vm._isVue
+        ? vm.$options || vm.constructor.options
+        : vm || {};
+    var name = options.name || options._componentTag;
+    var file = options.__file;
+    if (!name && file) {
+      var match = file.match(/([^/\\]+)\.vue$/);
+      name = match && match[1];
+    }
+
+    return (
+      (name ? ("<" + (classify(name)) + ">") : "<Anonymous>") +
+      (file && includeFile !== false ? (" at " + file) : '')
+    )
+  };
+
+  var repeat = function (str, n) {
+    var res = '';
+    while (n) {
+      if (n % 2 === 1) { res += str; }
+      if (n > 1) { str += str; }
+      n >>= 1;
+    }
+    return res
+  };
+
+  generateComponentTrace = function (vm) {
+    if (vm._isVue && vm.$parent) {
+      var tree = [];
+      var currentRecursiveSequence = 0;
+      while (vm) {
+        if (tree.length > 0) {
+          var last = tree[tree.length - 1];
+          if (last.constructor === vm.constructor) {
+            currentRecursiveSequence++;
+            vm = vm.$parent;
+            continue
+          } else if (currentRecursiveSequence > 0) {
+            tree[tree.length - 1] = [last, currentRecursiveSequence];
+            currentRecursiveSequence = 0;
+          }
+        }
+        tree.push(vm);
+        vm = vm.$parent;
+      }
+      return '\n\nfound in\n\n' + tree
+        .map(function (vm, i) { return ("" + (i === 0 ? '---> ' : repeat(' ', 5 + i * 2)) + (Array.isArray(vm)
+            ? ((formatComponentName(vm[0])) + "... (" + (vm[1]) + " recursive calls)")
+            : formatComponentName(vm))); })
+        .join('\n')
+    } else {
+      return ("\n\n(found in " + (formatComponentName(vm)) + ")")
+    }
+  };
 }
 
 /*  */
@@ -7498,6 +7666,110 @@ function popTarget () {
   Dep.target = targetStack.pop();
 }
 
+/*  */
+
+var VNode = function VNode (
+  tag,
+  data,
+  children,
+  text,
+  elm,
+  context,
+  componentOptions,
+  asyncFactory
+) {
+  this.tag = tag;
+  this.data = data;
+  this.children = children;
+  this.text = text;
+  this.elm = elm;
+  this.ns = undefined;
+  this.context = context;
+  this.fnContext = undefined;
+  this.fnOptions = undefined;
+  this.fnScopeId = undefined;
+  this.key = data && data.key;
+  this.componentOptions = componentOptions;
+  this.componentInstance = undefined;
+  this.parent = undefined;
+  this.raw = false;
+  this.isStatic = false;
+  this.isRootInsert = true;
+  this.isComment = false;
+  this.isCloned = false;
+  this.isOnce = false;
+  this.asyncFactory = asyncFactory;
+  this.asyncMeta = undefined;
+  this.isAsyncPlaceholder = false;
+};
+
+var prototypeAccessors = { child: { configurable: true } };
+
+// DEPRECATED: alias for componentInstance for backwards compat.
+/* istanbul ignore next */
+prototypeAccessors.child.get = function () {
+  return this.componentInstance
+};
+
+Object.defineProperties( VNode.prototype, prototypeAccessors );
+
+var createEmptyVNode = function (text) {
+  if ( text === void 0 ) text = '';
+
+  var node = new VNode();
+  node.text = text;
+  node.isComment = true;
+  return node
+};
+
+function createTextVNode (val) {
+  return new VNode(undefined, undefined, undefined, String(val))
+}
+
+// optimized shallow clone
+// used for static nodes and slot nodes because they may be reused across
+// multiple renders, cloning them avoids errors when DOM manipulations rely
+// on their elm reference.
+function cloneVNode (vnode, deep) {
+  var componentOptions = vnode.componentOptions;
+  var cloned = new VNode(
+    vnode.tag,
+    vnode.data,
+    vnode.children,
+    vnode.text,
+    vnode.elm,
+    vnode.context,
+    componentOptions,
+    vnode.asyncFactory
+  );
+  cloned.ns = vnode.ns;
+  cloned.isStatic = vnode.isStatic;
+  cloned.key = vnode.key;
+  cloned.isComment = vnode.isComment;
+  cloned.fnContext = vnode.fnContext;
+  cloned.fnOptions = vnode.fnOptions;
+  cloned.fnScopeId = vnode.fnScopeId;
+  cloned.isCloned = true;
+  if (deep) {
+    if (vnode.children) {
+      cloned.children = cloneVNodes(vnode.children, true);
+    }
+    if (componentOptions && componentOptions.children) {
+      componentOptions.children = cloneVNodes(componentOptions.children, true);
+    }
+  }
+  return cloned
+}
+
+function cloneVNodes (vnodes, deep) {
+  var len = vnodes.length;
+  var res = new Array(len);
+  for (var i = 0; i < len; i++) {
+    res[i] = cloneVNode(vnodes[i], deep);
+  }
+  return res
+}
+
 /*
  * not type checking this file because flow doesn't play well with
  * dynamically accessing methods on Array prototype
@@ -7512,8 +7784,7 @@ var arrayMethods = Object.create(arrayProto);[
   'splice',
   'sort',
   'reverse'
-]
-.forEach(function (method) {
+].forEach(function (method) {
   // cache original method
   var original = arrayProto[method];
   def(arrayMethods, method, function mutator () {
@@ -7583,7 +7854,7 @@ var Observer = function Observer (value) {
 Observer.prototype.walk = function walk (obj) {
   var keys = Object.keys(obj);
   for (var i = 0; i < keys.length; i++) {
-    defineReactive$$1(obj, keys[i], obj[keys[i]]);
+    defineReactive(obj, keys[i], obj[keys[i]]);
   }
 };
 
@@ -7626,7 +7897,7 @@ function copyAugment (target, src, keys) {
  * or the existing observer if the value already has one.
  */
 function observe (value, asRootData) {
-  if (!isObject(value)) {
+  if (!isObject(value) || value instanceof VNode) {
     return
   }
   var ob;
@@ -7650,7 +7921,7 @@ function observe (value, asRootData) {
 /**
  * Define a reactive property on an Object.
  */
-function defineReactive$$1 (
+function defineReactive (
   obj,
   key,
   val,
@@ -7678,9 +7949,9 @@ function defineReactive$$1 (
         dep.depend();
         if (childOb) {
           childOb.dep.depend();
-        }
-        if (Array.isArray(value)) {
-          dependArray(value);
+          if (Array.isArray(value)) {
+            dependArray(value);
+          }
         }
       }
       return value
@@ -7717,7 +7988,7 @@ function set (target, key, val) {
     target.splice(key, 1, val);
     return val
   }
-  if (hasOwn(target, key)) {
+  if (key in target && !(key in Object.prototype)) {
     target[key] = val;
     return val
   }
@@ -7733,7 +8004,7 @@ function set (target, key, val) {
     target[key] = val;
     return val
   }
-  defineReactive$$1(ob.value, key, val);
+  defineReactive(ob.value, key, val);
   ob.dep.notify();
   return val
 }
@@ -7845,19 +8116,19 @@ function mergeDataOrFn (
     // it has to be a function to pass previous merges.
     return function mergedDataFn () {
       return mergeData(
-        typeof childVal === 'function' ? childVal.call(this) : childVal,
-        typeof parentVal === 'function' ? parentVal.call(this) : parentVal
+        typeof childVal === 'function' ? childVal.call(this, this) : childVal,
+        typeof parentVal === 'function' ? parentVal.call(this, this) : parentVal
       )
     }
-  } else if (parentVal || childVal) {
+  } else {
     return function mergedInstanceDataFn () {
       // instance merge
       var instanceData = typeof childVal === 'function'
-        ? childVal.call(vm)
+        ? childVal.call(vm, vm)
         : childVal;
       var defaultData = typeof parentVal === 'function'
-        ? parentVal.call(vm)
-        : undefined;
+        ? parentVal.call(vm, vm)
+        : parentVal;
       if (instanceData) {
         return mergeData(instanceData, defaultData)
       } else {
@@ -7883,7 +8154,7 @@ strats.data = function (
 
       return parentVal
     }
-    return mergeDataOrFn.call(this, parentVal, childVal)
+    return mergeDataOrFn(parentVal, childVal)
   }
 
   return mergeDataOrFn(parentVal, childVal, vm)
@@ -7916,11 +8187,19 @@ LIFECYCLE_HOOKS.forEach(function (hook) {
  * a three-way merge between constructor options, instance
  * options and parent options.
  */
-function mergeAssets (parentVal, childVal) {
+function mergeAssets (
+  parentVal,
+  childVal,
+  vm,
+  key
+) {
   var res = Object.create(parentVal || null);
-  return childVal
-    ? extend(res, childVal)
-    : res
+  if (childVal) {
+    "development" !== 'production' && assertObjectType(key, childVal, vm);
+    return extend(res, childVal)
+  } else {
+    return res
+  }
 }
 
 ASSET_TYPES.forEach(function (type) {
@@ -7933,22 +8212,30 @@ ASSET_TYPES.forEach(function (type) {
  * Watchers hashes should not overwrite one
  * another, so we merge them as arrays.
  */
-strats.watch = function (parentVal, childVal) {
+strats.watch = function (
+  parentVal,
+  childVal,
+  vm,
+  key
+) {
   // work around Firefox's Object.prototype.watch...
   if (parentVal === nativeWatch) { parentVal = undefined; }
   if (childVal === nativeWatch) { childVal = undefined; }
   /* istanbul ignore if */
   if (!childVal) { return Object.create(parentVal || null) }
+  if (true) {
+    assertObjectType(key, childVal, vm);
+  }
   if (!parentVal) { return childVal }
   var ret = {};
   extend(ret, parentVal);
-  for (var key in childVal) {
-    var parent = ret[key];
-    var child = childVal[key];
+  for (var key$1 in childVal) {
+    var parent = ret[key$1];
+    var child = childVal[key$1];
     if (parent && !Array.isArray(parent)) {
       parent = [parent];
     }
-    ret[key] = parent
+    ret[key$1] = parent
       ? parent.concat(child)
       : Array.isArray(child) ? child : [child];
   }
@@ -7961,7 +8248,15 @@ strats.watch = function (parentVal, childVal) {
 strats.props =
 strats.methods =
 strats.inject =
-strats.computed = function (parentVal, childVal) {
+strats.computed = function (
+  parentVal,
+  childVal,
+  vm,
+  key
+) {
+  if (childVal && "development" !== 'production') {
+    assertObjectType(key, childVal, vm);
+  }
   if (!parentVal) { return childVal }
   var ret = Object.create(null);
   extend(ret, parentVal);
@@ -7984,13 +8279,23 @@ var defaultStrat = function (parentVal, childVal) {
  */
 function checkComponents (options) {
   for (var key in options.components) {
-    var lower = key.toLowerCase();
-    if (isBuiltInTag(lower) || config.isReservedTag(lower)) {
-      warn(
-        'Do not use built-in or reserved HTML elements as component ' +
-        'id: ' + key
-      );
-    }
+    validateComponentName(key);
+  }
+}
+
+function validateComponentName (name) {
+  if (!/^[a-zA-Z][\w-]*$/.test(name)) {
+    warn(
+      'Invalid component name: "' + name + '". Component names ' +
+      'can only contain alphanumeric characters and the hyphen, ' +
+      'and must start with a letter.'
+    );
+  }
+  if (isBuiltInTag(name) || config.isReservedTag(name)) {
+    warn(
+      'Do not use built-in or reserved HTML elements as component ' +
+      'id: ' + name
+    );
   }
 }
 
@@ -7998,7 +8303,7 @@ function checkComponents (options) {
  * Ensure all props option syntax are normalized into the
  * Object-based format.
  */
-function normalizeProps (options) {
+function normalizeProps (options, vm) {
   var props = options.props;
   if (!props) { return }
   var res = {};
@@ -8022,6 +8327,12 @@ function normalizeProps (options) {
         ? val
         : { type: val };
     }
+  } else if (true) {
+    warn(
+      "Invalid value for option \"props\": expected an Array or an Object, " +
+      "but got " + (toRawType(props)) + ".",
+      vm
+    );
   }
   options.props = res;
 }
@@ -8029,13 +8340,27 @@ function normalizeProps (options) {
 /**
  * Normalize all injections into Object-based format
  */
-function normalizeInject (options) {
+function normalizeInject (options, vm) {
   var inject = options.inject;
+  if (!inject) { return }
+  var normalized = options.inject = {};
   if (Array.isArray(inject)) {
-    var normalized = options.inject = {};
     for (var i = 0; i < inject.length; i++) {
-      normalized[inject[i]] = inject[i];
+      normalized[inject[i]] = { from: inject[i] };
     }
+  } else if (isPlainObject(inject)) {
+    for (var key in inject) {
+      var val = inject[key];
+      normalized[key] = isPlainObject(val)
+        ? extend({ from: key }, val)
+        : { from: val };
+    }
+  } else if (true) {
+    warn(
+      "Invalid value for option \"inject\": expected an Array or an Object, " +
+      "but got " + (toRawType(inject)) + ".",
+      vm
+    );
   }
 }
 
@@ -8051,6 +8376,16 @@ function normalizeDirectives (options) {
         dirs[key] = { bind: def, update: def };
       }
     }
+  }
+}
+
+function assertObjectType (name, value, vm) {
+  if (!isPlainObject(value)) {
+    warn(
+      "Invalid value for option \"" + name + "\": expected an Object, " +
+      "but got " + (toRawType(value)) + ".",
+      vm
+    );
   }
 }
 
@@ -8071,8 +8406,8 @@ function mergeOptions (
     child = child.options;
   }
 
-  normalizeProps(child);
-  normalizeInject(child);
+  normalizeProps(child, vm);
+  normalizeInject(child, vm);
   normalizeDirectives(child);
   var extendsFrom = child.extends;
   if (extendsFrom) {
@@ -8162,7 +8497,9 @@ function validateProp (
     observe(value);
     observerState.shouldConvert = prevShouldConvert;
   }
-  if (true) {
+  if (
+    true
+  ) {
     assertProp(prop, key, value, vm, absent);
   }
   return value
@@ -8236,9 +8573,9 @@ function assertProp (
   }
   if (!valid) {
     warn(
-      'Invalid prop: type check failed for prop "' + name + '".' +
-      ' Expected ' + expectedTypes.map(capitalize).join(', ') +
-      ', got ' + Object.prototype.toString.call(value).slice(8, -1) + '.',
+      "Invalid prop: type check failed for prop \"" + name + "\"." +
+      " Expected " + (expectedTypes.map(capitalize).join(', ')) +
+      ", got " + (toRawType(value)) + ".",
       vm
     );
     return
@@ -8260,7 +8597,12 @@ function assertType (value, type) {
   var valid;
   var expectedType = getType(type);
   if (simpleCheckRE.test(expectedType)) {
-    valid = typeof value === expectedType.toLowerCase();
+    var t = typeof value;
+    valid = t === expectedType.toLowerCase();
+    // for primitive wrapper objects
+    if (!valid && t === 'object') {
+      valid = value instanceof type;
+    }
   } else if (expectedType === 'Object') {
     valid = isPlainObject(value);
   } else if (expectedType === 'Array') {
@@ -8295,6 +8637,165 @@ function isType (type, fn) {
   }
   /* istanbul ignore next */
   return false
+}
+
+/*  */
+
+function handleError (err, vm, info) {
+  if (vm) {
+    var cur = vm;
+    while ((cur = cur.$parent)) {
+      var hooks = cur.$options.errorCaptured;
+      if (hooks) {
+        for (var i = 0; i < hooks.length; i++) {
+          try {
+            var capture = hooks[i].call(cur, err, vm, info) === false;
+            if (capture) { return }
+          } catch (e) {
+            globalHandleError(e, cur, 'errorCaptured hook');
+          }
+        }
+      }
+    }
+  }
+  globalHandleError(err, vm, info);
+}
+
+function globalHandleError (err, vm, info) {
+  if (config.errorHandler) {
+    try {
+      return config.errorHandler.call(null, err, vm, info)
+    } catch (e) {
+      logError(e, null, 'config.errorHandler');
+    }
+  }
+  logError(err, vm, info);
+}
+
+function logError (err, vm, info) {
+  if (true) {
+    warn(("Error in " + info + ": \"" + (err.toString()) + "\""), vm);
+  }
+  /* istanbul ignore else */
+  if ((inBrowser || inWeex) && typeof console !== 'undefined') {
+    console.error(err);
+  } else {
+    throw err
+  }
+}
+
+/*  */
+/* globals MessageChannel */
+
+var callbacks = [];
+var pending = false;
+
+function flushCallbacks () {
+  pending = false;
+  var copies = callbacks.slice(0);
+  callbacks.length = 0;
+  for (var i = 0; i < copies.length; i++) {
+    copies[i]();
+  }
+}
+
+// Here we have async deferring wrappers using both micro and macro tasks.
+// In < 2.4 we used micro tasks everywhere, but there are some scenarios where
+// micro tasks have too high a priority and fires in between supposedly
+// sequential events (e.g. #4521, #6690) or even between bubbling of the same
+// event (#6566). However, using macro tasks everywhere also has subtle problems
+// when state is changed right before repaint (e.g. #6813, out-in transitions).
+// Here we use micro task by default, but expose a way to force macro task when
+// needed (e.g. in event handlers attached by v-on).
+var microTimerFunc;
+var macroTimerFunc;
+var useMacroTask = false;
+
+// Determine (macro) Task defer implementation.
+// Technically setImmediate should be the ideal choice, but it's only available
+// in IE. The only polyfill that consistently queues the callback after all DOM
+// events triggered in the same loop is by using MessageChannel.
+/* istanbul ignore if */
+if (typeof setImmediate !== 'undefined' && isNative(setImmediate)) {
+  macroTimerFunc = function () {
+    setImmediate(flushCallbacks);
+  };
+} else if (typeof MessageChannel !== 'undefined' && (
+  isNative(MessageChannel) ||
+  // PhantomJS
+  MessageChannel.toString() === '[object MessageChannelConstructor]'
+)) {
+  var channel = new MessageChannel();
+  var port = channel.port2;
+  channel.port1.onmessage = flushCallbacks;
+  macroTimerFunc = function () {
+    port.postMessage(1);
+  };
+} else {
+  /* istanbul ignore next */
+  macroTimerFunc = function () {
+    setTimeout(flushCallbacks, 0);
+  };
+}
+
+// Determine MicroTask defer implementation.
+/* istanbul ignore next, $flow-disable-line */
+if (typeof Promise !== 'undefined' && isNative(Promise)) {
+  var p = Promise.resolve();
+  microTimerFunc = function () {
+    p.then(flushCallbacks);
+    // in problematic UIWebViews, Promise.then doesn't completely break, but
+    // it can get stuck in a weird state where callbacks are pushed into the
+    // microtask queue but the queue isn't being flushed, until the browser
+    // needs to do some other work, e.g. handle a timer. Therefore we can
+    // "force" the microtask queue to be flushed by adding an empty timer.
+    if (isIOS) { setTimeout(noop); }
+  };
+} else {
+  // fallback to macro
+  microTimerFunc = macroTimerFunc;
+}
+
+/**
+ * Wrap a function so that if any code inside triggers state change,
+ * the changes are queued using a Task instead of a MicroTask.
+ */
+function withMacroTask (fn) {
+  return fn._withTask || (fn._withTask = function () {
+    useMacroTask = true;
+    var res = fn.apply(null, arguments);
+    useMacroTask = false;
+    return res
+  })
+}
+
+function nextTick (cb, ctx) {
+  var _resolve;
+  callbacks.push(function () {
+    if (cb) {
+      try {
+        cb.call(ctx);
+      } catch (e) {
+        handleError(e, ctx, 'nextTick');
+      }
+    } else if (_resolve) {
+      _resolve(ctx);
+    }
+  });
+  if (!pending) {
+    pending = true;
+    if (useMacroTask) {
+      macroTimerFunc();
+    } else {
+      microTimerFunc();
+    }
+  }
+  // $flow-disable-line
+  if (!cb && typeof Promise !== 'undefined') {
+    return new Promise(function (resolve) {
+      _resolve = resolve;
+    })
+  }
 }
 
 /*  */
@@ -8337,8 +8838,10 @@ if (true) {
   var warnNonPresent = function (target, key) {
     warn(
       "Property or method \"" + key + "\" is not defined on the instance but " +
-      "referenced during render. Make sure to declare reactive data " +
-      "properties in the data option.",
+      'referenced during render. Make sure that this property is reactive, ' +
+      'either in the data option, or for class-based components, by ' +
+      'initializing the property. ' +
+      'See: https://vuejs.org/v2/guide/reactivity.html#Declaring-Reactive-Properties.',
       target
     );
   };
@@ -8348,7 +8851,7 @@ if (true) {
     Proxy.toString().match(/native code/);
 
   if (hasProxy) {
-    var isBuiltInModifier = makeMap('stop,prevent,self,ctrl,shift,alt,meta');
+    var isBuiltInModifier = makeMap('stop,prevent,self,ctrl,shift,alt,meta,exact');
     config.keyCodes = new Proxy(config.keyCodes, {
       set: function set (target, key, value) {
         if (isBuiltInModifier(key)) {
@@ -8398,92 +8901,39 @@ if (true) {
 
 /*  */
 
-var VNode = function VNode (
-  tag,
-  data,
-  children,
-  text,
-  elm,
-  context,
-  componentOptions,
-  asyncFactory
-) {
-  this.tag = tag;
-  this.data = data;
-  this.children = children;
-  this.text = text;
-  this.elm = elm;
-  this.ns = undefined;
-  this.context = context;
-  this.functionalContext = undefined;
-  this.key = data && data.key;
-  this.componentOptions = componentOptions;
-  this.componentInstance = undefined;
-  this.parent = undefined;
-  this.raw = false;
-  this.isStatic = false;
-  this.isRootInsert = true;
-  this.isComment = false;
-  this.isCloned = false;
-  this.isOnce = false;
-  this.asyncFactory = asyncFactory;
-  this.asyncMeta = undefined;
-  this.isAsyncPlaceholder = false;
-};
+var seenObjects = new _Set();
 
-var prototypeAccessors = { child: {} };
-
-// DEPRECATED: alias for componentInstance for backwards compat.
-/* istanbul ignore next */
-prototypeAccessors.child.get = function () {
-  return this.componentInstance
-};
-
-Object.defineProperties( VNode.prototype, prototypeAccessors );
-
-var createEmptyVNode = function (text) {
-  if ( text === void 0 ) text = '';
-
-  var node = new VNode();
-  node.text = text;
-  node.isComment = true;
-  return node
-};
-
-function createTextVNode (val) {
-  return new VNode(undefined, undefined, undefined, String(val))
+/**
+ * Recursively traverse an object to evoke all converted
+ * getters, so that every nested property inside the object
+ * is collected as a "deep" dependency.
+ */
+function traverse (val) {
+  _traverse(val, seenObjects);
+  seenObjects.clear();
 }
 
-// optimized shallow clone
-// used for static nodes and slot nodes because they may be reused across
-// multiple renders, cloning them avoids errors when DOM manipulations rely
-// on their elm reference.
-function cloneVNode (vnode) {
-  var cloned = new VNode(
-    vnode.tag,
-    vnode.data,
-    vnode.children,
-    vnode.text,
-    vnode.elm,
-    vnode.context,
-    vnode.componentOptions,
-    vnode.asyncFactory
-  );
-  cloned.ns = vnode.ns;
-  cloned.isStatic = vnode.isStatic;
-  cloned.key = vnode.key;
-  cloned.isComment = vnode.isComment;
-  cloned.isCloned = true;
-  return cloned
-}
-
-function cloneVNodes (vnodes) {
-  var len = vnodes.length;
-  var res = new Array(len);
-  for (var i = 0; i < len; i++) {
-    res[i] = cloneVNode(vnodes[i]);
+function _traverse (val, seen) {
+  var i, keys;
+  var isA = Array.isArray(val);
+  if ((!isA && !isObject(val)) || Object.isFrozen(val)) {
+    return
   }
-  return res
+  if (val.__ob__) {
+    var depId = val.__ob__.dep.id;
+    if (seen.has(depId)) {
+      return
+    }
+    seen.add(depId);
+  }
+  if (isA) {
+    i = val.length;
+    while (i--) { _traverse(val[i], seen); }
+  } else {
+    keys = Object.keys(val);
+    i = keys.length;
+    while (i--) { _traverse(val[keys[i]], seen); }
+  }
 }
 
 /*  */
@@ -8529,11 +8979,12 @@ function updateListeners (
   remove$$1,
   vm
 ) {
-  var name, cur, old, event;
+  var name, def, cur, old, event;
   for (name in on) {
-    cur = on[name];
+    def = cur = on[name];
     old = oldOn[name];
     event = normalizeEvent(name);
+    /* istanbul ignore if */
     if (isUndef(cur)) {
       "development" !== 'production' && warn(
         "Invalid handler for event \"" + (event.name) + "\": got " + String(cur),
@@ -8543,7 +8994,7 @@ function updateListeners (
       if (isUndef(cur.fns)) {
         cur = on[name] = createFnInvoker(cur);
       }
-      add(event.name, cur, event.once, event.capture, event.passive);
+      add(event.name, cur, event.once, event.capture, event.passive, event.params);
     } else if (cur !== old) {
       old.fns = cur;
       on[name] = old;
@@ -8560,6 +9011,9 @@ function updateListeners (
 /*  */
 
 function mergeVNodeHook (def, hookKey, hook) {
+  if (def instanceof VNode) {
+    def = def.data.hook || (def.data.hook = {});
+  }
   var invoker;
   var oldHook = def[hookKey];
 
@@ -8698,20 +9152,29 @@ function isTextNode (node) {
 
 function normalizeArrayChildren (children, nestedIndex) {
   var res = [];
-  var i, c, last;
+  var i, c, lastIndex, last;
   for (i = 0; i < children.length; i++) {
     c = children[i];
     if (isUndef(c) || typeof c === 'boolean') { continue }
-    last = res[res.length - 1];
+    lastIndex = res.length - 1;
+    last = res[lastIndex];
     //  nested
     if (Array.isArray(c)) {
-      res.push.apply(res, normalizeArrayChildren(c, ((nestedIndex || '') + "_" + i)));
+      if (c.length > 0) {
+        c = normalizeArrayChildren(c, ((nestedIndex || '') + "_" + i));
+        // merge adjacent text nodes
+        if (isTextNode(c[0]) && isTextNode(last)) {
+          res[lastIndex] = createTextVNode(last.text + (c[0]).text);
+          c.shift();
+        }
+        res.push.apply(res, c);
+      }
     } else if (isPrimitive(c)) {
       if (isTextNode(last)) {
         // merge adjacent text nodes
         // this is necessary for SSR hydration because text nodes are
         // essentially merged when rendered to HTML strings
-        (last).text += String(c);
+        res[lastIndex] = createTextVNode(last.text + c);
       } else if (c !== '') {
         // convert primitive to vnode
         res.push(createTextVNode(c));
@@ -8719,7 +9182,7 @@ function normalizeArrayChildren (children, nestedIndex) {
     } else {
       if (isTextNode(c) && isTextNode(last)) {
         // merge adjacent text nodes
-        res[res.length - 1] = createTextVNode(last.text + c.text);
+        res[lastIndex] = createTextVNode(last.text + c.text);
       } else {
         // default key for nested array children (likely generated by v-for)
         if (isTrue(children._isVList) &&
@@ -8738,7 +9201,10 @@ function normalizeArrayChildren (children, nestedIndex) {
 /*  */
 
 function ensureCtor (comp, base) {
-  if (comp.__esModule && comp.default) {
+  if (
+    comp.__esModule ||
+    (hasSymbol && comp[Symbol.toStringTag] === 'Module')
+  ) {
     comp = comp.default;
   }
   return isObject(comp)
@@ -8863,11 +9329,17 @@ function resolveAsyncComponent (
 
 /*  */
 
+function isAsyncPlaceholder (node) {
+  return node.isComment && node.asyncFactory
+}
+
+/*  */
+
 function getFirstComponentChild (children) {
   if (Array.isArray(children)) {
     for (var i = 0; i < children.length; i++) {
       var c = children[i];
-      if (isDef(c) && isDef(c.componentOptions)) {
+      if (isDef(c) && (isDef(c.componentOptions) || isAsyncPlaceholder(c))) {
         return c
       }
     }
@@ -8890,8 +9362,8 @@ function initEvents (vm) {
 
 var target;
 
-function add (event, fn, once$$1) {
-  if (once$$1) {
+function add (event, fn, once) {
+  if (once) {
     target.$once(event, fn);
   } else {
     target.$on(event, fn);
@@ -8909,6 +9381,7 @@ function updateComponentListeners (
 ) {
   target = vm;
   updateListeners(listeners, oldListeners || {}, add, remove$1, vm);
+  target = undefined;
 }
 
 function eventsMixin (Vue) {
@@ -8954,8 +9427,8 @@ function eventsMixin (Vue) {
     }
     // array of events
     if (Array.isArray(event)) {
-      for (var i$1 = 0, l = event.length; i$1 < l; i$1++) {
-        this$1.$off(event[i$1], fn);
+      for (var i = 0, l = event.length; i < l; i++) {
+        this$1.$off(event[i], fn);
       }
       return vm
     }
@@ -8964,18 +9437,20 @@ function eventsMixin (Vue) {
     if (!cbs) {
       return vm
     }
-    if (arguments.length === 1) {
+    if (!fn) {
       vm._events[event] = null;
       return vm
     }
-    // specific handler
-    var cb;
-    var i = cbs.length;
-    while (i--) {
-      cb = cbs[i];
-      if (cb === fn || cb.fn === fn) {
-        cbs.splice(i, 1);
-        break
+    if (fn) {
+      // specific handler
+      var cb;
+      var i$1 = cbs.length;
+      while (i$1--) {
+        cb = cbs[i$1];
+        if (cb === fn || cb.fn === fn) {
+          cbs.splice(i$1, 1);
+          break
+        }
       }
     }
     return vm
@@ -9013,6 +9488,8 @@ function eventsMixin (Vue) {
 
 /*  */
 
+
+
 /**
  * Runtime helper for resolving raw children VNodes into a slot object.
  */
@@ -9024,34 +9501,40 @@ function resolveSlots (
   if (!children) {
     return slots
   }
-  var defaultSlot = [];
   for (var i = 0, l = children.length; i < l; i++) {
     var child = children[i];
+    var data = child.data;
+    // remove slot attribute if the node is resolved as a Vue slot node
+    if (data && data.attrs && data.attrs.slot) {
+      delete data.attrs.slot;
+    }
     // named slots should only be respected if the vnode was rendered in the
     // same context.
-    if ((child.context === context || child.functionalContext === context) &&
-      child.data && child.data.slot != null
+    if ((child.context === context || child.fnContext === context) &&
+      data && data.slot != null
     ) {
-      var name = child.data.slot;
+      var name = data.slot;
       var slot = (slots[name] || (slots[name] = []));
       if (child.tag === 'template') {
-        slot.push.apply(slot, child.children);
+        slot.push.apply(slot, child.children || []);
       } else {
         slot.push(child);
       }
     } else {
-      defaultSlot.push(child);
+      (slots.default || (slots.default = [])).push(child);
     }
   }
-  // ignore whitespace
-  if (!defaultSlot.every(isWhitespace)) {
-    slots.default = defaultSlot;
+  // ignore slots that contains only whitespace
+  for (var name$1 in slots) {
+    if (slots[name$1].every(isWhitespace)) {
+      delete slots[name$1];
+    }
   }
   return slots
 }
 
 function isWhitespace (node) {
-  return node.isComment || node.text === ' '
+  return (node.isComment && !node.asyncFactory) || node.text === ' '
 }
 
 function resolveScopedSlots (
@@ -9187,6 +9670,10 @@ function lifecycleMixin (Vue) {
     if (vm.$el) {
       vm.$el.__vue__ = null;
     }
+    // release circular reference (#6759)
+    if (vm.$vnode) {
+      vm.$vnode.parent = null;
+    }
   };
 }
 
@@ -9230,12 +9717,12 @@ function mountComponent (
       mark(startTag);
       var vnode = vm._render();
       mark(endTag);
-      measure((name + " render"), startTag, endTag);
+      measure(("vue " + name + " render"), startTag, endTag);
 
       mark(startTag);
       vm._update(vnode, hydrating);
       mark(endTag);
-      measure((name + " patch"), startTag, endTag);
+      measure(("vue " + name + " patch"), startTag, endTag);
     };
   } else {
     updateComponent = function () {
@@ -9243,7 +9730,10 @@ function mountComponent (
     };
   }
 
-  vm._watcher = new Watcher(vm, updateComponent, noop);
+  // we set this to vm._watcher inside the watcher's constructor
+  // since the watcher's initial patch may call $forceUpdate (e.g. inside child
+  // component's mounted hook), which relies on vm._watcher being already defined
+  new Watcher(vm, updateComponent, noop, null, true /* isRenderWatcher */);
   hydrating = false;
 
   // manually mounted instance, call mounted on self
@@ -9283,11 +9773,11 @@ function updateChildComponent (
   }
   vm.$options._renderChildren = renderChildren;
 
-  // update $attrs and $listensers hash
+  // update $attrs and $listeners hash
   // these are also reactive so they may trigger child update if the child
   // used them during render
-  vm.$attrs = parentVnode.data && parentVnode.data.attrs;
-  vm.$listeners = listeners;
+  vm.$attrs = (parentVnode.data && parentVnode.data.attrs) || emptyObject;
+  vm.$listeners = listeners || emptyObject;
 
   // update props
   if (propsData && vm.$options.props) {
@@ -9530,9 +10020,13 @@ var Watcher = function Watcher (
   vm,
   expOrFn,
   cb,
-  options
+  options,
+  isRenderWatcher
 ) {
   this.vm = vm;
+  if (isRenderWatcher) {
+    vm._watcher = this;
+  }
   vm._watchers.push(this);
   // options
   if (options) {
@@ -9726,40 +10220,6 @@ Watcher.prototype.teardown = function teardown () {
   }
 };
 
-/**
- * Recursively traverse an object to evoke all converted
- * getters, so that every nested property inside the object
- * is collected as a "deep" dependency.
- */
-var seenObjects = new _Set();
-function traverse (val) {
-  seenObjects.clear();
-  _traverse(val, seenObjects);
-}
-
-function _traverse (val, seen) {
-  var i, keys;
-  var isA = Array.isArray(val);
-  if ((!isA && !isObject(val)) || !Object.isExtensible(val)) {
-    return
-  }
-  if (val.__ob__) {
-    var depId = val.__ob__.dep.id;
-    if (seen.has(depId)) {
-      return
-    }
-    seen.add(depId);
-  }
-  if (isA) {
-    i = val.length;
-    while (i--) { _traverse(val[i], seen); }
-  } else {
-    keys = Object.keys(val);
-    i = keys.length;
-    while (i--) { _traverse(val[keys[i]], seen); }
-  }
-}
-
 /*  */
 
 var sharedPropertyDefinition = {
@@ -9795,16 +10255,6 @@ function initState (vm) {
   }
 }
 
-function checkOptionType (vm, name) {
-  var option = vm.$options[name];
-  if (!isPlainObject(option)) {
-    warn(
-      ("component option \"" + name + "\" should be an object."),
-      vm
-    );
-  }
-}
-
 function initProps (vm, propsOptions) {
   var propsData = vm.$options.propsData || {};
   var props = vm._props = {};
@@ -9819,13 +10269,15 @@ function initProps (vm, propsOptions) {
     var value = validateProp(key, propsOptions, propsData, vm);
     /* istanbul ignore else */
     if (true) {
-      if (isReservedAttribute(key) || config.isReservedAttr(key)) {
+      var hyphenatedKey = hyphenate(key);
+      if (isReservedAttribute(hyphenatedKey) ||
+          config.isReservedAttr(hyphenatedKey)) {
         warn(
-          ("\"" + key + "\" is a reserved attribute and cannot be used as component prop."),
+          ("\"" + hyphenatedKey + "\" is a reserved attribute and cannot be used as component prop."),
           vm
         );
       }
-      defineReactive$$1(props, key, value, function () {
+      defineReactive(props, key, value, function () {
         if (vm.$parent && !isUpdatingChildComponent) {
           warn(
             "Avoid mutating a prop directly since the value will be " +
@@ -9837,7 +10289,7 @@ function initProps (vm, propsOptions) {
         }
       });
     } else {
-      defineReactive$$1(props, key, value);
+      defineReactive(props, key, value);
     }
     // static props are already proxied on the component's prototype
     // during Vue.extend(). We only need to proxy props defined at
@@ -9874,7 +10326,7 @@ function initData (vm) {
     if (true) {
       if (methods && hasOwn(methods, key)) {
         warn(
-          ("method \"" + key + "\" has already been defined as a data property."),
+          ("Method \"" + key + "\" has already been defined as a data property."),
           vm
         );
       }
@@ -9895,7 +10347,7 @@ function initData (vm) {
 
 function getData (data, vm) {
   try {
-    return data.call(vm)
+    return data.call(vm, vm)
   } catch (e) {
     handleError(e, vm, "data()");
     return {}
@@ -9905,8 +10357,10 @@ function getData (data, vm) {
 var computedWatcherOptions = { lazy: true };
 
 function initComputed (vm, computed) {
-  "development" !== 'production' && checkOptionType(vm, 'computed');
+  // $flow-disable-line
   var watchers = vm._computedWatchers = Object.create(null);
+  // computed properties are just getters during SSR
+  var isSSR = isServerRendering();
 
   for (var key in computed) {
     var userDef = computed[key];
@@ -9917,8 +10371,16 @@ function initComputed (vm, computed) {
         vm
       );
     }
-    // create internal watcher for the computed property.
-    watchers[key] = new Watcher(vm, getter || noop, noop, computedWatcherOptions);
+
+    if (!isSSR) {
+      // create internal watcher for the computed property.
+      watchers[key] = new Watcher(
+        vm,
+        getter || noop,
+        noop,
+        computedWatcherOptions
+      );
+    }
 
     // component-defined computed properties are already defined on the
     // component prototype. We only need to define computed properties defined
@@ -9935,13 +10397,20 @@ function initComputed (vm, computed) {
   }
 }
 
-function defineComputed (target, key, userDef) {
+function defineComputed (
+  target,
+  key,
+  userDef
+) {
+  var shouldCache = !isServerRendering();
   if (typeof userDef === 'function') {
-    sharedPropertyDefinition.get = createComputedGetter(key);
+    sharedPropertyDefinition.get = shouldCache
+      ? createComputedGetter(key)
+      : userDef;
     sharedPropertyDefinition.set = noop;
   } else {
     sharedPropertyDefinition.get = userDef.get
-      ? userDef.cache !== false
+      ? shouldCache && userDef.cache !== false
         ? createComputedGetter(key)
         : userDef.get
       : noop;
@@ -9977,30 +10446,34 @@ function createComputedGetter (key) {
 }
 
 function initMethods (vm, methods) {
-  "development" !== 'production' && checkOptionType(vm, 'methods');
   var props = vm.$options.props;
   for (var key in methods) {
-    vm[key] = methods[key] == null ? noop : bind(methods[key], vm);
     if (true) {
       if (methods[key] == null) {
         warn(
-          "method \"" + key + "\" has an undefined value in the component definition. " +
+          "Method \"" + key + "\" has an undefined value in the component definition. " +
           "Did you reference the function correctly?",
           vm
         );
       }
       if (props && hasOwn(props, key)) {
         warn(
-          ("method \"" + key + "\" has already been defined as a prop."),
+          ("Method \"" + key + "\" has already been defined as a prop."),
           vm
         );
       }
+      if ((key in vm) && isReserved(key)) {
+        warn(
+          "Method \"" + key + "\" conflicts with an existing Vue instance method. " +
+          "Avoid defining component methods that start with _ or $."
+        );
+      }
     }
+    vm[key] = methods[key] == null ? noop : bind(methods[key], vm);
   }
 }
 
 function initWatch (vm, watch) {
-  "development" !== 'production' && checkOptionType(vm, 'watch');
   for (var key in watch) {
     var handler = watch[key];
     if (Array.isArray(handler)) {
@@ -10094,7 +10567,7 @@ function initInjections (vm) {
     Object.keys(result).forEach(function (key) {
       /* istanbul ignore else */
       if (true) {
-        defineReactive$$1(vm, key, result[key], function () {
+        defineReactive(vm, key, result[key], function () {
           warn(
             "Avoid mutating an injected value directly since the changes will be " +
             "overwritten whenever the provided component re-renders. " +
@@ -10103,7 +10576,7 @@ function initInjections (vm) {
           );
         });
       } else {
-        defineReactive$$1(vm, key, result[key]);
+        defineReactive(vm, key, result[key]);
       }
     });
     observerState.shouldConvert = true;
@@ -10115,12 +10588,15 @@ function resolveInject (inject, vm) {
     // inject is :any because flow is not smart enough to figure out cached
     var result = Object.create(null);
     var keys = hasSymbol
-        ? Reflect.ownKeys(inject)
-        : Object.keys(inject);
+      ? Reflect.ownKeys(inject).filter(function (key) {
+        /* istanbul ignore next */
+        return Object.getOwnPropertyDescriptor(inject, key).enumerable
+      })
+      : Object.keys(inject);
 
     for (var i = 0; i < keys.length; i++) {
       var key = keys[i];
-      var provideKey = inject[key];
+      var provideKey = inject[key].from;
       var source = vm;
       while (source) {
         if (source._provided && provideKey in source._provided) {
@@ -10129,8 +10605,15 @@ function resolveInject (inject, vm) {
         }
         source = source.$parent;
       }
-      if ("development" !== 'production' && !source) {
-        warn(("Injection \"" + key + "\" not found"), vm);
+      if (!source) {
+        if ('default' in inject[key]) {
+          var provideDefault = inject[key].default;
+          result[key] = typeof provideDefault === 'function'
+            ? provideDefault.call(vm)
+            : provideDefault;
+        } else if (true) {
+          warn(("Injection \"" + key + "\" not found"), vm);
+        }
       }
     }
     return result
@@ -10139,43 +10622,365 @@ function resolveInject (inject, vm) {
 
 /*  */
 
+/**
+ * Runtime helper for rendering v-for lists.
+ */
+function renderList (
+  val,
+  render
+) {
+  var ret, i, l, keys, key;
+  if (Array.isArray(val) || typeof val === 'string') {
+    ret = new Array(val.length);
+    for (i = 0, l = val.length; i < l; i++) {
+      ret[i] = render(val[i], i);
+    }
+  } else if (typeof val === 'number') {
+    ret = new Array(val);
+    for (i = 0; i < val; i++) {
+      ret[i] = render(i + 1, i);
+    }
+  } else if (isObject(val)) {
+    keys = Object.keys(val);
+    ret = new Array(keys.length);
+    for (i = 0, l = keys.length; i < l; i++) {
+      key = keys[i];
+      ret[i] = render(val[key], key, i);
+    }
+  }
+  if (isDef(ret)) {
+    (ret)._isVList = true;
+  }
+  return ret
+}
+
+/*  */
+
+/**
+ * Runtime helper for rendering <slot>
+ */
+function renderSlot (
+  name,
+  fallback,
+  props,
+  bindObject
+) {
+  var scopedSlotFn = this.$scopedSlots[name];
+  var nodes;
+  if (scopedSlotFn) { // scoped slot
+    props = props || {};
+    if (bindObject) {
+      if ("development" !== 'production' && !isObject(bindObject)) {
+        warn(
+          'slot v-bind without argument expects an Object',
+          this
+        );
+      }
+      props = extend(extend({}, bindObject), props);
+    }
+    nodes = scopedSlotFn(props) || fallback;
+  } else {
+    var slotNodes = this.$slots[name];
+    // warn duplicate slot usage
+    if (slotNodes) {
+      if ("development" !== 'production' && slotNodes._rendered) {
+        warn(
+          "Duplicate presence of slot \"" + name + "\" found in the same render tree " +
+          "- this will likely cause render errors.",
+          this
+        );
+      }
+      slotNodes._rendered = true;
+    }
+    nodes = slotNodes || fallback;
+  }
+
+  var target = props && props.slot;
+  if (target) {
+    return this.$createElement('template', { slot: target }, nodes)
+  } else {
+    return nodes
+  }
+}
+
+/*  */
+
+/**
+ * Runtime helper for resolving filters
+ */
+function resolveFilter (id) {
+  return resolveAsset(this.$options, 'filters', id, true) || identity
+}
+
+/*  */
+
+/**
+ * Runtime helper for checking keyCodes from config.
+ * exposed as Vue.prototype._k
+ * passing in eventKeyName as last argument separately for backwards compat
+ */
+function checkKeyCodes (
+  eventKeyCode,
+  key,
+  builtInAlias,
+  eventKeyName
+) {
+  var keyCodes = config.keyCodes[key] || builtInAlias;
+  if (keyCodes) {
+    if (Array.isArray(keyCodes)) {
+      return keyCodes.indexOf(eventKeyCode) === -1
+    } else {
+      return keyCodes !== eventKeyCode
+    }
+  } else if (eventKeyName) {
+    return hyphenate(eventKeyName) !== key
+  }
+}
+
+/*  */
+
+/**
+ * Runtime helper for merging v-bind="object" into a VNode's data.
+ */
+function bindObjectProps (
+  data,
+  tag,
+  value,
+  asProp,
+  isSync
+) {
+  if (value) {
+    if (!isObject(value)) {
+      "development" !== 'production' && warn(
+        'v-bind without argument expects an Object or Array value',
+        this
+      );
+    } else {
+      if (Array.isArray(value)) {
+        value = toObject(value);
+      }
+      var hash;
+      var loop = function ( key ) {
+        if (
+          key === 'class' ||
+          key === 'style' ||
+          isReservedAttribute(key)
+        ) {
+          hash = data;
+        } else {
+          var type = data.attrs && data.attrs.type;
+          hash = asProp || config.mustUseProp(tag, type, key)
+            ? data.domProps || (data.domProps = {})
+            : data.attrs || (data.attrs = {});
+        }
+        if (!(key in hash)) {
+          hash[key] = value[key];
+
+          if (isSync) {
+            var on = data.on || (data.on = {});
+            on[("update:" + key)] = function ($event) {
+              value[key] = $event;
+            };
+          }
+        }
+      };
+
+      for (var key in value) loop( key );
+    }
+  }
+  return data
+}
+
+/*  */
+
+/**
+ * Runtime helper for rendering static trees.
+ */
+function renderStatic (
+  index,
+  isInFor
+) {
+  var cached = this._staticTrees || (this._staticTrees = []);
+  var tree = cached[index];
+  // if has already-rendered static tree and not inside v-for,
+  // we can reuse the same tree by doing a shallow clone.
+  if (tree && !isInFor) {
+    return Array.isArray(tree)
+      ? cloneVNodes(tree)
+      : cloneVNode(tree)
+  }
+  // otherwise, render a fresh tree.
+  tree = cached[index] = this.$options.staticRenderFns[index].call(
+    this._renderProxy,
+    null,
+    this // for render fns generated for functional component templates
+  );
+  markStatic(tree, ("__static__" + index), false);
+  return tree
+}
+
+/**
+ * Runtime helper for v-once.
+ * Effectively it means marking the node as static with a unique key.
+ */
+function markOnce (
+  tree,
+  index,
+  key
+) {
+  markStatic(tree, ("__once__" + index + (key ? ("_" + key) : "")), true);
+  return tree
+}
+
+function markStatic (
+  tree,
+  key,
+  isOnce
+) {
+  if (Array.isArray(tree)) {
+    for (var i = 0; i < tree.length; i++) {
+      if (tree[i] && typeof tree[i] !== 'string') {
+        markStaticNode(tree[i], (key + "_" + i), isOnce);
+      }
+    }
+  } else {
+    markStaticNode(tree, key, isOnce);
+  }
+}
+
+function markStaticNode (node, key, isOnce) {
+  node.isStatic = true;
+  node.key = key;
+  node.isOnce = isOnce;
+}
+
+/*  */
+
+function bindObjectListeners (data, value) {
+  if (value) {
+    if (!isPlainObject(value)) {
+      "development" !== 'production' && warn(
+        'v-on without argument expects an Object value',
+        this
+      );
+    } else {
+      var on = data.on = data.on ? extend({}, data.on) : {};
+      for (var key in value) {
+        var existing = on[key];
+        var ours = value[key];
+        on[key] = existing ? [].concat(existing, ours) : ours;
+      }
+    }
+  }
+  return data
+}
+
+/*  */
+
+function installRenderHelpers (target) {
+  target._o = markOnce;
+  target._n = toNumber;
+  target._s = toString;
+  target._l = renderList;
+  target._t = renderSlot;
+  target._q = looseEqual;
+  target._i = looseIndexOf;
+  target._m = renderStatic;
+  target._f = resolveFilter;
+  target._k = checkKeyCodes;
+  target._b = bindObjectProps;
+  target._v = createTextVNode;
+  target._e = createEmptyVNode;
+  target._u = resolveScopedSlots;
+  target._g = bindObjectListeners;
+}
+
+/*  */
+
+function FunctionalRenderContext (
+  data,
+  props,
+  children,
+  parent,
+  Ctor
+) {
+  var options = Ctor.options;
+  this.data = data;
+  this.props = props;
+  this.children = children;
+  this.parent = parent;
+  this.listeners = data.on || emptyObject;
+  this.injections = resolveInject(options.inject, parent);
+  this.slots = function () { return resolveSlots(children, parent); };
+
+  // ensure the createElement function in functional components
+  // gets a unique context - this is necessary for correct named slot check
+  var contextVm = Object.create(parent);
+  var isCompiled = isTrue(options._compiled);
+  var needNormalization = !isCompiled;
+
+  // support for compiled functional template
+  if (isCompiled) {
+    // exposing $options for renderStatic()
+    this.$options = options;
+    // pre-resolve slots for renderSlot()
+    this.$slots = this.slots();
+    this.$scopedSlots = data.scopedSlots || emptyObject;
+  }
+
+  if (options._scopeId) {
+    this._c = function (a, b, c, d) {
+      var vnode = createElement(contextVm, a, b, c, d, needNormalization);
+      if (vnode) {
+        vnode.fnScopeId = options._scopeId;
+        vnode.fnContext = parent;
+      }
+      return vnode
+    };
+  } else {
+    this._c = function (a, b, c, d) { return createElement(contextVm, a, b, c, d, needNormalization); };
+  }
+}
+
+installRenderHelpers(FunctionalRenderContext.prototype);
+
 function createFunctionalComponent (
   Ctor,
   propsData,
   data,
-  context,
+  contextVm,
   children
 ) {
+  var options = Ctor.options;
   var props = {};
-  var propOptions = Ctor.options.props;
+  var propOptions = options.props;
   if (isDef(propOptions)) {
     for (var key in propOptions) {
-      props[key] = validateProp(key, propOptions, propsData || {});
+      props[key] = validateProp(key, propOptions, propsData || emptyObject);
     }
   } else {
     if (isDef(data.attrs)) { mergeProps(props, data.attrs); }
     if (isDef(data.props)) { mergeProps(props, data.props); }
   }
-  // ensure the createElement function in functional components
-  // gets a unique context - this is necessary for correct named slot check
-  var _context = Object.create(context);
-  var h = function (a, b, c, d) { return createElement(_context, a, b, c, d, true); };
-  var vnode = Ctor.options.render.call(null, h, {
-    data: data,
-    props: props,
-    children: children,
-    parent: context,
-    listeners: data.on || {},
-    injections: resolveInject(Ctor.options.inject, context),
-    slots: function () { return resolveSlots(children, context); }
-  });
+
+  var renderContext = new FunctionalRenderContext(
+    data,
+    props,
+    children,
+    contextVm,
+    Ctor
+  );
+
+  var vnode = options.render.call(null, renderContext._c, renderContext);
+
   if (vnode instanceof VNode) {
-    vnode.functionalContext = context;
-    vnode.functionalOptions = Ctor.options;
+    vnode.fnContext = contextVm;
+    vnode.fnOptions = options;
     if (data.slot) {
       (vnode.data || (vnode.data = {})).slot = data.slot;
     }
   }
+
   return vnode
 }
 
@@ -10184,6 +10989,25 @@ function mergeProps (to, from) {
     to[camelize(key)] = from[key];
   }
 }
+
+/*  */
+
+
+
+
+// Register the component hook to weex native render engine.
+// The hook will be triggered by native, not javascript.
+
+
+// Updates the state of the component to weex native render engine.
+
+/*  */
+
+// https://github.com/Hanks10100/weex-native-directive/tree/master/component
+
+// listening on native callback
+
+/*  */
 
 /*  */
 
@@ -10352,6 +11176,11 @@ function createComponent (
     { Ctor: Ctor, propsData: propsData, listeners: listeners, tag: tag, children: children },
     asyncFactory
   );
+
+  // Weex specific: invoke recycle-list optimized @render function for
+  // extracting cell-slot template.
+  // https://github.com/Hanks10100/weex-native-directive/tree/master/component
+  /* istanbul ignore if */
   return vnode
 }
 
@@ -10361,15 +11190,10 @@ function createComponentInstanceForVnode (
   parentElm,
   refElm
 ) {
-  var vnodeComponentOptions = vnode.componentOptions;
   var options = {
     _isComponent: true,
     parent: parent,
-    propsData: vnodeComponentOptions.propsData,
-    _componentTag: vnodeComponentOptions.tag,
     _parentVnode: vnode,
-    _parentListeners: vnodeComponentOptions.listeners,
-    _renderChildren: vnodeComponentOptions.children,
     _parentElm: parentElm || null,
     _refElm: refElm || null
   };
@@ -10379,7 +11203,7 @@ function createComponentInstanceForVnode (
     options.render = inlineTemplate.render;
     options.staticRenderFns = inlineTemplate.staticRenderFns;
   }
-  return new vnodeComponentOptions.Ctor(options)
+  return new vnode.componentOptions.Ctor(options)
 }
 
 function mergeHooks (data) {
@@ -10467,11 +11291,13 @@ function _createElement (
   if ("development" !== 'production' &&
     isDef(data) && isDef(data.key) && !isPrimitive(data.key)
   ) {
-    warn(
-      'Avoid using non-primitive value as key, ' +
-      'use string/number value instead.',
-      context
-    );
+    {
+      warn(
+        'Avoid using non-primitive value as key, ' +
+        'use string/number value instead.',
+        context
+      );
+    }
   }
   // support single function children as default scoped slot
   if (Array.isArray(children) &&
@@ -10489,7 +11315,7 @@ function _createElement (
   var vnode, ns;
   if (typeof tag === 'string') {
     var Ctor;
-    ns = config.getTagNamespace(tag);
+    ns = (context.$vnode && context.$vnode.ns) || config.getTagNamespace(tag);
     if (config.isReservedTag(tag)) {
       // platform built-in elements
       vnode = new VNode(
@@ -10520,258 +11346,32 @@ function _createElement (
   }
 }
 
-function applyNS (vnode, ns) {
+function applyNS (vnode, ns, force) {
   vnode.ns = ns;
   if (vnode.tag === 'foreignObject') {
     // use default namespace inside foreignObject
-    return
+    ns = undefined;
+    force = true;
   }
   if (isDef(vnode.children)) {
     for (var i = 0, l = vnode.children.length; i < l; i++) {
       var child = vnode.children[i];
-      if (isDef(child.tag) && isUndef(child.ns)) {
-        applyNS(child, ns);
+      if (isDef(child.tag) && (isUndef(child.ns) || isTrue(force))) {
+        applyNS(child, ns, force);
       }
     }
   }
-}
-
-/*  */
-
-/**
- * Runtime helper for rendering v-for lists.
- */
-function renderList (
-  val,
-  render
-) {
-  var ret, i, l, keys, key;
-  if (Array.isArray(val) || typeof val === 'string') {
-    ret = new Array(val.length);
-    for (i = 0, l = val.length; i < l; i++) {
-      ret[i] = render(val[i], i);
-    }
-  } else if (typeof val === 'number') {
-    ret = new Array(val);
-    for (i = 0; i < val; i++) {
-      ret[i] = render(i + 1, i);
-    }
-  } else if (isObject(val)) {
-    keys = Object.keys(val);
-    ret = new Array(keys.length);
-    for (i = 0, l = keys.length; i < l; i++) {
-      key = keys[i];
-      ret[i] = render(val[key], key, i);
-    }
-  }
-  if (isDef(ret)) {
-    (ret)._isVList = true;
-  }
-  return ret
-}
-
-/*  */
-
-/**
- * Runtime helper for rendering <slot>
- */
-function renderSlot (
-  name,
-  fallback,
-  props,
-  bindObject
-) {
-  var scopedSlotFn = this.$scopedSlots[name];
-  if (scopedSlotFn) { // scoped slot
-    props = props || {};
-    if (bindObject) {
-      props = extend(extend({}, bindObject), props);
-    }
-    return scopedSlotFn(props) || fallback
-  } else {
-    var slotNodes = this.$slots[name];
-    // warn duplicate slot usage
-    if (slotNodes && "development" !== 'production') {
-      slotNodes._rendered && warn(
-        "Duplicate presence of slot \"" + name + "\" found in the same render tree " +
-        "- this will likely cause render errors.",
-        this
-      );
-      slotNodes._rendered = true;
-    }
-    return slotNodes || fallback
-  }
-}
-
-/*  */
-
-/**
- * Runtime helper for resolving filters
- */
-function resolveFilter (id) {
-  return resolveAsset(this.$options, 'filters', id, true) || identity
-}
-
-/*  */
-
-/**
- * Runtime helper for checking keyCodes from config.
- */
-function checkKeyCodes (
-  eventKeyCode,
-  key,
-  builtInAlias
-) {
-  var keyCodes = config.keyCodes[key] || builtInAlias;
-  if (Array.isArray(keyCodes)) {
-    return keyCodes.indexOf(eventKeyCode) === -1
-  } else {
-    return keyCodes !== eventKeyCode
-  }
-}
-
-/*  */
-
-/**
- * Runtime helper for merging v-bind="object" into a VNode's data.
- */
-function bindObjectProps (
-  data,
-  tag,
-  value,
-  asProp,
-  isSync
-) {
-  if (value) {
-    if (!isObject(value)) {
-      "development" !== 'production' && warn(
-        'v-bind without argument expects an Object or Array value',
-        this
-      );
-    } else {
-      if (Array.isArray(value)) {
-        value = toObject(value);
-      }
-      var hash;
-      var loop = function ( key ) {
-        if (
-          key === 'class' ||
-          key === 'style' ||
-          isReservedAttribute(key)
-        ) {
-          hash = data;
-        } else {
-          var type = data.attrs && data.attrs.type;
-          hash = asProp || config.mustUseProp(tag, type, key)
-            ? data.domProps || (data.domProps = {})
-            : data.attrs || (data.attrs = {});
-        }
-        if (!(key in hash)) {
-          hash[key] = value[key];
-
-          if (isSync) {
-            var on = data.on || (data.on = {});
-            on[("update:" + key)] = function ($event) {
-              value[key] = $event;
-            };
-          }
-        }
-      };
-
-      for (var key in value) loop( key );
-    }
-  }
-  return data
-}
-
-/*  */
-
-/**
- * Runtime helper for rendering static trees.
- */
-function renderStatic (
-  index,
-  isInFor
-) {
-  var tree = this._staticTrees[index];
-  // if has already-rendered static tree and not inside v-for,
-  // we can reuse the same tree by doing a shallow clone.
-  if (tree && !isInFor) {
-    return Array.isArray(tree)
-      ? cloneVNodes(tree)
-      : cloneVNode(tree)
-  }
-  // otherwise, render a fresh tree.
-  tree = this._staticTrees[index] =
-    this.$options.staticRenderFns[index].call(this._renderProxy);
-  markStatic(tree, ("__static__" + index), false);
-  return tree
-}
-
-/**
- * Runtime helper for v-once.
- * Effectively it means marking the node as static with a unique key.
- */
-function markOnce (
-  tree,
-  index,
-  key
-) {
-  markStatic(tree, ("__once__" + index + (key ? ("_" + key) : "")), true);
-  return tree
-}
-
-function markStatic (
-  tree,
-  key,
-  isOnce
-) {
-  if (Array.isArray(tree)) {
-    for (var i = 0; i < tree.length; i++) {
-      if (tree[i] && typeof tree[i] !== 'string') {
-        markStaticNode(tree[i], (key + "_" + i), isOnce);
-      }
-    }
-  } else {
-    markStaticNode(tree, key, isOnce);
-  }
-}
-
-function markStaticNode (node, key, isOnce) {
-  node.isStatic = true;
-  node.key = key;
-  node.isOnce = isOnce;
-}
-
-/*  */
-
-function bindObjectListeners (data, value) {
-  if (value) {
-    if (!isPlainObject(value)) {
-      "development" !== 'production' && warn(
-        'v-on without argument expects an Object value',
-        this
-      );
-    } else {
-      var on = data.on = data.on ? extend({}, data.on) : {};
-      for (var key in value) {
-        var existing = on[key];
-        var ours = value[key];
-        on[key] = existing ? [].concat(ours, existing) : ours;
-      }
-    }
-  }
-  return data
 }
 
 /*  */
 
 function initRender (vm) {
   vm._vnode = null; // the root of the child tree
-  vm._staticTrees = null;
-  var parentVnode = vm.$vnode = vm.$options._parentVnode; // the placeholder node in parent tree
+  vm._staticTrees = null; // v-once cached trees
+  var options = vm.$options;
+  var parentVnode = vm.$vnode = options._parentVnode; // the placeholder node in parent tree
   var renderContext = parentVnode && parentVnode.context;
-  vm.$slots = resolveSlots(vm.$options._renderChildren, renderContext);
+  vm.$slots = resolveSlots(options._renderChildren, renderContext);
   vm.$scopedSlots = emptyObject;
   // bind the createElement fn to this instance
   // so that we get proper render context inside it.
@@ -10785,21 +11385,25 @@ function initRender (vm) {
   // $attrs & $listeners are exposed for easier HOC creation.
   // they need to be reactive so that HOCs using them are always updated
   var parentData = parentVnode && parentVnode.data;
+
   /* istanbul ignore else */
   if (true) {
-    defineReactive$$1(vm, '$attrs', parentData && parentData.attrs, function () {
+    defineReactive(vm, '$attrs', parentData && parentData.attrs || emptyObject, function () {
       !isUpdatingChildComponent && warn("$attrs is readonly.", vm);
     }, true);
-    defineReactive$$1(vm, '$listeners', vm.$options._parentListeners, function () {
+    defineReactive(vm, '$listeners', options._parentListeners || emptyObject, function () {
       !isUpdatingChildComponent && warn("$listeners is readonly.", vm);
     }, true);
   } else {
-    defineReactive$$1(vm, '$attrs', parentData && parentData.attrs, null, true);
-    defineReactive$$1(vm, '$listeners', vm.$options._parentListeners, null, true);
+    defineReactive(vm, '$attrs', parentData && parentData.attrs || emptyObject, null, true);
+    defineReactive(vm, '$listeners', options._parentListeners || emptyObject, null, true);
   }
 }
 
 function renderMixin (Vue) {
+  // install runtime convenience helpers
+  installRenderHelpers(Vue.prototype);
+
   Vue.prototype.$nextTick = function (fn) {
     return nextTick(fn, this)
   };
@@ -10808,21 +11412,23 @@ function renderMixin (Vue) {
     var vm = this;
     var ref = vm.$options;
     var render = ref.render;
-    var staticRenderFns = ref.staticRenderFns;
     var _parentVnode = ref._parentVnode;
 
     if (vm._isMounted) {
-      // clone slot nodes on re-renders
+      // if the parent didn't update, the slot nodes will be the ones from
+      // last render. They need to be cloned to ensure "freshness" for this render.
       for (var key in vm.$slots) {
-        vm.$slots[key] = cloneVNodes(vm.$slots[key]);
+        var slot = vm.$slots[key];
+        // _rendered is a flag added by renderSlot, but may not be present
+        // if the slot is passed from manually written render functions
+        if (slot._rendered || (slot[0] && slot[0].elm)) {
+          vm.$slots[key] = cloneVNodes(slot, true /* deep */);
+        }
       }
     }
 
     vm.$scopedSlots = (_parentVnode && _parentVnode.data.scopedSlots) || emptyObject;
 
-    if (staticRenderFns && !vm._staticTrees) {
-      vm._staticTrees = [];
-    }
     // set parent vnode. this allows render functions to have access
     // to the data on the placeholder node.
     vm.$vnode = _parentVnode;
@@ -10831,14 +11437,21 @@ function renderMixin (Vue) {
     try {
       vnode = render.call(vm._renderProxy, vm.$createElement);
     } catch (e) {
-      handleError(e, vm, "render function");
+      handleError(e, vm, "render");
       // return error render result,
       // or previous vnode to prevent render error causing blank component
       /* istanbul ignore else */
       if (true) {
-        vnode = vm.$options.renderError
-          ? vm.$options.renderError.call(vm._renderProxy, vm.$createElement, e)
-          : vm._vnode;
+        if (vm.$options.renderError) {
+          try {
+            vnode = vm.$options.renderError.call(vm._renderProxy, vm.$createElement, e);
+          } catch (e) {
+            handleError(e, vm, "renderError");
+            vnode = vm._vnode;
+          }
+        } else {
+          vnode = vm._vnode;
+        }
       } else {
         vnode = vm._vnode;
       }
@@ -10858,25 +11471,6 @@ function renderMixin (Vue) {
     vnode.parent = _parentVnode;
     return vnode
   };
-
-  // internal render helpers.
-  // these are exposed on the instance prototype to reduce generated render
-  // code size.
-  Vue.prototype._o = markOnce;
-  Vue.prototype._n = toNumber;
-  Vue.prototype._s = toString;
-  Vue.prototype._l = renderList;
-  Vue.prototype._t = renderSlot;
-  Vue.prototype._q = looseEqual;
-  Vue.prototype._i = looseIndexOf;
-  Vue.prototype._m = renderStatic;
-  Vue.prototype._f = resolveFilter;
-  Vue.prototype._k = checkKeyCodes;
-  Vue.prototype._b = bindObjectProps;
-  Vue.prototype._v = createTextVNode;
-  Vue.prototype._e = createEmptyVNode;
-  Vue.prototype._u = resolveScopedSlots;
-  Vue.prototype._g = bindObjectListeners;
 }
 
 /*  */
@@ -10892,7 +11486,7 @@ function initMixin (Vue) {
     var startTag, endTag;
     /* istanbul ignore if */
     if ("development" !== 'production' && config.performance && mark) {
-      startTag = "vue-perf-init:" + (vm._uid);
+      startTag = "vue-perf-start:" + (vm._uid);
       endTag = "vue-perf-end:" + (vm._uid);
       mark(startTag);
     }
@@ -10933,7 +11527,7 @@ function initMixin (Vue) {
     if ("development" !== 'production' && config.performance && mark) {
       vm._name = formatComponentName(vm, false);
       mark(endTag);
-      measure(((vm._name) + " init"), startTag, endTag);
+      measure(("vue " + (vm._name) + " init"), startTag, endTag);
     }
 
     if (vm.$options.el) {
@@ -10945,14 +11539,18 @@ function initMixin (Vue) {
 function initInternalComponent (vm, options) {
   var opts = vm.$options = Object.create(vm.constructor.options);
   // doing this because it's faster than dynamic enumeration.
+  var parentVnode = options._parentVnode;
   opts.parent = options.parent;
-  opts.propsData = options.propsData;
-  opts._parentVnode = options._parentVnode;
-  opts._parentListeners = options._parentListeners;
-  opts._renderChildren = options._renderChildren;
-  opts._componentTag = options._componentTag;
+  opts._parentVnode = parentVnode;
   opts._parentElm = options._parentElm;
   opts._refElm = options._refElm;
+
+  var vnodeComponentOptions = parentVnode.componentOptions;
+  opts.propsData = vnodeComponentOptions.propsData;
+  opts._parentListeners = vnodeComponentOptions.listeners;
+  opts._renderChildren = vnodeComponentOptions.children;
+  opts._componentTag = vnodeComponentOptions.tag;
+
   if (options.render) {
     opts.render = options.render;
     opts.staticRenderFns = options.staticRenderFns;
@@ -11086,14 +11684,8 @@ function initExtend (Vue) {
     }
 
     var name = extendOptions.name || Super.options.name;
-    if (true) {
-      if (!/^[a-zA-Z][\w-]*$/.test(name)) {
-        warn(
-          'Invalid component name: "' + name + '". Component names ' +
-          'can only contain alphanumeric characters and the hyphen, ' +
-          'and must start with a letter.'
-        );
-      }
+    if ("development" !== 'production' && name) {
+      validateComponentName(name);
     }
 
     var Sub = function VueComponent (options) {
@@ -11175,13 +11767,8 @@ function initAssetRegisters (Vue) {
         return this.options[type + 's'][id]
       } else {
         /* istanbul ignore if */
-        if (true) {
-          if (type === 'component' && config.isReservedTag(id)) {
-            warn(
-              'Do not use built-in or reserved HTML elements as component ' +
-              'id: ' + id
-            );
-          }
+        if ("development" !== 'production' && type === 'component') {
+          validateComponentName(id);
         }
         if (type === 'component' && isPlainObject(definition)) {
           definition.name = definition.name || id;
@@ -11199,8 +11786,6 @@ function initAssetRegisters (Vue) {
 
 /*  */
 
-var patternTypes = [String, RegExp, Array];
-
 function getComponentName (opts) {
   return opts && (opts.Ctor.options.name || opts.tag)
 }
@@ -11217,26 +11802,36 @@ function matches (pattern, name) {
   return false
 }
 
-function pruneCache (cache, current, filter) {
+function pruneCache (keepAliveInstance, filter) {
+  var cache = keepAliveInstance.cache;
+  var keys = keepAliveInstance.keys;
+  var _vnode = keepAliveInstance._vnode;
   for (var key in cache) {
     var cachedNode = cache[key];
     if (cachedNode) {
       var name = getComponentName(cachedNode.componentOptions);
       if (name && !filter(name)) {
-        if (cachedNode !== current) {
-          pruneCacheEntry(cachedNode);
-        }
-        cache[key] = null;
+        pruneCacheEntry(cache, key, keys, _vnode);
       }
     }
   }
 }
 
-function pruneCacheEntry (vnode) {
-  if (vnode) {
-    vnode.componentInstance.$destroy();
+function pruneCacheEntry (
+  cache,
+  key,
+  keys,
+  current
+) {
+  var cached$$1 = cache[key];
+  if (cached$$1 && (!current || cached$$1.tag !== current.tag)) {
+    cached$$1.componentInstance.$destroy();
   }
+  cache[key] = null;
+  remove(keys, key);
 }
+
+var patternTypes = [String, RegExp, Array];
 
 var KeepAlive = {
   name: 'keep-alive',
@@ -11244,55 +11839,76 @@ var KeepAlive = {
 
   props: {
     include: patternTypes,
-    exclude: patternTypes
+    exclude: patternTypes,
+    max: [String, Number]
   },
 
   created: function created () {
     this.cache = Object.create(null);
+    this.keys = [];
   },
 
   destroyed: function destroyed () {
     var this$1 = this;
 
     for (var key in this$1.cache) {
-      pruneCacheEntry(this$1.cache[key]);
+      pruneCacheEntry(this$1.cache, key, this$1.keys);
     }
   },
 
   watch: {
     include: function include (val) {
-      pruneCache(this.cache, this._vnode, function (name) { return matches(val, name); });
+      pruneCache(this, function (name) { return matches(val, name); });
     },
     exclude: function exclude (val) {
-      pruneCache(this.cache, this._vnode, function (name) { return !matches(val, name); });
+      pruneCache(this, function (name) { return !matches(val, name); });
     }
   },
 
   render: function render () {
-    var vnode = getFirstComponentChild(this.$slots.default);
+    var slot = this.$slots.default;
+    var vnode = getFirstComponentChild(slot);
     var componentOptions = vnode && vnode.componentOptions;
     if (componentOptions) {
       // check pattern
       var name = getComponentName(componentOptions);
-      if (name && (
-        (this.include && !matches(this.include, name)) ||
-        (this.exclude && matches(this.exclude, name))
-      )) {
+      var ref = this;
+      var include = ref.include;
+      var exclude = ref.exclude;
+      if (
+        // not included
+        (include && (!name || !matches(include, name))) ||
+        // excluded
+        (exclude && name && matches(exclude, name))
+      ) {
         return vnode
       }
+
+      var ref$1 = this;
+      var cache = ref$1.cache;
+      var keys = ref$1.keys;
       var key = vnode.key == null
         // same constructor may get registered as different local components
         // so cid alone is not enough (#3269)
         ? componentOptions.Ctor.cid + (componentOptions.tag ? ("::" + (componentOptions.tag)) : '')
         : vnode.key;
-      if (this.cache[key]) {
-        vnode.componentInstance = this.cache[key].componentInstance;
+      if (cache[key]) {
+        vnode.componentInstance = cache[key].componentInstance;
+        // make current key freshest
+        remove(keys, key);
+        keys.push(key);
       } else {
-        this.cache[key] = vnode;
+        cache[key] = vnode;
+        keys.push(key);
+        // prune oldest entry
+        if (this.max && keys.length > parseInt(this.max)) {
+          pruneCacheEntry(cache, keys[0], keys, this._vnode);
+        }
       }
+
       vnode.data.keepAlive = true;
     }
-    return vnode
+    return vnode || (slot && slot[0])
   }
 };
 
@@ -11322,7 +11938,7 @@ function initGlobalAPI (Vue) {
     warn: warn,
     extend: extend,
     mergeOptions: mergeOptions,
-    defineReactive: defineReactive$$1
+    defineReactive: defineReactive
   };
 
   Vue.set = set;
@@ -11359,7 +11975,7 @@ Object.defineProperty(Vue$3.prototype, '$ssrContext', {
   }
 });
 
-Vue$3.version = '2.4.2';
+Vue$3.version = '2.5.13';
 
 /*  */
 
@@ -11368,7 +11984,7 @@ Vue$3.version = '2.4.2';
 var isReservedAttr = makeMap('style,class');
 
 // attributes that should be using props for binding
-var acceptValue = makeMap('input,textarea,option,select');
+var acceptValue = makeMap('input,textarea,option,select,progress');
 var mustUseProp = function (tag, type, attr) {
   return (
     (attr === 'value' && acceptValue(tag)) && type !== 'button' ||
@@ -11411,12 +12027,12 @@ function genClassForVnode (vnode) {
   var childNode = vnode;
   while (isDef(childNode.componentInstance)) {
     childNode = childNode.componentInstance._vnode;
-    if (childNode.data) {
+    if (childNode && childNode.data) {
       data = mergeClassData(childNode.data, data);
     }
   }
   while (isDef(parentNode = parentNode.parent)) {
-    if (parentNode.data) {
+    if (parentNode && parentNode.data) {
       data = mergeClassData(data, parentNode.data);
     }
   }
@@ -11556,6 +12172,8 @@ function isUnknownElement (tag) {
     return (unknownElementCache[tag] = /HTMLUnknownElement/.test(el.toString()))
   }
 }
+
+var isTextInputType = makeMap('text,number,password,search,email,tel,url');
 
 /*  */
 
@@ -11703,8 +12321,6 @@ function registerRef (vnode, isRemoval) {
  *
  * modified by Evan You (@yyx990803)
  *
-
-/*
  * Not type-checking this because this file is perf-critical and the cost
  * of making flow understand it is not worth it.
  */
@@ -11730,14 +12346,12 @@ function sameVnode (a, b) {
   )
 }
 
-// Some browsers do not support dynamically changing type for <input>
-// so they need to be treated as different nodes
 function sameInputType (a, b) {
   if (a.tag !== 'input') { return true }
   var i;
   var typeA = isDef(i = a.data) && isDef(i = i.attrs) && i.type;
   var typeB = isDef(i = b.data) && isDef(i = i.attrs) && i.type;
-  return typeA === typeB
+  return typeA === typeB || isTextInputType(typeA) && isTextInputType(typeB)
 }
 
 function createKeyToOldIdx (children, beginIdx, endIdx) {
@@ -11771,13 +12385,13 @@ function createPatchFunction (backend) {
   }
 
   function createRmCb (childElm, listeners) {
-    function remove$$1 () {
-      if (--remove$$1.listeners === 0) {
+    function remove () {
+      if (--remove.listeners === 0) {
         removeNode(childElm);
       }
     }
-    remove$$1.listeners = listeners;
-    return remove$$1
+    remove.listeners = listeners;
+    return remove
   }
 
   function removeNode (el) {
@@ -11788,7 +12402,23 @@ function createPatchFunction (backend) {
     }
   }
 
-  var inPre = 0;
+  function isUnknownElement$$1 (vnode, inVPre) {
+    return (
+      !inVPre &&
+      !vnode.ns &&
+      !(
+        config.ignoredElements.length &&
+        config.ignoredElements.some(function (ignore) {
+          return isRegExp(ignore)
+            ? ignore.test(vnode.tag)
+            : ignore === vnode.tag
+        })
+      ) &&
+      config.isUnknownElement(vnode.tag)
+    )
+  }
+
+  var creatingElmInVPre = 0;
   function createElm (vnode, insertedVnodeQueue, parentElm, refElm, nested) {
     vnode.isRootInsert = !nested; // for transition enter check
     if (createComponent(vnode, insertedVnodeQueue, parentElm, refElm)) {
@@ -11801,14 +12431,9 @@ function createPatchFunction (backend) {
     if (isDef(tag)) {
       if (true) {
         if (data && data.pre) {
-          inPre++;
+          creatingElmInVPre++;
         }
-        if (
-          !inPre &&
-          !vnode.ns &&
-          !(config.ignoredElements.length && config.ignoredElements.indexOf(tag) > -1) &&
-          config.isUnknownElement(tag)
-        ) {
+        if (isUnknownElement$$1(vnode, creatingElmInVPre)) {
           warn(
             'Unknown custom element: <' + tag + '> - did you ' +
             'register the component correctly? For recursive components, ' +
@@ -11832,7 +12457,7 @@ function createPatchFunction (backend) {
       }
 
       if ("development" !== 'production' && data && data.pre) {
-        inPre--;
+        creatingElmInVPre--;
       }
     } else if (isTrue(vnode.isComment)) {
       vnode.elm = nodeOps.createComment(vnode.text);
@@ -11918,11 +12543,14 @@ function createPatchFunction (backend) {
 
   function createChildren (vnode, children, insertedVnodeQueue) {
     if (Array.isArray(children)) {
+      if (true) {
+        checkDuplicateKeys(children);
+      }
       for (var i = 0; i < children.length; ++i) {
         createElm(children[i], insertedVnodeQueue, vnode.elm, null, true);
       }
     } else if (isPrimitive(vnode.text)) {
-      nodeOps.appendChild(vnode.elm, nodeOps.createTextNode(vnode.text));
+      nodeOps.appendChild(vnode.elm, nodeOps.createTextNode(String(vnode.text)));
     }
   }
 
@@ -11949,16 +12577,21 @@ function createPatchFunction (backend) {
   // of going through the normal attribute patching process.
   function setScope (vnode) {
     var i;
-    var ancestor = vnode;
-    while (ancestor) {
-      if (isDef(i = ancestor.context) && isDef(i = i.$options._scopeId)) {
-        nodeOps.setAttribute(vnode.elm, i, '');
+    if (isDef(i = vnode.fnScopeId)) {
+      nodeOps.setAttribute(vnode.elm, i, '');
+    } else {
+      var ancestor = vnode;
+      while (ancestor) {
+        if (isDef(i = ancestor.context) && isDef(i = i.$options._scopeId)) {
+          nodeOps.setAttribute(vnode.elm, i, '');
+        }
+        ancestor = ancestor.parent;
       }
-      ancestor = ancestor.parent;
     }
     // for slot content they should also get the scopeId from the host instance.
     if (isDef(i = activeInstance) &&
       i !== vnode.context &&
+      i !== vnode.fnContext &&
       isDef(i = i.$options._scopeId)
     ) {
       nodeOps.setAttribute(vnode.elm, i, '');
@@ -12037,12 +12670,16 @@ function createPatchFunction (backend) {
     var newEndIdx = newCh.length - 1;
     var newStartVnode = newCh[0];
     var newEndVnode = newCh[newEndIdx];
-    var oldKeyToIdx, idxInOld, elmToMove, refElm;
+    var oldKeyToIdx, idxInOld, vnodeToMove, refElm;
 
     // removeOnly is a special flag used only by <transition-group>
     // to ensure removed elements stay in correct relative positions
     // during leaving transitions
     var canMove = !removeOnly;
+
+    if (true) {
+      checkDuplicateKeys(newCh);
+    }
 
     while (oldStartIdx <= oldEndIdx && newStartIdx <= newEndIdx) {
       if (isUndef(oldStartVnode)) {
@@ -12069,30 +12706,23 @@ function createPatchFunction (backend) {
         newStartVnode = newCh[++newStartIdx];
       } else {
         if (isUndef(oldKeyToIdx)) { oldKeyToIdx = createKeyToOldIdx(oldCh, oldStartIdx, oldEndIdx); }
-        idxInOld = isDef(newStartVnode.key) ? oldKeyToIdx[newStartVnode.key] : null;
+        idxInOld = isDef(newStartVnode.key)
+          ? oldKeyToIdx[newStartVnode.key]
+          : findIdxInOld(newStartVnode, oldCh, oldStartIdx, oldEndIdx);
         if (isUndef(idxInOld)) { // New element
           createElm(newStartVnode, insertedVnodeQueue, parentElm, oldStartVnode.elm);
-          newStartVnode = newCh[++newStartIdx];
         } else {
-          elmToMove = oldCh[idxInOld];
-          /* istanbul ignore if */
-          if ("development" !== 'production' && !elmToMove) {
-            warn(
-              'It seems there are duplicate keys that is causing an update error. ' +
-              'Make sure each v-for item has a unique key.'
-            );
-          }
-          if (sameVnode(elmToMove, newStartVnode)) {
-            patchVnode(elmToMove, newStartVnode, insertedVnodeQueue);
+          vnodeToMove = oldCh[idxInOld];
+          if (sameVnode(vnodeToMove, newStartVnode)) {
+            patchVnode(vnodeToMove, newStartVnode, insertedVnodeQueue);
             oldCh[idxInOld] = undefined;
-            canMove && nodeOps.insertBefore(parentElm, elmToMove.elm, oldStartVnode.elm);
-            newStartVnode = newCh[++newStartIdx];
+            canMove && nodeOps.insertBefore(parentElm, vnodeToMove.elm, oldStartVnode.elm);
           } else {
             // same key but different element. treat as new element
             createElm(newStartVnode, insertedVnodeQueue, parentElm, oldStartVnode.elm);
-            newStartVnode = newCh[++newStartIdx];
           }
         }
+        newStartVnode = newCh[++newStartIdx];
       }
     }
     if (oldStartIdx > oldEndIdx) {
@@ -12100,6 +12730,31 @@ function createPatchFunction (backend) {
       addVnodes(parentElm, refElm, newCh, newStartIdx, newEndIdx, insertedVnodeQueue);
     } else if (newStartIdx > newEndIdx) {
       removeVnodes(parentElm, oldCh, oldStartIdx, oldEndIdx);
+    }
+  }
+
+  function checkDuplicateKeys (children) {
+    var seenKeys = {};
+    for (var i = 0; i < children.length; i++) {
+      var vnode = children[i];
+      var key = vnode.key;
+      if (isDef(key)) {
+        if (seenKeys[key]) {
+          warn(
+            ("Duplicate keys detected: '" + key + "'. This may cause an update error."),
+            vnode.context
+          );
+        } else {
+          seenKeys[key] = true;
+        }
+      }
+    }
+  }
+
+  function findIdxInOld (node, oldCh, start, end) {
+    for (var i = start; i < end; i++) {
+      var c = oldCh[i];
+      if (isDef(c) && sameVnode(node, c)) { return i }
     }
   }
 
@@ -12175,27 +12830,32 @@ function createPatchFunction (backend) {
     }
   }
 
-  var bailed = false;
+  var hydrationBailed = false;
   // list of modules that can skip create hook during hydration because they
   // are already rendered on the client or has no need for initialization
-  var isRenderedModule = makeMap('attrs,style,class,staticClass,staticStyle,key');
+  // Note: style is excluded because it relies on initial clone for future
+  // deep updates (#7063).
+  var isRenderedModule = makeMap('attrs,class,staticClass,staticStyle,key');
 
   // Note: this is a browser-only function so we can assume elms are DOM nodes.
-  function hydrate (elm, vnode, insertedVnodeQueue) {
-    if (isTrue(vnode.isComment) && isDef(vnode.asyncFactory)) {
-      vnode.elm = elm;
-      vnode.isAsyncPlaceholder = true;
-      return true
-    }
-    if (true) {
-      if (!assertNodeMatch(elm, vnode)) {
-        return false
-      }
-    }
-    vnode.elm = elm;
+  function hydrate (elm, vnode, insertedVnodeQueue, inVPre) {
+    var i;
     var tag = vnode.tag;
     var data = vnode.data;
     var children = vnode.children;
+    inVPre = inVPre || (data && data.pre);
+    vnode.elm = elm;
+
+    if (isTrue(vnode.isComment) && isDef(vnode.asyncFactory)) {
+      vnode.isAsyncPlaceholder = true;
+      return true
+    }
+    // assert node match
+    if (true) {
+      if (!assertNodeMatch(elm, vnode, inVPre)) {
+        return false
+      }
+    }
     if (isDef(data)) {
       if (isDef(i = data.hook) && isDef(i = i.init)) { i(vnode, true /* hydrating */); }
       if (isDef(i = vnode.componentInstance)) {
@@ -12210,36 +12870,61 @@ function createPatchFunction (backend) {
         if (!elm.hasChildNodes()) {
           createChildren(vnode, children, insertedVnodeQueue);
         } else {
-          var childrenMatch = true;
-          var childNode = elm.firstChild;
-          for (var i$1 = 0; i$1 < children.length; i$1++) {
-            if (!childNode || !hydrate(childNode, children[i$1], insertedVnodeQueue)) {
-              childrenMatch = false;
-              break
+          // v-html and domProps: innerHTML
+          if (isDef(i = data) && isDef(i = i.domProps) && isDef(i = i.innerHTML)) {
+            if (i !== elm.innerHTML) {
+              /* istanbul ignore if */
+              if ("development" !== 'production' &&
+                typeof console !== 'undefined' &&
+                !hydrationBailed
+              ) {
+                hydrationBailed = true;
+                console.warn('Parent: ', elm);
+                console.warn('server innerHTML: ', i);
+                console.warn('client innerHTML: ', elm.innerHTML);
+              }
+              return false
             }
-            childNode = childNode.nextSibling;
-          }
-          // if childNode is not null, it means the actual childNodes list is
-          // longer than the virtual children list.
-          if (!childrenMatch || childNode) {
-            if ("development" !== 'production' &&
-              typeof console !== 'undefined' &&
-              !bailed
-            ) {
-              bailed = true;
-              console.warn('Parent: ', elm);
-              console.warn('Mismatching childNodes vs. VNodes: ', elm.childNodes, children);
+          } else {
+            // iterate and compare children lists
+            var childrenMatch = true;
+            var childNode = elm.firstChild;
+            for (var i$1 = 0; i$1 < children.length; i$1++) {
+              if (!childNode || !hydrate(childNode, children[i$1], insertedVnodeQueue, inVPre)) {
+                childrenMatch = false;
+                break
+              }
+              childNode = childNode.nextSibling;
             }
-            return false
+            // if childNode is not null, it means the actual childNodes list is
+            // longer than the virtual children list.
+            if (!childrenMatch || childNode) {
+              /* istanbul ignore if */
+              if ("development" !== 'production' &&
+                typeof console !== 'undefined' &&
+                !hydrationBailed
+              ) {
+                hydrationBailed = true;
+                console.warn('Parent: ', elm);
+                console.warn('Mismatching childNodes vs. VNodes: ', elm.childNodes, children);
+              }
+              return false
+            }
           }
         }
       }
       if (isDef(data)) {
+        var fullInvoke = false;
         for (var key in data) {
           if (!isRenderedModule(key)) {
+            fullInvoke = true;
             invokeCreateHooks(vnode, insertedVnodeQueue);
             break
           }
+        }
+        if (!fullInvoke && data['class']) {
+          // ensure collecting deps for deep class bindings for future updates
+          traverse(data['class']);
         }
       }
     } else if (elm.data !== vnode.text) {
@@ -12248,10 +12933,10 @@ function createPatchFunction (backend) {
     return true
   }
 
-  function assertNodeMatch (node, vnode) {
+  function assertNodeMatch (node, vnode, inVPre) {
     if (isDef(vnode.tag)) {
-      return (
-        vnode.tag.indexOf('vue-component') === 0 ||
+      return vnode.tag.indexOf('vue-component') === 0 || (
+        !isUnknownElement$$1(vnode, inVPre) &&
         vnode.tag.toLowerCase() === (node.tagName && node.tagName.toLowerCase())
       )
     } else {
@@ -12304,9 +12989,12 @@ function createPatchFunction (backend) {
           // create an empty node and replace it
           oldVnode = emptyNodeAt(oldVnode);
         }
+
         // replacing existing element
         var oldElm = oldVnode.elm;
         var parentElm$1 = nodeOps.parentNode(oldElm);
+
+        // create new node
         createElm(
           vnode,
           insertedVnodeQueue,
@@ -12317,21 +13005,37 @@ function createPatchFunction (backend) {
           nodeOps.nextSibling(oldElm)
         );
 
+        // update parent placeholder node element, recursively
         if (isDef(vnode.parent)) {
-          // component root element replaced.
-          // update parent placeholder node element, recursively
           var ancestor = vnode.parent;
+          var patchable = isPatchable(vnode);
           while (ancestor) {
-            ancestor.elm = vnode.elm;
-            ancestor = ancestor.parent;
-          }
-          if (isPatchable(vnode)) {
-            for (var i = 0; i < cbs.create.length; ++i) {
-              cbs.create[i](emptyNode, vnode.parent);
+            for (var i = 0; i < cbs.destroy.length; ++i) {
+              cbs.destroy[i](ancestor);
             }
+            ancestor.elm = vnode.elm;
+            if (patchable) {
+              for (var i$1 = 0; i$1 < cbs.create.length; ++i$1) {
+                cbs.create[i$1](emptyNode, ancestor);
+              }
+              // #6513
+              // invoke insert hooks that may have been merged by create hooks.
+              // e.g. for directives that uses the "inserted" hook.
+              var insert = ancestor.data.hook.insert;
+              if (insert.merged) {
+                // start at index 1 to avoid re-invoking component mounted hook
+                for (var i$2 = 1; i$2 < insert.fns.length; i$2++) {
+                  insert.fns[i$2]();
+                }
+              }
+            } else {
+              registerRef(ancestor);
+            }
+            ancestor = ancestor.parent;
           }
         }
 
+        // destroy old node
         if (isDef(parentElm$1)) {
           removeVnodes(parentElm$1, [oldVnode], 0, 0);
         } else if (isDef(oldVnode.tag)) {
@@ -12397,14 +13101,14 @@ function _update (oldVnode, vnode) {
       }
     };
     if (isCreate) {
-      mergeVNodeHook(vnode.data.hook || (vnode.data.hook = {}), 'insert', callInsert);
+      mergeVNodeHook(vnode, 'insert', callInsert);
     } else {
       callInsert();
     }
   }
 
   if (dirsWithPostpatch.length) {
-    mergeVNodeHook(vnode.data.hook || (vnode.data.hook = {}), 'postpatch', function () {
+    mergeVNodeHook(vnode, 'postpatch', function () {
       for (var i = 0; i < dirsWithPostpatch.length; i++) {
         callHook$1(dirsWithPostpatch[i], 'componentUpdated', vnode, oldVnode);
       }
@@ -12429,17 +13133,20 @@ function normalizeDirectives$1 (
 ) {
   var res = Object.create(null);
   if (!dirs) {
+    // $flow-disable-line
     return res
   }
   var i, dir;
   for (i = 0; i < dirs.length; i++) {
     dir = dirs[i];
     if (!dir.modifiers) {
+      // $flow-disable-line
       dir.modifiers = emptyModifiers;
     }
     res[getRawDirName(dir)] = dir;
     dir.def = resolveAsset(vm.$options, 'directives', dir.name, true);
   }
+  // $flow-disable-line
   return res
 }
 
@@ -12490,8 +13197,9 @@ function updateAttrs (oldVnode, vnode) {
     }
   }
   // #4391: in IE9, setting type can reset value for input[type=radio]
+  // #6666: IE/Edge forces progress value down to 1 before setting a max
   /* istanbul ignore if */
-  if (isIE9 && attrs.value !== oldAttrs.value) {
+  if ((isIE || isEdge) && attrs.value !== oldAttrs.value) {
     setAttr(elm, 'value', attrs.value);
   }
   for (key in oldAttrs) {
@@ -12512,7 +13220,12 @@ function setAttr (el, key, value) {
     if (isFalsyAttrValue(value)) {
       el.removeAttribute(key);
     } else {
-      el.setAttribute(key, key);
+      // technically allowfullscreen is a boolean attribute for <iframe>,
+      // but Flash expects a value of "true" when used on <embed> tag
+      value = key === 'allowfullscreen' && el.tagName === 'EMBED'
+        ? 'true'
+        : key;
+      el.setAttribute(key, value);
     }
   } else if (isEnumeratedAttr(key)) {
     el.setAttribute(key, isFalsyAttrValue(value) || value === 'false' ? 'false' : 'true');
@@ -12526,6 +13239,23 @@ function setAttr (el, key, value) {
     if (isFalsyAttrValue(value)) {
       el.removeAttribute(key);
     } else {
+      // #7138: IE10 & 11 fires input event when setting placeholder on
+      // <textarea>... block the first input event and remove the blocker
+      // immediately.
+      /* istanbul ignore if */
+      if (
+        isIE && !isIE9 &&
+        el.tagName === 'TEXTAREA' &&
+        key === 'placeholder' && !el.__ieph
+      ) {
+        var blocker = function (e) {
+          e.stopImmediatePropagation();
+          el.removeEventListener('input', blocker);
+        };
+        el.addEventListener('input', blocker);
+        // $flow-disable-line
+        el.__ieph = true; /* IE placeholder patched */
+      }
       el.setAttribute(key, value);
     }
   }
@@ -12689,10 +13419,18 @@ function pluckModuleFunction (
 
 function addProp (el, name, value) {
   (el.props || (el.props = [])).push({ name: name, value: value });
+  el.plain = false;
 }
 
 function addAttr (el, name, value) {
   (el.attrs || (el.attrs = [])).push({ name: name, value: value });
+  el.plain = false;
+}
+
+// add a raw attr (use this in preTransforms)
+function addRawAttr (el, name, value) {
+  el.attrsMap[name] = value;
+  el.attrsList.push({ name: name, value: value });
 }
 
 function addDirective (
@@ -12704,6 +13442,7 @@ function addDirective (
   modifiers
 ) {
   (el.directives || (el.directives = [])).push({ name: name, rawName: rawName, value: value, arg: arg, modifiers: modifiers });
+  el.plain = false;
 }
 
 function addHandler (
@@ -12714,39 +13453,59 @@ function addHandler (
   important,
   warn
 ) {
+  modifiers = modifiers || emptyObject;
   // warn prevent and passive modifier
   /* istanbul ignore if */
   if (
     "development" !== 'production' && warn &&
-    modifiers && modifiers.prevent && modifiers.passive
+    modifiers.prevent && modifiers.passive
   ) {
     warn(
       'passive and prevent can\'t be used together. ' +
       'Passive handler can\'t prevent default event.'
     );
   }
+
   // check capture modifier
-  if (modifiers && modifiers.capture) {
+  if (modifiers.capture) {
     delete modifiers.capture;
     name = '!' + name; // mark the event as captured
   }
-  if (modifiers && modifiers.once) {
+  if (modifiers.once) {
     delete modifiers.once;
     name = '~' + name; // mark the event as once
   }
   /* istanbul ignore if */
-  if (modifiers && modifiers.passive) {
+  if (modifiers.passive) {
     delete modifiers.passive;
     name = '&' + name; // mark the event as passive
   }
+
+  // normalize click.right and click.middle since they don't actually fire
+  // this is technically browser-specific, but at least for now browsers are
+  // the only target envs that have right/middle clicks.
+  if (name === 'click') {
+    if (modifiers.right) {
+      name = 'contextmenu';
+      delete modifiers.right;
+    } else if (modifiers.middle) {
+      name = 'mouseup';
+    }
+  }
+
   var events;
-  if (modifiers && modifiers.native) {
+  if (modifiers.native) {
     delete modifiers.native;
     events = el.nativeEvents || (el.nativeEvents = {});
   } else {
     events = el.events || (el.events = {});
   }
-  var newHandler = { value: value, modifiers: modifiers };
+
+  var newHandler = { value: value };
+  if (modifiers !== emptyObject) {
+    newHandler.modifiers = modifiers;
+  }
+
   var handlers = events[name];
   /* istanbul ignore if */
   if (Array.isArray(handlers)) {
@@ -12756,6 +13515,8 @@ function addHandler (
   } else {
     events[name] = newHandler;
   }
+
+  el.plain = false;
 }
 
 function getBindingAttr (
@@ -12776,7 +13537,15 @@ function getBindingAttr (
   }
 }
 
-function getAndRemoveAttr (el, name) {
+// note: this only removes the attr from the Array (attrsList) so that it
+// doesn't get processed by processAttrs.
+// By default it does NOT remove it from the map (attrsMap) because the map is
+// needed during codegen.
+function getAndRemoveAttr (
+  el,
+  name,
+  removeFromMap
+) {
   var val;
   if ((val = el.attrsMap[name]) != null) {
     var list = el.attrsList;
@@ -12786,6 +13555,9 @@ function getAndRemoveAttr (el, name) {
         break
       }
     }
+  }
+  if (removeFromMap) {
+    delete el.attrsMap[name];
   }
   return val
 }
@@ -12831,25 +13603,26 @@ function genAssignmentCode (
   value,
   assignment
 ) {
-  var modelRs = parseModel(value);
-  if (modelRs.idx === null) {
+  var res = parseModel(value);
+  if (res.key === null) {
     return (value + "=" + assignment)
   } else {
-    return ("$set(" + (modelRs.exp) + ", " + (modelRs.idx) + ", " + assignment + ")")
+    return ("$set(" + (res.exp) + ", " + (res.key) + ", " + assignment + ")")
   }
 }
 
 /**
- * parse directive model to do the array update transform. a[idx] = val => $$a.splice($$idx, 1, val)
+ * Parse a v-model expression into a base path and a final key segment.
+ * Handles both dot-path and possible square brackets.
  *
- * for loop possible cases:
+ * Possible cases:
  *
  * - test
- * - test[idx]
- * - test[test1[idx]]
- * - test["a"][idx]
- * - xxx.test[a[a].test1[idx]]
- * - test.xxx.a["asa"][test1[idx]]
+ * - test[key]
+ * - test[test1[key]]
+ * - test["a"][key]
+ * - xxx.test[a[a].test1[key]]
+ * - test.xxx.a["asa"][test1[key]]
  *
  */
 
@@ -12860,17 +13633,28 @@ var index$1;
 var expressionPos;
 var expressionEndPos;
 
+
+
 function parseModel (val) {
-  str = val;
-  len = str.length;
-  index$1 = expressionPos = expressionEndPos = 0;
+  len = val.length;
 
   if (val.indexOf('[') < 0 || val.lastIndexOf(']') < len - 1) {
-    return {
-      exp: val,
-      idx: null
+    index$1 = val.lastIndexOf('.');
+    if (index$1 > -1) {
+      return {
+        exp: val.slice(0, index$1),
+        key: '"' + val.slice(index$1 + 1) + '"'
+      }
+    } else {
+      return {
+        exp: val,
+        key: null
+      }
     }
   }
+
+  str = val;
+  index$1 = expressionPos = expressionEndPos = 0;
 
   while (!eof()) {
     chr = next();
@@ -12883,8 +13667,8 @@ function parseModel (val) {
   }
 
   return {
-    exp: val.substring(0, expressionPos),
-    idx: val.substring(expressionPos + 1, expressionEndPos)
+    exp: val.slice(0, expressionPos),
+    key: val.slice(expressionPos + 1, expressionEndPos)
   }
 }
 
@@ -12949,13 +13733,6 @@ function model (
   var type = el.attrsMap.type;
 
   if (true) {
-    var dynamicType = el.attrsMap['v-bind:type'] || el.attrsMap[':type'];
-    if (tag === 'input' && dynamicType) {
-      warn$1(
-        "<input :type=\"" + dynamicType + "\" v-model=\"" + value + "\">:\n" +
-        "v-model does not support dynamic input types. Use v-if branches instead."
-      );
-    }
     // inputs with type="file" are read only and setting the input's
     // value will throw an error.
     if (tag === 'input' && type === 'file') {
@@ -13006,20 +13783,20 @@ function genCheckboxModel (
   var falseValueBinding = getBindingAttr(el, 'false-value') || 'false';
   addProp(el, 'checked',
     "Array.isArray(" + value + ")" +
-      "?_i(" + value + "," + valueBinding + ")>-1" + (
-        trueValueBinding === 'true'
-          ? (":(" + value + ")")
-          : (":_q(" + value + "," + trueValueBinding + ")")
-      )
+    "?_i(" + value + "," + valueBinding + ")>-1" + (
+      trueValueBinding === 'true'
+        ? (":(" + value + ")")
+        : (":_q(" + value + "," + trueValueBinding + ")")
+    )
   );
-  addHandler(el, CHECKBOX_RADIO_TOKEN,
+  addHandler(el, 'change',
     "var $$a=" + value + "," +
         '$$el=$event.target,' +
         "$$c=$$el.checked?(" + trueValueBinding + "):(" + falseValueBinding + ");" +
     'if(Array.isArray($$a)){' +
       "var $$v=" + (number ? '_n(' + valueBinding + ')' : valueBinding) + "," +
           '$$i=_i($$a,$$v);' +
-      "if($$el.checked){$$i<0&&(" + value + "=$$a.concat($$v))}" +
+      "if($$el.checked){$$i<0&&(" + value + "=$$a.concat([$$v]))}" +
       "else{$$i>-1&&(" + value + "=$$a.slice(0,$$i).concat($$a.slice($$i+1)))}" +
     "}else{" + (genAssignmentCode(value, '$$c')) + "}",
     null, true
@@ -13027,21 +13804,21 @@ function genCheckboxModel (
 }
 
 function genRadioModel (
-    el,
-    value,
-    modifiers
+  el,
+  value,
+  modifiers
 ) {
   var number = modifiers && modifiers.number;
   var valueBinding = getBindingAttr(el, 'value') || 'null';
   valueBinding = number ? ("_n(" + valueBinding + ")") : valueBinding;
   addProp(el, 'checked', ("_q(" + value + "," + valueBinding + ")"));
-  addHandler(el, CHECKBOX_RADIO_TOKEN, genAssignmentCode(value, valueBinding), null, true);
+  addHandler(el, 'change', genAssignmentCode(value, valueBinding), null, true);
 }
 
 function genSelect (
-    el,
-    value,
-    modifiers
+  el,
+  value,
+  modifiers
 ) {
   var number = modifiers && modifiers.number;
   var selectedVal = "Array.prototype.filter" +
@@ -13061,6 +13838,19 @@ function genDefaultModel (
   modifiers
 ) {
   var type = el.attrsMap.type;
+
+  // warn if v-bind:value conflicts with v-model
+  if (true) {
+    var value$1 = el.attrsMap['v-bind:value'] || el.attrsMap[':value'];
+    if (value$1) {
+      var binding = el.attrsMap['v-bind:value'] ? 'v-bind:value' : ':value';
+      warn$1(
+        binding + "=\"" + value$1 + "\" conflicts with v-model on the same element " +
+        'because the latter already expands to a value binding internally'
+      );
+    }
+  }
+
   var ref = modifiers || {};
   var lazy = ref.lazy;
   var number = ref.number;
@@ -13099,23 +13889,33 @@ function genDefaultModel (
 // the whole point is ensuring the v-model callback gets called before
 // user-attached handlers.
 function normalizeEvents (on) {
-  var event;
   /* istanbul ignore if */
   if (isDef(on[RANGE_TOKEN])) {
     // IE input[type=range] only supports `change` event
-    event = isIE ? 'change' : 'input';
+    var event = isIE ? 'change' : 'input';
     on[event] = [].concat(on[RANGE_TOKEN], on[event] || []);
     delete on[RANGE_TOKEN];
   }
+  // This was originally intended to fix #4521 but no longer necessary
+  // after 2.5. Keeping it for backwards compat with generated code from < 2.4
+  /* istanbul ignore if */
   if (isDef(on[CHECKBOX_RADIO_TOKEN])) {
-    // Chrome fires microtasks in between click/change, leads to #4521
-    event = isChrome ? 'click' : 'change';
-    on[event] = [].concat(on[CHECKBOX_RADIO_TOKEN], on[event] || []);
+    on.change = [].concat(on[CHECKBOX_RADIO_TOKEN], on.change || []);
     delete on[CHECKBOX_RADIO_TOKEN];
   }
 }
 
 var target$1;
+
+function createOnceHandler (handler, event, capture) {
+  var _target = target$1; // save current target element in closure
+  return function onceHandler () {
+    var res = handler.apply(null, arguments);
+    if (res !== null) {
+      remove$2(event, onceHandler, capture, _target);
+    }
+  }
+}
 
 function add$1 (
   event,
@@ -13124,18 +13924,8 @@ function add$1 (
   capture,
   passive
 ) {
-  if (once$$1) {
-    var oldHandler = handler;
-    var _target = target$1; // save current target element in closure
-    handler = function (ev) {
-      var res = arguments.length === 1
-        ? oldHandler(ev)
-        : oldHandler.apply(null, arguments);
-      if (res !== null) {
-        remove$2(event, handler, capture, _target);
-      }
-    };
-  }
+  handler = withMacroTask(handler);
+  if (once$$1) { handler = createOnceHandler(handler, event, capture); }
   target$1.addEventListener(
     event,
     handler,
@@ -13151,7 +13941,11 @@ function remove$2 (
   capture,
   _target
 ) {
-  (_target || target$1).removeEventListener(event, handler, capture);
+  (_target || target$1).removeEventListener(
+    event,
+    handler._withTask || handler,
+    capture
+  );
 }
 
 function updateDOMListeners (oldVnode, vnode) {
@@ -13163,6 +13957,7 @@ function updateDOMListeners (oldVnode, vnode) {
   target$1 = vnode.elm;
   normalizeEvents(on);
   updateListeners(on, oldOn, add$1, remove$2, vnode.context);
+  target$1 = undefined;
 }
 
 var events = {
@@ -13198,6 +13993,11 @@ function updateDOMProps (oldVnode, vnode) {
     if (key === 'textContent' || key === 'innerHTML') {
       if (vnode.children) { vnode.children.length = 0; }
       if (cur === oldProps[key]) { continue }
+      // #6601 work around Chrome version <= 55 bug where single textNode
+      // replaced by innerHTML/textContent retains its parentNode property
+      if (elm.childNodes.length === 1) {
+        elm.removeChild(elm.childNodes[0]);
+      }
     }
 
     if (key === 'value') {
@@ -13206,7 +14006,7 @@ function updateDOMProps (oldVnode, vnode) {
       elm._value = cur;
       // avoid resetting cursor position when value is the same
       var strCur = isUndef(cur) ? '' : String(cur);
-      if (shouldUpdateValue(elm, vnode, strCur)) {
+      if (shouldUpdateValue(elm, strCur)) {
         elm.value = strCur;
       }
     } else {
@@ -13218,19 +14018,15 @@ function updateDOMProps (oldVnode, vnode) {
 // check platforms/web/util/attrs.js acceptValue
 
 
-function shouldUpdateValue (
-  elm,
-  vnode,
-  checkVal
-) {
+function shouldUpdateValue (elm, checkVal) {
   return (!elm.composing && (
-    vnode.tag === 'option' ||
-    isDirty(elm, checkVal) ||
-    isInputChanged(elm, checkVal)
+    elm.tagName === 'OPTION' ||
+    isNotInFocusAndDirty(elm, checkVal) ||
+    isDirtyWithModifiers(elm, checkVal)
   ))
 }
 
-function isDirty (elm, checkVal) {
+function isNotInFocusAndDirty (elm, checkVal) {
   // return true when textbox (.number and .trim) loses focus and its value is
   // not equal to the updated value
   var notInFocus = true;
@@ -13240,14 +14036,20 @@ function isDirty (elm, checkVal) {
   return notInFocus && elm.value !== checkVal
 }
 
-function isInputChanged (elm, newVal) {
+function isDirtyWithModifiers (elm, newVal) {
   var value = elm.value;
   var modifiers = elm._vModifiers; // injected by v-model runtime
-  if (isDef(modifiers) && modifiers.number) {
-    return toNumber(value) !== toNumber(newVal)
-  }
-  if (isDef(modifiers) && modifiers.trim) {
-    return value.trim() !== newVal.trim()
+  if (isDef(modifiers)) {
+    if (modifiers.lazy) {
+      // inputs with lazy should only be updated when not in focus
+      return false
+    }
+    if (modifiers.number) {
+      return toNumber(value) !== toNumber(newVal)
+    }
+    if (modifiers.trim) {
+      return value.trim() !== newVal.trim()
+    }
   }
   return value !== newVal
 }
@@ -13305,7 +14107,10 @@ function getStyle (vnode, checkChild) {
     var childNode = vnode;
     while (childNode.componentInstance) {
       childNode = childNode.componentInstance._vnode;
-      if (childNode.data && (styleData = normalizeStyleData(childNode.data))) {
+      if (
+        childNode && childNode.data &&
+        (styleData = normalizeStyleData(childNode.data))
+      ) {
         extend(res, styleData);
       }
     }
@@ -13388,7 +14193,7 @@ function updateStyle (oldVnode, vnode) {
   var style = normalizeStyleBinding(vnode.data.style) || {};
 
   // store normalized style under a different key for next diff
-  // make sure to clone it if it's reactive, since the user likley wants
+  // make sure to clone it if it's reactive, since the user likely wants
   // to mutate it.
   vnode.data.normalizedStyle = isDef(style.__ob__)
     ? extend({}, style)
@@ -13479,20 +14284,20 @@ function removeClass (el, cls) {
 
 /*  */
 
-function resolveTransition (def$$1) {
-  if (!def$$1) {
+function resolveTransition (def) {
+  if (!def) {
     return
   }
   /* istanbul ignore else */
-  if (typeof def$$1 === 'object') {
+  if (typeof def === 'object') {
     var res = {};
-    if (def$$1.css !== false) {
-      extend(res, autoCssTransition(def$$1.name || 'v'));
+    if (def.css !== false) {
+      extend(res, autoCssTransition(def.name || 'v'));
     }
-    extend(res, def$$1);
+    extend(res, def);
     return res
-  } else if (typeof def$$1 === 'string') {
-    return autoCssTransition(def$$1)
+  } else if (typeof def === 'string') {
+    return autoCssTransition(def)
   }
 }
 
@@ -13533,9 +14338,11 @@ if (hasTransition) {
 }
 
 // binding to window is necessary to make hot reload work in IE in strict mode
-var raf = inBrowser && window.requestAnimationFrame
-  ? window.requestAnimationFrame.bind(window)
-  : setTimeout;
+var raf = inBrowser
+  ? window.requestAnimationFrame
+    ? window.requestAnimationFrame.bind(window)
+    : setTimeout
+  : /* istanbul ignore next */ function (fn) { return fn(); };
 
 function nextFrame (fn) {
   raf(function () {
@@ -13765,7 +14572,7 @@ function enter (vnode, toggleDisplay) {
 
   if (!vnode.data.show) {
     // remove pending leave element on enter by injecting an insert hook
-    mergeVNodeHook(vnode.data.hook || (vnode.data.hook = {}), 'insert', function () {
+    mergeVNodeHook(vnode, 'insert', function () {
       var parent = el.parentNode;
       var pendingNode = parent && parent._pending && parent._pending[vnode.key];
       if (pendingNode &&
@@ -13816,12 +14623,12 @@ function leave (vnode, rm) {
   }
 
   var data = resolveTransition(vnode.data.transition);
-  if (isUndef(data)) {
+  if (isUndef(data) || el.nodeType !== 1) {
     return rm()
   }
 
   /* istanbul ignore if */
-  if (isDef(el._leaveCb) || el.nodeType !== 1) {
+  if (isDef(el._leaveCb)) {
     return
   }
 
@@ -13993,8 +14800,6 @@ var patch = createPatchFunction({ nodeOps: nodeOps, modules: modules });
  * properties to Elements.
  */
 
-var isTextInputType = makeMap('text,number,password,search,email,tel,url');
-
 /* istanbul ignore if */
 if (isIE9) {
   // http://www.matts411.com/post/internet-explorer-9-oninput/
@@ -14006,16 +14811,16 @@ if (isIE9) {
   });
 }
 
-var model$1 = {
-  inserted: function inserted (el, binding, vnode) {
+var directive = {
+  inserted: function inserted (el, binding, vnode, oldVnode) {
     if (vnode.tag === 'select') {
-      var cb = function () {
+      // #6903
+      if (oldVnode.elm && !oldVnode.elm._vOptions) {
+        mergeVNodeHook(vnode, 'postpatch', function () {
+          directive.componentUpdated(el, binding, vnode);
+        });
+      } else {
         setSelected(el, binding, vnode.context);
-      };
-      cb();
-      /* istanbul ignore if */
-      if (isIE || isEdge) {
-        setTimeout(cb, 0);
       }
       el._vOptions = [].map.call(el.options, getValue);
     } else if (vnode.tag === 'textarea' || isTextInputType(el.type)) {
@@ -14037,6 +14842,7 @@ var model$1 = {
       }
     }
   },
+
   componentUpdated: function componentUpdated (el, binding, vnode) {
     if (vnode.tag === 'select') {
       setSelected(el, binding, vnode.context);
@@ -14047,13 +14853,30 @@ var model$1 = {
       var prevOptions = el._vOptions;
       var curOptions = el._vOptions = [].map.call(el.options, getValue);
       if (curOptions.some(function (o, i) { return !looseEqual(o, prevOptions[i]); })) {
-        trigger(el, 'change');
+        // trigger change event if
+        // no matching option found for at least one value
+        var needReset = el.multiple
+          ? binding.value.some(function (v) { return hasNoMatchingOption(v, curOptions); })
+          : binding.value !== binding.oldValue && hasNoMatchingOption(binding.value, curOptions);
+        if (needReset) {
+          trigger(el, 'change');
+        }
       }
     }
   }
 };
 
 function setSelected (el, binding, vm) {
+  actuallySetSelected(el, binding, vm);
+  /* istanbul ignore if */
+  if (isIE || isEdge) {
+    setTimeout(function () {
+      actuallySetSelected(el, binding, vm);
+    }, 0);
+  }
+}
+
+function actuallySetSelected (el, binding, vm) {
   var value = binding.value;
   var isMultiple = el.multiple;
   if (isMultiple && !Array.isArray(value)) {
@@ -14084,6 +14907,10 @@ function setSelected (el, binding, vm) {
   if (!isMultiple) {
     el.selectedIndex = -1;
   }
+}
+
+function hasNoMatchingOption (value, options) {
+  return options.every(function (o) { return !looseEqual(o, value); })
 }
 
 function getValue (option) {
@@ -14174,7 +15001,7 @@ var show = {
 };
 
 var platformDirectives = {
-  model: model$1,
+  model: directive,
   show: show
 };
 
@@ -14248,10 +15075,6 @@ function isSameChild (child, oldChild) {
   return oldChild.key === child.key && oldChild.tag === child.tag
 }
 
-function isAsyncPlaceholder (node) {
-  return node.isComment && node.asyncFactory
-}
-
 var Transition = {
   name: 'transition',
   props: transitionProps,
@@ -14260,7 +15083,7 @@ var Transition = {
   render: function render (h) {
     var this$1 = this;
 
-    var children = this.$options._renderChildren;
+    var children = this.$slots.default;
     if (!children) {
       return
     }
@@ -14339,11 +15162,13 @@ var Transition = {
       oldChild &&
       oldChild.data &&
       !isSameChild(child, oldChild) &&
-      !isAsyncPlaceholder(oldChild)
+      !isAsyncPlaceholder(oldChild) &&
+      // #6687 component root is a comment node
+      !(oldChild.componentInstance && oldChild.componentInstance._vnode.isComment)
     ) {
       // replace old child transition data with fresh one
       // important for dynamic transitions!
-      var oldData = oldChild && (oldChild.data.transition = extend({}, data));
+      var oldData = oldChild.data.transition = extend({}, data);
       // handle transition mode
       if (mode === 'out-in') {
         // return placeholder node and queue update when leave finishes
@@ -14441,7 +15266,7 @@ var TransitionGroup = {
       this._vnode,
       this.kept,
       false, // hydrating
-      true // removeOnly (!important, avoids unnecessary moves)
+      true // removeOnly (!important avoids unnecessary moves)
     );
     this._vnode = this.kept;
   },
@@ -14460,8 +15285,9 @@ var TransitionGroup = {
     children.forEach(applyTranslation);
 
     // force reflow to put everything in position
-    var body = document.body;
-    var f = body.offsetHeight; // eslint-disable-line
+    // assign to this to avoid being removed in tree-shaking
+    // $flow-disable-line
+    this._reflow = document.body.offsetHeight;
 
     children.forEach(function (c) {
       if (c.data.moved) {
@@ -14569,7 +15395,7 @@ Vue$3.prototype.$mount = function (
 
 // devtools global hook
 /* istanbul ignore next */
-setTimeout(function () {
+Vue$3.nextTick(function () {
   if (config.devtools) {
     if (devtools) {
       devtools.emit('init', Vue$3);
@@ -14594,19 +15420,6 @@ setTimeout(function () {
 
 /*  */
 
-// check whether current browser encodes a char inside attribute values
-function shouldDecode (content, encoded) {
-  var div = document.createElement('div');
-  div.innerHTML = "<div a=\"" + content + "\"/>";
-  return div.innerHTML.indexOf(encoded) > 0
-}
-
-// #3663
-// IE encodes newlines inside attribute values while other browsers don't
-var shouldDecodeNewlines = inBrowser ? shouldDecode('\n', '&#10;') : false;
-
-/*  */
-
 var defaultTagRE = /\{\{((?:.|\n)+?)\}\}/g;
 var regexEscapeRE = /[-.*+?^${}()|[\]\/\\]/g;
 
@@ -14615,6 +15428,8 @@ var buildRegex = cached(function (delimiters) {
   var close = delimiters[1].replace(regexEscapeRE, '\\$&');
   return new RegExp(open + '((?:.|\\n)+?)' + close, 'g')
 });
+
+
 
 function parseText (
   text,
@@ -14625,23 +15440,30 @@ function parseText (
     return
   }
   var tokens = [];
+  var rawTokens = [];
   var lastIndex = tagRE.lastIndex = 0;
-  var match, index;
+  var match, index, tokenValue;
   while ((match = tagRE.exec(text))) {
     index = match.index;
     // push text token
     if (index > lastIndex) {
-      tokens.push(JSON.stringify(text.slice(lastIndex, index)));
+      rawTokens.push(tokenValue = text.slice(lastIndex, index));
+      tokens.push(JSON.stringify(tokenValue));
     }
     // tag token
     var exp = parseFilters(match[1].trim());
     tokens.push(("_s(" + exp + ")"));
+    rawTokens.push({ '@binding': exp });
     lastIndex = index + match[0].length;
   }
   if (lastIndex < text.length) {
-    tokens.push(JSON.stringify(text.slice(lastIndex)));
+    rawTokens.push(tokenValue = text.slice(lastIndex));
+    tokens.push(JSON.stringify(tokenValue));
   }
-  return tokens.join('+')
+  return {
+    expression: tokens.join('+'),
+    tokens: rawTokens
+  }
 }
 
 /*  */
@@ -14650,8 +15472,8 @@ function transformNode (el, options) {
   var warn = options.warn || baseWarn;
   var staticClass = getAndRemoveAttr(el, 'class');
   if ("development" !== 'production' && staticClass) {
-    var expression = parseText(staticClass, options.delimiters);
-    if (expression) {
+    var res = parseText(staticClass, options.delimiters);
+    if (res) {
       warn(
         "class=\"" + staticClass + "\": " +
         'Interpolation inside attributes has been removed. ' +
@@ -14694,8 +15516,8 @@ function transformNode$1 (el, options) {
   if (staticStyle) {
     /* istanbul ignore if */
     if (true) {
-      var expression = parseText(staticStyle, options.delimiters);
-      if (expression) {
+      var res = parseText(staticStyle, options.delimiters);
+      if (res) {
         warn(
           "style=\"" + staticStyle + "\": " +
           'Interpolation inside attributes has been removed. ' +
@@ -14730,31 +15552,16 @@ var style$1 = {
   genData: genData$1
 };
 
-var modules$1 = [
-  klass$1,
-  style$1
-];
-
 /*  */
 
-function text (el, dir) {
-  if (dir.value) {
-    addProp(el, 'textContent', ("_s(" + (dir.value) + ")"));
+var decoder;
+
+var he = {
+  decode: function decode (html) {
+    decoder = decoder || document.createElement('div');
+    decoder.innerHTML = html;
+    return decoder.textContent
   }
-}
-
-/*  */
-
-function html (el, dir) {
-  if (dir.value) {
-    addProp(el, 'innerHTML', ("_s(" + (dir.value) + ")"));
-  }
-}
-
-var directives$1 = {
-  model: model,
-  text: text,
-  html: html
 };
 
 /*  */
@@ -14780,33 +15587,6 @@ var isNonPhrasingTag = makeMap(
   'title,tr,track'
 );
 
-/*  */
-
-var baseOptions = {
-  expectHTML: true,
-  modules: modules$1,
-  directives: directives$1,
-  isPreTag: isPreTag,
-  isUnaryTag: isUnaryTag,
-  mustUseProp: mustUseProp,
-  canBeLeftOpenTag: canBeLeftOpenTag,
-  isReservedTag: isReservedTag,
-  getTagNamespace: getTagNamespace,
-  staticKeys: genStaticKeys(modules$1)
-};
-
-/*  */
-
-var decoder;
-
-var he = {
-  decode: function decode (html) {
-    decoder = decoder || document.createElement('div');
-    decoder.innerHTML = html;
-    return decoder.textContent
-  }
-};
-
 /**
  * Not type-checking this file because it's mostly vendor code.
  */
@@ -14819,29 +15599,14 @@ var he = {
  */
 
 // Regular Expressions for parsing tags and attributes
-var singleAttrIdentifier = /([^\s"'<>/=]+)/;
-var singleAttrAssign = /(?:=)/;
-var singleAttrValues = [
-  // attr value double quotes
-  /"([^"]*)"+/.source,
-  // attr value, single quotes
-  /'([^']*)'+/.source,
-  // attr value, no quotes
-  /([^\s"'=<>`]+)/.source
-];
-var attribute = new RegExp(
-  '^\\s*' + singleAttrIdentifier.source +
-  '(?:\\s*(' + singleAttrAssign.source + ')' +
-  '\\s*(?:' + singleAttrValues.join('|') + '))?'
-);
-
+var attribute = /^\s*([^\s"'<>\/=]+)(?:\s*(=)\s*(?:"([^"]*)"+|'([^']*)'+|([^\s"'=<>`]+)))?/;
 // could use https://www.w3.org/TR/1999/REC-xml-names-19990114/#NT-QName
 // but for Vue templates we can enforce a simple charset
 var ncname = '[a-zA-Z_][\\w\\-\\.]*';
-var qnameCapture = '((?:' + ncname + '\\:)?' + ncname + ')';
-var startTagOpen = new RegExp('^<' + qnameCapture);
+var qnameCapture = "((?:" + ncname + "\\:)?" + ncname + ")";
+var startTagOpen = new RegExp(("^<" + qnameCapture));
 var startTagClose = /^\s*(\/?)>/;
-var endTag = new RegExp('^<\\/' + qnameCapture + '[^>]*>');
+var endTag = new RegExp(("^<\\/" + qnameCapture + "[^>]*>"));
 var doctype = /^<!DOCTYPE [^>]+>/i;
 var comment = /^<!--/;
 var conditionalComment = /^<!\[/;
@@ -14860,10 +15625,11 @@ var decodingMap = {
   '&gt;': '>',
   '&quot;': '"',
   '&amp;': '&',
-  '&#10;': '\n'
+  '&#10;': '\n',
+  '&#9;': '\t'
 };
 var encodedAttr = /&(?:lt|gt|quot|amp);/g;
-var encodedAttrWithNewLines = /&(?:lt|gt|quot|amp|#10);/g;
+var encodedAttrWithNewLines = /&(?:lt|gt|quot|amp|#10|#9);/g;
 
 // #5992
 var isIgnoreNewlineTag = makeMap('pre,textarea', true);
@@ -15054,12 +15820,12 @@ function parseHTML (html, options) {
         if (args[5] === '') { delete args[5]; }
       }
       var value = args[3] || args[4] || args[5] || '';
+      var shouldDecodeNewlines = tagName === 'a' && args[1] === 'href'
+        ? options.shouldDecodeNewlinesForHref
+        : options.shouldDecodeNewlines;
       attrs[i] = {
         name: args[1],
-        value: decodeAttr(
-          value,
-          options.shouldDecodeNewlines
-        )
+        value: decodeAttr(value, shouldDecodeNewlines)
       };
     }
 
@@ -15133,7 +15899,8 @@ function parseHTML (html, options) {
 var onRE = /^@|^v-on:/;
 var dirRE = /^v-|^@|^:/;
 var forAliasRE = /(.*?)\s+(?:in|of)\s+(.*)/;
-var forIteratorRE = /\((\{[^}]*\}|[^,]*),([^,]*)(?:,([^,]*))?\)/;
+var forIteratorRE = /,([^,\}\]]*)(?:,([^,\}\]]*))?$/;
+var stripParensRE = /^\(|\)$/g;
 
 var argRE = /:(.*)$/;
 var bindRE = /^:|^v-bind:/;
@@ -15150,6 +15917,23 @@ var postTransforms;
 var platformIsPreTag;
 var platformMustUseProp;
 var platformGetTagNamespace;
+
+
+
+function createASTElement (
+  tag,
+  attrs,
+  parent
+) {
+  return {
+    type: 1,
+    tag: tag,
+    attrsList: attrs,
+    attrsMap: makeAttrsMap(attrs),
+    parent: parent,
+    children: []
+  }
+}
 
 /**
  * Convert HTML string to AST.
@@ -15185,13 +15969,17 @@ function parse (
     }
   }
 
-  function endPre (element) {
+  function closeElement (element) {
     // check pre state
     if (element.pre) {
       inVPre = false;
     }
     if (platformIsPreTag(element.tag)) {
       inPre = false;
+    }
+    // apply post-transforms
+    for (var i = 0; i < postTransforms.length; i++) {
+      postTransforms[i](element, options);
     }
   }
 
@@ -15201,6 +15989,7 @@ function parse (
     isUnaryTag: options.isUnaryTag,
     canBeLeftOpenTag: options.canBeLeftOpenTag,
     shouldDecodeNewlines: options.shouldDecodeNewlines,
+    shouldDecodeNewlinesForHref: options.shouldDecodeNewlinesForHref,
     shouldKeepComment: options.comments,
     start: function start (tag, attrs, unary) {
       // check namespace.
@@ -15213,14 +16002,7 @@ function parse (
         attrs = guardIESVGBug(attrs);
       }
 
-      var element = {
-        type: 1,
-        tag: tag,
-        attrsList: attrs,
-        attrsMap: makeAttrsMap(attrs),
-        parent: currentParent,
-        children: []
-      };
+      var element = createASTElement(tag, attrs, currentParent);
       if (ns) {
         element.ns = ns;
       }
@@ -15236,7 +16018,7 @@ function parse (
 
       // apply pre-transforms
       for (var i = 0; i < preTransforms.length; i++) {
-        preTransforms[i](element, options);
+        element = preTransforms[i](element, options) || element;
       }
 
       if (!inVPre) {
@@ -15250,23 +16032,13 @@ function parse (
       }
       if (inVPre) {
         processRawAttrs(element);
-      } else {
+      } else if (!element.processed) {
+        // structural directives
         processFor(element);
         processIf(element);
         processOnce(element);
-        processKey(element);
-
-        // determine whether this is a plain element after
-        // removing structural attributes
-        element.plain = !element.key && !attrs.length;
-
-        processRef(element);
-        processSlot(element);
-        processComponent(element);
-        for (var i$1 = 0; i$1 < transforms.length; i$1++) {
-          transforms[i$1](element, options);
-        }
-        processAttrs(element);
+        // element-scope stuff
+        processElement(element, options);
       }
 
       function checkRootConstraints (el) {
@@ -15321,11 +16093,7 @@ function parse (
         currentParent = element;
         stack.push(element);
       } else {
-        endPre(element);
-      }
-      // apply post-transforms
-      for (var i$2 = 0; i$2 < postTransforms.length; i$2++) {
-        postTransforms[i$2](element, options);
+        closeElement(element);
       }
     },
 
@@ -15339,7 +16107,7 @@ function parse (
       // pop stack
       stack.length -= 1;
       currentParent = stack[stack.length - 1];
-      endPre(element);
+      closeElement(element);
     },
 
     chars: function chars (text) {
@@ -15371,11 +16139,12 @@ function parse (
         // only preserve whitespace if its not right after a starting tag
         : preserveWhitespace && children.length ? ' ' : '';
       if (text) {
-        var expression;
-        if (!inVPre && text !== ' ' && (expression = parseText(text, delimiters))) {
+        var res;
+        if (!inVPre && text !== ' ' && (res = parseText(text, delimiters))) {
           children.push({
             type: 2,
-            expression: expression,
+            expression: res.expression,
+            tokens: res.tokens,
             text: text
           });
         } else if (text !== ' ' || !children.length || children[children.length - 1].text !== ' ') {
@@ -15419,6 +16188,22 @@ function processRawAttrs (el) {
   }
 }
 
+function processElement (element, options) {
+  processKey(element);
+
+  // determine whether this is a plain element after
+  // removing structural attributes
+  element.plain = !element.key && !element.attrsList.length;
+
+  processRef(element);
+  processSlot(element);
+  processComponent(element);
+  for (var i = 0; i < transforms.length; i++) {
+    element = transforms[i](element, options) || element;
+  }
+  processAttrs(element);
+}
+
 function processKey (el) {
   var exp = getBindingAttr(el, 'key');
   if (exp) {
@@ -15440,26 +16225,34 @@ function processRef (el) {
 function processFor (el) {
   var exp;
   if ((exp = getAndRemoveAttr(el, 'v-for'))) {
-    var inMatch = exp.match(forAliasRE);
-    if (!inMatch) {
-      "development" !== 'production' && warn$2(
+    var res = parseFor(exp);
+    if (res) {
+      extend(el, res);
+    } else if (true) {
+      warn$2(
         ("Invalid v-for expression: " + exp)
       );
-      return
-    }
-    el.for = inMatch[2].trim();
-    var alias = inMatch[1].trim();
-    var iteratorMatch = alias.match(forIteratorRE);
-    if (iteratorMatch) {
-      el.alias = iteratorMatch[1].trim();
-      el.iterator1 = iteratorMatch[2].trim();
-      if (iteratorMatch[3]) {
-        el.iterator2 = iteratorMatch[3].trim();
-      }
-    } else {
-      el.alias = alias;
     }
   }
+}
+
+function parseFor (exp) {
+  var inMatch = exp.match(forAliasRE);
+  if (!inMatch) { return }
+  var res = {};
+  res.for = inMatch[2].trim();
+  var alias = inMatch[1].trim().replace(stripParensRE, '');
+  var iteratorMatch = alias.match(forIteratorRE);
+  if (iteratorMatch) {
+    res.alias = alias.replace(forIteratorRE, '');
+    res.iterator1 = iteratorMatch[1].trim();
+    if (iteratorMatch[2]) {
+      res.iterator2 = iteratorMatch[2].trim();
+    }
+  } else {
+    res.alias = alias;
+  }
+  return res
 }
 
 function processIf (el) {
@@ -15538,12 +16331,40 @@ function processSlot (el) {
       );
     }
   } else {
+    var slotScope;
+    if (el.tag === 'template') {
+      slotScope = getAndRemoveAttr(el, 'scope');
+      /* istanbul ignore if */
+      if ("development" !== 'production' && slotScope) {
+        warn$2(
+          "the \"scope\" attribute for scoped slots have been deprecated and " +
+          "replaced by \"slot-scope\" since 2.5. The new \"slot-scope\" attribute " +
+          "can also be used on plain elements in addition to <template> to " +
+          "denote scoped slots.",
+          true
+        );
+      }
+      el.slotScope = slotScope || getAndRemoveAttr(el, 'slot-scope');
+    } else if ((slotScope = getAndRemoveAttr(el, 'slot-scope'))) {
+      /* istanbul ignore if */
+      if ("development" !== 'production' && el.attrsMap['v-for']) {
+        warn$2(
+          "Ambiguous combined usage of slot-scope and v-for on <" + (el.tag) + "> " +
+          "(v-for takes higher priority). Use a wrapper <template> for the " +
+          "scoped slot to make it clearer.",
+          true
+        );
+      }
+      el.slotScope = slotScope;
+    }
     var slotTarget = getBindingAttr(el, 'slot');
     if (slotTarget) {
       el.slotTarget = slotTarget === '""' ? '"default"' : slotTarget;
-    }
-    if (el.tag === 'template') {
-      el.slotScope = getAndRemoveAttr(el, 'scope');
+      // preserve slot as an attribute for native shadow DOM compat
+      // only for non-scoped slots.
+      if (el.tag !== 'template' && !el.slotScope) {
+        addAttr(el, 'slot', slotTarget);
+      }
     }
   }
 }
@@ -15619,8 +16440,8 @@ function processAttrs (el) {
     } else {
       // literal attribute
       if (true) {
-        var expression = parseText(value, delimiters);
-        if (expression) {
+        var res = parseText(value, delimiters);
+        if (res) {
           warn$2(
             name + "=\"" + value + "\": " +
             'Interpolation inside attributes has been removed. ' +
@@ -15630,6 +16451,13 @@ function processAttrs (el) {
         }
       }
       addAttr(el, name, JSON.stringify(value));
+      // #6887 firefox doesn't update muted state if set via attribute
+      // even immediately after element creation
+      if (!el.component &&
+          name === 'muted' &&
+          platformMustUseProp(el.tag, el.attrsMap.type, name)) {
+        addProp(el, name, 'true');
+      }
     }
   }
 }
@@ -15714,6 +16542,120 @@ function checkForAliasModel (el, value) {
     _el = _el.parent;
   }
 }
+
+/*  */
+
+/**
+ * Expand input[v-model] with dyanmic type bindings into v-if-else chains
+ * Turn this:
+ *   <input v-model="data[type]" :type="type">
+ * into this:
+ *   <input v-if="type === 'checkbox'" type="checkbox" v-model="data[type]">
+ *   <input v-else-if="type === 'radio'" type="radio" v-model="data[type]">
+ *   <input v-else :type="type" v-model="data[type]">
+ */
+
+function preTransformNode (el, options) {
+  if (el.tag === 'input') {
+    var map = el.attrsMap;
+    if (map['v-model'] && (map['v-bind:type'] || map[':type'])) {
+      var typeBinding = getBindingAttr(el, 'type');
+      var ifCondition = getAndRemoveAttr(el, 'v-if', true);
+      var ifConditionExtra = ifCondition ? ("&&(" + ifCondition + ")") : "";
+      var hasElse = getAndRemoveAttr(el, 'v-else', true) != null;
+      var elseIfCondition = getAndRemoveAttr(el, 'v-else-if', true);
+      // 1. checkbox
+      var branch0 = cloneASTElement(el);
+      // process for on the main node
+      processFor(branch0);
+      addRawAttr(branch0, 'type', 'checkbox');
+      processElement(branch0, options);
+      branch0.processed = true; // prevent it from double-processed
+      branch0.if = "(" + typeBinding + ")==='checkbox'" + ifConditionExtra;
+      addIfCondition(branch0, {
+        exp: branch0.if,
+        block: branch0
+      });
+      // 2. add radio else-if condition
+      var branch1 = cloneASTElement(el);
+      getAndRemoveAttr(branch1, 'v-for', true);
+      addRawAttr(branch1, 'type', 'radio');
+      processElement(branch1, options);
+      addIfCondition(branch0, {
+        exp: "(" + typeBinding + ")==='radio'" + ifConditionExtra,
+        block: branch1
+      });
+      // 3. other
+      var branch2 = cloneASTElement(el);
+      getAndRemoveAttr(branch2, 'v-for', true);
+      addRawAttr(branch2, ':type', typeBinding);
+      processElement(branch2, options);
+      addIfCondition(branch0, {
+        exp: ifCondition,
+        block: branch2
+      });
+
+      if (hasElse) {
+        branch0.else = true;
+      } else if (elseIfCondition) {
+        branch0.elseif = elseIfCondition;
+      }
+
+      return branch0
+    }
+  }
+}
+
+function cloneASTElement (el) {
+  return createASTElement(el.tag, el.attrsList.slice(), el.parent)
+}
+
+var model$2 = {
+  preTransformNode: preTransformNode
+};
+
+var modules$1 = [
+  klass$1,
+  style$1,
+  model$2
+];
+
+/*  */
+
+function text (el, dir) {
+  if (dir.value) {
+    addProp(el, 'textContent', ("_s(" + (dir.value) + ")"));
+  }
+}
+
+/*  */
+
+function html (el, dir) {
+  if (dir.value) {
+    addProp(el, 'innerHTML', ("_s(" + (dir.value) + ")"));
+  }
+}
+
+var directives$1 = {
+  model: model,
+  text: text,
+  html: html
+};
+
+/*  */
+
+var baseOptions = {
+  expectHTML: true,
+  modules: modules$1,
+  directives: directives$1,
+  isPreTag: isPreTag,
+  isUnaryTag: isUnaryTag,
+  mustUseProp: mustUseProp,
+  canBeLeftOpenTag: canBeLeftOpenTag,
+  isReservedTag: isReservedTag,
+  getTagNamespace: getTagNamespace,
+  staticKeys: genStaticKeys(modules$1)
+};
 
 /*  */
 
@@ -15885,18 +16827,7 @@ function genHandlers (
 ) {
   var res = isNative ? 'nativeOn:{' : 'on:{';
   for (var name in events) {
-    var handler = events[name];
-    // #5330: warn click.right, since right clicks do not actually fire click events.
-    if ("development" !== 'production' &&
-      name === 'click' &&
-      handler && handler.modifiers && handler.modifiers.right
-    ) {
-      warn(
-        "Use \"contextmenu\" instead of \"click.right\" since right clicks " +
-        "do not actually fire \"click\" events."
-      );
-    }
-    res += "\"" + name + "\":" + (genHandler(name, handler)) + ",";
+    res += "\"" + name + "\":" + (genHandler(name, events[name])) + ",";
   }
   return res.slice(0, -1) + '}'
 }
@@ -15917,9 +16848,11 @@ function genHandler (
   var isFunctionExpression = fnExpRE.test(handler.value);
 
   if (!handler.modifiers) {
-    return isMethodPath || isFunctionExpression
-      ? handler.value
-      : ("function($event){" + (handler.value) + "}") // inline statement
+    if (isMethodPath || isFunctionExpression) {
+      return handler.value
+    }
+    /* istanbul ignore if */
+    return ("function($event){" + (handler.value) + "}") // inline statement
   } else {
     var code = '';
     var genModifierCode = '';
@@ -15931,6 +16864,14 @@ function genHandler (
         if (keyCodes[key]) {
           keys.push(key);
         }
+      } else if (key === 'exact') {
+        var modifiers = (handler.modifiers);
+        genModifierCode += genGuard(
+          ['ctrl', 'shift', 'alt', 'meta']
+            .filter(function (keyModifier) { return !modifiers[keyModifier]; })
+            .map(function (keyModifier) { return ("$event." + keyModifier + "Key"); })
+            .join('||')
+        );
       } else {
         keys.push(key);
       }
@@ -15947,6 +16888,7 @@ function genHandler (
       : isFunctionExpression
         ? ("(" + (handler.value) + ")($event)")
         : handler.value;
+    /* istanbul ignore if */
     return ("function($event){" + code + handlerCode + "}")
   }
 }
@@ -15960,8 +16902,13 @@ function genFilterCode (key) {
   if (keyVal) {
     return ("$event.keyCode!==" + keyVal)
   }
-  var alias = keyCodes[key];
-  return ("_k($event.keyCode," + (JSON.stringify(key)) + (alias ? ',' + JSON.stringify(alias) : '') + ")")
+  var code = keyCodes[key];
+  return (
+    "_k($event.keyCode," +
+    (JSON.stringify(key)) + "," +
+    (JSON.stringify(code)) + "," +
+    "$event.key)"
+  )
 }
 
 /*  */
@@ -16077,7 +17024,7 @@ function genOnce (el, state) {
       );
       return genElement(el, state)
     }
-    return ("_o(" + (genElement(el, state)) + "," + (state.onceId++) + (key ? ("," + key) : "") + ")")
+    return ("_o(" + (genElement(el, state)) + "," + (state.onceId++) + "," + key + ")")
   } else {
     return genStatic(el, state)
   }
@@ -16199,7 +17146,8 @@ function genData$2 (el, state) {
     data += (genHandlers(el.nativeEvents, true, state.warn)) + ",";
   }
   // slot target
-  if (el.slotTarget) {
+  // only for non-scoped slots
+  if (el.slotTarget && !el.slotScope) {
     data += "slot:" + (el.slotTarget) + ",";
   }
   // scoped slots
@@ -16257,7 +17205,7 @@ function genDirectives (el, state) {
 function genInlineTemplate (el, state) {
   var ast = el.children[0];
   if ("development" !== 'production' && (
-    el.children.length > 1 || ast.type !== 1
+    el.children.length !== 1 || ast.type !== 1
   )) {
     state.warn('Inline-template components must have exactly one child element.');
   }
@@ -16284,10 +17232,13 @@ function genScopedSlot (
   if (el.for && !el.forProcessed) {
     return genForScopedSlot(key, el, state)
   }
-  return "{key:" + key + ",fn:function(" + (String(el.attrsMap.scope)) + "){" +
+  var fn = "function(" + (String(el.slotScope)) + "){" +
     "return " + (el.tag === 'template'
-      ? genChildren(el, state) || 'void 0'
-      : genElement(el, state)) + "}}"
+      ? el.if
+        ? ((el.if) + "?" + (genChildren(el, state) || 'undefined') + ":undefined")
+        : genChildren(el, state) || 'undefined'
+      : genElement(el, state)) + "}";
+  return ("{key:" + key + ",fn:" + fn + "}")
 }
 
 function genForScopedSlot (
@@ -16415,7 +17366,10 @@ function genProps (props) {
   var res = '';
   for (var i = 0; i < props.length; i++) {
     var prop = props[i];
-    res += "\"" + (prop.name) + "\":" + (transformSpecialNewlines(prop.value)) + ",";
+    /* istanbul ignore if */
+    {
+      res += "\"" + (prop.name) + "\":" + (transformSpecialNewlines(prop.value)) + ",";
+    }
   }
   return res.slice(0, -1)
 }
@@ -16441,9 +17395,6 @@ var prohibitedKeywordRE = new RegExp('\\b' + (
 var unaryOperatorsRE = new RegExp('\\b' + (
   'delete,typeof,void'
 ).split(',').join('\\s*\\([^\\)]*\\)|\\b') + '\\s*\\([^\\)]*\\)');
-
-// check valid identifier for v-for
-var identRE = /[A-Za-z_$][\w$]*/;
 
 // strip strings in expressions
 var stripStringRE = /'(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*"|`(?:[^`\\]|\\.)*\$\{|\}(?:[^`\\]|\\.)*`|`(?:[^`\\]|\\.)*`/g;
@@ -16502,9 +17453,18 @@ function checkFor (node, text, errors) {
   checkIdentifier(node.iterator2, 'v-for iterator', text, errors);
 }
 
-function checkIdentifier (ident, type, text, errors) {
-  if (typeof ident === 'string' && !identRE.test(ident)) {
-    errors.push(("invalid " + type + " \"" + ident + "\" in expression: " + (text.trim())));
+function checkIdentifier (
+  ident,
+  type,
+  text,
+  errors
+) {
+  if (typeof ident === 'string') {
+    try {
+      new Function(("var " + ident + "=_"));
+    } catch (e) {
+      errors.push(("invalid " + type + " \"" + ident + "\" in expression: " + (text.trim())));
+    }
   }
 }
 
@@ -16516,10 +17476,14 @@ function checkExpression (exp, text, errors) {
     if (keywordMatch) {
       errors.push(
         "avoid using JavaScript keyword as property name: " +
-        "\"" + (keywordMatch[0]) + "\" in expression " + (text.trim())
+        "\"" + (keywordMatch[0]) + "\"\n  Raw expression: " + (text.trim())
       );
     } else {
-      errors.push(("invalid expression: " + (text.trim())));
+      errors.push(
+        "invalid expression: " + (e.message) + " in\n\n" +
+        "    " + exp + "\n\n" +
+        "  Raw expression: " + (text.trim()) + "\n"
+      );
     }
   }
 }
@@ -16543,7 +17507,9 @@ function createCompileToFunctionFn (compile) {
     options,
     vm
   ) {
-    options = options || {};
+    options = extend({}, options);
+    var warn$$1 = options.warn || warn;
+    delete options.warn;
 
     /* istanbul ignore if */
     if (true) {
@@ -16552,7 +17518,7 @@ function createCompileToFunctionFn (compile) {
         new Function('return 1');
       } catch (e) {
         if (e.toString().match(/unsafe-eval|CSP/)) {
-          warn(
+          warn$$1(
             'It seems you are using the standalone build of Vue.js in an ' +
             'environment with Content Security Policy that prohibits unsafe-eval. ' +
             'The template compiler cannot work in this environment. Consider ' +
@@ -16577,7 +17543,7 @@ function createCompileToFunctionFn (compile) {
     // check compilation errors/tips
     if (true) {
       if (compiled.errors && compiled.errors.length) {
-        warn(
+        warn$$1(
           "Error compiling template:\n\n" + template + "\n\n" +
           compiled.errors.map(function (e) { return ("- " + e); }).join('\n') + '\n',
           vm
@@ -16602,7 +17568,7 @@ function createCompileToFunctionFn (compile) {
     /* istanbul ignore if */
     if (true) {
       if ((!compiled.errors || !compiled.errors.length) && fnGenErrors.length) {
-        warn(
+        warn$$1(
           "Failed to generate render function:\n\n" +
           fnGenErrors.map(function (ref) {
             var err = ref.err;
@@ -16643,7 +17609,7 @@ function createCompilerCreator (baseCompile) {
         // merge custom directives
         if (options.directives) {
           finalOptions.directives = extend(
-            Object.create(baseOptions.directives),
+            Object.create(baseOptions.directives || null),
             options.directives
           );
         }
@@ -16681,7 +17647,9 @@ var createCompiler = createCompilerCreator(function baseCompile (
   options
 ) {
   var ast = parse(template.trim(), options);
-  optimize(ast, options);
+  if (options.optimize !== false) {
+    optimize(ast, options);
+  }
   var code = generate(ast, options);
   return {
     ast: ast,
@@ -16694,6 +17662,21 @@ var createCompiler = createCompilerCreator(function baseCompile (
 
 var ref$1 = createCompiler(baseOptions);
 var compileToFunctions = ref$1.compileToFunctions;
+
+/*  */
+
+// check whether current browser encodes a char inside attribute values
+var div;
+function getShouldDecode (href) {
+  div = div || document.createElement('div');
+  div.innerHTML = href ? "<a href=\"\n\"/>" : "<div a=\"\n\"/>";
+  return div.innerHTML.indexOf('&#10;') > 0
+}
+
+// #3663: IE encodes newlines inside attribute values while other browsers don't
+var shouldDecodeNewlines = inBrowser ? getShouldDecode(false) : false;
+// #6828: chrome encodes content in a[href]
+var shouldDecodeNewlinesForHref = inBrowser ? getShouldDecode(true) : false;
 
 /*  */
 
@@ -16752,6 +17735,7 @@ Vue$3.prototype.$mount = function (
 
       var ref = compileToFunctions(template, {
         shouldDecodeNewlines: shouldDecodeNewlines,
+        shouldDecodeNewlinesForHref: shouldDecodeNewlinesForHref,
         delimiters: options.delimiters,
         comments: options.comments
       }, this);
@@ -16763,7 +17747,7 @@ Vue$3.prototype.$mount = function (
       /* istanbul ignore if */
       if ("development" !== 'production' && config.performance && mark) {
         mark('compile end');
-        measure(((this._name) + " compile"), 'compile', 'compile end');
+        measure(("vue " + (this._name) + " compile"), 'compile', 'compile end');
       }
     }
   }
@@ -16788,13 +17772,13 @@ Vue$3.compile = compileToFunctions;
 
 module.exports = Vue$3;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9), __webpack_require__(163).setImmediate))
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var defineProperty = __webpack_require__(20);
+var defineProperty = __webpack_require__(21);
 
 /**
  * The base implementation of `assignValue` and `assignMergeValue` without
@@ -16822,10 +17806,10 @@ module.exports = baseAssignValue;
 
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var getNative = __webpack_require__(173);
+var getNative = __webpack_require__(179);
 
 var defineProperty = (function() {
   try {
@@ -16839,10 +17823,10 @@ module.exports = defineProperty;
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var root = __webpack_require__(14);
+var root = __webpack_require__(15);
 
 /** Built-in value references. */
 var Symbol = root.Symbol;
@@ -16851,7 +17835,7 @@ module.exports = Symbol;
 
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {/** Detect free variable `global` from Node.js. */
@@ -16859,10 +17843,10 @@ var freeGlobal = typeof global == 'object' && global && global.Object === Object
 
 module.exports = freeGlobal;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9)))
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports) {
 
 /**
@@ -16905,7 +17889,7 @@ module.exports = eq;
 
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports) {
 
 /**
@@ -16932,11 +17916,11 @@ module.exports = identity;
 
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isFunction = __webpack_require__(13),
-    isLength = __webpack_require__(26);
+var isFunction = __webpack_require__(14),
+    isLength = __webpack_require__(27);
 
 /**
  * Checks if `value` is array-like. A value is considered array-like if it's
@@ -16971,7 +17955,7 @@ module.exports = isArrayLike;
 
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports) {
 
 /** Used as references for various `Number` constants. */
@@ -17012,7 +17996,7 @@ module.exports = isLength;
 
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports) {
 
 /** Used as references for various `Number` constants. */
@@ -17040,7 +18024,7 @@ module.exports = isIndex;
 
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports) {
 
 /**
@@ -17072,7 +18056,7 @@ module.exports = isArray;
 
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17090,196 +18074,6 @@ module.exports = function bind(fn, thisArg) {
 
 
 /***/ }),
-/* 30 */
-/***/ (function(module, exports) {
-
-// shim for using process in browser
-var process = module.exports = {};
-
-// cached from whatever global is present so that test runners that stub it
-// don't break things.  But we need to wrap it in a try catch in case it is
-// wrapped in strict mode code which doesn't define any globals.  It's inside a
-// function because try/catches deoptimize in certain engines.
-
-var cachedSetTimeout;
-var cachedClearTimeout;
-
-function defaultSetTimout() {
-    throw new Error('setTimeout has not been defined');
-}
-function defaultClearTimeout () {
-    throw new Error('clearTimeout has not been defined');
-}
-(function () {
-    try {
-        if (typeof setTimeout === 'function') {
-            cachedSetTimeout = setTimeout;
-        } else {
-            cachedSetTimeout = defaultSetTimout;
-        }
-    } catch (e) {
-        cachedSetTimeout = defaultSetTimout;
-    }
-    try {
-        if (typeof clearTimeout === 'function') {
-            cachedClearTimeout = clearTimeout;
-        } else {
-            cachedClearTimeout = defaultClearTimeout;
-        }
-    } catch (e) {
-        cachedClearTimeout = defaultClearTimeout;
-    }
-} ())
-function runTimeout(fun) {
-    if (cachedSetTimeout === setTimeout) {
-        //normal enviroments in sane situations
-        return setTimeout(fun, 0);
-    }
-    // if setTimeout wasn't available but was latter defined
-    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
-        cachedSetTimeout = setTimeout;
-        return setTimeout(fun, 0);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedSetTimeout(fun, 0);
-    } catch(e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
-            return cachedSetTimeout.call(null, fun, 0);
-        } catch(e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
-            return cachedSetTimeout.call(this, fun, 0);
-        }
-    }
-
-
-}
-function runClearTimeout(marker) {
-    if (cachedClearTimeout === clearTimeout) {
-        //normal enviroments in sane situations
-        return clearTimeout(marker);
-    }
-    // if clearTimeout wasn't available but was latter defined
-    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
-        cachedClearTimeout = clearTimeout;
-        return clearTimeout(marker);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedClearTimeout(marker);
-    } catch (e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
-            return cachedClearTimeout.call(null, marker);
-        } catch (e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
-            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
-            return cachedClearTimeout.call(this, marker);
-        }
-    }
-
-
-
-}
-var queue = [];
-var draining = false;
-var currentQueue;
-var queueIndex = -1;
-
-function cleanUpNextTick() {
-    if (!draining || !currentQueue) {
-        return;
-    }
-    draining = false;
-    if (currentQueue.length) {
-        queue = currentQueue.concat(queue);
-    } else {
-        queueIndex = -1;
-    }
-    if (queue.length) {
-        drainQueue();
-    }
-}
-
-function drainQueue() {
-    if (draining) {
-        return;
-    }
-    var timeout = runTimeout(cleanUpNextTick);
-    draining = true;
-
-    var len = queue.length;
-    while(len) {
-        currentQueue = queue;
-        queue = [];
-        while (++queueIndex < len) {
-            if (currentQueue) {
-                currentQueue[queueIndex].run();
-            }
-        }
-        queueIndex = -1;
-        len = queue.length;
-    }
-    currentQueue = null;
-    draining = false;
-    runClearTimeout(timeout);
-}
-
-process.nextTick = function (fun) {
-    var args = new Array(arguments.length - 1);
-    if (arguments.length > 1) {
-        for (var i = 1; i < arguments.length; i++) {
-            args[i - 1] = arguments[i];
-        }
-    }
-    queue.push(new Item(fun, args));
-    if (queue.length === 1 && !draining) {
-        runTimeout(drainQueue);
-    }
-};
-
-// v8 likes predictible objects
-function Item(fun, array) {
-    this.fun = fun;
-    this.array = array;
-}
-Item.prototype.run = function () {
-    this.fun.apply(null, this.array);
-};
-process.title = 'browser';
-process.browser = true;
-process.env = {};
-process.argv = [];
-process.version = ''; // empty string to avoid regexp issues
-process.versions = {};
-
-function noop() {}
-
-process.on = noop;
-process.addListener = noop;
-process.once = noop;
-process.off = noop;
-process.removeListener = noop;
-process.removeAllListeners = noop;
-process.emit = noop;
-process.prependListener = noop;
-process.prependOnceListener = noop;
-
-process.listeners = function (name) { return [] }
-
-process.binding = function (name) {
-    throw new Error('process.binding is not supported');
-};
-
-process.cwd = function () { return '/' };
-process.chdir = function (dir) {
-    throw new Error('process.chdir is not supported');
-};
-process.umask = function() { return 0; };
-
-
-/***/ }),
 /* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -17287,12 +18081,12 @@ process.umask = function() { return 0; };
 
 
 var utils = __webpack_require__(5);
-var settle = __webpack_require__(216);
-var buildURL = __webpack_require__(218);
-var parseHeaders = __webpack_require__(219);
-var isURLSameOrigin = __webpack_require__(220);
+var settle = __webpack_require__(222);
+var buildURL = __webpack_require__(224);
+var parseHeaders = __webpack_require__(225);
+var isURLSameOrigin = __webpack_require__(226);
 var createError = __webpack_require__(32);
-var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(221);
+var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(227);
 
 module.exports = function xhrAdapter(config) {
   return new Promise(function dispatchXhrRequest(resolve, reject) {
@@ -17389,7 +18183,7 @@ module.exports = function xhrAdapter(config) {
     // This is only done if running in a standard browser environment.
     // Specifically not if we're in a web worker, or react-native.
     if (utils.isStandardBrowserEnv()) {
-      var cookies = __webpack_require__(222);
+      var cookies = __webpack_require__(228);
 
       // Add xsrf header
       var xsrfValue = (config.withCredentials || isURLSameOrigin(config.url)) && config.xsrfCookieName ?
@@ -17473,7 +18267,7 @@ module.exports = function xhrAdapter(config) {
 "use strict";
 
 
-var enhanceError = __webpack_require__(217);
+var enhanceError = __webpack_require__(223);
 
 /**
  * Create an Error with the specified message, config, error code, request and response.
@@ -17536,13 +18330,13 @@ module.exports = Cancel;
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(230)
+  __webpack_require__(236)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(233),
+  __webpack_require__(239),
   /* template */
-  __webpack_require__(234),
+  __webpack_require__(240),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -17550,7 +18344,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Creating\\CreateMember.vue"
+Component.options.__file = "/var/www/html/softAdventist/resources/assets/js/components/Creating/CreateMember.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] CreateMember.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -17578,7 +18372,7 @@ module.exports = Component.exports
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lassehaslev_vue_modal__ = __webpack_require__(253);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lassehaslev_vue_modal__ = __webpack_require__(259);
 
 /* harmony default export */ __webpack_exports__["a"] = ({
     mixins: [__WEBPACK_IMPORTED_MODULE_0__lassehaslev_vue_modal__["a" /* default */]],
@@ -17623,7 +18417,7 @@ module.exports = Component.exports
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(19);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ModalController__ = __webpack_require__(38);
 // Set global controller
@@ -17643,13 +18437,13 @@ window.ModalController=new __WEBPACK_IMPORTED_MODULE_0_vue___default.a(__WEBPACK
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(264)
+  __webpack_require__(270)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(266),
+  __webpack_require__(272),
   /* template */
-  __webpack_require__(267),
+  __webpack_require__(273),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -17657,7 +18451,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Lists\\ListsExpenses.vue"
+Component.options.__file = "/var/www/html/softAdventist/resources/assets/js/components/Lists/ListsExpenses.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ListsExpenses.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -17732,6 +18526,7 @@ var af = moment.defineLocale('af', {
         future : 'oor %s',
         past : '%s gelede',
         s : '\'n paar sekondes',
+        ss : '%d sekondes',
         m : '\'n minuut',
         mm : '%d minute',
         h : '\'n uur',
@@ -17821,18 +18616,18 @@ var pluralize = function (u) {
     };
 };
 var months = [
-    'كانون الثاني يناير',
-    'شباط فبراير',
-    'آذار مارس',
-    'نيسان أبريل',
-    'أيار مايو',
-    'حزيران يونيو',
-    'تموز يوليو',
-    'آب أغسطس',
-    'أيلول سبتمبر',
-    'تشرين الأول أكتوبر',
-    'تشرين الثاني نوفمبر',
-    'كانون الأول ديسمبر'
+    'يناير',
+    'فبراير',
+    'مارس',
+    'أبريل',
+    'مايو',
+    'يونيو',
+    'يوليو',
+    'أغسطس',
+    'سبتمبر',
+    'أكتوبر',
+    'نوفمبر',
+    'ديسمبر'
 ];
 
 var ar = moment.defineLocale('ar', {
@@ -17873,6 +18668,7 @@ var ar = moment.defineLocale('ar', {
         future : 'بعد %s',
         past : 'منذ %s',
         s : pluralize('s'),
+        ss : pluralize('s'),
         m : pluralize('m'),
         mm : pluralize('m'),
         h : pluralize('h'),
@@ -17885,7 +18681,7 @@ var ar = moment.defineLocale('ar', {
         yy : pluralize('y')
     },
     preparse: function (string) {
-        return string.replace(/\u200f/g, '').replace(/[١٢٣٤٥٦٧٨٩٠]/g, function (match) {
+        return string.replace(/[١٢٣٤٥٦٧٨٩٠]/g, function (match) {
             return numberMap[match];
         }).replace(/،/g, ',');
     },
@@ -17947,6 +18743,7 @@ var arDz = moment.defineLocale('ar-dz', {
         future : 'في %s',
         past : 'منذ %s',
         s : 'ثوان',
+        ss : '%d ثانية',
         m : 'دقيقة',
         mm : '%d دقائق',
         h : 'ساعة',
@@ -18011,6 +18808,7 @@ var arKw = moment.defineLocale('ar-kw', {
         future : 'في %s',
         past : 'منذ %s',
         s : 'ثوان',
+        ss : '%d ثانية',
         m : 'دقيقة',
         mm : '%d دقائق',
         h : 'ساعة',
@@ -18134,6 +18932,7 @@ var arLy = moment.defineLocale('ar-ly', {
         future : 'بعد %s',
         past : 'منذ %s',
         s : pluralize('s'),
+        ss : pluralize('s'),
         m : pluralize('m'),
         mm : pluralize('m'),
         h : pluralize('h'),
@@ -18146,7 +18945,7 @@ var arLy = moment.defineLocale('ar-ly', {
         yy : pluralize('y')
     },
     preparse: function (string) {
-        return string.replace(/\u200f/g, '').replace(/،/g, ',');
+        return string.replace(/،/g, ',');
     },
     postformat: function (string) {
         return string.replace(/\d/g, function (match) {
@@ -18207,6 +19006,7 @@ var arMa = moment.defineLocale('ar-ma', {
         future : 'في %s',
         past : 'منذ %s',
         s : 'ثوان',
+        ss : '%d ثانية',
         m : 'دقيقة',
         mm : '%d دقائق',
         h : 'ساعة',
@@ -18307,6 +19107,7 @@ var arSa = moment.defineLocale('ar-sa', {
         future : 'في %s',
         past : 'منذ %s',
         s : 'ثوان',
+        ss : '%d ثانية',
         m : 'دقيقة',
         mm : '%d دقائق',
         h : 'ساعة',
@@ -18381,6 +19182,7 @@ var arTn = moment.defineLocale('ar-tn', {
         future: 'في %s',
         past: 'منذ %s',
         s: 'ثوان',
+        ss : '%d ثانية',
         m: 'دقيقة',
         mm: '%d دقائق',
         h: 'ساعة',
@@ -18466,6 +19268,7 @@ var az = moment.defineLocale('az', {
         future : '%s sonra',
         past : '%s əvvəl',
         s : 'birneçə saniyyə',
+        ss : '%d saniyə',
         m : 'bir dəqiqə',
         mm : '%d dəqiqə',
         h : 'bir saat',
@@ -18536,6 +19339,7 @@ function plural(word, num) {
 }
 function relativeTimeWithPlural(number, withoutSuffix, key) {
     var format = {
+        'ss': withoutSuffix ? 'секунда_секунды_секунд' : 'секунду_секунды_секунд',
         'mm': withoutSuffix ? 'хвіліна_хвіліны_хвілін' : 'хвіліну_хвіліны_хвілін',
         'hh': withoutSuffix ? 'гадзіна_гадзіны_гадзін' : 'гадзіну_гадзіны_гадзін',
         'dd': 'дзень_дні_дзён',
@@ -18705,6 +19509,7 @@ var bg = moment.defineLocale('bg', {
         future : 'след %s',
         past : 'преди %s',
         s : 'няколко секунди',
+        ss : '%d секунди',
         m : 'минута',
         mm : '%d минути',
         h : 'час',
@@ -18749,6 +19554,71 @@ return bg;
 
 /***/ }),
 /* 51 */
+/***/ (function(module, exports, __webpack_require__) {
+
+//! moment.js locale configuration
+//! locale : Bambara [bm]
+//! author : Estelle Comment : https://github.com/estellecomment
+
+;(function (global, factory) {
+    true ? factory(__webpack_require__(0)) :
+   typeof define === 'function' && define.amd ? define(['../moment'], factory) :
+   factory(global.moment)
+}(this, (function (moment) { 'use strict';
+
+// Language contact person : Abdoufata Kane : https://github.com/abdoufata
+
+var bm = moment.defineLocale('bm', {
+    months : 'Zanwuyekalo_Fewuruyekalo_Marisikalo_Awirilikalo_Mɛkalo_Zuwɛnkalo_Zuluyekalo_Utikalo_Sɛtanburukalo_ɔkutɔburukalo_Nowanburukalo_Desanburukalo'.split('_'),
+    monthsShort : 'Zan_Few_Mar_Awi_Mɛ_Zuw_Zul_Uti_Sɛt_ɔku_Now_Des'.split('_'),
+    weekdays : 'Kari_Ntɛnɛn_Tarata_Araba_Alamisa_Juma_Sibiri'.split('_'),
+    weekdaysShort : 'Kar_Ntɛ_Tar_Ara_Ala_Jum_Sib'.split('_'),
+    weekdaysMin : 'Ka_Nt_Ta_Ar_Al_Ju_Si'.split('_'),
+    longDateFormat : {
+        LT : 'HH:mm',
+        LTS : 'HH:mm:ss',
+        L : 'DD/MM/YYYY',
+        LL : 'MMMM [tile] D [san] YYYY',
+        LLL : 'MMMM [tile] D [san] YYYY [lɛrɛ] HH:mm',
+        LLLL : 'dddd MMMM [tile] D [san] YYYY [lɛrɛ] HH:mm'
+    },
+    calendar : {
+        sameDay : '[Bi lɛrɛ] LT',
+        nextDay : '[Sini lɛrɛ] LT',
+        nextWeek : 'dddd [don lɛrɛ] LT',
+        lastDay : '[Kunu lɛrɛ] LT',
+        lastWeek : 'dddd [tɛmɛnen lɛrɛ] LT',
+        sameElse : 'L'
+    },
+    relativeTime : {
+        future : '%s kɔnɔ',
+        past : 'a bɛ %s bɔ',
+        s : 'sanga dama dama',
+        ss : 'sekondi %d',
+        m : 'miniti kelen',
+        mm : 'miniti %d',
+        h : 'lɛrɛ kelen',
+        hh : 'lɛrɛ %d',
+        d : 'tile kelen',
+        dd : 'tile %d',
+        M : 'kalo kelen',
+        MM : 'kalo %d',
+        y : 'san kelen',
+        yy : 'san %d'
+    },
+    week : {
+        dow : 1, // Monday is the first day of the week.
+        doy : 4  // The week that contains Jan 4th is the first week of the year.
+    }
+});
+
+return bm;
+
+})));
+
+
+/***/ }),
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -18813,6 +19683,7 @@ var bn = moment.defineLocale('bn', {
         future : '%s পরে',
         past : '%s আগে',
         s : 'কয়েক সেকেন্ড',
+        ss : '%d সেকেন্ড',
         m : 'এক মিনিট',
         mm : '%d মিনিট',
         h : 'এক ঘন্টা',
@@ -18872,7 +19743,7 @@ return bn;
 
 
 /***/ }),
-/* 52 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -18937,6 +19808,7 @@ var bo = moment.defineLocale('bo', {
         future : '%s ལ་',
         past : '%s སྔན་ལ',
         s : 'ལམ་སང',
+        ss : '%d སྐར་ཆ།',
         m : 'སྐར་མ་གཅིག',
         mm : '%d སྐར་མ',
         h : 'ཆུ་ཚོད་གཅིག',
@@ -18996,7 +19868,7 @@ return bo;
 
 
 /***/ }),
-/* 53 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -19081,6 +19953,7 @@ var br = moment.defineLocale('br', {
         future : 'a-benn %s',
         past : '%s \'zo',
         s : 'un nebeud segondennoù',
+        ss : '%d eilenn',
         m : 'ur vunutenn',
         mm : relativeTimeWithMutation,
         h : 'un eur',
@@ -19109,7 +19982,7 @@ return br;
 
 
 /***/ }),
-/* 54 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -19127,6 +20000,15 @@ return br;
 function translate(number, withoutSuffix, key) {
     var result = number + ' ';
     switch (key) {
+        case 'ss':
+            if (number === 1) {
+                result += 'sekunda';
+            } else if (number === 2 || number === 3 || number === 4) {
+                result += 'sekunde';
+            } else {
+                result += 'sekundi';
+            }
+            return result;
         case 'm':
             return withoutSuffix ? 'jedna minuta' : 'jedne minute';
         case 'mm':
@@ -19232,6 +20114,7 @@ var bs = moment.defineLocale('bs', {
         future : 'za %s',
         past   : 'prije %s',
         s      : 'par sekundi',
+        ss     : translate,
         m      : translate,
         mm     : translate,
         h      : translate,
@@ -19257,7 +20140,7 @@ return bs;
 
 
 /***/ }),
-/* 55 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -19281,17 +20164,17 @@ var ca = moment.defineLocale('ca', {
     monthsParseExact : true,
     weekdays : 'diumenge_dilluns_dimarts_dimecres_dijous_divendres_dissabte'.split('_'),
     weekdaysShort : 'dg._dl._dt._dc._dj._dv._ds.'.split('_'),
-    weekdaysMin : 'Dg_Dl_Dt_Dc_Dj_Dv_Ds'.split('_'),
+    weekdaysMin : 'dg_dl_dt_dc_dj_dv_ds'.split('_'),
     weekdaysParseExact : true,
     longDateFormat : {
         LT : 'H:mm',
         LTS : 'H:mm:ss',
         L : 'DD/MM/YYYY',
-        LL : '[el] D MMMM [de] YYYY',
+        LL : 'D MMMM [de] YYYY',
         ll : 'D MMM YYYY',
-        LLL : '[el] D MMMM [de] YYYY [a les] H:mm',
+        LLL : 'D MMMM [de] YYYY [a les] H:mm',
         lll : 'D MMM YYYY, H:mm',
-        LLLL : '[el] dddd D MMMM [de] YYYY [a les] H:mm',
+        LLLL : 'dddd D MMMM [de] YYYY [a les] H:mm',
         llll : 'ddd D MMM YYYY, H:mm'
     },
     calendar : {
@@ -19316,6 +20199,7 @@ var ca = moment.defineLocale('ca', {
         future : 'd\'aquí %s',
         past : 'fa %s',
         s : 'uns segons',
+        ss : '%d segons',
         m : 'un minut',
         mm : '%d minuts',
         h : 'una hora',
@@ -19350,7 +20234,7 @@ return ca;
 
 
 /***/ }),
-/* 56 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -19374,6 +20258,13 @@ function translate(number, withoutSuffix, key, isFuture) {
     switch (key) {
         case 's':  // a few seconds / in a few seconds / a few seconds ago
             return (withoutSuffix || isFuture) ? 'pár sekund' : 'pár sekundami';
+        case 'ss': // 9 seconds / in 9 seconds / 9 seconds ago
+            if (withoutSuffix || isFuture) {
+                return result + (plural(number) ? 'sekundy' : 'sekund');
+            } else {
+                return result + 'sekundami';
+            }
+            break;
         case 'm':  // a minute / in a minute / a minute ago
             return withoutSuffix ? 'minuta' : (isFuture ? 'minutu' : 'minutou');
         case 'mm': // 9 minutes / in 9 minutes / 9 minutes ago
@@ -19502,6 +20393,7 @@ var cs = moment.defineLocale('cs', {
         future : 'za %s',
         past : 'před %s',
         s : translate,
+        ss : translate,
         m : translate,
         mm : translate,
         h : translate,
@@ -19527,7 +20419,7 @@ return cs;
 
 
 /***/ }),
-/* 57 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -19570,6 +20462,7 @@ var cv = moment.defineLocale('cv', {
         },
         past : '%s каялла',
         s : 'пӗр-ик ҫеккунт',
+        ss : '%d ҫеккунт',
         m : 'пӗр минут',
         mm : '%d минут',
         h : 'пӗр сехет',
@@ -19595,7 +20488,7 @@ return cv;
 
 
 /***/ }),
-/* 58 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -19638,6 +20531,7 @@ var cy = moment.defineLocale('cy', {
         future: 'mewn %s',
         past: '%s yn ôl',
         s: 'ychydig eiliadau',
+        ss: '%d eiliad',
         m: 'munud',
         mm: '%d munud',
         h: 'awr',
@@ -19681,7 +20575,7 @@ return cy;
 
 
 /***/ }),
-/* 59 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -19704,7 +20598,7 @@ var da = moment.defineLocale('da', {
     longDateFormat : {
         LT : 'HH:mm',
         LTS : 'HH:mm:ss',
-        L : 'DD/MM/YYYY',
+        L : 'DD.MM.YYYY',
         LL : 'D. MMMM YYYY',
         LLL : 'D. MMMM YYYY HH:mm',
         LLLL : 'dddd [d.] D. MMMM YYYY [kl.] HH:mm'
@@ -19721,6 +20615,7 @@ var da = moment.defineLocale('da', {
         future : 'om %s',
         past : '%s siden',
         s : 'få sekunder',
+        ss : '%d sekunder',
         m : 'et minut',
         mm : '%d minutter',
         h : 'en time',
@@ -19746,7 +20641,7 @@ return da;
 
 
 /***/ }),
-/* 60 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -19778,7 +20673,7 @@ function processRelativeTime(number, withoutSuffix, key, isFuture) {
 
 var de = moment.defineLocale('de', {
     months : 'Januar_Februar_März_April_Mai_Juni_Juli_August_September_Oktober_November_Dezember'.split('_'),
-    monthsShort : 'Jan._Febr._Mrz._Apr._Mai_Jun._Jul._Aug._Sept._Okt._Nov._Dez.'.split('_'),
+    monthsShort : 'Jan._Feb._März_Apr._Mai_Juni_Juli_Aug._Sep._Okt._Nov._Dez.'.split('_'),
     monthsParseExact : true,
     weekdays : 'Sonntag_Montag_Dienstag_Mittwoch_Donnerstag_Freitag_Samstag'.split('_'),
     weekdaysShort : 'So._Mo._Di._Mi._Do._Fr._Sa.'.split('_'),
@@ -19804,6 +20699,7 @@ var de = moment.defineLocale('de', {
         future : 'in %s',
         past : 'vor %s',
         s : 'ein paar Sekunden',
+        ss : '%d Sekunden',
         m : processRelativeTime,
         mm : '%d Minuten',
         h : processRelativeTime,
@@ -19829,7 +20725,7 @@ return de;
 
 
 /***/ }),
-/* 61 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -19862,7 +20758,7 @@ function processRelativeTime(number, withoutSuffix, key, isFuture) {
 
 var deAt = moment.defineLocale('de-at', {
     months : 'Jänner_Februar_März_April_Mai_Juni_Juli_August_September_Oktober_November_Dezember'.split('_'),
-    monthsShort : 'Jän._Febr._Mrz._Apr._Mai_Jun._Jul._Aug._Sept._Okt._Nov._Dez.'.split('_'),
+    monthsShort : 'Jän._Feb._März_Apr._Mai_Juni_Juli_Aug._Sep._Okt._Nov._Dez.'.split('_'),
     monthsParseExact : true,
     weekdays : 'Sonntag_Montag_Dienstag_Mittwoch_Donnerstag_Freitag_Samstag'.split('_'),
     weekdaysShort : 'So._Mo._Di._Mi._Do._Fr._Sa.'.split('_'),
@@ -19888,6 +20784,7 @@ var deAt = moment.defineLocale('de-at', {
         future : 'in %s',
         past : 'vor %s',
         s : 'ein paar Sekunden',
+        ss : '%d Sekunden',
         m : processRelativeTime,
         mm : '%d Minuten',
         h : processRelativeTime,
@@ -19913,7 +20810,7 @@ return deAt;
 
 
 /***/ }),
-/* 62 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -19945,19 +20842,19 @@ function processRelativeTime(number, withoutSuffix, key, isFuture) {
 
 var deCh = moment.defineLocale('de-ch', {
     months : 'Januar_Februar_März_April_Mai_Juni_Juli_August_September_Oktober_November_Dezember'.split('_'),
-    monthsShort : 'Jan._Febr._März_April_Mai_Juni_Juli_Aug._Sept._Okt._Nov._Dez.'.split('_'),
+    monthsShort : 'Jan._Feb._März_Apr._Mai_Juni_Juli_Aug._Sep._Okt._Nov._Dez.'.split('_'),
     monthsParseExact : true,
     weekdays : 'Sonntag_Montag_Dienstag_Mittwoch_Donnerstag_Freitag_Samstag'.split('_'),
     weekdaysShort : 'So_Mo_Di_Mi_Do_Fr_Sa'.split('_'),
     weekdaysMin : 'So_Mo_Di_Mi_Do_Fr_Sa'.split('_'),
     weekdaysParseExact : true,
     longDateFormat : {
-        LT: 'HH.mm',
-        LTS: 'HH.mm.ss',
+        LT: 'HH:mm',
+        LTS: 'HH:mm:ss',
         L : 'DD.MM.YYYY',
         LL : 'D. MMMM YYYY',
-        LLL : 'D. MMMM YYYY HH.mm',
-        LLLL : 'dddd, D. MMMM YYYY HH.mm'
+        LLL : 'D. MMMM YYYY HH:mm',
+        LLLL : 'dddd, D. MMMM YYYY HH:mm'
     },
     calendar : {
         sameDay: '[heute um] LT [Uhr]',
@@ -19971,6 +20868,7 @@ var deCh = moment.defineLocale('de-ch', {
         future : 'in %s',
         past : 'vor %s',
         s : 'ein paar Sekunden',
+        ss : '%d Sekunden',
         m : processRelativeTime,
         mm : '%d Minuten',
         h : processRelativeTime,
@@ -19996,7 +20894,7 @@ return deCh;
 
 
 /***/ }),
-/* 63 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -20072,6 +20970,7 @@ var dv = moment.defineLocale('dv', {
         future : 'ތެރޭގައި %s',
         past : 'ކުރިން %s',
         s : 'ސިކުންތުކޮޅެއް',
+        ss : 'd% ސިކުންތު',
         m : 'މިނިޓެއް',
         mm : 'މިނިޓު %d',
         h : 'ގަޑިއިރެއް',
@@ -20101,7 +21000,7 @@ return dv;
 
 
 /***/ }),
-/* 64 */
+/* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -20125,7 +21024,7 @@ var el = moment.defineLocale('el', {
     months : function (momentToFormat, format) {
         if (!momentToFormat) {
             return this._monthsNominativeEl;
-        } else if (/D/.test(format.substring(0, format.indexOf('MMMM')))) { // if there is a day number before 'MMMM'
+        } else if (typeof format === 'string' && /D/.test(format.substring(0, format.indexOf('MMMM')))) { // if there is a day number before 'MMMM'
             return this._monthsGenitiveEl[momentToFormat.month()];
         } else {
             return this._monthsNominativeEl[momentToFormat.month()];
@@ -20181,6 +21080,7 @@ var el = moment.defineLocale('el', {
         future : 'σε %s',
         past : '%s πριν',
         s : 'λίγα δευτερόλεπτα',
+        ss : '%d δευτερόλεπτα',
         m : 'ένα λεπτό',
         mm : '%d λεπτά',
         h : 'μία ώρα',
@@ -20206,7 +21106,7 @@ return el;
 
 
 /***/ }),
-/* 65 */
+/* 66 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -20246,6 +21146,7 @@ var enAu = moment.defineLocale('en-au', {
         future : 'in %s',
         past : '%s ago',
         s : 'a few seconds',
+        ss : '%d seconds',
         m : 'a minute',
         mm : '%d minutes',
         h : 'an hour',
@@ -20278,7 +21179,7 @@ return enAu;
 
 
 /***/ }),
-/* 66 */
+/* 67 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -20318,6 +21219,7 @@ var enCa = moment.defineLocale('en-ca', {
         future : 'in %s',
         past : '%s ago',
         s : 'a few seconds',
+        ss : '%d seconds',
         m : 'a minute',
         mm : '%d minutes',
         h : 'an hour',
@@ -20346,7 +21248,7 @@ return enCa;
 
 
 /***/ }),
-/* 67 */
+/* 68 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -20386,6 +21288,7 @@ var enGb = moment.defineLocale('en-gb', {
         future : 'in %s',
         past : '%s ago',
         s : 'a few seconds',
+        ss : '%d seconds',
         m : 'a minute',
         mm : '%d minutes',
         h : 'an hour',
@@ -20418,7 +21321,7 @@ return enGb;
 
 
 /***/ }),
-/* 68 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -20458,6 +21361,7 @@ var enIe = moment.defineLocale('en-ie', {
         future : 'in %s',
         past : '%s ago',
         s : 'a few seconds',
+        ss : '%d seconds',
         m : 'a minute',
         mm : '%d minutes',
         h : 'an hour',
@@ -20490,7 +21394,7 @@ return enIe;
 
 
 /***/ }),
-/* 69 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -20530,6 +21434,7 @@ var enNz = moment.defineLocale('en-nz', {
         future : 'in %s',
         past : '%s ago',
         s : 'a few seconds',
+        ss : '%d seconds',
         m : 'a minute',
         mm : '%d minutes',
         h : 'an hour',
@@ -20562,7 +21467,7 @@ return enNz;
 
 
 /***/ }),
-/* 70 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -20615,6 +21520,7 @@ var eo = moment.defineLocale('eo', {
         future : 'post %s',
         past : 'antaŭ %s',
         s : 'sekundoj',
+        ss : '%d sekundoj',
         m : 'minuto',
         mm : '%d minutoj',
         h : 'horo',
@@ -20640,7 +21546,7 @@ return eo;
 
 
 /***/ }),
-/* 71 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -20657,6 +21563,9 @@ return eo;
 var monthsShortDot = 'ene._feb._mar._abr._may._jun._jul._ago._sep._oct._nov._dic.'.split('_');
 var monthsShort = 'ene_feb_mar_abr_may_jun_jul_ago_sep_oct_nov_dic'.split('_');
 
+var monthsParse = [/^ene/i, /^feb/i, /^mar/i, /^abr/i, /^may/i, /^jun/i, /^jul/i, /^ago/i, /^sep/i, /^oct/i, /^nov/i, /^dic/i];
+var monthsRegex = /^(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre|ene\.?|feb\.?|mar\.?|abr\.?|may\.?|jun\.?|jul\.?|ago\.?|sep\.?|oct\.?|nov\.?|dic\.?)/i;
+
 var es = moment.defineLocale('es', {
     months : 'enero_febrero_marzo_abril_mayo_junio_julio_agosto_septiembre_octubre_noviembre_diciembre'.split('_'),
     monthsShort : function (m, format) {
@@ -20668,7 +21577,13 @@ var es = moment.defineLocale('es', {
             return monthsShortDot[m.month()];
         }
     },
-    monthsParseExact : true,
+    monthsRegex : monthsRegex,
+    monthsShortRegex : monthsRegex,
+    monthsStrictRegex : /^(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)/i,
+    monthsShortStrictRegex : /^(ene\.?|feb\.?|mar\.?|abr\.?|may\.?|jun\.?|jul\.?|ago\.?|sep\.?|oct\.?|nov\.?|dic\.?)/i,
+    monthsParse : monthsParse,
+    longMonthsParse : monthsParse,
+    shortMonthsParse : monthsParse,
     weekdays : 'domingo_lunes_martes_miércoles_jueves_viernes_sábado'.split('_'),
     weekdaysShort : 'dom._lun._mar._mié._jue._vie._sáb.'.split('_'),
     weekdaysMin : 'do_lu_ma_mi_ju_vi_sá'.split('_'),
@@ -20703,6 +21618,7 @@ var es = moment.defineLocale('es', {
         future : 'en %s',
         past : 'hace %s',
         s : 'unos segundos',
+        ss : '%d segundos',
         m : 'un minuto',
         mm : '%d minutos',
         h : 'una hora',
@@ -20728,7 +21644,7 @@ return es;
 
 
 /***/ }),
-/* 72 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -20744,6 +21660,9 @@ return es;
 var monthsShortDot = 'ene._feb._mar._abr._may._jun._jul._ago._sep._oct._nov._dic.'.split('_');
 var monthsShort = 'ene_feb_mar_abr_may_jun_jul_ago_sep_oct_nov_dic'.split('_');
 
+var monthsParse = [/^ene/i, /^feb/i, /^mar/i, /^abr/i, /^may/i, /^jun/i, /^jul/i, /^ago/i, /^sep/i, /^oct/i, /^nov/i, /^dic/i];
+var monthsRegex = /^(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre|ene\.?|feb\.?|mar\.?|abr\.?|may\.?|jun\.?|jul\.?|ago\.?|sep\.?|oct\.?|nov\.?|dic\.?)/i;
+
 var esDo = moment.defineLocale('es-do', {
     months : 'enero_febrero_marzo_abril_mayo_junio_julio_agosto_septiembre_octubre_noviembre_diciembre'.split('_'),
     monthsShort : function (m, format) {
@@ -20755,7 +21674,13 @@ var esDo = moment.defineLocale('es-do', {
             return monthsShortDot[m.month()];
         }
     },
-    monthsParseExact : true,
+    monthsRegex: monthsRegex,
+    monthsShortRegex: monthsRegex,
+    monthsStrictRegex: /^(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)/i,
+    monthsShortStrictRegex: /^(ene\.?|feb\.?|mar\.?|abr\.?|may\.?|jun\.?|jul\.?|ago\.?|sep\.?|oct\.?|nov\.?|dic\.?)/i,
+    monthsParse: monthsParse,
+    longMonthsParse: monthsParse,
+    shortMonthsParse: monthsParse,
     weekdays : 'domingo_lunes_martes_miércoles_jueves_viernes_sábado'.split('_'),
     weekdaysShort : 'dom._lun._mar._mié._jue._vie._sáb.'.split('_'),
     weekdaysMin : 'do_lu_ma_mi_ju_vi_sá'.split('_'),
@@ -20790,6 +21715,7 @@ var esDo = moment.defineLocale('es-do', {
         future : 'en %s',
         past : 'hace %s',
         s : 'unos segundos',
+        ss : '%d segundos',
         m : 'un minuto',
         mm : '%d minutos',
         h : 'una hora',
@@ -20815,7 +21741,96 @@ return esDo;
 
 
 /***/ }),
-/* 73 */
+/* 74 */
+/***/ (function(module, exports, __webpack_require__) {
+
+//! moment.js locale configuration
+//! locale : Spanish (United States) [es-us]
+//! author : bustta : https://github.com/bustta
+
+;(function (global, factory) {
+    true ? factory(__webpack_require__(0)) :
+   typeof define === 'function' && define.amd ? define(['../moment'], factory) :
+   factory(global.moment)
+}(this, (function (moment) { 'use strict';
+
+
+var monthsShortDot = 'ene._feb._mar._abr._may._jun._jul._ago._sep._oct._nov._dic.'.split('_');
+var monthsShort = 'ene_feb_mar_abr_may_jun_jul_ago_sep_oct_nov_dic'.split('_');
+
+var esUs = moment.defineLocale('es-us', {
+    months : 'enero_febrero_marzo_abril_mayo_junio_julio_agosto_septiembre_octubre_noviembre_diciembre'.split('_'),
+    monthsShort : function (m, format) {
+        if (!m) {
+            return monthsShortDot;
+        } else if (/-MMM-/.test(format)) {
+            return monthsShort[m.month()];
+        } else {
+            return monthsShortDot[m.month()];
+        }
+    },
+    monthsParseExact : true,
+    weekdays : 'domingo_lunes_martes_miércoles_jueves_viernes_sábado'.split('_'),
+    weekdaysShort : 'dom._lun._mar._mié._jue._vie._sáb.'.split('_'),
+    weekdaysMin : 'do_lu_ma_mi_ju_vi_sá'.split('_'),
+    weekdaysParseExact : true,
+    longDateFormat : {
+        LT : 'h:mm A',
+        LTS : 'h:mm:ss A',
+        L : 'MM/DD/YYYY',
+        LL : 'MMMM [de] D [de] YYYY',
+        LLL : 'MMMM [de] D [de] YYYY h:mm A',
+        LLLL : 'dddd, MMMM [de] D [de] YYYY h:mm A'
+    },
+    calendar : {
+        sameDay : function () {
+            return '[hoy a la' + ((this.hours() !== 1) ? 's' : '') + '] LT';
+        },
+        nextDay : function () {
+            return '[mañana a la' + ((this.hours() !== 1) ? 's' : '') + '] LT';
+        },
+        nextWeek : function () {
+            return 'dddd [a la' + ((this.hours() !== 1) ? 's' : '') + '] LT';
+        },
+        lastDay : function () {
+            return '[ayer a la' + ((this.hours() !== 1) ? 's' : '') + '] LT';
+        },
+        lastWeek : function () {
+            return '[el] dddd [pasado a la' + ((this.hours() !== 1) ? 's' : '') + '] LT';
+        },
+        sameElse : 'L'
+    },
+    relativeTime : {
+        future : 'en %s',
+        past : 'hace %s',
+        s : 'unos segundos',
+        ss : '%d segundos',
+        m : 'un minuto',
+        mm : '%d minutos',
+        h : 'una hora',
+        hh : '%d horas',
+        d : 'un día',
+        dd : '%d días',
+        M : 'un mes',
+        MM : '%d meses',
+        y : 'un año',
+        yy : '%d años'
+    },
+    dayOfMonthOrdinalParse : /\d{1,2}º/,
+    ordinal : '%dº',
+    week : {
+        dow : 0, // Sunday is the first day of the week.
+        doy : 6  // The week that contains Jan 1st is the first week of the year.
+    }
+});
+
+return esUs;
+
+})));
+
+
+/***/ }),
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -20833,6 +21848,7 @@ return esDo;
 function processRelativeTime(number, withoutSuffix, key, isFuture) {
     var format = {
         's' : ['mõne sekundi', 'mõni sekund', 'paar sekundit'],
+        'ss': [number + 'sekundi', number + 'sekundit'],
         'm' : ['ühe minuti', 'üks minut'],
         'mm': [number + ' minuti', number + ' minutit'],
         'h' : ['ühe tunni', 'tund aega', 'üks tund'],
@@ -20875,6 +21891,7 @@ var et = moment.defineLocale('et', {
         future : '%s pärast',
         past   : '%s tagasi',
         s      : processRelativeTime,
+        ss     : processRelativeTime,
         m      : processRelativeTime,
         mm     : processRelativeTime,
         h      : processRelativeTime,
@@ -20900,7 +21917,7 @@ return et;
 
 
 /***/ }),
-/* 74 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -20946,6 +21963,7 @@ var eu = moment.defineLocale('eu', {
         future : '%s barru',
         past : 'duela %s',
         s : 'segundo batzuk',
+        ss : '%d segundo',
         m : 'minutu bat',
         mm : '%d minutu',
         h : 'ordu bat',
@@ -20971,7 +21989,7 @@ return eu;
 
 
 /***/ }),
-/* 75 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -21048,6 +22066,7 @@ var fa = moment.defineLocale('fa', {
         future : 'در %s',
         past : '%s پیش',
         s : 'چند ثانیه',
+        ss : 'ثانیه d%',
         m : 'یک دقیقه',
         mm : '%d دقیقه',
         h : 'یک ساعت',
@@ -21083,7 +22102,7 @@ return fa;
 
 
 /***/ }),
-/* 76 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -21107,6 +22126,8 @@ function translate(number, withoutSuffix, key, isFuture) {
     switch (key) {
         case 's':
             return isFuture ? 'muutaman sekunnin' : 'muutama sekunti';
+        case 'ss':
+            return isFuture ? 'sekunnin' : 'sekuntia';
         case 'm':
             return isFuture ? 'minuutin' : 'minuutti';
         case 'mm':
@@ -21170,6 +22191,7 @@ var fi = moment.defineLocale('fi', {
         future : '%s päästä',
         past : '%s sitten',
         s : translate,
+        ss : translate,
         m : translate,
         mm : translate,
         h : translate,
@@ -21195,7 +22217,7 @@ return fi;
 
 
 /***/ }),
-/* 77 */
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -21235,6 +22257,7 @@ var fo = moment.defineLocale('fo', {
         future : 'um %s',
         past : '%s síðani',
         s : 'fá sekund',
+        ss : '%d sekundir',
         m : 'ein minutt',
         mm : '%d minuttir',
         h : 'ein tími',
@@ -21260,7 +22283,7 @@ return fo;
 
 
 /***/ }),
-/* 78 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -21280,7 +22303,7 @@ var fr = moment.defineLocale('fr', {
     monthsParseExact : true,
     weekdays : 'dimanche_lundi_mardi_mercredi_jeudi_vendredi_samedi'.split('_'),
     weekdaysShort : 'dim._lun._mar._mer._jeu._ven._sam.'.split('_'),
-    weekdaysMin : 'Di_Lu_Ma_Me_Je_Ve_Sa'.split('_'),
+    weekdaysMin : 'di_lu_ma_me_je_ve_sa'.split('_'),
     weekdaysParseExact : true,
     longDateFormat : {
         LT : 'HH:mm',
@@ -21302,6 +22325,7 @@ var fr = moment.defineLocale('fr', {
         future : 'dans %s',
         past : 'il y a %s',
         s : 'quelques secondes',
+        ss : '%d secondes',
         m : 'une minute',
         mm : '%d minutes',
         h : 'une heure',
@@ -21348,7 +22372,7 @@ return fr;
 
 
 /***/ }),
-/* 79 */
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -21368,7 +22392,7 @@ var frCa = moment.defineLocale('fr-ca', {
     monthsParseExact : true,
     weekdays : 'dimanche_lundi_mardi_mercredi_jeudi_vendredi_samedi'.split('_'),
     weekdaysShort : 'dim._lun._mar._mer._jeu._ven._sam.'.split('_'),
-    weekdaysMin : 'Di_Lu_Ma_Me_Je_Ve_Sa'.split('_'),
+    weekdaysMin : 'di_lu_ma_me_je_ve_sa'.split('_'),
     weekdaysParseExact : true,
     longDateFormat : {
         LT : 'HH:mm',
@@ -21390,6 +22414,7 @@ var frCa = moment.defineLocale('fr-ca', {
         future : 'dans %s',
         past : 'il y a %s',
         s : 'quelques secondes',
+        ss : '%d secondes',
         m : 'une minute',
         mm : '%d minutes',
         h : 'une heure',
@@ -21427,7 +22452,7 @@ return frCa;
 
 
 /***/ }),
-/* 80 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -21447,7 +22472,7 @@ var frCh = moment.defineLocale('fr-ch', {
     monthsParseExact : true,
     weekdays : 'dimanche_lundi_mardi_mercredi_jeudi_vendredi_samedi'.split('_'),
     weekdaysShort : 'dim._lun._mar._mer._jeu._ven._sam.'.split('_'),
-    weekdaysMin : 'Di_Lu_Ma_Me_Je_Ve_Sa'.split('_'),
+    weekdaysMin : 'di_lu_ma_me_je_ve_sa'.split('_'),
     weekdaysParseExact : true,
     longDateFormat : {
         LT : 'HH:mm',
@@ -21469,6 +22494,7 @@ var frCh = moment.defineLocale('fr-ch', {
         future : 'dans %s',
         past : 'il y a %s',
         s : 'quelques secondes',
+        ss : '%d secondes',
         m : 'une minute',
         mm : '%d minutes',
         h : 'une heure',
@@ -21510,7 +22536,7 @@ return frCh;
 
 
 /***/ }),
-/* 81 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -21563,6 +22589,7 @@ var fy = moment.defineLocale('fy', {
         future : 'oer %s',
         past : '%s lyn',
         s : 'in pear sekonden',
+        ss : '%d sekonden',
         m : 'ien minút',
         mm : '%d minuten',
         h : 'ien oere',
@@ -21590,7 +22617,7 @@ return fy;
 
 
 /***/ }),
-/* 82 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -21643,6 +22670,7 @@ var gd = moment.defineLocale('gd', {
         future : 'ann an %s',
         past : 'bho chionn %s',
         s : 'beagan diogan',
+        ss : '%d diogan',
         m : 'mionaid',
         mm : '%d mionaidean',
         h : 'uair',
@@ -21671,7 +22699,7 @@ return gd;
 
 
 /***/ }),
-/* 83 */
+/* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -21728,6 +22756,7 @@ var gl = moment.defineLocale('gl', {
         },
         past : 'hai %s',
         s : 'uns segundos',
+        ss : '%d segundos',
         m : 'un minuto',
         mm : '%d minutos',
         h : 'unha hora',
@@ -21753,7 +22782,7 @@ return gl;
 
 
 /***/ }),
-/* 84 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -21770,6 +22799,7 @@ return gl;
 function processRelativeTime(number, withoutSuffix, key, isFuture) {
     var format = {
         's': ['thodde secondanim', 'thodde second'],
+        'ss': [number + ' secondanim', number + ' second'],
         'm': ['eka mintan', 'ek minute'],
         'mm': [number + ' mintanim', number + ' mintam'],
         'h': ['eka horan', 'ek hor'],
@@ -21813,6 +22843,7 @@ var gomLatn = moment.defineLocale('gom-latn', {
         future : '%s',
         past : '%s adim',
         s : processRelativeTime,
+        ss : processRelativeTime,
         m : processRelativeTime,
         mm : processRelativeTime,
         h : processRelativeTime,
@@ -21880,7 +22911,137 @@ return gomLatn;
 
 
 /***/ }),
-/* 85 */
+/* 87 */
+/***/ (function(module, exports, __webpack_require__) {
+
+//! moment.js locale configuration
+//! locale : Gujarati [gu]
+//! author : Kaushik Thanki : https://github.com/Kaushik1987
+
+;(function (global, factory) {
+    true ? factory(__webpack_require__(0)) :
+   typeof define === 'function' && define.amd ? define(['../moment'], factory) :
+   factory(global.moment)
+}(this, (function (moment) { 'use strict';
+
+
+var symbolMap = {
+        '1': '૧',
+        '2': '૨',
+        '3': '૩',
+        '4': '૪',
+        '5': '૫',
+        '6': '૬',
+        '7': '૭',
+        '8': '૮',
+        '9': '૯',
+        '0': '૦'
+    };
+var numberMap = {
+        '૧': '1',
+        '૨': '2',
+        '૩': '3',
+        '૪': '4',
+        '૫': '5',
+        '૬': '6',
+        '૭': '7',
+        '૮': '8',
+        '૯': '9',
+        '૦': '0'
+    };
+
+var gu = moment.defineLocale('gu', {
+    months: 'જાન્યુઆરી_ફેબ્રુઆરી_માર્ચ_એપ્રિલ_મે_જૂન_જુલાઈ_ઑગસ્ટ_સપ્ટેમ્બર_ઑક્ટ્બર_નવેમ્બર_ડિસેમ્બર'.split('_'),
+    monthsShort: 'જાન્યુ._ફેબ્રુ._માર્ચ_એપ્રિ._મે_જૂન_જુલા._ઑગ._સપ્ટે._ઑક્ટ્._નવે._ડિસે.'.split('_'),
+    monthsParseExact: true,
+    weekdays: 'રવિવાર_સોમવાર_મંગળવાર_બુધ્વાર_ગુરુવાર_શુક્રવાર_શનિવાર'.split('_'),
+    weekdaysShort: 'રવિ_સોમ_મંગળ_બુધ્_ગુરુ_શુક્ર_શનિ'.split('_'),
+    weekdaysMin: 'ર_સો_મં_બુ_ગુ_શુ_શ'.split('_'),
+    longDateFormat: {
+        LT: 'A h:mm વાગ્યે',
+        LTS: 'A h:mm:ss વાગ્યે',
+        L: 'DD/MM/YYYY',
+        LL: 'D MMMM YYYY',
+        LLL: 'D MMMM YYYY, A h:mm વાગ્યે',
+        LLLL: 'dddd, D MMMM YYYY, A h:mm વાગ્યે'
+    },
+    calendar: {
+        sameDay: '[આજ] LT',
+        nextDay: '[કાલે] LT',
+        nextWeek: 'dddd, LT',
+        lastDay: '[ગઇકાલે] LT',
+        lastWeek: '[પાછલા] dddd, LT',
+        sameElse: 'L'
+    },
+    relativeTime: {
+        future: '%s મા',
+        past: '%s પેહલા',
+        s: 'અમુક પળો',
+        ss: '%d સેકંડ',
+        m: 'એક મિનિટ',
+        mm: '%d મિનિટ',
+        h: 'એક કલાક',
+        hh: '%d કલાક',
+        d: 'એક દિવસ',
+        dd: '%d દિવસ',
+        M: 'એક મહિનો',
+        MM: '%d મહિનો',
+        y: 'એક વર્ષ',
+        yy: '%d વર્ષ'
+    },
+    preparse: function (string) {
+        return string.replace(/[૧૨૩૪૫૬૭૮૯૦]/g, function (match) {
+            return numberMap[match];
+        });
+    },
+    postformat: function (string) {
+        return string.replace(/\d/g, function (match) {
+            return symbolMap[match];
+        });
+    },
+    // Gujarati notation for meridiems are quite fuzzy in practice. While there exists
+    // a rigid notion of a 'Pahar' it is not used as rigidly in modern Gujarati.
+    meridiemParse: /રાત|બપોર|સવાર|સાંજ/,
+    meridiemHour: function (hour, meridiem) {
+        if (hour === 12) {
+            hour = 0;
+        }
+        if (meridiem === 'રાત') {
+            return hour < 4 ? hour : hour + 12;
+        } else if (meridiem === 'સવાર') {
+            return hour;
+        } else if (meridiem === 'બપોર') {
+            return hour >= 10 ? hour : hour + 12;
+        } else if (meridiem === 'સાંજ') {
+            return hour + 12;
+        }
+    },
+    meridiem: function (hour, minute, isLower) {
+        if (hour < 4) {
+            return 'રાત';
+        } else if (hour < 10) {
+            return 'સવાર';
+        } else if (hour < 17) {
+            return 'બપોર';
+        } else if (hour < 20) {
+            return 'સાંજ';
+        } else {
+            return 'રાત';
+        }
+    },
+    week: {
+        dow: 0, // Sunday is the first day of the week.
+        doy: 6 // The week that contains Jan 1st is the first week of the year.
+    }
+});
+
+return gu;
+
+})));
+
+
+/***/ }),
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -21926,6 +23087,7 @@ var he = moment.defineLocale('he', {
         future : 'בעוד %s',
         past : 'לפני %s',
         s : 'מספר שניות',
+        ss : '%d שניות',
         m : 'דקה',
         mm : '%d דקות',
         h : 'שעה',
@@ -21984,7 +23146,7 @@ return he;
 
 
 /***/ }),
-/* 86 */
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -22050,6 +23212,7 @@ var hi = moment.defineLocale('hi', {
         future : '%s में',
         past : '%s पहले',
         s : 'कुछ ही क्षण',
+        ss : '%d सेकंड',
         m : 'एक मिनट',
         mm : '%d मिनट',
         h : 'एक घंटा',
@@ -22113,7 +23276,7 @@ return hi;
 
 
 /***/ }),
-/* 87 */
+/* 90 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -22130,6 +23293,15 @@ return hi;
 function translate(number, withoutSuffix, key) {
     var result = number + ' ';
     switch (key) {
+        case 'ss':
+            if (number === 1) {
+                result += 'sekunda';
+            } else if (number === 2 || number === 3 || number === 4) {
+                result += 'sekunde';
+            } else {
+                result += 'sekundi';
+            }
+            return result;
         case 'm':
             return withoutSuffix ? 'jedna minuta' : 'jedne minute';
         case 'mm':
@@ -22238,6 +23410,7 @@ var hr = moment.defineLocale('hr', {
         future : 'za %s',
         past   : 'prije %s',
         s      : 'par sekundi',
+        ss     : translate,
         m      : translate,
         mm     : translate,
         h      : translate,
@@ -22263,7 +23436,7 @@ return hr;
 
 
 /***/ }),
-/* 88 */
+/* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -22279,11 +23452,12 @@ return hr;
 
 var weekEndings = 'vasárnap hétfőn kedden szerdán csütörtökön pénteken szombaton'.split(' ');
 function translate(number, withoutSuffix, key, isFuture) {
-    var num = number,
-        suffix;
+    var num = number;
     switch (key) {
         case 's':
             return (isFuture || withoutSuffix) ? 'néhány másodperc' : 'néhány másodperce';
+        case 'ss':
+            return num + (isFuture || withoutSuffix) ? ' másodperc' : ' másodperce';
         case 'm':
             return 'egy' + (isFuture || withoutSuffix ? ' perc' : ' perce');
         case 'mm':
@@ -22352,6 +23526,7 @@ var hu = moment.defineLocale('hu', {
         future : '%s múlva',
         past : '%s',
         s : translate,
+        ss : translate,
         m : translate,
         mm : translate,
         h : translate,
@@ -22377,7 +23552,7 @@ return hu;
 
 
 /***/ }),
-/* 89 */
+/* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -22424,6 +23599,7 @@ var hyAm = moment.defineLocale('hy-am', {
         future : '%s հետո',
         past : '%s առաջ',
         s : 'մի քանի վայրկյան',
+        ss : '%d վայրկյան',
         m : 'րոպե',
         mm : '%d րոպե',
         h : 'ժամ',
@@ -22477,7 +23653,7 @@ return hyAm;
 
 
 /***/ }),
-/* 90 */
+/* 93 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -22542,6 +23718,7 @@ var id = moment.defineLocale('id', {
         future : 'dalam %s',
         past : '%s yang lalu',
         s : 'beberapa detik',
+        ss : '%d detik',
         m : 'semenit',
         mm : '%d menit',
         h : 'sejam',
@@ -22565,7 +23742,7 @@ return id;
 
 
 /***/ }),
-/* 91 */
+/* 94 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -22592,6 +23769,11 @@ function translate(number, withoutSuffix, key, isFuture) {
     switch (key) {
         case 's':
             return withoutSuffix || isFuture ? 'nokkrar sekúndur' : 'nokkrum sekúndum';
+        case 'ss':
+            if (plural(number)) {
+                return result + (withoutSuffix || isFuture ? 'sekúndur' : 'sekúndum');
+            }
+            return result + 'sekúnda';
         case 'm':
             return withoutSuffix ? 'mínúta' : 'mínútu';
         case 'mm':
@@ -22672,6 +23854,7 @@ var is = moment.defineLocale('is', {
         future : 'eftir %s',
         past : 'fyrir %s síðan',
         s : translate,
+        ss : translate,
         m : translate,
         mm : translate,
         h : 'klukkustund',
@@ -22697,7 +23880,7 @@ return is;
 
 
 /***/ }),
-/* 92 */
+/* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -22724,7 +23907,7 @@ var it = moment.defineLocale('it', {
         L : 'DD/MM/YYYY',
         LL : 'D MMMM YYYY',
         LLL : 'D MMMM YYYY HH:mm',
-        LLLL : 'dddd, D MMMM YYYY HH:mm'
+        LLLL : 'dddd D MMMM YYYY HH:mm'
     },
     calendar : {
         sameDay: '[Oggi alle] LT',
@@ -22747,6 +23930,7 @@ var it = moment.defineLocale('it', {
         },
         past : '%s fa',
         s : 'alcuni secondi',
+        ss : '%d secondi',
         m : 'un minuto',
         mm : '%d minuti',
         h : 'un\'ora',
@@ -22772,7 +23956,7 @@ return it;
 
 
 /***/ }),
-/* 93 */
+/* 96 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -22838,6 +24022,7 @@ var ja = moment.defineLocale('ja', {
         future : '%s後',
         past : '%s前',
         s : '数秒',
+        ss : '%d秒',
         m : '1分',
         mm : '%d分',
         h : '1時間',
@@ -22857,7 +24042,7 @@ return ja;
 
 
 /***/ }),
-/* 94 */
+/* 97 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -22922,6 +24107,7 @@ var jv = moment.defineLocale('jv', {
         future : 'wonten ing %s',
         past : '%s ingkang kepengker',
         s : 'sawetawis detik',
+        ss : '%d detik',
         m : 'setunggal menit',
         mm : '%d menit',
         h : 'setunggal jam',
@@ -22945,7 +24131,7 @@ return jv;
 
 
 /***/ }),
-/* 95 */
+/* 98 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -23003,6 +24189,7 @@ var ka = moment.defineLocale('ka', {
             }
         },
         s : 'რამდენიმე წამი',
+        ss : '%d წამი',
         m : 'წუთი',
         mm : '%d წუთი',
         h : 'საათი',
@@ -23039,7 +24226,7 @@ return ka;
 
 
 /***/ }),
-/* 96 */
+/* 99 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -23102,6 +24289,7 @@ var kk = moment.defineLocale('kk', {
         future : '%s ішінде',
         past : '%s бұрын',
         s : 'бірнеше секунд',
+        ss : '%d секунд',
         m : 'бір минут',
         mm : '%d минут',
         h : 'бір сағат',
@@ -23131,7 +24319,7 @@ return kk;
 
 
 /***/ }),
-/* 97 */
+/* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -23171,6 +24359,7 @@ var km = moment.defineLocale('km', {
         future: '%sទៀត',
         past: '%sមុន',
         s: 'ប៉ុន្មានវិនាទី',
+        ss: '%d វិនាទី',
         m: 'មួយនាទី',
         mm: '%d នាទី',
         h: 'មួយម៉ោង',
@@ -23194,7 +24383,7 @@ return km;
 
 
 /***/ }),
-/* 98 */
+/* 101 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -23260,6 +24449,7 @@ var kn = moment.defineLocale('kn', {
         future : '%s ನಂತರ',
         past : '%s ಹಿಂದೆ',
         s : 'ಕೆಲವು ಕ್ಷಣಗಳು',
+        ss : '%d ಸೆಕೆಂಡುಗಳು',
         m : 'ಒಂದು ನಿಮಿಷ',
         mm : '%d ನಿಮಿಷ',
         h : 'ಒಂದು ಗಂಟೆ',
@@ -23325,7 +24515,7 @@ return kn;
 
 
 /***/ }),
-/* 99 */
+/* 102 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -23382,8 +24572,22 @@ var ko = moment.defineLocale('ko', {
         y : '일 년',
         yy : '%d년'
     },
-    dayOfMonthOrdinalParse : /\d{1,2}일/,
-    ordinal : '%d일',
+    dayOfMonthOrdinalParse : /\d{1,2}(일|월|주)/,
+    ordinal : function (number, period) {
+        switch (period) {
+            case 'd':
+            case 'D':
+            case 'DDD':
+                return number + '일';
+            case 'M':
+                return number + '월';
+            case 'w':
+            case 'W':
+                return number + '주';
+            default:
+                return number;
+        }
+    },
     meridiemParse : /오전|오후/,
     isPM : function (token) {
         return token === '오후';
@@ -23399,7 +24603,7 @@ return ko;
 
 
 /***/ }),
-/* 100 */
+/* 103 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -23463,6 +24667,7 @@ var ky = moment.defineLocale('ky', {
         future : '%s ичинде',
         past : '%s мурун',
         s : 'бирнече секунд',
+        ss : '%d секунд',
         m : 'бир мүнөт',
         mm : '%d мүнөт',
         h : 'бир саат',
@@ -23492,7 +24697,7 @@ return ky;
 
 
 /***/ }),
-/* 101 */
+/* 104 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -23609,6 +24814,7 @@ var lb = moment.defineLocale('lb', {
         future : processFutureTime,
         past : processPastTime,
         s : 'e puer Sekonnen',
+        ss : '%d Sekonnen',
         m : processRelativeTime,
         mm : '%d Minutten',
         h : processRelativeTime,
@@ -23634,7 +24840,7 @@ return lb;
 
 
 /***/ }),
-/* 102 */
+/* 105 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -23686,6 +24892,7 @@ var lo = moment.defineLocale('lo', {
         future : 'ອີກ %s',
         past : '%sຜ່ານມາ',
         s : 'ບໍ່ເທົ່າໃດວິນາທີ',
+        ss : '%d ວິນາທີ' ,
         m : '1 ນາທີ',
         mm : '%d ນາທີ',
         h : '1 ຊົ່ວໂມງ',
@@ -23709,7 +24916,7 @@ return lo;
 
 
 /***/ }),
-/* 103 */
+/* 106 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -23724,6 +24931,7 @@ return lo;
 
 
 var units = {
+    'ss' : 'sekundė_sekundžių_sekundes',
     'm' : 'minutė_minutės_minutę',
     'mm': 'minutės_minučių_minutes',
     'h' : 'valanda_valandos_valandą',
@@ -23804,6 +25012,7 @@ var lt = moment.defineLocale('lt', {
         future : 'po %s',
         past : 'prieš %s',
         s : translateSeconds,
+        ss : translate,
         m : translateSingular,
         mm : translate,
         h : translateSingular,
@@ -23831,7 +25040,7 @@ return lt;
 
 
 /***/ }),
-/* 104 */
+/* 107 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -23847,6 +25056,7 @@ return lt;
 
 
 var units = {
+    'ss': 'sekundes_sekundēm_sekunde_sekundes'.split('_'),
     'm': 'minūtes_minūtēm_minūte_minūtes'.split('_'),
     'mm': 'minūtes_minūtēm_minūte_minūtes'.split('_'),
     'h': 'stundas_stundām_stunda_stundas'.split('_'),
@@ -23908,6 +25118,7 @@ var lv = moment.defineLocale('lv', {
         future : 'pēc %s',
         past : 'pirms %s',
         s : relativeSeconds,
+        ss : relativeTimeWithPlural,
         m : relativeTimeWithSingular,
         mm : relativeTimeWithPlural,
         h : relativeTimeWithSingular,
@@ -23933,7 +25144,7 @@ return lv;
 
 
 /***/ }),
-/* 105 */
+/* 108 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -23949,6 +25160,7 @@ return lv;
 
 var translator = {
     words: { //Different grammatical cases
+        ss: ['sekund', 'sekunda', 'sekundi'],
         m: ['jedan minut', 'jednog minuta'],
         mm: ['minut', 'minuta', 'minuta'],
         h: ['jedan sat', 'jednog sata'],
@@ -24024,6 +25236,7 @@ var me = moment.defineLocale('me', {
         future : 'za %s',
         past   : 'prije %s',
         s      : 'nekoliko sekundi',
+        ss     : translator.translate,
         m      : translator.translate,
         mm     : translator.translate,
         h      : translator.translate,
@@ -24049,7 +25262,7 @@ return me;
 
 
 /***/ }),
-/* 106 */
+/* 109 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -24093,6 +25306,7 @@ var mi = moment.defineLocale('mi', {
         future: 'i roto i %s',
         past: '%s i mua',
         s: 'te hēkona ruarua',
+        ss: '%d hēkona',
         m: 'he meneti',
         mm: '%d meneti',
         h: 'te haora',
@@ -24118,7 +25332,7 @@ return mi;
 
 
 /***/ }),
-/* 107 */
+/* 110 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -24170,6 +25384,7 @@ var mk = moment.defineLocale('mk', {
         future : 'после %s',
         past : 'пред %s',
         s : 'неколку секунди',
+        ss : '%d секунди',
         m : 'минута',
         mm : '%d минути',
         h : 'час',
@@ -24213,7 +25428,7 @@ return mk;
 
 
 /***/ }),
-/* 108 */
+/* 111 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -24254,6 +25469,7 @@ var ml = moment.defineLocale('ml', {
         future : '%s കഴിഞ്ഞ്',
         past : '%s മുൻപ്',
         s : 'അൽപ നിമിഷങ്ങൾ',
+        ss : '%d സെക്കൻഡ്',
         m : 'ഒരു മിനിറ്റ്',
         mm : '%d മിനിറ്റ്',
         h : 'ഒരു മണിക്കൂർ',
@@ -24299,7 +25515,7 @@ return ml;
 
 
 /***/ }),
-/* 109 */
+/* 112 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -24345,6 +25561,7 @@ function relativeTimeMr(number, withoutSuffix, string, isFuture)
     if (withoutSuffix) {
         switch (string) {
             case 's': output = 'काही सेकंद'; break;
+            case 'ss': output = '%d सेकंद'; break;
             case 'm': output = 'एक मिनिट'; break;
             case 'mm': output = '%d मिनिटे'; break;
             case 'h': output = 'एक तास'; break;
@@ -24360,6 +25577,7 @@ function relativeTimeMr(number, withoutSuffix, string, isFuture)
     else {
         switch (string) {
             case 's': output = 'काही सेकंदां'; break;
+            case 'ss': output = '%d सेकंदां'; break;
             case 'm': output = 'एका मिनिटा'; break;
             case 'mm': output = '%d मिनिटां'; break;
             case 'h': output = 'एका तासा'; break;
@@ -24402,6 +25620,7 @@ var mr = moment.defineLocale('mr', {
         future: '%sमध्ये',
         past: '%sपूर्वी',
         s: relativeTimeMr,
+        ss: relativeTimeMr,
         m: relativeTimeMr,
         mm: relativeTimeMr,
         h: relativeTimeMr,
@@ -24463,7 +25682,7 @@ return mr;
 
 
 /***/ }),
-/* 110 */
+/* 113 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -24527,6 +25746,7 @@ var ms = moment.defineLocale('ms', {
         future : 'dalam %s',
         past : '%s yang lepas',
         s : 'beberapa saat',
+        ss : '%d saat',
         m : 'seminit',
         mm : '%d minit',
         h : 'sejam',
@@ -24550,7 +25770,7 @@ return ms;
 
 
 /***/ }),
-/* 111 */
+/* 114 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -24615,6 +25835,7 @@ var msMy = moment.defineLocale('ms-my', {
         future : 'dalam %s',
         past : '%s yang lepas',
         s : 'beberapa saat',
+        ss : '%d saat',
         m : 'seminit',
         mm : '%d minit',
         h : 'sejam',
@@ -24638,7 +25859,73 @@ return msMy;
 
 
 /***/ }),
-/* 112 */
+/* 115 */
+/***/ (function(module, exports, __webpack_require__) {
+
+//! moment.js locale configuration
+//! locale : Maltese (Malta) [mt]
+//! author : Alessandro Maruccia : https://github.com/alesma
+
+;(function (global, factory) {
+    true ? factory(__webpack_require__(0)) :
+   typeof define === 'function' && define.amd ? define(['../moment'], factory) :
+   factory(global.moment)
+}(this, (function (moment) { 'use strict';
+
+
+var mt = moment.defineLocale('mt', {
+    months : 'Jannar_Frar_Marzu_April_Mejju_Ġunju_Lulju_Awwissu_Settembru_Ottubru_Novembru_Diċembru'.split('_'),
+    monthsShort : 'Jan_Fra_Mar_Apr_Mej_Ġun_Lul_Aww_Set_Ott_Nov_Diċ'.split('_'),
+    weekdays : 'Il-Ħadd_It-Tnejn_It-Tlieta_L-Erbgħa_Il-Ħamis_Il-Ġimgħa_Is-Sibt'.split('_'),
+    weekdaysShort : 'Ħad_Tne_Tli_Erb_Ħam_Ġim_Sib'.split('_'),
+    weekdaysMin : 'Ħa_Tn_Tl_Er_Ħa_Ġi_Si'.split('_'),
+    longDateFormat : {
+        LT : 'HH:mm',
+        LTS : 'HH:mm:ss',
+        L : 'DD/MM/YYYY',
+        LL : 'D MMMM YYYY',
+        LLL : 'D MMMM YYYY HH:mm',
+        LLLL : 'dddd, D MMMM YYYY HH:mm'
+    },
+    calendar : {
+        sameDay : '[Illum fil-]LT',
+        nextDay : '[Għada fil-]LT',
+        nextWeek : 'dddd [fil-]LT',
+        lastDay : '[Il-bieraħ fil-]LT',
+        lastWeek : 'dddd [li għadda] [fil-]LT',
+        sameElse : 'L'
+    },
+    relativeTime : {
+        future : 'f’ %s',
+        past : '%s ilu',
+        s : 'ftit sekondi',
+        ss : '%d sekondi',
+        m : 'minuta',
+        mm : '%d minuti',
+        h : 'siegħa',
+        hh : '%d siegħat',
+        d : 'ġurnata',
+        dd : '%d ġranet',
+        M : 'xahar',
+        MM : '%d xhur',
+        y : 'sena',
+        yy : '%d sni'
+    },
+    dayOfMonthOrdinalParse : /\d{1,2}º/,
+    ordinal: '%dº',
+    week : {
+        dow : 1, // Monday is the first day of the week.
+        doy : 4  // The week that contains Jan 4th is the first week of the year.
+    }
+});
+
+return mt;
+
+})));
+
+
+/***/ }),
+/* 116 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -24706,6 +25993,7 @@ var my = moment.defineLocale('my', {
         future: 'လာမည့် %s မှာ',
         past: 'လွန်ခဲ့သော %s က',
         s: 'စက္ကန်.အနည်းငယ်',
+        ss : '%d စက္ကန့်',
         m: 'တစ်မိနစ်',
         mm: '%d မိနစ်',
         h: 'တစ်နာရီ',
@@ -24739,7 +26027,7 @@ return my;
 
 
 /***/ }),
-/* 113 */
+/* 117 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -24782,6 +26070,7 @@ var nb = moment.defineLocale('nb', {
         future : 'om %s',
         past : '%s siden',
         s : 'noen sekunder',
+        ss : '%d sekunder',
         m : 'ett minutt',
         mm : '%d minutter',
         h : 'en time',
@@ -24807,7 +26096,7 @@ return nb;
 
 
 /***/ }),
-/* 114 */
+/* 118 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -24912,6 +26201,7 @@ var ne = moment.defineLocale('ne', {
         future : '%sमा',
         past : '%s अगाडि',
         s : 'केही क्षण',
+        ss : '%d सेकेण्ड',
         m : 'एक मिनेट',
         mm : '%d मिनेट',
         h : 'एक घण्टा',
@@ -24935,7 +26225,7 @@ return ne;
 
 
 /***/ }),
-/* 115 */
+/* 119 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -24979,7 +26269,7 @@ var nl = moment.defineLocale('nl', {
 
     weekdays : 'zondag_maandag_dinsdag_woensdag_donderdag_vrijdag_zaterdag'.split('_'),
     weekdaysShort : 'zo._ma._di._wo._do._vr._za.'.split('_'),
-    weekdaysMin : 'Zo_Ma_Di_Wo_Do_Vr_Za'.split('_'),
+    weekdaysMin : 'zo_ma_di_wo_do_vr_za'.split('_'),
     weekdaysParseExact : true,
     longDateFormat : {
         LT : 'HH:mm',
@@ -25001,6 +26291,7 @@ var nl = moment.defineLocale('nl', {
         future : 'over %s',
         past : '%s geleden',
         s : 'een paar seconden',
+        ss : '%d seconden',
         m : 'één minuut',
         mm : '%d minuten',
         h : 'één uur',
@@ -25028,7 +26319,7 @@ return nl;
 
 
 /***/ }),
-/* 116 */
+/* 120 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -25072,7 +26363,7 @@ var nlBe = moment.defineLocale('nl-be', {
 
     weekdays : 'zondag_maandag_dinsdag_woensdag_donderdag_vrijdag_zaterdag'.split('_'),
     weekdaysShort : 'zo._ma._di._wo._do._vr._za.'.split('_'),
-    weekdaysMin : 'Zo_Ma_Di_Wo_Do_Vr_Za'.split('_'),
+    weekdaysMin : 'zo_ma_di_wo_do_vr_za'.split('_'),
     weekdaysParseExact : true,
     longDateFormat : {
         LT : 'HH:mm',
@@ -25094,6 +26385,7 @@ var nlBe = moment.defineLocale('nl-be', {
         future : 'over %s',
         past : '%s geleden',
         s : 'een paar seconden',
+        ss : '%d seconden',
         m : 'één minuut',
         mm : '%d minuten',
         h : 'één uur',
@@ -25121,7 +26413,7 @@ return nlBe;
 
 
 /***/ }),
-/* 117 */
+/* 121 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -25161,6 +26453,7 @@ var nn = moment.defineLocale('nn', {
         future : 'om %s',
         past : '%s sidan',
         s : 'nokre sekund',
+        ss : '%d sekund',
         m : 'eit minutt',
         mm : '%d minutt',
         h : 'ein time',
@@ -25186,7 +26479,7 @@ return nn;
 
 
 /***/ }),
-/* 118 */
+/* 122 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -25252,6 +26545,7 @@ var paIn = moment.defineLocale('pa-in', {
         future : '%s ਵਿੱਚ',
         past : '%s ਪਿਛਲੇ',
         s : 'ਕੁਝ ਸਕਿੰਟ',
+        ss : '%d ਸਕਿੰਟ',
         m : 'ਇਕ ਮਿੰਟ',
         mm : '%d ਮਿੰਟ',
         h : 'ਇੱਕ ਘੰਟਾ',
@@ -25315,7 +26609,7 @@ return paIn;
 
 
 /***/ }),
-/* 119 */
+/* 123 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -25337,6 +26631,8 @@ function plural(n) {
 function translate(number, withoutSuffix, key) {
     var result = number + ' ';
     switch (key) {
+        case 'ss':
+            return result + (plural(number) ? 'sekundy' : 'sekund');
         case 'm':
             return withoutSuffix ? 'minuta' : 'minutę';
         case 'mm':
@@ -25382,7 +26678,24 @@ var pl = moment.defineLocale('pl', {
     calendar : {
         sameDay: '[Dziś o] LT',
         nextDay: '[Jutro o] LT',
-        nextWeek: '[W] dddd [o] LT',
+        nextWeek: function () {
+            switch (this.day()) {
+                case 0:
+                    return '[W niedzielę o] LT';
+
+                case 2:
+                    return '[We wtorek o] LT';
+
+                case 3:
+                    return '[W środę o] LT';
+
+                case 6:
+                    return '[W sobotę o] LT';
+
+                default:
+                    return '[W] dddd [o] LT';
+            }
+        },
         lastDay: '[Wczoraj o] LT',
         lastWeek: function () {
             switch (this.day()) {
@@ -25402,6 +26715,7 @@ var pl = moment.defineLocale('pl', {
         future : 'za %s',
         past : '%s temu',
         s : 'kilka sekund',
+        ss : translate,
         m : translate,
         mm : translate,
         h : translate,
@@ -25427,7 +26741,7 @@ return pl;
 
 
 /***/ }),
-/* 120 */
+/* 124 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -25442,9 +26756,9 @@ return pl;
 
 
 var pt = moment.defineLocale('pt', {
-    months : 'Janeiro_Fevereiro_Março_Abril_Maio_Junho_Julho_Agosto_Setembro_Outubro_Novembro_Dezembro'.split('_'),
-    monthsShort : 'Jan_Fev_Mar_Abr_Mai_Jun_Jul_Ago_Set_Out_Nov_Dez'.split('_'),
-    weekdays : 'Domingo_Segunda-Feira_Terça-Feira_Quarta-Feira_Quinta-Feira_Sexta-Feira_Sábado'.split('_'),
+    months : 'janeiro_fevereiro_março_abril_maio_junho_julho_agosto_setembro_outubro_novembro_dezembro'.split('_'),
+    monthsShort : 'jan_fev_mar_abr_mai_jun_jul_ago_set_out_nov_dez'.split('_'),
+    weekdays : 'Domingo_Segunda-feira_Terça-feira_Quarta-feira_Quinta-feira_Sexta-feira_Sábado'.split('_'),
     weekdaysShort : 'Dom_Seg_Ter_Qua_Qui_Sex_Sáb'.split('_'),
     weekdaysMin : 'Do_2ª_3ª_4ª_5ª_6ª_Sá'.split('_'),
     weekdaysParseExact : true,
@@ -25472,6 +26786,7 @@ var pt = moment.defineLocale('pt', {
         future : 'em %s',
         past : 'há %s',
         s : 'segundos',
+        ss : '%d segundos',
         m : 'um minuto',
         mm : '%d minutos',
         h : 'uma hora',
@@ -25497,7 +26812,7 @@ return pt;
 
 
 /***/ }),
-/* 121 */
+/* 125 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -25512,8 +26827,8 @@ return pt;
 
 
 var ptBr = moment.defineLocale('pt-br', {
-    months : 'Janeiro_Fevereiro_Março_Abril_Maio_Junho_Julho_Agosto_Setembro_Outubro_Novembro_Dezembro'.split('_'),
-    monthsShort : 'Jan_Fev_Mar_Abr_Mai_Jun_Jul_Ago_Set_Out_Nov_Dez'.split('_'),
+    months : 'janeiro_fevereiro_março_abril_maio_junho_julho_agosto_setembro_outubro_novembro_dezembro'.split('_'),
+    monthsShort : 'jan_fev_mar_abr_mai_jun_jul_ago_set_out_nov_dez'.split('_'),
     weekdays : 'Domingo_Segunda-feira_Terça-feira_Quarta-feira_Quinta-feira_Sexta-feira_Sábado'.split('_'),
     weekdaysShort : 'Dom_Seg_Ter_Qua_Qui_Sex_Sáb'.split('_'),
     weekdaysMin : 'Do_2ª_3ª_4ª_5ª_6ª_Sá'.split('_'),
@@ -25542,6 +26857,7 @@ var ptBr = moment.defineLocale('pt-br', {
         future : 'em %s',
         past : '%s atrás',
         s : 'poucos segundos',
+        ss : '%d segundos',
         m : 'um minuto',
         mm : '%d minutos',
         h : 'uma hora',
@@ -25563,7 +26879,7 @@ return ptBr;
 
 
 /***/ }),
-/* 122 */
+/* 126 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -25580,6 +26896,7 @@ return ptBr;
 
 function relativeTimeWithPlural(number, withoutSuffix, key) {
     var format = {
+            'ss': 'secunde',
             'mm': 'minute',
             'hh': 'ore',
             'dd': 'zile',
@@ -25620,6 +26937,7 @@ var ro = moment.defineLocale('ro', {
         future : 'peste %s',
         past : '%s în urmă',
         s : 'câteva secunde',
+        ss : relativeTimeWithPlural,
         m : 'un minut',
         mm : relativeTimeWithPlural,
         h : 'o oră',
@@ -25643,7 +26961,7 @@ return ro;
 
 
 /***/ }),
-/* 123 */
+/* 127 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -25665,6 +26983,7 @@ function plural(word, num) {
 }
 function relativeTimeWithPlural(number, withoutSuffix, key) {
     var format = {
+        'ss': withoutSuffix ? 'секунда_секунды_секунд' : 'секунду_секунды_секунд',
         'mm': withoutSuffix ? 'минута_минуты_минут' : 'минуту_минуты_минут',
         'hh': 'час_часа_часов',
         'dd': 'день_дня_дней',
@@ -25716,12 +27035,12 @@ var ru = moment.defineLocale('ru', {
     // Выражение, которое соотвествует только сокращённым формам
     monthsShortStrictRegex: /^(янв\.|февр?\.|мар[т.]|апр\.|ма[яй]|июн[ья.]|июл[ья.]|авг\.|сент?\.|окт\.|нояб?\.|дек\.)/i,
     longDateFormat : {
-        LT : 'HH:mm',
-        LTS : 'HH:mm:ss',
+        LT : 'H:mm',
+        LTS : 'H:mm:ss',
         L : 'DD.MM.YYYY',
         LL : 'D MMMM YYYY г.',
-        LLL : 'D MMMM YYYY г., HH:mm',
-        LLLL : 'dddd, D MMMM YYYY г., HH:mm'
+        LLL : 'D MMMM YYYY г., H:mm',
+        LLLL : 'dddd, D MMMM YYYY г., H:mm'
     },
     calendar : {
         sameDay: '[Сегодня в] LT',
@@ -25777,6 +27096,7 @@ var ru = moment.defineLocale('ru', {
         future : 'через %s',
         past : '%s назад',
         s : 'несколько секунд',
+        ss : relativeTimeWithPlural,
         m : relativeTimeWithPlural,
         mm : relativeTimeWithPlural,
         h : 'час',
@@ -25821,7 +27141,7 @@ var ru = moment.defineLocale('ru', {
     },
     week : {
         dow : 1, // Monday is the first day of the week.
-        doy : 7  // The week that contains Jan 1st is the first week of the year.
+        doy : 4  // The week that contains Jan 4th is the first week of the year.
     }
 });
 
@@ -25831,7 +27151,7 @@ return ru;
 
 
 /***/ }),
-/* 124 */
+/* 128 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -25905,6 +27225,7 @@ var sd = moment.defineLocale('sd', {
         future : '%s پوء',
         past : '%s اڳ',
         s : 'چند سيڪنڊ',
+        ss : '%d سيڪنڊ',
         m : 'هڪ منٽ',
         mm : '%d منٽ',
         h : 'هڪ ڪلاڪ',
@@ -25934,7 +27255,7 @@ return sd;
 
 
 /***/ }),
-/* 125 */
+/* 129 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -25975,6 +27296,7 @@ var se = moment.defineLocale('se', {
         future : '%s geažes',
         past : 'maŋit %s',
         s : 'moadde sekunddat',
+        ss: '%d sekunddat',
         m : 'okta minuhta',
         mm : '%d minuhtat',
         h : 'okta diimmu',
@@ -26000,7 +27322,7 @@ return se;
 
 
 /***/ }),
-/* 126 */
+/* 130 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -26042,6 +27364,7 @@ var si = moment.defineLocale('si', {
         future : '%sකින්',
         past : '%sකට පෙර',
         s : 'තත්පර කිහිපය',
+        ss : 'තත්පර %d',
         m : 'මිනිත්තුව',
         mm : 'මිනිත්තු %d',
         h : 'පැය',
@@ -26076,7 +27399,7 @@ return si;
 
 
 /***/ }),
-/* 127 */
+/* 131 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -26101,6 +27424,13 @@ function translate(number, withoutSuffix, key, isFuture) {
     switch (key) {
         case 's':  // a few seconds / in a few seconds / a few seconds ago
             return (withoutSuffix || isFuture) ? 'pár sekúnd' : 'pár sekundami';
+        case 'ss': // 9 seconds / in 9 seconds / 9 seconds ago
+            if (withoutSuffix || isFuture) {
+                return result + (plural(number) ? 'sekundy' : 'sekúnd');
+            } else {
+                return result + 'sekundami';
+            }
+            break;
         case 'm':  // a minute / in a minute / a minute ago
             return withoutSuffix ? 'minúta' : (isFuture ? 'minútu' : 'minútou');
         case 'mm': // 9 minutes / in 9 minutes / 9 minutes ago
@@ -26206,6 +27536,7 @@ var sk = moment.defineLocale('sk', {
         future : 'za %s',
         past : 'pred %s',
         s : translate,
+        ss : translate,
         m : translate,
         mm : translate,
         h : translate,
@@ -26231,7 +27562,7 @@ return sk;
 
 
 /***/ }),
-/* 128 */
+/* 132 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -26250,6 +27581,17 @@ function processRelativeTime(number, withoutSuffix, key, isFuture) {
     switch (key) {
         case 's':
             return withoutSuffix || isFuture ? 'nekaj sekund' : 'nekaj sekundami';
+        case 'ss':
+            if (number === 1) {
+                result += withoutSuffix ? 'sekundo' : 'sekundi';
+            } else if (number === 2) {
+                result += withoutSuffix || isFuture ? 'sekundi' : 'sekundah';
+            } else if (number < 5) {
+                result += withoutSuffix || isFuture ? 'sekunde' : 'sekundah';
+            } else {
+                result += withoutSuffix || isFuture ? 'sekund' : 'sekund';
+            }
+            return result;
         case 'm':
             return withoutSuffix ? 'ena minuta' : 'eno minuto';
         case 'mm':
@@ -26373,6 +27715,7 @@ var sl = moment.defineLocale('sl', {
         future : 'čez %s',
         past   : 'pred %s',
         s      : processRelativeTime,
+        ss     : processRelativeTime,
         m      : processRelativeTime,
         mm     : processRelativeTime,
         h      : processRelativeTime,
@@ -26398,7 +27741,7 @@ return sl;
 
 
 /***/ }),
-/* 129 */
+/* 133 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -26448,6 +27791,7 @@ var sq = moment.defineLocale('sq', {
         future : 'në %s',
         past : '%s më parë',
         s : 'disa sekonda',
+        ss : '%d sekonda',
         m : 'një minutë',
         mm : '%d minuta',
         h : 'një orë',
@@ -26473,7 +27817,7 @@ return sq;
 
 
 /***/ }),
-/* 130 */
+/* 134 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -26489,6 +27833,7 @@ return sq;
 
 var translator = {
     words: { //Different grammatical cases
+        ss: ['sekunda', 'sekunde', 'sekundi'],
         m: ['jedan minut', 'jedne minute'],
         mm: ['minut', 'minute', 'minuta'],
         h: ['jedan sat', 'jednog sata'],
@@ -26563,6 +27908,7 @@ var sr = moment.defineLocale('sr', {
         future : 'za %s',
         past   : 'pre %s',
         s      : 'nekoliko sekundi',
+        ss     : translator.translate,
         m      : translator.translate,
         mm     : translator.translate,
         h      : translator.translate,
@@ -26588,7 +27934,7 @@ return sr;
 
 
 /***/ }),
-/* 131 */
+/* 135 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -26604,6 +27950,7 @@ return sr;
 
 var translator = {
     words: { //Different grammatical cases
+        ss: ['секунда', 'секунде', 'секунди'],
         m: ['један минут', 'једне минуте'],
         mm: ['минут', 'минуте', 'минута'],
         h: ['један сат', 'једног сата'],
@@ -26678,6 +28025,7 @@ var srCyrl = moment.defineLocale('sr-cyrl', {
         future : 'за %s',
         past   : 'пре %s',
         s      : 'неколико секунди',
+        ss     : translator.translate,
         m      : translator.translate,
         mm     : translator.translate,
         h      : translator.translate,
@@ -26703,7 +28051,7 @@ return srCyrl;
 
 
 /***/ }),
-/* 132 */
+/* 136 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -26745,6 +28093,7 @@ var ss = moment.defineLocale('ss', {
         future : 'nga %s',
         past : 'wenteka nga %s',
         s : 'emizuzwana lomcane',
+        ss : '%d mzuzwana',
         m : 'umzuzu',
         mm : '%d emizuzu',
         h : 'lihora',
@@ -26797,7 +28146,7 @@ return ss;
 
 
 /***/ }),
-/* 133 */
+/* 137 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -26839,6 +28188,7 @@ var sv = moment.defineLocale('sv', {
         future : 'om %s',
         past : 'för %s sedan',
         s : 'några sekunder',
+        ss : '%d sekunder',
         m : 'en minut',
         mm : '%d minuter',
         h : 'en timme',
@@ -26871,7 +28221,7 @@ return sv;
 
 
 /***/ }),
-/* 134 */
+/* 138 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -26912,6 +28262,7 @@ var sw = moment.defineLocale('sw', {
         future : '%s baadaye',
         past : 'tokea %s',
         s : 'hivi punde',
+        ss : 'sekunde %d',
         m : 'dakika moja',
         mm : 'dakika %d',
         h : 'saa limoja',
@@ -26935,7 +28286,7 @@ return sw;
 
 
 /***/ }),
-/* 135 */
+/* 139 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -27000,6 +28351,7 @@ var ta = moment.defineLocale('ta', {
         future : '%s இல்',
         past : '%s முன்',
         s : 'ஒரு சில விநாடிகள்',
+        ss : '%d விநாடிகள்',
         m : 'ஒரு நிமிடம்',
         mm : '%d நிமிடங்கள்',
         h : 'ஒரு மணி நேரம்',
@@ -27070,7 +28422,7 @@ return ta;
 
 
 /***/ }),
-/* 136 */
+/* 140 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -27111,6 +28463,7 @@ var te = moment.defineLocale('te', {
         future : '%s లో',
         past : '%s క్రితం',
         s : 'కొన్ని క్షణాలు',
+        ss : '%d సెకన్లు',
         m : 'ఒక నిమిషం',
         mm : '%d నిమిషాలు',
         h : 'ఒక గంట',
@@ -27164,7 +28517,7 @@ return te;
 
 
 /***/ }),
-/* 137 */
+/* 141 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -27205,6 +28558,7 @@ var tet = moment.defineLocale('tet', {
         future : 'iha %s',
         past : '%s liuba',
         s : 'minutu balun',
+        ss : 'minutu %d',
         m : 'minutu ida',
         mm : 'minutus %d',
         h : 'horas ida',
@@ -27237,7 +28591,7 @@ return tet;
 
 
 /***/ }),
-/* 138 */
+/* 142 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -27290,6 +28644,7 @@ var th = moment.defineLocale('th', {
         future : 'อีก %s',
         past : '%sที่แล้ว',
         s : 'ไม่กี่วินาที',
+        ss : '%d วินาที',
         m : '1 นาที',
         mm : '%d นาที',
         h : '1 ชั่วโมง',
@@ -27309,7 +28664,7 @@ return th;
 
 
 /***/ }),
-/* 139 */
+/* 143 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -27349,6 +28704,7 @@ var tlPh = moment.defineLocale('tl-ph', {
         future : 'sa loob ng %s',
         past : '%s ang nakalipas',
         s : 'ilang segundo',
+        ss : '%d segundo',
         m : 'isang minuto',
         mm : '%d minuto',
         h : 'isang oras',
@@ -27376,7 +28732,7 @@ return tlPh;
 
 
 /***/ }),
-/* 140 */
+/* 144 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -27419,6 +28775,8 @@ function translatePast(output) {
 function translate(number, withoutSuffix, string, isFuture) {
     var numberNoun = numberAsNoun(number);
     switch (string) {
+        case 'ss':
+            return numberNoun + ' lup';
         case 'mm':
             return numberNoun + ' tup';
         case 'hh':
@@ -27476,6 +28834,7 @@ var tlh = moment.defineLocale('tlh', {
         future : translateFuture,
         past : translatePast,
         s : 'puS lup',
+        ss : translate,
         m : 'wa’ tup',
         mm : translate,
         h : 'wa’ rep',
@@ -27501,7 +28860,7 @@ return tlh;
 
 
 /***/ }),
-/* 141 */
+/* 145 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -27554,15 +28913,16 @@ var tr = moment.defineLocale('tr', {
     calendar : {
         sameDay : '[bugün saat] LT',
         nextDay : '[yarın saat] LT',
-        nextWeek : '[haftaya] dddd [saat] LT',
+        nextWeek : '[gelecek] dddd [saat] LT',
         lastDay : '[dün] LT',
-        lastWeek : '[geçen hafta] dddd [saat] LT',
+        lastWeek : '[geçen] dddd [saat] LT',
         sameElse : 'L'
     },
     relativeTime : {
         future : '%s sonra',
         past : '%s önce',
         s : 'birkaç saniye',
+        ss : '%d saniye',
         m : 'bir dakika',
         mm : '%d dakika',
         h : 'bir saat',
@@ -27596,7 +28956,7 @@ return tr;
 
 
 /***/ }),
-/* 142 */
+/* 146 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -27650,6 +29010,7 @@ var tzl = moment.defineLocale('tzl', {
         future : 'osprei %s',
         past : 'ja%s',
         s : processRelativeTime,
+        ss : processRelativeTime,
         m : processRelativeTime,
         mm : processRelativeTime,
         h : processRelativeTime,
@@ -27672,6 +29033,7 @@ var tzl = moment.defineLocale('tzl', {
 function processRelativeTime(number, withoutSuffix, key, isFuture) {
     var format = {
         's': ['viensas secunds', '\'iensas secunds'],
+        'ss': [number + ' secunds', '' + number + ' secunds'],
         'm': ['\'n míut', '\'iens míut'],
         'mm': [number + ' míuts', '' + number + ' míuts'],
         'h': ['\'n þora', '\'iensa þora'],
@@ -27692,7 +29054,7 @@ return tzl;
 
 
 /***/ }),
-/* 143 */
+/* 147 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -27732,6 +29094,7 @@ var tzm = moment.defineLocale('tzm', {
         future : 'ⴷⴰⴷⵅ ⵙ ⵢⴰⵏ %s',
         past : 'ⵢⴰⵏ %s',
         s : 'ⵉⵎⵉⴽ',
+        ss : '%d ⵉⵎⵉⴽ',
         m : 'ⵎⵉⵏⵓⴺ',
         mm : '%d ⵎⵉⵏⵓⴺ',
         h : 'ⵙⴰⵄⴰ',
@@ -27755,7 +29118,7 @@ return tzm;
 
 
 /***/ }),
-/* 144 */
+/* 148 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -27795,6 +29158,7 @@ var tzmLatn = moment.defineLocale('tzm-latn', {
         future : 'dadkh s yan %s',
         past : 'yan %s',
         s : 'imik',
+        ss : '%d imik',
         m : 'minuḍ',
         mm : '%d minuḍ',
         h : 'saɛa',
@@ -27818,7 +29182,7 @@ return tzmLatn;
 
 
 /***/ }),
-/* 145 */
+/* 149 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -27839,6 +29203,7 @@ function plural(word, num) {
 }
 function relativeTimeWithPlural(number, withoutSuffix, key) {
     var format = {
+        'ss': withoutSuffix ? 'секунда_секунди_секунд' : 'секунду_секунди_секунд',
         'mm': withoutSuffix ? 'хвилина_хвилини_хвилин' : 'хвилину_хвилини_хвилин',
         'hh': withoutSuffix ? 'година_години_годин' : 'годину_години_годин',
         'dd': 'день_дні_днів',
@@ -27920,6 +29285,7 @@ var uk = moment.defineLocale('uk', {
         future : 'за %s',
         past : '%s тому',
         s : 'декілька секунд',
+        ss : relativeTimeWithPlural,
         m : relativeTimeWithPlural,
         mm : relativeTimeWithPlural,
         h : 'годину',
@@ -27974,7 +29340,7 @@ return uk;
 
 
 /***/ }),
-/* 146 */
+/* 150 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -28049,6 +29415,7 @@ var ur = moment.defineLocale('ur', {
         future : '%s بعد',
         past : '%s قبل',
         s : 'چند سیکنڈ',
+        ss : '%d سیکنڈ',
         m : 'ایک منٹ',
         mm : '%d منٹ',
         h : 'ایک گھنٹہ',
@@ -28078,7 +29445,7 @@ return ur;
 
 
 /***/ }),
-/* 147 */
+/* 151 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -28118,6 +29485,7 @@ var uz = moment.defineLocale('uz', {
         future : 'Якин %s ичида',
         past : 'Бир неча %s олдин',
         s : 'фурсат',
+        ss : '%d фурсат',
         m : 'бир дакика',
         mm : '%d дакика',
         h : 'бир соат',
@@ -28141,7 +29509,7 @@ return uz;
 
 
 /***/ }),
-/* 148 */
+/* 152 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -28181,6 +29549,7 @@ var uzLatn = moment.defineLocale('uz-latn', {
         future : 'Yaqin %s ichida',
         past : 'Bir necha %s oldin',
         s : 'soniya',
+        ss : '%d soniya',
         m : 'bir daqiqa',
         mm : '%d daqiqa',
         h : 'bir soat',
@@ -28204,7 +29573,7 @@ return uzLatn;
 
 
 /***/ }),
-/* 149 */
+/* 153 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -28261,6 +29630,7 @@ var vi = moment.defineLocale('vi', {
         future : '%s tới',
         past : '%s trước',
         s : 'vài giây',
+        ss : '%d giây' ,
         m : 'một phút',
         mm : '%d phút',
         h : 'một giờ',
@@ -28288,7 +29658,7 @@ return vi;
 
 
 /***/ }),
-/* 150 */
+/* 154 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -28329,6 +29699,7 @@ var xPseudo = moment.defineLocale('x-pseudo', {
         future : 'í~ñ %s',
         past : '%s á~gó',
         s : 'á ~féw ~sécó~ñds',
+        ss : '%d s~écóñ~ds',
         m : 'á ~míñ~úté',
         mm : '%d m~íñú~tés',
         h : 'á~ñ hó~úr',
@@ -28361,7 +29732,7 @@ return xPseudo;
 
 
 /***/ }),
-/* 151 */
+/* 155 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -28401,6 +29772,7 @@ var yo = moment.defineLocale('yo', {
         future : 'ní %s',
         past : '%s kọjá',
         s : 'ìsẹjú aayá die',
+        ss :'aayá %d',
         m : 'ìsẹjú kan',
         mm : 'ìsẹjú %d',
         h : 'wákati kan',
@@ -28426,7 +29798,7 @@ return yo;
 
 
 /***/ }),
-/* 152 */
+/* 156 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -28450,14 +29822,14 @@ var zhCn = moment.defineLocale('zh-cn', {
     longDateFormat : {
         LT : 'HH:mm',
         LTS : 'HH:mm:ss',
-        L : 'YYYY年MMMD日',
-        LL : 'YYYY年MMMD日',
-        LLL : 'YYYY年MMMD日Ah点mm分',
-        LLLL : 'YYYY年MMMD日ddddAh点mm分',
-        l : 'YYYY年MMMD日',
-        ll : 'YYYY年MMMD日',
-        lll : 'YYYY年MMMD日 HH:mm',
-        llll : 'YYYY年MMMD日dddd HH:mm'
+        L : 'YYYY/MM/DD',
+        LL : 'YYYY年M月D日',
+        LLL : 'YYYY年M月D日Ah点mm分',
+        LLLL : 'YYYY年M月D日ddddAh点mm分',
+        l : 'YYYY/M/D',
+        ll : 'YYYY年M月D日',
+        lll : 'YYYY年M月D日 HH:mm',
+        llll : 'YYYY年M月D日dddd HH:mm'
     },
     meridiemParse: /凌晨|早上|上午|中午|下午|晚上/,
     meridiemHour: function (hour, meridiem) {
@@ -28518,6 +29890,7 @@ var zhCn = moment.defineLocale('zh-cn', {
         future : '%s内',
         past : '%s前',
         s : '几秒',
+        ss : '%d 秒',
         m : '1 分钟',
         mm : '%d 分钟',
         h : '1 小时',
@@ -28542,7 +29915,7 @@ return zhCn;
 
 
 /***/ }),
-/* 153 */
+/* 157 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -28567,14 +29940,14 @@ var zhHk = moment.defineLocale('zh-hk', {
     longDateFormat : {
         LT : 'HH:mm',
         LTS : 'HH:mm:ss',
-        L : 'YYYY年MMMD日',
-        LL : 'YYYY年MMMD日',
-        LLL : 'YYYY年MMMD日 HH:mm',
-        LLLL : 'YYYY年MMMD日dddd HH:mm',
-        l : 'YYYY年MMMD日',
-        ll : 'YYYY年MMMD日',
-        lll : 'YYYY年MMMD日 HH:mm',
-        llll : 'YYYY年MMMD日dddd HH:mm'
+        L : 'YYYY/MM/DD',
+        LL : 'YYYY年M月D日',
+        LLL : 'YYYY年M月D日 HH:mm',
+        LLLL : 'YYYY年M月D日dddd HH:mm',
+        l : 'YYYY/M/D',
+        ll : 'YYYY年M月D日',
+        lll : 'YYYY年M月D日 HH:mm',
+        llll : 'YYYY年M月D日dddd HH:mm'
     },
     meridiemParse: /凌晨|早上|上午|中午|下午|晚上/,
     meridiemHour : function (hour, meridiem) {
@@ -28633,6 +30006,7 @@ var zhHk = moment.defineLocale('zh-hk', {
         future : '%s內',
         past : '%s前',
         s : '幾秒',
+        ss : '%d 秒',
         m : '1 分鐘',
         mm : '%d 分鐘',
         h : '1 小時',
@@ -28652,7 +30026,7 @@ return zhHk;
 
 
 /***/ }),
-/* 154 */
+/* 158 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -28676,14 +30050,14 @@ var zhTw = moment.defineLocale('zh-tw', {
     longDateFormat : {
         LT : 'HH:mm',
         LTS : 'HH:mm:ss',
-        L : 'YYYY年MMMD日',
-        LL : 'YYYY年MMMD日',
-        LLL : 'YYYY年MMMD日 HH:mm',
-        LLLL : 'YYYY年MMMD日dddd HH:mm',
-        l : 'YYYY年MMMD日',
-        ll : 'YYYY年MMMD日',
-        lll : 'YYYY年MMMD日 HH:mm',
-        llll : 'YYYY年MMMD日dddd HH:mm'
+        L : 'YYYY/MM/DD',
+        LL : 'YYYY年M月D日',
+        LLL : 'YYYY年M月D日 HH:mm',
+        LLLL : 'YYYY年M月D日dddd HH:mm',
+        l : 'YYYY/M/D',
+        ll : 'YYYY年M月D日',
+        lll : 'YYYY年M月D日 HH:mm',
+        llll : 'YYYY年M月D日dddd HH:mm'
     },
     meridiemParse: /凌晨|早上|上午|中午|下午|晚上/,
     meridiemHour : function (hour, meridiem) {
@@ -28742,6 +30116,7 @@ var zhTw = moment.defineLocale('zh-tw', {
         future : '%s內',
         past : '%s前',
         s : '幾秒',
+        ss : '%d 秒',
         m : '1 分鐘',
         mm : '%d 分鐘',
         h : '1 小時',
@@ -28761,15 +30136,15 @@ return zhTw;
 
 
 /***/ }),
-/* 155 */
+/* 159 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(156);
-module.exports = __webpack_require__(352);
+__webpack_require__(160);
+module.exports = __webpack_require__(358);
 
 
 /***/ }),
-/* 156 */
+/* 160 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -28778,7 +30153,7 @@ module.exports = __webpack_require__(352);
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-__webpack_require__(157);
+__webpack_require__(161);
 
 /**
  *
@@ -28793,50 +30168,50 @@ __webpack_require__(157);
  */
 Vue.component('createMember', __webpack_require__(35));
 Vue.component('editMember', __webpack_require__(35));
-Vue.component('createDepartament', __webpack_require__(235));
-Vue.component('createIncomes', __webpack_require__(244));
-Vue.component('createInternalControl', __webpack_require__(249));
-Vue.component('createWeeklyIncomes', __webpack_require__(257));
-Vue.component('createExpenses', __webpack_require__(262));
-Vue.component('createBank', __webpack_require__(269));
-Vue.component('createChurchDeposits', __webpack_require__(274));
-Vue.component('createLocalDeposits', __webpack_require__(284));
-Vue.component('createCheck', __webpack_require__(289));
-Vue.component('createChurchPublic', __webpack_require__(296));
+Vue.component('createDepartament', __webpack_require__(241));
+Vue.component('createIncomes', __webpack_require__(250));
+Vue.component('createInternalControl', __webpack_require__(255));
+Vue.component('createWeeklyIncomes', __webpack_require__(263));
+Vue.component('createExpenses', __webpack_require__(268));
+Vue.component('createBank', __webpack_require__(275));
+Vue.component('createChurchDeposits', __webpack_require__(280));
+Vue.component('createLocalDeposits', __webpack_require__(290));
+Vue.component('createCheck', __webpack_require__(295));
+Vue.component('createChurchPublic', __webpack_require__(302));
 /**
  * Editores de tablas
  */
 
-Vue.component('editorsDepartament', __webpack_require__(301));
+Vue.component('editorsDepartament', __webpack_require__(307));
 /**
  * Listas de datos en tablas tipo dataTable
  */
-Vue.component('listsIncomeAccounts', __webpack_require__(306));
+Vue.component('listsIncomeAccounts', __webpack_require__(312));
 Vue.component('listsExpenses', __webpack_require__(39));
-Vue.component('listsExpenseAccounts', __webpack_require__(311));
-Vue.component('listWeeklyInfo', __webpack_require__(316));
-Vue.component('listsMembers', __webpack_require__(321));
-Vue.component('listsChecks', __webpack_require__(326));
-Vue.component('listsInternalControls', __webpack_require__(331));
-Vue.component('listsDepartaments', __webpack_require__(16));
-Vue.component('listsCheckExpenses', __webpack_require__(336));
+Vue.component('listsExpenseAccounts', __webpack_require__(317));
+Vue.component('listWeeklyInfo', __webpack_require__(322));
+Vue.component('listsMembers', __webpack_require__(327));
+Vue.component('listsChecks', __webpack_require__(332));
+Vue.component('listsInternalControls', __webpack_require__(337));
+Vue.component('listsDepartaments', __webpack_require__(17));
+Vue.component('listsCheckExpenses', __webpack_require__(342));
 /**
  * Otros fromularios
  */
-Vue.component('transferAccount', __webpack_require__(341));
-Vue.component('depositLocalField', __webpack_require__(344));
-Vue.component('registroExpenses', __webpack_require__(349));
+Vue.component('transferAccount', __webpack_require__(347));
+Vue.component('depositLocalField', __webpack_require__(350));
+Vue.component('registroExpenses', __webpack_require__(355));
 
 var app = new Vue({
   el: '#app'
 });
 
 /***/ }),
-/* 157 */
+/* 161 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-window._ = __webpack_require__(158);
+window._ = __webpack_require__(162);
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
@@ -28852,21 +30227,21 @@ window._ = __webpack_require__(158);
  * and simple, leaving you to focus on building your next great project.
  */
 
-window.Vue = __webpack_require__(18);
-Vue.use(__webpack_require__(159));
-Vue.use(__webpack_require__(160));
-Vue.use(__webpack_require__(162));
+window.Vue = __webpack_require__(19);
 Vue.use(__webpack_require__(165));
-Vue.use(__webpack_require__(12));
 Vue.use(__webpack_require__(166));
-window.Money = __webpack_require__(167);
+Vue.use(__webpack_require__(168));
+Vue.use(__webpack_require__(171));
+Vue.use(__webpack_require__(13));
+Vue.use(__webpack_require__(172));
+window.Money = __webpack_require__(173);
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
  * to our Laravel back-end. This library automatically handles sending the
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
-window.axios = __webpack_require__(211);
+window.axios = __webpack_require__(217);
 
 window.axios.defaults.headers.common = {
   'X-CSRF-TOKEN': window.Laravel.csrfToken,
@@ -28889,7 +30264,7 @@ window.axios.defaults.headers.common = {
 // });
 
 /***/ }),
-/* 158 */
+/* 162 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, module) {var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -45978,16 +47353,268 @@ window.axios.defaults.headers.common = {
   }
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10), __webpack_require__(11)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9), __webpack_require__(11)(module)))
 
 /***/ }),
-/* 159 */
+/* 163 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var apply = Function.prototype.apply;
+
+// DOM APIs, for completeness
+
+exports.setTimeout = function() {
+  return new Timeout(apply.call(setTimeout, window, arguments), clearTimeout);
+};
+exports.setInterval = function() {
+  return new Timeout(apply.call(setInterval, window, arguments), clearInterval);
+};
+exports.clearTimeout =
+exports.clearInterval = function(timeout) {
+  if (timeout) {
+    timeout.close();
+  }
+};
+
+function Timeout(id, clearFn) {
+  this._id = id;
+  this._clearFn = clearFn;
+}
+Timeout.prototype.unref = Timeout.prototype.ref = function() {};
+Timeout.prototype.close = function() {
+  this._clearFn.call(window, this._id);
+};
+
+// Does not start the time, just sets up the members needed.
+exports.enroll = function(item, msecs) {
+  clearTimeout(item._idleTimeoutId);
+  item._idleTimeout = msecs;
+};
+
+exports.unenroll = function(item) {
+  clearTimeout(item._idleTimeoutId);
+  item._idleTimeout = -1;
+};
+
+exports._unrefActive = exports.active = function(item) {
+  clearTimeout(item._idleTimeoutId);
+
+  var msecs = item._idleTimeout;
+  if (msecs >= 0) {
+    item._idleTimeoutId = setTimeout(function onTimeout() {
+      if (item._onTimeout)
+        item._onTimeout();
+    }, msecs);
+  }
+};
+
+// setimmediate attaches itself to the global object
+__webpack_require__(164);
+exports.setImmediate = setImmediate;
+exports.clearImmediate = clearImmediate;
+
+
+/***/ }),
+/* 164 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
+    "use strict";
+
+    if (global.setImmediate) {
+        return;
+    }
+
+    var nextHandle = 1; // Spec says greater than zero
+    var tasksByHandle = {};
+    var currentlyRunningATask = false;
+    var doc = global.document;
+    var registerImmediate;
+
+    function setImmediate(callback) {
+      // Callback can either be a function or a string
+      if (typeof callback !== "function") {
+        callback = new Function("" + callback);
+      }
+      // Copy function arguments
+      var args = new Array(arguments.length - 1);
+      for (var i = 0; i < args.length; i++) {
+          args[i] = arguments[i + 1];
+      }
+      // Store and register the task
+      var task = { callback: callback, args: args };
+      tasksByHandle[nextHandle] = task;
+      registerImmediate(nextHandle);
+      return nextHandle++;
+    }
+
+    function clearImmediate(handle) {
+        delete tasksByHandle[handle];
+    }
+
+    function run(task) {
+        var callback = task.callback;
+        var args = task.args;
+        switch (args.length) {
+        case 0:
+            callback();
+            break;
+        case 1:
+            callback(args[0]);
+            break;
+        case 2:
+            callback(args[0], args[1]);
+            break;
+        case 3:
+            callback(args[0], args[1], args[2]);
+            break;
+        default:
+            callback.apply(undefined, args);
+            break;
+        }
+    }
+
+    function runIfPresent(handle) {
+        // From the spec: "Wait until any invocations of this algorithm started before this one have completed."
+        // So if we're currently running a task, we'll need to delay this invocation.
+        if (currentlyRunningATask) {
+            // Delay by doing a setTimeout. setImmediate was tried instead, but in Firefox 7 it generated a
+            // "too much recursion" error.
+            setTimeout(runIfPresent, 0, handle);
+        } else {
+            var task = tasksByHandle[handle];
+            if (task) {
+                currentlyRunningATask = true;
+                try {
+                    run(task);
+                } finally {
+                    clearImmediate(handle);
+                    currentlyRunningATask = false;
+                }
+            }
+        }
+    }
+
+    function installNextTickImplementation() {
+        registerImmediate = function(handle) {
+            process.nextTick(function () { runIfPresent(handle); });
+        };
+    }
+
+    function canUsePostMessage() {
+        // The test against `importScripts` prevents this implementation from being installed inside a web worker,
+        // where `global.postMessage` means something completely different and can't be used for this purpose.
+        if (global.postMessage && !global.importScripts) {
+            var postMessageIsAsynchronous = true;
+            var oldOnMessage = global.onmessage;
+            global.onmessage = function() {
+                postMessageIsAsynchronous = false;
+            };
+            global.postMessage("", "*");
+            global.onmessage = oldOnMessage;
+            return postMessageIsAsynchronous;
+        }
+    }
+
+    function installPostMessageImplementation() {
+        // Installs an event handler on `global` for the `message` event: see
+        // * https://developer.mozilla.org/en/DOM/window.postMessage
+        // * http://www.whatwg.org/specs/web-apps/current-work/multipage/comms.html#crossDocumentMessages
+
+        var messagePrefix = "setImmediate$" + Math.random() + "$";
+        var onGlobalMessage = function(event) {
+            if (event.source === global &&
+                typeof event.data === "string" &&
+                event.data.indexOf(messagePrefix) === 0) {
+                runIfPresent(+event.data.slice(messagePrefix.length));
+            }
+        };
+
+        if (global.addEventListener) {
+            global.addEventListener("message", onGlobalMessage, false);
+        } else {
+            global.attachEvent("onmessage", onGlobalMessage);
+        }
+
+        registerImmediate = function(handle) {
+            global.postMessage(messagePrefix + handle, "*");
+        };
+    }
+
+    function installMessageChannelImplementation() {
+        var channel = new MessageChannel();
+        channel.port1.onmessage = function(event) {
+            var handle = event.data;
+            runIfPresent(handle);
+        };
+
+        registerImmediate = function(handle) {
+            channel.port2.postMessage(handle);
+        };
+    }
+
+    function installReadyStateChangeImplementation() {
+        var html = doc.documentElement;
+        registerImmediate = function(handle) {
+            // Create a <script> element; its readystatechange event will be fired asynchronously once it is inserted
+            // into the document. Do so, thus queuing up the task. Remember to clean up once it's been called.
+            var script = doc.createElement("script");
+            script.onreadystatechange = function () {
+                runIfPresent(handle);
+                script.onreadystatechange = null;
+                html.removeChild(script);
+                script = null;
+            };
+            html.appendChild(script);
+        };
+    }
+
+    function installSetTimeoutImplementation() {
+        registerImmediate = function(handle) {
+            setTimeout(runIfPresent, 0, handle);
+        };
+    }
+
+    // If supported, we should attach to the prototype of global, since that is where setTimeout et al. live.
+    var attachTo = Object.getPrototypeOf && Object.getPrototypeOf(global);
+    attachTo = attachTo && attachTo.setTimeout ? attachTo : global;
+
+    // Don't get fooled by e.g. browserify environments.
+    if ({}.toString.call(global.process) === "[object process]") {
+        // For Node.js before 0.9
+        installNextTickImplementation();
+
+    } else if (canUsePostMessage()) {
+        // For non-IE10 modern browsers
+        installPostMessageImplementation();
+
+    } else if (global.MessageChannel) {
+        // For web workers, where supported
+        installMessageChannelImplementation();
+
+    } else if (doc && "onreadystatechange" in doc.createElement("script")) {
+        // For IE 6–8
+        installReadyStateChangeImplementation();
+
+    } else {
+        // For older browsers
+        installSetTimeoutImplementation();
+    }
+
+    attachTo.setImmediate = setImmediate;
+    attachTo.clearImmediate = clearImmediate;
+}(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9), __webpack_require__(12)))
+
+/***/ }),
+/* 165 */
 /***/ (function(module, exports, __webpack_require__) {
 
 !function(t,e){if(true)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var n=e();for(var r in n)("object"==typeof exports?exports:t)[r]=n[r]}}(this,function(){return function(t){function e(r){if(n[r])return n[r].exports;var o=n[r]={exports:{},id:r,loaded:!1};return t[r].call(o.exports,o,o.exports,e),o.loaded=!0,o.exports}var n={};return e.m=t,e.c=n,e.p="",e(0)}([function(t,e,n){"use strict";function r(t){return t&&t.__esModule?t:{default:t}}function o(t){var e=arguments.length>1&&void 0!==arguments[1]?arguments[1]:{},r=t.extend(n(74)),o=null,i=null;Object.defineProperty(t.prototype,"$alert",{get:function(){return function(t){if(!o)return i=new a.default(function(n,i){o=new r({el:document.createElement("div"),data:function(){return{title:t.title,message:t.message,confirmTxt:t.confirmTxt||e.confirmTxt||"OK"}},methods:{confirm:function(){o.$el.remove(),o=null,n({data:"confirm"})}}}),document.body.appendChild(o.$el)})}}})}var i=n(35),a=r(i);t.exports=o},function(t,e,n){var r=n(28)("wks"),o=n(31),i=n(2).Symbol,a="function"==typeof i,s=t.exports=function(t){return r[t]||(r[t]=a&&i[t]||(a?i:o)("Symbol."+t))};s.store=r},function(t,e){var n=t.exports="undefined"!=typeof window&&window.Math==Math?window:"undefined"!=typeof self&&self.Math==Math?self:Function("return this")();"number"==typeof __g&&(__g=n)},function(t,e,n){var r=n(11);t.exports=function(t){if(!r(t))throw TypeError(t+" is not an object!");return t}},function(t,e,n){var r=n(12),o=n(27);t.exports=n(6)?function(t,e,n){return r.f(t,e,o(1,n))}:function(t,e,n){return t[e]=n,t}},function(t,e){var n=t.exports={version:"2.4.0"};"number"==typeof __e&&(__e=n)},function(t,e,n){t.exports=!n(23)(function(){return 7!=Object.defineProperty({},"a",{get:function(){return 7}}).a})},function(t,e){t.exports={}},function(t,e){var n={}.toString;t.exports=function(t){return n.call(t).slice(8,-1)}},function(t,e,n){var r=n(13);t.exports=function(t,e,n){if(r(t),void 0===e)return t;switch(n){case 1:return function(n){return t.call(e,n)};case 2:return function(n,r){return t.call(e,n,r)};case 3:return function(n,r,o){return t.call(e,n,r,o)}}return function(){return t.apply(e,arguments)}}},function(t,e){var n={}.hasOwnProperty;t.exports=function(t,e){return n.call(t,e)}},function(t,e){t.exports=function(t){return"object"==typeof t?null!==t:"function"==typeof t}},function(t,e,n){var r=n(3),o=n(41),i=n(62),a=Object.defineProperty;e.f=n(6)?Object.defineProperty:function(t,e,n){if(r(t),e=i(e,!0),r(n),o)try{return a(t,e,n)}catch(t){}if("get"in n||"set"in n)throw TypeError("Accessors not supported!");return"value"in n&&(t[e]=n.value),t}},function(t,e){t.exports=function(t){if("function"!=typeof t)throw TypeError(t+" is not a function!");return t}},function(t,e){t.exports=function(t){if(void 0==t)throw TypeError("Can't call method on  "+t);return t}},function(t,e,n){var r=n(11),o=n(2).document,i=r(o)&&r(o.createElement);t.exports=function(t){return i?o.createElement(t):{}}},function(t,e,n){var r=n(12).f,o=n(10),i=n(1)("toStringTag");t.exports=function(t,e,n){t&&!o(t=n?t:t.prototype,i)&&r(t,i,{configurable:!0,value:e})}},function(t,e,n){var r=n(28)("keys"),o=n(31);t.exports=function(t){return r[t]||(r[t]=o(t))}},function(t,e){var n=Math.ceil,r=Math.floor;t.exports=function(t){return isNaN(t=+t)?0:(t>0?r:n)(t)}},function(t,e,n){var r=n(43),o=n(14);t.exports=function(t){return r(o(t))}},function(t,e,n){var r=n(8),o=n(1)("toStringTag"),i="Arguments"==r(function(){return arguments}()),a=function(t,e){try{return t[e]}catch(t){}};t.exports=function(t){var e,n,s;return void 0===t?"Undefined":null===t?"Null":"string"==typeof(n=a(e=Object(t),o))?n:i?r(e):"Object"==(s=r(e))&&"function"==typeof e.callee?"Arguments":s}},function(t,e){t.exports="constructor,hasOwnProperty,isPrototypeOf,propertyIsEnumerable,toLocaleString,toString,valueOf".split(",")},function(t,e,n){var r=n(2),o=n(5),i=n(9),a=n(4),s="prototype",c=function(t,e,n){var f,u,l,p=t&c.F,A=t&c.G,d=t&c.S,v=t&c.P,h=t&c.B,m=t&c.W,b=A?o:o[e]||(o[e]={}),g=b[s],x=A?r:d?r[e]:(r[e]||{})[s];A&&(n=e);for(f in n)u=!p&&x&&void 0!==x[f],u&&f in b||(l=u?x[f]:n[f],b[f]=A&&"function"!=typeof x[f]?n[f]:h&&u?i(l,r):m&&x[f]==l?function(t){var e=function(e,n,r){if(this instanceof t){switch(arguments.length){case 0:return new t;case 1:return new t(e);case 2:return new t(e,n)}return new t(e,n,r)}return t.apply(this,arguments)};return e[s]=t[s],e}(l):v&&"function"==typeof l?i(Function.call,l):l,v&&((b.virtual||(b.virtual={}))[f]=l,t&c.R&&g&&!g[f]&&a(g,f,l)))};c.F=1,c.G=2,c.S=4,c.P=8,c.B=16,c.W=32,c.U=64,c.R=128,t.exports=c},function(t,e){t.exports=function(t){try{return!!t()}catch(t){return!0}}},function(t,e,n){t.exports=n(2).document&&document.documentElement},function(t,e,n){"use strict";var r=n(26),o=n(22),i=n(56),a=n(4),s=n(10),c=n(7),f=n(46),u=n(16),l=n(52),p=n(1)("iterator"),A=!([].keys&&"next"in[].keys()),d="@@iterator",v="keys",h="values",m=function(){return this};t.exports=function(t,e,n,b,g,x,y){f(n,e,b);var C,w,_,B=function(t){if(!A&&t in W)return W[t];switch(t){case v:return function(){return new n(this,t)};case h:return function(){return new n(this,t)}}return function(){return new n(this,t)}},k=e+" Iterator",O=g==h,j=!1,W=t.prototype,S=W[p]||W[d]||g&&W[g],M=S||B(g),E=g?O?B("entries"):M:void 0,T="Array"==e?W.entries||S:S;if(T&&(_=l(T.call(new t)),_!==Object.prototype&&(u(_,k,!0),r||s(_,p)||a(_,p,m))),O&&S&&S.name!==h&&(j=!0,M=function(){return S.call(this)}),r&&!y||!A&&!j&&W[p]||a(W,p,M),c[e]=M,c[k]=m,g)if(C={values:O?M:B(h),keys:x?M:B(v),entries:E},y)for(w in C)w in W||i(W,w,C[w]);else o(o.P+o.F*(A||j),e,C);return C}},function(t,e){t.exports=!0},function(t,e){t.exports=function(t,e){return{enumerable:!(1&t),configurable:!(2&t),writable:!(4&t),value:e}}},function(t,e,n){var r=n(2),o="__core-js_shared__",i=r[o]||(r[o]={});t.exports=function(t){return i[t]||(i[t]={})}},function(t,e,n){var r,o,i,a=n(9),s=n(42),c=n(24),f=n(15),u=n(2),l=u.process,p=u.setImmediate,A=u.clearImmediate,d=u.MessageChannel,v=0,h={},m="onreadystatechange",b=function(){var t=+this;if(h.hasOwnProperty(t)){var e=h[t];delete h[t],e()}},g=function(t){b.call(t.data)};p&&A||(p=function(t){for(var e=[],n=1;arguments.length>n;)e.push(arguments[n++]);return h[++v]=function(){s("function"==typeof t?t:Function(t),e)},r(v),v},A=function(t){delete h[t]},"process"==n(8)(l)?r=function(t){l.nextTick(a(b,t,1))}:d?(o=new d,i=o.port2,o.port1.onmessage=g,r=a(i.postMessage,i,1)):u.addEventListener&&"function"==typeof postMessage&&!u.importScripts?(r=function(t){u.postMessage(t+"","*")},u.addEventListener("message",g,!1)):r=m in f("script")?function(t){c.appendChild(f("script"))[m]=function(){c.removeChild(this),b.call(t)}}:function(t){setTimeout(a(b,t,1),0)}),t.exports={set:p,clear:A}},function(t,e,n){var r=n(18),o=Math.min;t.exports=function(t){return t>0?o(r(t),9007199254740991):0}},function(t,e){var n=0,r=Math.random();t.exports=function(t){return"Symbol(".concat(void 0===t?"":t,")_",(++n+r).toString(36))}},function(t,e){t.exports=function(){var t=[];return t.toString=function(){for(var t=[],e=0;e<this.length;e++){var n=this[e];n[2]?t.push("@media "+n[2]+"{"+n[1]+"}"):t.push(n[1])}return t.join("")},t.i=function(e,n){"string"==typeof e&&(e=[[null,e,""]]);for(var r={},o=0;o<this.length;o++){var i=this[o][0];"number"==typeof i&&(r[i]=!0)}for(o=0;o<e.length;o++){var a=e[o];"number"==typeof a[0]&&r[a[0]]||(n&&!a[2]?a[2]=n:n&&(a[2]="("+a[2]+") and ("+n+")"),t.push(a))}},t}},function(t,e,n){function r(t,e){for(var n=0;n<t.length;n++){var r=t[n],o=A[r.id];if(o){o.refs++;for(var i=0;i<o.parts.length;i++)o.parts[i](r.parts[i]);for(;i<r.parts.length;i++)o.parts.push(f(r.parts[i],e))}else{for(var a=[],i=0;i<r.parts.length;i++)a.push(f(r.parts[i],e));A[r.id]={id:r.id,refs:1,parts:a}}}}function o(t){for(var e=[],n={},r=0;r<t.length;r++){var o=t[r],i=o[0],a=o[1],s=o[2],c=o[3],f={css:a,media:s,sourceMap:c};n[i]?n[i].parts.push(f):e.push(n[i]={id:i,parts:[f]})}return e}function i(t,e){var n=h(),r=g[g.length-1];if("top"===t.insertAt)r?r.nextSibling?n.insertBefore(e,r.nextSibling):n.appendChild(e):n.insertBefore(e,n.firstChild),g.push(e);else{if("bottom"!==t.insertAt)throw new Error("Invalid value for parameter 'insertAt'. Must be 'top' or 'bottom'.");n.appendChild(e)}}function a(t){t.parentNode.removeChild(t);var e=g.indexOf(t);e>=0&&g.splice(e,1)}function s(t){var e=document.createElement("style");return e.type="text/css",i(t,e),e}function c(t){var e=document.createElement("link");return e.rel="stylesheet",i(t,e),e}function f(t,e){var n,r,o;if(e.singleton){var i=b++;n=m||(m=s(e)),r=u.bind(null,n,i,!1),o=u.bind(null,n,i,!0)}else t.sourceMap&&"function"==typeof URL&&"function"==typeof URL.createObjectURL&&"function"==typeof URL.revokeObjectURL&&"function"==typeof Blob&&"function"==typeof btoa?(n=c(e),r=p.bind(null,n),o=function(){a(n),n.href&&URL.revokeObjectURL(n.href)}):(n=s(e),r=l.bind(null,n),o=function(){a(n)});return r(t),function(e){if(e){if(e.css===t.css&&e.media===t.media&&e.sourceMap===t.sourceMap)return;r(t=e)}else o()}}function u(t,e,n,r){var o=n?"":r.css;if(t.styleSheet)t.styleSheet.cssText=x(e,o);else{var i=document.createTextNode(o),a=t.childNodes;a[e]&&t.removeChild(a[e]),a.length?t.insertBefore(i,a[e]):t.appendChild(i)}}function l(t,e){var n=e.css,r=e.media;if(r&&t.setAttribute("media",r),t.styleSheet)t.styleSheet.cssText=n;else{for(;t.firstChild;)t.removeChild(t.firstChild);t.appendChild(document.createTextNode(n))}}function p(t,e){var n=e.css,r=e.sourceMap;r&&(n+="\n/*# sourceMappingURL=data:application/json;base64,"+btoa(unescape(encodeURIComponent(JSON.stringify(r))))+" */");var o=new Blob([n],{type:"text/css"}),i=t.href;t.href=URL.createObjectURL(o),i&&URL.revokeObjectURL(i)}var A={},d=function(t){var e;return function(){return"undefined"==typeof e&&(e=t.apply(this,arguments)),e}},v=d(function(){return/msie [6-9]\b/.test(self.navigator.userAgent.toLowerCase())}),h=d(function(){return document.head||document.getElementsByTagName("head")[0]}),m=null,b=0,g=[];t.exports=function(t,e){e=e||{},"undefined"==typeof e.singleton&&(e.singleton=v()),"undefined"==typeof e.insertAt&&(e.insertAt="bottom");var n=o(t);return r(n,e),function(t){for(var i=[],a=0;a<n.length;a++){var s=n[a],c=A[s.id];c.refs--,i.push(c)}if(t){var f=o(t);r(f,e)}for(var a=0;a<i.length;a++){var c=i[a];if(0===c.refs){for(var u=0;u<c.parts.length;u++)c.parts[u]();delete A[c.id]}}}};var x=function(){var t=[];return function(e,n){return t[e]=n,t.filter(Boolean).join("\n")}}()},function(t,e){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.default={}},function(t,e,n){t.exports={default:n(36),__esModule:!0}},function(t,e,n){n(65),n(67),n(68),n(66),t.exports=n(5).Promise},function(t,e){t.exports=function(){}},function(t,e){t.exports=function(t,e,n,r){if(!(t instanceof e)||void 0!==r&&r in t)throw TypeError(n+": incorrect invocation!");return t}},function(t,e,n){var r=n(19),o=n(30),i=n(60);t.exports=function(t){return function(e,n,a){var s,c=r(e),f=o(c.length),u=i(a,f);if(t&&n!=n){for(;f>u;)if(s=c[u++],s!=s)return!0}else for(;f>u;u++)if((t||u in c)&&c[u]===n)return t||u||0;return!t&&-1}}},function(t,e,n){var r=n(9),o=n(45),i=n(44),a=n(3),s=n(30),c=n(63),f={},u={},e=t.exports=function(t,e,n,l,p){var A,d,v,h,m=p?function(){return t}:c(t),b=r(n,l,e?2:1),g=0;if("function"!=typeof m)throw TypeError(t+" is not iterable!");if(i(m)){for(A=s(t.length);A>g;g++)if(h=e?b(a(d=t[g])[0],d[1]):b(t[g]),h===f||h===u)return h}else for(v=m.call(t);!(d=v.next()).done;)if(h=o(v,b,d.value,e),h===f||h===u)return h};e.BREAK=f,e.RETURN=u},function(t,e,n){t.exports=!n(6)&&!n(23)(function(){return 7!=Object.defineProperty(n(15)("div"),"a",{get:function(){return 7}}).a})},function(t,e){t.exports=function(t,e,n){var r=void 0===n;switch(e.length){case 0:return r?t():t.call(n);case 1:return r?t(e[0]):t.call(n,e[0]);case 2:return r?t(e[0],e[1]):t.call(n,e[0],e[1]);case 3:return r?t(e[0],e[1],e[2]):t.call(n,e[0],e[1],e[2]);case 4:return r?t(e[0],e[1],e[2],e[3]):t.call(n,e[0],e[1],e[2],e[3])}return t.apply(n,e)}},function(t,e,n){var r=n(8);t.exports=Object("z").propertyIsEnumerable(0)?Object:function(t){return"String"==r(t)?t.split(""):Object(t)}},function(t,e,n){var r=n(7),o=n(1)("iterator"),i=Array.prototype;t.exports=function(t){return void 0!==t&&(r.Array===t||i[o]===t)}},function(t,e,n){var r=n(3);t.exports=function(t,e,n,o){try{return o?e(r(n)[0],n[1]):e(n)}catch(e){var i=t.return;throw void 0!==i&&r(i.call(t)),e}}},function(t,e,n){"use strict";var r=n(50),o=n(27),i=n(16),a={};n(4)(a,n(1)("iterator"),function(){return this}),t.exports=function(t,e,n){t.prototype=r(a,{next:o(1,n)}),i(t,e+" Iterator")}},function(t,e,n){var r=n(1)("iterator"),o=!1;try{var i=[7][r]();i.return=function(){o=!0},Array.from(i,function(){throw 2})}catch(t){}t.exports=function(t,e){if(!e&&!o)return!1;var n=!1;try{var i=[7],a=i[r]();a.next=function(){return{done:n=!0}},i[r]=function(){return a},t(i)}catch(t){}return n}},function(t,e){t.exports=function(t,e){return{value:e,done:!!t}}},function(t,e,n){var r=n(2),o=n(29).set,i=r.MutationObserver||r.WebKitMutationObserver,a=r.process,s=r.Promise,c="process"==n(8)(a);t.exports=function(){var t,e,n,f=function(){var r,o;for(c&&(r=a.domain)&&r.exit();t;){o=t.fn,t=t.next;try{o()}catch(r){throw t?n():e=void 0,r}}e=void 0,r&&r.enter()};if(c)n=function(){a.nextTick(f)};else if(i){var u=!0,l=document.createTextNode("");new i(f).observe(l,{characterData:!0}),n=function(){l.data=u=!u}}else if(s&&s.resolve){var p=s.resolve();n=function(){p.then(f)}}else n=function(){o.call(r,f)};return function(r){var o={fn:r,next:void 0};e&&(e.next=o),t||(t=o,n()),e=o}}},function(t,e,n){var r=n(3),o=n(51),i=n(21),a=n(17)("IE_PROTO"),s=function(){},c="prototype",f=function(){var t,e=n(15)("iframe"),r=i.length,o="<",a=">";for(e.style.display="none",n(24).appendChild(e),e.src="javascript:",t=e.contentWindow.document,t.open(),t.write(o+"script"+a+"document.F=Object"+o+"/script"+a),t.close(),f=t.F;r--;)delete f[c][i[r]];return f()};t.exports=Object.create||function(t,e){var n;return null!==t?(s[c]=r(t),n=new s,s[c]=null,n[a]=t):n=f(),void 0===e?n:o(n,e)}},function(t,e,n){var r=n(12),o=n(3),i=n(54);t.exports=n(6)?Object.defineProperties:function(t,e){o(t);for(var n,a=i(e),s=a.length,c=0;s>c;)r.f(t,n=a[c++],e[n]);return t}},function(t,e,n){var r=n(10),o=n(61),i=n(17)("IE_PROTO"),a=Object.prototype;t.exports=Object.getPrototypeOf||function(t){return t=o(t),r(t,i)?t[i]:"function"==typeof t.constructor&&t instanceof t.constructor?t.constructor.prototype:t instanceof Object?a:null}},function(t,e,n){var r=n(10),o=n(19),i=n(39)(!1),a=n(17)("IE_PROTO");t.exports=function(t,e){var n,s=o(t),c=0,f=[];for(n in s)n!=a&&r(s,n)&&f.push(n);for(;e.length>c;)r(s,n=e[c++])&&(~i(f,n)||f.push(n));return f}},function(t,e,n){var r=n(53),o=n(21);t.exports=Object.keys||function(t){return r(t,o)}},function(t,e,n){var r=n(4);t.exports=function(t,e,n){for(var o in e)n&&t[o]?t[o]=e[o]:r(t,o,e[o]);return t}},function(t,e,n){t.exports=n(4)},function(t,e,n){"use strict";var r=n(2),o=n(5),i=n(12),a=n(6),s=n(1)("species");t.exports=function(t){var e="function"==typeof o[t]?o[t]:r[t];a&&e&&!e[s]&&i.f(e,s,{configurable:!0,get:function(){return this}})}},function(t,e,n){var r=n(3),o=n(13),i=n(1)("species");t.exports=function(t,e){var n,a=r(t).constructor;return void 0===a||void 0==(n=r(a)[i])?e:o(n)}},function(t,e,n){var r=n(18),o=n(14);t.exports=function(t){return function(e,n){var i,a,s=String(o(e)),c=r(n),f=s.length;return c<0||c>=f?t?"":void 0:(i=s.charCodeAt(c),i<55296||i>56319||c+1===f||(a=s.charCodeAt(c+1))<56320||a>57343?t?s.charAt(c):i:t?s.slice(c,c+2):(i-55296<<10)+(a-56320)+65536)}}},function(t,e,n){var r=n(18),o=Math.max,i=Math.min;t.exports=function(t,e){return t=r(t),t<0?o(t+e,0):i(t,e)}},function(t,e,n){var r=n(14);t.exports=function(t){return Object(r(t))}},function(t,e,n){var r=n(11);t.exports=function(t,e){if(!r(t))return t;var n,o;if(e&&"function"==typeof(n=t.toString)&&!r(o=n.call(t)))return o;if("function"==typeof(n=t.valueOf)&&!r(o=n.call(t)))return o;if(!e&&"function"==typeof(n=t.toString)&&!r(o=n.call(t)))return o;throw TypeError("Can't convert object to primitive value")}},function(t,e,n){var r=n(20),o=n(1)("iterator"),i=n(7);t.exports=n(5).getIteratorMethod=function(t){if(void 0!=t)return t[o]||t["@@iterator"]||i[r(t)]}},function(t,e,n){"use strict";var r=n(37),o=n(48),i=n(7),a=n(19);t.exports=n(25)(Array,"Array",function(t,e){this._t=a(t),this._i=0,this._k=e},function(){var t=this._t,e=this._k,n=this._i++;return!t||n>=t.length?(this._t=void 0,o(1)):"keys"==e?o(0,n):"values"==e?o(0,t[n]):o(0,[n,t[n]])},"values"),i.Arguments=i.Array,r("keys"),r("values"),r("entries")},function(t,e){},function(t,e,n){"use strict";var r,o,i,a=n(26),s=n(2),c=n(9),f=n(20),u=n(22),l=n(11),p=n(13),A=n(38),d=n(40),v=n(58),h=n(29).set,m=n(49)(),b="Promise",g=s.TypeError,x=s.process,y=s[b],x=s.process,C="process"==f(x),w=function(){},_=!!function(){try{var t=y.resolve(1),e=(t.constructor={})[n(1)("species")]=function(t){t(w,w)};return(C||"function"==typeof PromiseRejectionEvent)&&t.then(w)instanceof e}catch(t){}}(),B=function(t,e){return t===e||t===y&&e===i},k=function(t){var e;return!(!l(t)||"function"!=typeof(e=t.then))&&e},O=function(t){return B(y,t)?new j(t):new o(t)},j=o=function(t){var e,n;this.promise=new t(function(t,r){if(void 0!==e||void 0!==n)throw g("Bad Promise constructor");e=t,n=r}),this.resolve=p(e),this.reject=p(n)},W=function(t){try{t()}catch(t){return{error:t}}},S=function(t,e){if(!t._n){t._n=!0;var n=t._c;m(function(){for(var r=t._v,o=1==t._s,i=0,a=function(e){var n,i,a=o?e.ok:e.fail,s=e.resolve,c=e.reject,f=e.domain;try{a?(o||(2==t._h&&T(t),t._h=1),a===!0?n=r:(f&&f.enter(),n=a(r),f&&f.exit()),n===e.promise?c(g("Promise-chain cycle")):(i=k(n))?i.call(n,s,c):s(n)):c(r)}catch(t){c(t)}};n.length>i;)a(n[i++]);t._c=[],t._n=!1,e&&!t._h&&M(t)})}},M=function(t){h.call(s,function(){var e,n,r,o=t._v;if(E(t)&&(e=W(function(){C?x.emit("unhandledRejection",o,t):(n=s.onunhandledrejection)?n({promise:t,reason:o}):(r=s.console)&&r.error&&r.error("Unhandled promise rejection",o)}),t._h=C||E(t)?2:1),t._a=void 0,e)throw e.error})},E=function(t){if(1==t._h)return!1;for(var e,n=t._a||t._c,r=0;n.length>r;)if(e=n[r++],e.fail||!E(e.promise))return!1;return!0},T=function(t){h.call(s,function(){var e;C?x.emit("rejectionHandled",t):(e=s.onrejectionhandled)&&e({promise:t,reason:t._v})})},P=function(t){var e=this;e._d||(e._d=!0,e=e._w||e,e._v=t,e._s=2,e._a||(e._a=e._c.slice()),S(e,!0))},R=function(t){var e,n=this;if(!n._d){n._d=!0,n=n._w||n;try{if(n===t)throw g("Promise can't be resolved itself");(e=k(t))?m(function(){var r={_w:n,_d:!1};try{e.call(t,c(R,r,1),c(P,r,1))}catch(t){P.call(r,t)}}):(n._v=t,n._s=1,S(n,!1))}catch(t){P.call({_w:n,_d:!1},t)}}};_||(y=function(t){A(this,y,b,"_h"),p(t),r.call(this);try{t(c(R,this,1),c(P,this,1))}catch(t){P.call(this,t)}},r=function(t){this._c=[],this._a=void 0,this._s=0,this._d=!1,this._v=void 0,this._h=0,this._n=!1},r.prototype=n(55)(y.prototype,{then:function(t,e){var n=O(v(this,y));return n.ok="function"!=typeof t||t,n.fail="function"==typeof e&&e,n.domain=C?x.domain:void 0,this._c.push(n),this._a&&this._a.push(n),this._s&&S(this,!1),n.promise},catch:function(t){return this.then(void 0,t)}}),j=function(){var t=new r;this.promise=t,this.resolve=c(R,t,1),this.reject=c(P,t,1)}),u(u.G+u.W+u.F*!_,{Promise:y}),n(16)(y,b),n(57)(b),i=n(5)[b],u(u.S+u.F*!_,b,{reject:function(t){var e=O(this),n=e.reject;return n(t),e.promise}}),u(u.S+u.F*(a||!_),b,{resolve:function(t){if(t instanceof y&&B(t.constructor,this))return t;var e=O(this),n=e.resolve;return n(t),e.promise}}),u(u.S+u.F*!(_&&n(47)(function(t){y.all(t).catch(w)})),b,{all:function(t){var e=this,n=O(e),r=n.resolve,o=n.reject,i=W(function(){var n=[],i=0,a=1;d(t,!1,function(t){var s=i++,c=!1;n.push(void 0),a++,e.resolve(t).then(function(t){c||(c=!0,n[s]=t,--a||r(n))},o)}),--a||r(n)});return i&&o(i.error),n.promise},race:function(t){var e=this,n=O(e),r=n.reject,o=W(function(){d(t,!1,function(t){e.resolve(t).then(n.resolve,r)})});return o&&r(o.error),n.promise}})},function(t,e,n){"use strict";var r=n(59)(!0);n(25)(String,"String",function(t){this._t=String(t),this._i=0},function(){var t,e=this._t,n=this._i;return n>=e.length?{value:void 0,done:!0}:(t=r(e,n),this._i+=t.length,{value:t,done:!1})})},function(t,e,n){n(64);for(var r=n(2),o=n(4),i=n(7),a=n(1)("toStringTag"),s=["NodeList","DOMTokenList","MediaList","StyleSheetList","CSSRuleList"],c=0;c<5;c++){var f=s[c],u=r[f],l=u&&u.prototype;l&&!l[a]&&o(l,a,f),i[f]=i.Array}},function(t,e,n){e=t.exports=n(32)(),e.push([t.id,"@media screen and (min-width:320px){html{font-size:10px}}@media screen and (min-width:375px){html{font-size:12px}}@media screen and(min-width:414px){html{font-size:14px}}@media screen and(min-width:600px){html{font-size:16px}}","",{version:3,sources:["/Users/wxttt/Projects/qingchengUED/archer-vue-alert/src/alert.vue.style"],names:[],mappings:"AAmBA,oCACA,KACA,cAAA,CACA,CACA,AAEA,oCACA,KACA,cAAA,CACA,CACA,AAEA,mCACA,KACA,cAAA,CACA,CACA,AAEA,mCACA,KACA,cAAA,CACA,CACA",file:"alert.vue",sourcesContent:['<template>\n    <div class="g-layerWrap">\n        <div class="m-alert">\n            <div class="alert-mainWrap">\n                <div class="alert-titleWrap" v-show="title">\n                    <h3 class="title f-bw">{{title}}</h3>\n                </div>\n                <div class="alert-ctnWrap" v-show="message">\n                    <p class="ctn f-bw" v-html="message"></p>\n                </div>\n            </div>\n            <div class="alert-btnWrap retainbt">\n                <button  class="btn" v-on:click="confirm()" type="button">{{confirmTxt}}</button>\n            </div>\n        </div>\n    </div>\n</template>\n\n<style>\n    @media screen and (min-width: 320px) {\n        html {\n            font-size: 10px;\n        }\n    }\n\n    @media screen and (min-width: 375px) {\n        html {\n            font-size: 12px;\n        }\n    }\n\n    @media screen and(min-width: 414px) {\n        html {\n            font-size: 14px;\n        }\n    }\n\n    @media screen and(min-width: 600px) {\n        html {\n            font-size: 16px;\n        }\n    }\n</style>\n\n<style  lang="less" scoped>\n    @import "alert.less";\n</style>\n\n<script type="text/ecmascript-6" lang="babel">\n    export default {\n\n    };\n</script>'],sourceRoot:""}])},function(t,e,n){e=t.exports=n(32)(),e.push([t.id,'.retainb[_v-192faae2],.retainbb[_v-192faae2],.retainbl[_v-192faae2],.retainbr[_v-192faae2],.retainbt[_v-192faae2]{position:relative!important}.retainbb[_v-192faae2]:after,.retainbt[_v-192faae2]:before{pointer-events:none;position:absolute;content:"";height:.08333rem;max-height:1px;background:#ddd;left:0;right:0}.retainbt[_v-192faae2]:before{top:0}.retainbb[_v-192faae2]:after{bottom:0}.retainbl[_v-192faae2]:before,.retainbr[_v-192faae2]:after{pointer-events:none;position:absolute;content:"";width:.08333rem;max-width:1px;background:#ddd;top:0;bottom:0}.retainbl[_v-192faae2]:before{left:0}.retainbr[_v-192faae2]:after{right:0}.retainb[_v-192faae2]:after{position:absolute;content:"";top:0;left:0;box-sizing:border-box;width:100%;height:100%;border:1px solid #ddd;pointer-events:none}@media (-webkit-min-device-pixel-ratio:1.5),(min-device-pixel-ratio:1.5),(min-resolution:1.5dppx),(min-resolution:144dpi){.retainbb[_v-192faae2]:after,.retainbt[_v-192faae2]:before{-webkit-transform:scaleY(.5);transform:scaleY(.5)}.retainbl[_v-192faae2]:before,.retainbr[_v-192faae2]:after{-webkit-transform:scaleX(.5);transform:scaleX(.5)}.retainb[_v-192faae2]:after{width:200%;height:200%;-webkit-transform:scale(.5);transform:scale(.5)}.retainb[_v-192faae2]:after,.retainbl[_v-192faae2]:before,.retainbt[_v-192faae2]:before{-webkit-transform-origin:0 0;transform-origin:0 0}.retainbb[_v-192faae2]:after,.retainbr[_v-192faae2]:after{-webkit-transform-origin:100% 100%;transform-origin:100% 100%}}@media (-webkit-device-pixel-ratio:1.5){.retainbb[_v-192faae2]:after,.retainbt[_v-192faae2]:before{-webkit-transform:scaleY(.6666);transform:scaleY(.6666)}.retainbl[_v-192faae2]:before,.retainbr[_v-192faae2]:after{-webkit-transform:scaleX(.6666);transform:scaleX(.6666)}.retainb[_v-192faae2]:after{width:150%;height:150%;-webkit-transform:scale(.6666);transform:scale(.6666)}}@media (-webkit-device-pixel-ratio:3){.retainbb[_v-192faae2]:after,.retainbt[_v-192faae2]:before{-webkit-transform:scaleY(.3333);transform:scaleY(.3333)}.retainbl[_v-192faae2]:before,.retainbr[_v-192faae2]:after{-webkit-transform:scaleX(.3333);transform:scaleX(.3333)}.retainb[_v-192faae2]:after{width:300%;height:300%;-webkit-transform:scale(.3333);transform:scale(.3333)}}.g-layerWrap[_v-192faae2]{position:fixed;left:0;top:0;width:100%;height:100%;overflow-x:hidden;overflow-y:auto;background-color:rgba(0,0,0,.4)}.f-bw[_v-192faae2]{word-wrap:break-word;overflow:hidden}.m-alert[_v-192faae2]{position:absolute;top:10%;left:50%;width:22.5rem;margin-left:-11.25rem;background-color:#fff;border-radius:5px}.m-alert .alert-mainWrap[_v-192faae2]{padding:1.66667rem 0}.m-alert .alert-titleWrap .title[_v-192faae2]{margin:0;line-height:1.1em;color:#333;font-size:1.41667rem;font-weight:400;text-align:center}.m-alert .alert-ctnWrap[_v-192faae2]{padding:1rem 0 0}.m-alert .alert-ctnWrap .ctn[_v-192faae2]{margin:0;line-height:1.2em;color:#333;font-size:1.08333rem;text-align:center}.m-alert .alert-btnWrap .btn[_v-192faae2]{padding:1rem 0;width:100%;border:none;outline:none;background-color:transparent;text-align:center;font-size:1.5rem;line-height:1.1em;color:#00bfbf}',"",{version:3,sources:["/Users/wxttt/Projects/qingchengUED/archer-vue-alert/src/alert.vue.style"],names:[],mappings:"AAAA,kHAAiD,2BAA4B,CAAC,2DAAiC,oBAAoB,kBAAkB,WAAW,iBAAW,eAAe,gBAAgB,OAAO,OAAO,CAAC,8BAAiB,KAAK,CAAC,6BAAgB,QAAQ,CAAC,2DAAiC,oBAAoB,kBAAkB,WAAW,gBAAU,cAAc,gBAAgB,MAAM,QAAQ,CAAC,8BAAiB,MAAM,CAAC,6BAAgB,OAAO,CAAC,4BAAe,kBAAkB,WAAW,MAAM,OAAO,sBAAoD,WAAW,YAAY,sBAAsB,mBAAmB,CAAC,0HAA0H,2DAAiC,6BAA6B,oBAAoB,CAAC,2DAAiC,6BAA6B,oBAAoB,CAAC,4BAAe,WAAW,YAAY,4BAA4B,mBAAmB,CAAC,wFAAiD,6BAA6B,oBAAoB,CAAC,0DAAgC,mCAAmC,0BAA0B,CAAC,CAAC,wCAAwC,2DAAiC,gCAAgC,uBAAuB,CAAC,2DAAiC,gCAAgC,uBAAuB,CAAC,4BAAe,WAAW,YAAY,+BAA+B,sBAAsB,CAAC,CAAC,sCAAsC,2DAAiC,gCAAgC,uBAAuB,CAAC,2DAAiC,gCAAgC,uBAAuB,CAAC,4BAAe,WAAW,YAAY,+BAA+B,sBAAsB,CAAC,CAAC,0BAAa,eAAe,OAAO,MAAM,WAAW,YAAY,kBAAkB,gBAAgB,+BAAgC,CAAC,mBAAM,qBAAqB,eAAe,CAAC,sBAAS,kBAAkB,QAAQ,SAAS,cAAY,sBAAmB,sBAAsB,iBAAiB,CAAC,sCAAyB,oBAAc,CAAC,8CAAiC,SAAS,kBAAkB,WAAW,qBAAe,gBAAmB,iBAAiB,CAAC,qCAAwB,gBAAkB,CAAC,0CAA6B,SAAS,kBAAkB,WAAW,qBAAe,iBAAiB,CAAC,0CAA6B,eAAe,WAAW,YAAY,aAAa,6BAA6B,kBAAkB,iBAAe,kBAAkB,aAAa,CAAC",file:"alert.vue",sourcesContent:['.retainbt,.retainbb,.retainbl,.retainbr,.retainb{position:relative !important}.retainbt:before,.retainbb:after{pointer-events:none;position:absolute;content:"";height:1px;max-height:1px;background:#ddd;left:0;right:0}.retainbt:before{top:0}.retainbb:after{bottom:0}.retainbl:before,.retainbr:after{pointer-events:none;position:absolute;content:"";width:1px;max-width:1px;background:#ddd;top:0;bottom:0}.retainbl:before{left:0}.retainbr:after{right:0}.retainb:after{position:absolute;content:"";top:0;left:0;-webkit-box-sizing:border-box;box-sizing:border-box;width:100%;height:100%;border:1px solid #ddd;pointer-events:none}@media (-webkit-min-device-pixel-ratio:1.5),(min-device-pixel-ratio:1.5),(min-resolution:144dpi),(min-resolution:1.5dppx){.retainbt:before,.retainbb:after{-webkit-transform:scaleY(.5);transform:scaleY(.5)}.retainbl:before,.retainbr:after{-webkit-transform:scaleX(.5);transform:scaleX(.5)}.retainb:after{width:200%;height:200%;-webkit-transform:scale(.5);transform:scale(.5)}.retainbt:before,.retainbl:before,.retainb:after{-webkit-transform-origin:0 0;transform-origin:0 0}.retainbb:after,.retainbr:after{-webkit-transform-origin:100% 100%;transform-origin:100% 100%}}@media (-webkit-device-pixel-ratio:1.5){.retainbt:before,.retainbb:after{-webkit-transform:scaleY(.6666);transform:scaleY(.6666)}.retainbl:before,.retainbr:after{-webkit-transform:scaleX(.6666);transform:scaleX(.6666)}.retainb:after{width:150%;height:150%;-webkit-transform:scale(.6666);transform:scale(.6666)}}@media (-webkit-device-pixel-ratio:3){.retainbt:before,.retainbb:after{-webkit-transform:scaleY(.3333);transform:scaleY(.3333)}.retainbl:before,.retainbr:after{-webkit-transform:scaleX(.3333);transform:scaleX(.3333)}.retainb:after{width:300%;height:300%;-webkit-transform:scale(.3333);transform:scale(.3333)}}.g-layerWrap{position:fixed;left:0;top:0;width:100%;height:100%;overflow-x:hidden;overflow-y:auto;background-color:rgba(0,0,0,0.4)}.f-bw{word-wrap:break-word;overflow:hidden}.m-alert{position:absolute;top:20%;left:50%;width:270px;margin-left:-135px;background-color:#fff;border-radius:5px}.m-alert .alert-mainWrap{padding:20px 0}.m-alert .alert-titleWrap .title{margin:0;line-height:1.1em;color:#333;font-size:17px;font-weight:normal;text-align:center}.m-alert .alert-ctnWrap{padding:12px 0 0 0}.m-alert .alert-ctnWrap .ctn{margin:0;line-height:1.2em;color:#333;font-size:13px;text-align:center}.m-alert .alert-btnWrap .btn{padding:12px 0;width:100%;border:none;outline:none;background-color:transparent;text-align:center;font-size:18px;line-height:1.1em;color:#00BFBF}'],sourceRoot:""}])},function(t,e,n){var r=n(69);"string"==typeof r&&(r=[[t.id,r,""]]);n(33)(r,{});r.locals&&(t.exports=r.locals)},function(t,e,n){var r=n(70);"string"==typeof r&&(r=[[t.id,r,""]]);n(33)(r,{});r.locals&&(t.exports=r.locals)},function(t,e){t.exports=' <div class=g-layerWrap _v-192faae2=""> <div class=m-alert _v-192faae2=""> <div class=alert-mainWrap _v-192faae2=""> <div class=alert-titleWrap v-show=title _v-192faae2=""> <h3 class="title f-bw" _v-192faae2="">{{title}}</h3> </div> <div class=alert-ctnWrap v-show=message _v-192faae2=""> <p class="ctn f-bw" v-html=message _v-192faae2=""></p> </div> </div> <div class="alert-btnWrap retainbt" _v-192faae2=""> <button class=btn v-on:click=confirm() type=button _v-192faae2="">{{confirmTxt}}</button> </div> </div> </div> '},function(t,e,n){var r,o;n(71),n(72),r=n(34),o=n(73),t.exports=r||{},t.exports.__esModule&&(t.exports=t.exports.default),o&&(("function"==typeof t.exports?t.exports.options:t.exports).template=o)}])});
 
 /***/ }),
-/* 160 */
+/* 166 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -45996,7 +47623,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Http", function() { return Http; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Resource", function() { return Resource; });
 /*!
- * vue-resource v1.3.4
+ * vue-resource v1.3.5
  * https://github.com/pagekit/vue-resource
  * Released under the MIT License.
  */
@@ -46267,13 +47894,13 @@ var ntick;
 
 var inBrowser = typeof window !== 'undefined';
 
-var Util = function (ref) {
+function Util (ref) {
     var config = ref.config;
     var nextTick = ref.nextTick;
 
     ntick = nextTick;
     debug = config.debug || !config.silent;
-};
+}
 
 function warn(msg) {
     if (typeof console !== 'undefined' && debug) {
@@ -46446,7 +48073,7 @@ function _merge(target, source, deep) {
  * Root Prefix Transform.
  */
 
-var root = function (options$$1, next) {
+function root (options$$1, next) {
 
     var url = next(options$$1);
 
@@ -46455,13 +48082,13 @@ var root = function (options$$1, next) {
     }
 
     return url;
-};
+}
 
 /**
  * Query Parameter Transform.
  */
 
-var query = function (options$$1, next) {
+function query (options$$1, next) {
 
     var urlParams = Object.keys(Url.options.params), query = {}, url = next(options$$1);
 
@@ -46478,7 +48105,7 @@ var query = function (options$$1, next) {
     }
 
     return url;
-};
+}
 
 /**
  * URL Template v2.0.6 (https://github.com/bramstein/url-template)
@@ -46635,7 +48262,7 @@ function encodeReserved(str) {
  * URL Template (RFC 6570) Transform.
  */
 
-var template = function (options) {
+function template (options) {
 
     var variables = [], url = expand(options.url, options.params, variables);
 
@@ -46644,7 +48271,7 @@ var template = function (options) {
     });
 
     return url;
-};
+}
 
 /**
  * Service for URL templating.
@@ -46781,7 +48408,7 @@ function serialize(params, obj, scope) {
  * XDomain client (Internet Explorer).
  */
 
-var xdrClient = function (request) {
+function xdrClient (request) {
     return new PromiseObj(function (resolve) {
 
         var xdr = new XDomainRequest(), handler = function (ref) {
@@ -46814,7 +48441,7 @@ var xdrClient = function (request) {
         xdr.onprogress = function () {};
         xdr.send(request.getBody());
     });
-};
+}
 
 /**
  * CORS Interceptor.
@@ -46822,7 +48449,7 @@ var xdrClient = function (request) {
 
 var SUPPORTS_CORS = inBrowser && 'withCredentials' in new XMLHttpRequest();
 
-var cors = function (request, next) {
+function cors (request, next) {
 
     if (inBrowser) {
 
@@ -46841,13 +48468,13 @@ var cors = function (request, next) {
     }
 
     next();
-};
+}
 
 /**
  * Form data Interceptor.
  */
 
-var form = function (request, next) {
+function form (request, next) {
 
     if (isFormData(request.body)) {
 
@@ -46860,13 +48487,13 @@ var form = function (request, next) {
     }
 
     next();
-};
+}
 
 /**
  * JSON Interceptor.
  */
 
-var json = function (request, next) {
+function json (request, next) {
 
     var type = request.headers.get('Content-Type') || '';
 
@@ -46897,20 +48524,21 @@ var json = function (request, next) {
         }) : response;
 
     });
-};
+}
 
 function isJson(str) {
 
-    var start = str.match(/^\[|^\{(?!\{)/), end = {'[': /]$/, '{': /}$/};
+    var start = str.match(/^\s*(\[|\{)/);
+    var end = {'[': /]\s*$/, '{': /}\s*$/};
 
-    return start && end[start[0]].test(str);
+    return start && end[start[1]].test(str);
 }
 
 /**
  * JSONP client (Browser).
  */
 
-var jsonpClient = function (request) {
+function jsonpClient (request) {
     return new PromiseObj(function (resolve) {
 
         var name = request.jsonp || 'callback', callback = request.jsonpCallback || '_jsonp' + Math.random().toString(36).substr(2), body = null, handler, script;
@@ -46958,39 +48586,39 @@ var jsonpClient = function (request) {
 
         document.body.appendChild(script);
     });
-};
+}
 
 /**
  * JSONP Interceptor.
  */
 
-var jsonp = function (request, next) {
+function jsonp (request, next) {
 
     if (request.method == 'JSONP') {
         request.client = jsonpClient;
     }
 
     next();
-};
+}
 
 /**
  * Before Interceptor.
  */
 
-var before = function (request, next) {
+function before (request, next) {
 
     if (isFunction(request.before)) {
         request.before.call(this, request);
     }
 
     next();
-};
+}
 
 /**
  * HTTP method override Interceptor.
  */
 
-var method = function (request, next) {
+function method (request, next) {
 
     if (request.emulateHTTP && /^(PUT|PATCH|DELETE)$/i.test(request.method)) {
         request.headers.set('X-HTTP-Method-Override', request.method);
@@ -46998,13 +48626,13 @@ var method = function (request, next) {
     }
 
     next();
-};
+}
 
 /**
  * Header Interceptor.
  */
 
-var header = function (request, next) {
+function header (request, next) {
 
     var headers = assign({}, Http.headers.common,
         !request.crossOrigin ? Http.headers.custom : {},
@@ -47018,13 +48646,13 @@ var header = function (request, next) {
     });
 
     next();
-};
+}
 
 /**
  * XMLHttp client (Browser).
  */
 
-var xhrClient = function (request) {
+function xhrClient (request) {
     return new PromiseObj(function (resolve) {
 
         var xhr = new XMLHttpRequest(), handler = function (event) {
@@ -47081,15 +48709,15 @@ var xhrClient = function (request) {
         xhr.ontimeout = handler;
         xhr.send(request.getBody());
     });
-};
+}
 
 /**
  * Http client (Node).
  */
 
-var nodeClient = function (request) {
+function nodeClient (request) {
 
-    var client = __webpack_require__(161);
+    var client = __webpack_require__(167);
 
     return new PromiseObj(function (resolve) {
 
@@ -47118,13 +48746,13 @@ var nodeClient = function (request) {
 
         }, function (error$$1) { return handler(error$$1.response); });
     });
-};
+}
 
 /**
  * Base client.
  */
 
-var Client = function (context) {
+function Client (context) {
 
     var reqHandlers = [sendRequest], resHandlers = [], handler;
 
@@ -47179,7 +48807,7 @@ var Client = function (context) {
     };
 
     return Client;
-};
+}
 
 function sendRequest(request, resolve) {
 
@@ -47565,20 +49193,20 @@ if (typeof window !== 'undefined' && window.Vue) {
 
 
 /***/ }),
-/* 161 */
+/* 167 */
 /***/ (function(module, exports) {
 
 /* (ignored) */
 
 /***/ }),
-/* 162 */
+/* 168 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(163);
-__webpack_require__(164);
+__webpack_require__(169);
+__webpack_require__(170);
 
 /***/ }),
-/* 163 */
+/* 169 */
 /***/ (function(module, exports) {
 
 window.Vue.component('checkbox', {
@@ -47628,7 +49256,7 @@ window.Vue.component('checkbox', {
 });
 
 /***/ }),
-/* 164 */
+/* 170 */
 /***/ (function(module, exports) {
 
 window.Vue.component('radio', {
@@ -47678,7 +49306,7 @@ window.Vue.component('radio', {
 });
 
 /***/ }),
-/* 165 */
+/* 171 */
 /***/ (function(module, exports, __webpack_require__) {
 
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -47920,7 +49548,7 @@ return /******/ (function(modules) { // webpackBootstrap
 //# sourceMappingURL=vuejs-paginator.js.map
 
 /***/ }),
-/* 166 */
+/* 172 */
 /***/ (function(module, exports, __webpack_require__) {
 
 !function(t,e){if(true)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var r=e();for(var n in r)("object"==typeof exports?exports:t)[n]=r[n]}}(this,function(){return function(t){function e(n){if(r[n])return r[n].exports;var o=r[n]={i:n,l:!1,exports:{}};return t[n].call(o.exports,o,o.exports,e),o.l=!0,o.exports}var r={};return e.m=t,e.c=r,e.i=function(t){return t},e.d=function(t,r,n){e.o(t,r)||Object.defineProperty(t,r,{configurable:!1,enumerable:!0,get:n})},e.n=function(t){var r=t&&t.__esModule?function(){return t.default}:function(){return t};return e.d(r,"a",r),r},e.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)},e.p="/dist/",e(e.s=28)}([function(t,e,r){"use strict";function n(t){return"[object Array]"===S.call(t)}function o(t){return"[object ArrayBuffer]"===S.call(t)}function i(t){return"undefined"!=typeof FormData&&t instanceof FormData}function s(t){return"undefined"!=typeof ArrayBuffer&&ArrayBuffer.isView?ArrayBuffer.isView(t):t&&t.buffer&&t.buffer instanceof ArrayBuffer}function a(t){return"string"==typeof t}function u(t){return"number"==typeof t}function c(t){return void 0===t}function f(t){return null!==t&&"object"==typeof t}function l(t){return"[object Date]"===S.call(t)}function p(t){return"[object File]"===S.call(t)}function d(t){return"[object Blob]"===S.call(t)}function h(t){return"[object Function]"===S.call(t)}function m(t){return f(t)&&h(t.pipe)}function v(t){return"undefined"!=typeof URLSearchParams&&t instanceof URLSearchParams}function y(t){return t.replace(/^\s*/,"").replace(/\s*$/,"")}function g(){return"undefined"!=typeof window&&"undefined"!=typeof document&&"function"==typeof document.createElement}function b(t,e){if(null!==t&&void 0!==t)if("object"==typeof t||n(t)||(t=[t]),n(t))for(var r=0,o=t.length;r<o;r++)e.call(null,t[r],r,t);else for(var i in t)Object.prototype.hasOwnProperty.call(t,i)&&e.call(null,t[i],i,t)}function w(){function t(t,r){"object"==typeof e[r]&&"object"==typeof t?e[r]=w(e[r],t):e[r]=t}for(var e={},r=0,n=arguments.length;r<n;r++)b(arguments[r],t);return e}function _(t,e,r){return b(e,function(e,n){t[n]=r&&"function"==typeof e?x(e,r):e}),t}var x=r(6),S=Object.prototype.toString;t.exports={isArray:n,isArrayBuffer:o,isFormData:i,isArrayBufferView:s,isString:a,isNumber:u,isObject:f,isUndefined:c,isDate:l,isFile:p,isBlob:d,isFunction:h,isStream:m,isURLSearchParams:v,isStandardBrowserEnv:g,forEach:b,merge:w,extend:_,trim:y}},function(t,e,r){"use strict";(function(e){function n(t,e){!o.isUndefined(t)&&o.isUndefined(t["Content-Type"])&&(t["Content-Type"]=e)}var o=r(0),i=r(24),s=/^\)\]\}',?\n/,a={"Content-Type":"application/x-www-form-urlencoded"},u={adapter:function(){var t;return"undefined"!=typeof XMLHttpRequest?t=r(2):void 0!==e&&(t=r(2)),t}(),transformRequest:[function(t,e){return i(e,"Content-Type"),o.isFormData(t)||o.isArrayBuffer(t)||o.isStream(t)||o.isFile(t)||o.isBlob(t)?t:o.isArrayBufferView(t)?t.buffer:o.isURLSearchParams(t)?(n(e,"application/x-www-form-urlencoded;charset=utf-8"),t.toString()):o.isObject(t)?(n(e,"application/json;charset=utf-8"),JSON.stringify(t)):t}],transformResponse:[function(t){if("string"==typeof t){t=t.replace(s,"");try{t=JSON.parse(t)}catch(t){}}return t}],timeout:0,xsrfCookieName:"XSRF-TOKEN",xsrfHeaderName:"X-XSRF-TOKEN",maxContentLength:-1,validateStatus:function(t){return t>=200&&t<300}};u.headers={common:{Accept:"application/json, text/plain, */*"}},o.forEach(["delete","get","head"],function(t){u.headers[t]={}}),o.forEach(["post","put","patch"],function(t){u.headers[t]=o.merge(a)}),t.exports=u}).call(e,r(7))},function(t,e,r){"use strict";var n=r(0),o=r(16),i=r(19),s=r(25),a=r(23),u=r(5),c="undefined"!=typeof window&&window.btoa&&window.btoa.bind(window)||r(18);t.exports=function(t){return new Promise(function(e,f){var l=t.data,p=t.headers;n.isFormData(l)&&delete p["Content-Type"];var d=new XMLHttpRequest,h="onreadystatechange",m=!1;if("undefined"==typeof window||!window.XDomainRequest||"withCredentials"in d||a(t.url)||(d=new window.XDomainRequest,h="onload",m=!0,d.onprogress=function(){},d.ontimeout=function(){}),t.auth){var v=t.auth.username||"",y=t.auth.password||"";p.Authorization="Basic "+c(v+":"+y)}if(d.open(t.method.toUpperCase(),i(t.url,t.params,t.paramsSerializer),!0),d.timeout=t.timeout,d[h]=function(){if(d&&(4===d.readyState||m)&&(0!==d.status||d.responseURL&&0===d.responseURL.indexOf("file:"))){var r="getAllResponseHeaders"in d?s(d.getAllResponseHeaders()):null,n=t.responseType&&"text"!==t.responseType?d.response:d.responseText,i={data:n,status:1223===d.status?204:d.status,statusText:1223===d.status?"No Content":d.statusText,headers:r,config:t,request:d};o(e,f,i),d=null}},d.onerror=function(){f(u("Network Error",t)),d=null},d.ontimeout=function(){f(u("timeout of "+t.timeout+"ms exceeded",t,"ECONNABORTED")),d=null},n.isStandardBrowserEnv()){var g=r(21),b=(t.withCredentials||a(t.url))&&t.xsrfCookieName?g.read(t.xsrfCookieName):void 0;b&&(p[t.xsrfHeaderName]=b)}if("setRequestHeader"in d&&n.forEach(p,function(t,e){void 0===l&&"content-type"===e.toLowerCase()?delete p[e]:d.setRequestHeader(e,t)}),t.withCredentials&&(d.withCredentials=!0),t.responseType)try{d.responseType=t.responseType}catch(t){if("json"!==d.responseType)throw t}"function"==typeof t.onDownloadProgress&&d.addEventListener("progress",t.onDownloadProgress),"function"==typeof t.onUploadProgress&&d.upload&&d.upload.addEventListener("progress",t.onUploadProgress),t.cancelToken&&t.cancelToken.promise.then(function(t){d&&(d.abort(),f(t),d=null)}),void 0===l&&(l=null),d.send(l)})}},function(t,e,r){"use strict";function n(t){this.message=t}n.prototype.toString=function(){return"Cancel"+(this.message?": "+this.message:"")},n.prototype.__CANCEL__=!0,t.exports=n},function(t,e,r){"use strict";t.exports=function(t){return!(!t||!t.__CANCEL__)}},function(t,e,r){"use strict";var n=r(15);t.exports=function(t,e,r,o){var i=new Error(t);return n(i,e,r,o)}},function(t,e,r){"use strict";t.exports=function(t,e){return function(){for(var r=new Array(arguments.length),n=0;n<r.length;n++)r[n]=arguments[n];return t.apply(e,r)}}},function(t,e){function r(){throw new Error("setTimeout has not been defined")}function n(){throw new Error("clearTimeout has not been defined")}function o(t){if(f===setTimeout)return setTimeout(t,0);if((f===r||!f)&&setTimeout)return f=setTimeout,setTimeout(t,0);try{return f(t,0)}catch(e){try{return f.call(null,t,0)}catch(e){return f.call(this,t,0)}}}function i(t){if(l===clearTimeout)return clearTimeout(t);if((l===n||!l)&&clearTimeout)return l=clearTimeout,clearTimeout(t);try{return l(t)}catch(e){try{return l.call(null,t)}catch(e){return l.call(this,t)}}}function s(){m&&d&&(m=!1,d.length?h=d.concat(h):v=-1,h.length&&a())}function a(){if(!m){var t=o(s);m=!0;for(var e=h.length;e;){for(d=h,h=[];++v<e;)d&&d[v].run();v=-1,e=h.length}d=null,m=!1,i(t)}}function u(t,e){this.fun=t,this.array=e}function c(){}var f,l,p=t.exports={};!function(){try{f="function"==typeof setTimeout?setTimeout:r}catch(t){f=r}try{l="function"==typeof clearTimeout?clearTimeout:n}catch(t){l=n}}();var d,h=[],m=!1,v=-1;p.nextTick=function(t){var e=new Array(arguments.length-1);if(arguments.length>1)for(var r=1;r<arguments.length;r++)e[r-1]=arguments[r];h.push(new u(t,e)),1!==h.length||m||o(a)},u.prototype.run=function(){this.fun.apply(null,this.array)},p.title="browser",p.browser=!0,p.env={},p.argv=[],p.version="",p.versions={},p.on=c,p.addListener=c,p.once=c,p.off=c,p.removeListener=c,p.removeAllListeners=c,p.emit=c,p.prependListener=c,p.prependOnceListener=c,p.listeners=function(t){return[]},p.binding=function(t){throw new Error("process.binding is not supported")},p.cwd=function(){return"/"},p.chdir=function(t){throw new Error("process.chdir is not supported")},p.umask=function(){return 0}},function(t,e,r){r(34);var n=r(32)(r(27),r(33),null,null);t.exports=n.exports},function(t,e,r){t.exports=r(10)},function(t,e,r){"use strict";function n(t){var e=new s(t),r=i(s.prototype.request,e);return o.extend(r,s.prototype,e),o.extend(r,e),r}var o=r(0),i=r(6),s=r(12),a=r(1),u=n(a);u.Axios=s,u.create=function(t){return n(o.merge(a,t))},u.Cancel=r(3),u.CancelToken=r(11),u.isCancel=r(4),u.all=function(t){return Promise.all(t)},u.spread=r(26),t.exports=u,t.exports.default=u},function(t,e,r){"use strict";function n(t){if("function"!=typeof t)throw new TypeError("executor must be a function.");var e;this.promise=new Promise(function(t){e=t});var r=this;t(function(t){r.reason||(r.reason=new o(t),e(r.reason))})}var o=r(3);n.prototype.throwIfRequested=function(){if(this.reason)throw this.reason},n.source=function(){var t;return{token:new n(function(e){t=e}),cancel:t}},t.exports=n},function(t,e,r){"use strict";function n(t){this.defaults=t,this.interceptors={request:new s,response:new s}}var o=r(1),i=r(0),s=r(13),a=r(14),u=r(22),c=r(20);n.prototype.request=function(t){"string"==typeof t&&(t=i.merge({url:arguments[0]},arguments[1])),t=i.merge(o,this.defaults,{method:"get"},t),t.baseURL&&!u(t.url)&&(t.url=c(t.baseURL,t.url));var e=[a,void 0],r=Promise.resolve(t);for(this.interceptors.request.forEach(function(t){e.unshift(t.fulfilled,t.rejected)}),this.interceptors.response.forEach(function(t){e.push(t.fulfilled,t.rejected)});e.length;)r=r.then(e.shift(),e.shift());return r},i.forEach(["delete","get","head"],function(t){n.prototype[t]=function(e,r){return this.request(i.merge(r||{},{method:t,url:e}))}}),i.forEach(["post","put","patch"],function(t){n.prototype[t]=function(e,r,n){return this.request(i.merge(n||{},{method:t,url:e,data:r}))}}),t.exports=n},function(t,e,r){"use strict";function n(){this.handlers=[]}var o=r(0);n.prototype.use=function(t,e){return this.handlers.push({fulfilled:t,rejected:e}),this.handlers.length-1},n.prototype.eject=function(t){this.handlers[t]&&(this.handlers[t]=null)},n.prototype.forEach=function(t){o.forEach(this.handlers,function(e){null!==e&&t(e)})},t.exports=n},function(t,e,r){"use strict";function n(t){t.cancelToken&&t.cancelToken.throwIfRequested()}var o=r(0),i=r(17),s=r(4),a=r(1);t.exports=function(t){return n(t),t.headers=t.headers||{},t.data=i(t.data,t.headers,t.transformRequest),t.headers=o.merge(t.headers.common||{},t.headers[t.method]||{},t.headers||{}),o.forEach(["delete","get","head","post","put","patch","common"],function(e){delete t.headers[e]}),(t.adapter||a.adapter)(t).then(function(e){return n(t),e.data=i(e.data,e.headers,t.transformResponse),e},function(e){return s(e)||(n(t),e&&e.response&&(e.response.data=i(e.response.data,e.response.headers,t.transformResponse))),Promise.reject(e)})}},function(t,e,r){"use strict";t.exports=function(t,e,r,n){return t.config=e,r&&(t.code=r),t.response=n,t}},function(t,e,r){"use strict";var n=r(5);t.exports=function(t,e,r){var o=r.config.validateStatus;r.status&&o&&!o(r.status)?e(n("Request failed with status code "+r.status,r.config,null,r)):t(r)}},function(t,e,r){"use strict";var n=r(0);t.exports=function(t,e,r){return n.forEach(r,function(r){t=r(t,e)}),t}},function(t,e,r){"use strict";function n(){this.message="String contains an invalid character"}function o(t){for(var e,r,o=String(t),s="",a=0,u=i;o.charAt(0|a)||(u="=",a%1);s+=u.charAt(63&e>>8-a%1*8)){if((r=o.charCodeAt(a+=.75))>255)throw new n;e=e<<8|r}return s}var i="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";n.prototype=new Error,n.prototype.code=5,n.prototype.name="InvalidCharacterError",t.exports=o},function(t,e,r){"use strict";function n(t){return encodeURIComponent(t).replace(/%40/gi,"@").replace(/%3A/gi,":").replace(/%24/g,"$").replace(/%2C/gi,",").replace(/%20/g,"+").replace(/%5B/gi,"[").replace(/%5D/gi,"]")}var o=r(0);t.exports=function(t,e,r){if(!e)return t;var i;if(r)i=r(e);else if(o.isURLSearchParams(e))i=e.toString();else{var s=[];o.forEach(e,function(t,e){null!==t&&void 0!==t&&(o.isArray(t)&&(e+="[]"),o.isArray(t)||(t=[t]),o.forEach(t,function(t){o.isDate(t)?t=t.toISOString():o.isObject(t)&&(t=JSON.stringify(t)),s.push(n(e)+"="+n(t))}))}),i=s.join("&")}return i&&(t+=(-1===t.indexOf("?")?"?":"&")+i),t}},function(t,e,r){"use strict";t.exports=function(t,e){return t.replace(/\/+$/,"")+"/"+e.replace(/^\/+/,"")}},function(t,e,r){"use strict";var n=r(0);t.exports=n.isStandardBrowserEnv()?function(){return{write:function(t,e,r,o,i,s){var a=[];a.push(t+"="+encodeURIComponent(e)),n.isNumber(r)&&a.push("expires="+new Date(r).toGMTString()),n.isString(o)&&a.push("path="+o),n.isString(i)&&a.push("domain="+i),!0===s&&a.push("secure"),document.cookie=a.join("; ")},read:function(t){var e=document.cookie.match(new RegExp("(^|;\\s*)("+t+")=([^;]*)"));return e?decodeURIComponent(e[3]):null},remove:function(t){this.write(t,"",Date.now()-864e5)}}}():function(){return{write:function(){},read:function(){return null},remove:function(){}}}()},function(t,e,r){"use strict";t.exports=function(t){return/^([a-z][a-z\d\+\-\.]*:)?\/\//i.test(t)}},function(t,e,r){"use strict";var n=r(0);t.exports=n.isStandardBrowserEnv()?function(){function t(t){var e=t;return r&&(o.setAttribute("href",e),e=o.href),o.setAttribute("href",e),{href:o.href,protocol:o.protocol?o.protocol.replace(/:$/,""):"",host:o.host,search:o.search?o.search.replace(/^\?/,""):"",hash:o.hash?o.hash.replace(/^#/,""):"",hostname:o.hostname,port:o.port,pathname:"/"===o.pathname.charAt(0)?o.pathname:"/"+o.pathname}}var e,r=/(msie|trident)/i.test(navigator.userAgent),o=document.createElement("a");return e=t(window.location.href),function(r){var o=n.isString(r)?t(r):r;return o.protocol===e.protocol&&o.host===e.host}}():function(){return function(){return!0}}()},function(t,e,r){"use strict";var n=r(0);t.exports=function(t,e){n.forEach(t,function(r,n){n!==e&&n.toUpperCase()===e.toUpperCase()&&(t[e]=r,delete t[n])})}},function(t,e,r){"use strict";var n=r(0);t.exports=function(t){var e,r,o,i={};return t?(n.forEach(t.split("\n"),function(t){o=t.indexOf(":"),e=n.trim(t.substr(0,o)).toLowerCase(),r=n.trim(t.substr(o+1)),e&&(i[e]=i[e]?i[e]+", "+r:r)}),i):i}},function(t,e,r){"use strict";t.exports=function(t){return function(e){return t.apply(null,e)}}},function(t,e,r){"use strict";Object.defineProperty(e,"__esModule",{value:!0});var n=r(9),o=r.n(n),i="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t};r(31).polyfill(),o.a,e.default={props:{postURL:{type:String,required:!0},minItems:{type:Number,default:1},maxItems:{type:Number,default:30},method:{type:String,default:"post"},postMeta:{type:[String,Array,Object],default:""},successMessagePath:{type:String,required:!0},errorMessagePath:{type:String,required:!0}},data:function(){return{items:[],itemsAdded:"",itemsNames:[],itemsSizes:[],itemsTotalSize:"",formData:"",successMsg:"",errorMsg:"",isLoaderVisible:!1}},methods:{bytesToSize:function(t){var e=["Bytes","KB","MB","GB","TB"];if(0===t)return"n/a";var r=parseInt(Math.floor(Math.log(t)/Math.log(1024)));return 0===r?t+" "+e[r]:(t/Math.pow(1024,r)).toFixed(2)+" "+e[r]},onChange:function(t){this.successMsg="",this.errorMsg="",this.formData=new FormData;var e=t.target.files||t.dataTransfer.files;this.itemsAdded=e.length;var r=0;for(var n in e)isNaN(n)||(this.items=t.target.files[n]||t.dataTransfer.files[n],this.itemsNames[n]=e[n].name,this.itemsSizes[n]=this.bytesToSize(e[n].size),r+=e[n].size,this.formData.append("items[]",this.items));this.itemsTotalSize=this.bytesToSize(r)},removeItems:function(){this.items="",this.itemsAdded="",this.itemsNames=[],this.itemsSizes=[],this.itemsTotalSize=""},onSubmit:function(){var t=this;this.isLoaderVisible=!0,("string"==typeof this.postMeta&&""!==this.postMeta||"object"===i(this.postMeta)&&Object.keys(this.postMeta).length>0)&&this.formData.append("postMeta",this.postMeta),"put"===this.method||"post"===this.method?o()({method:this.method,url:this.postURL,data:this.formData}).then(function(e){t.isLoaderVisible=!1,t.successMsg=e+"."+t.successMessagePath,t.removeItems()}).catch(function(e){t.isLoaderVisible=!1,t.errorMsg=e+"."+t.errorMessagePath,t.removeItems()}):(this.errorMsg="This HTTP method is not allowed. Please use either 'put' or 'post' methods.",this.removeItems())}}}},function(t,e,r){t.exports=r(8)},function(t,e,r){e=t.exports=r(30)(),e.push([t.i,".uploadBox{position:relative;background:#eee;padding:0 1em 1em;margin:1em}.uploadBox h3{padding-top:1em}.uploadBox .uploadBoxMain{position:relative;margin-bottom:1em;margin-right:1em}.uploadBox .dropArea{position:relative;width:100%;height:300px;border:5px dashed #00adce;text-align:center;font-size:2em;padding-top:80px}.uploadBox .dropArea input{cursor:pointer;right:0;left:0;opacity:0}.uploadBox .dropArea input,.uploadBox .loader{position:absolute;top:0;bottom:0;width:100%;height:100%}.uploadBox .loader{display:flex;align-items:center;justify-content:center;background-color:#fff;opacity:.9}.uploadBox .loaderImg{border:9px solid #eee;border-top:9px solid #00adce;border-radius:50%;width:70px;height:70px;animation:spin 1s linear infinite}@keyframes spin{0%{transform:rotate(0deg)}to{transform:rotate(1turn)}}.uploadBox .errorMsg{font-size:2em;color:#a94442}.uploadBox .successMsg{font-size:2em;color:#3c763d}",""])},function(t,e){t.exports=function(){var t=[];return t.toString=function(){for(var t=[],e=0;e<this.length;e++){var r=this[e];r[2]?t.push("@media "+r[2]+"{"+r[1]+"}"):t.push(r[1])}return t.join("")},t.i=function(e,r){"string"==typeof e&&(e=[[null,e,""]]);for(var n={},o=0;o<this.length;o++){var i=this[o][0];"number"==typeof i&&(n[i]=!0)}for(o=0;o<e.length;o++){var s=e[o];"number"==typeof s[0]&&n[s[0]]||(r&&!s[2]?s[2]=r:r&&(s[2]="("+s[2]+") and ("+r+")"),t.push(s))}},t}},function(t,e,r){(function(e,n){/*!
@@ -47934,7 +49562,7 @@ return /******/ (function(modules) { // webpackBootstrap
 //# sourceMappingURL=build.js.map
 
 /***/ }),
-/* 167 */
+/* 173 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -47946,11 +49574,11 @@ return /******/ (function(modules) { // webpackBootstrap
  * file that was distributed with this source code.
  */
 
-module.exports = __webpack_require__(168);
+module.exports = __webpack_require__(174);
 
 
 /***/ }),
-/* 168 */
+/* 174 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -47962,13 +49590,13 @@ module.exports = __webpack_require__(168);
  * file that was distributed with this source code.
  */
 
-var extend = __webpack_require__(169);
-var isFunction = __webpack_require__(13);
-var isNaN = __webpack_require__(204);
-var isObject = __webpack_require__(9);
-var isPlainObject = __webpack_require__(206);
-var isString = __webpack_require__(209);
-var currencies = __webpack_require__(210);
+var extend = __webpack_require__(175);
+var isFunction = __webpack_require__(14);
+var isNaN = __webpack_require__(210);
+var isObject = __webpack_require__(10);
+var isPlainObject = __webpack_require__(212);
+var isString = __webpack_require__(215);
+var currencies = __webpack_require__(216);
 
 var isInt = function (n) {
     return Number(n) === n && n % 1 === 0;
@@ -48321,19 +49949,19 @@ module.exports = extend(Money, currencies);
 
 
 /***/ }),
-/* 169 */
+/* 175 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(170);
+module.exports = __webpack_require__(176);
 
 
 /***/ }),
-/* 170 */
+/* 176 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var copyObject = __webpack_require__(171),
-    createAssigner = __webpack_require__(181),
-    keysIn = __webpack_require__(190);
+var copyObject = __webpack_require__(177),
+    createAssigner = __webpack_require__(187),
+    keysIn = __webpack_require__(196);
 
 /**
  * This method is like `_.assign` except that it iterates over own and
@@ -48374,11 +50002,11 @@ module.exports = assignIn;
 
 
 /***/ }),
-/* 171 */
+/* 177 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var assignValue = __webpack_require__(172),
-    baseAssignValue = __webpack_require__(19);
+var assignValue = __webpack_require__(178),
+    baseAssignValue = __webpack_require__(20);
 
 /**
  * Copies properties of `source` to `object`.
@@ -48420,11 +50048,11 @@ module.exports = copyObject;
 
 
 /***/ }),
-/* 172 */
+/* 178 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseAssignValue = __webpack_require__(19),
-    eq = __webpack_require__(23);
+var baseAssignValue = __webpack_require__(20),
+    eq = __webpack_require__(24);
 
 /** Used for built-in method references. */
 var objectProto = Object.prototype;
@@ -48454,11 +50082,11 @@ module.exports = assignValue;
 
 
 /***/ }),
-/* 173 */
+/* 179 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseIsNative = __webpack_require__(174),
-    getValue = __webpack_require__(180);
+var baseIsNative = __webpack_require__(180),
+    getValue = __webpack_require__(186);
 
 /**
  * Gets the native function at `key` of `object`.
@@ -48477,13 +50105,13 @@ module.exports = getNative;
 
 
 /***/ }),
-/* 174 */
+/* 180 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isFunction = __webpack_require__(13),
-    isMasked = __webpack_require__(177),
-    isObject = __webpack_require__(9),
-    toSource = __webpack_require__(179);
+var isFunction = __webpack_require__(14),
+    isMasked = __webpack_require__(183),
+    isObject = __webpack_require__(10),
+    toSource = __webpack_require__(185);
 
 /**
  * Used to match `RegExp`
@@ -48530,10 +50158,10 @@ module.exports = baseIsNative;
 
 
 /***/ }),
-/* 175 */
+/* 181 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Symbol = __webpack_require__(21);
+var Symbol = __webpack_require__(22);
 
 /** Used for built-in method references. */
 var objectProto = Object.prototype;
@@ -48582,7 +50210,7 @@ module.exports = getRawTag;
 
 
 /***/ }),
-/* 176 */
+/* 182 */
 /***/ (function(module, exports) {
 
 /** Used for built-in method references. */
@@ -48610,10 +50238,10 @@ module.exports = objectToString;
 
 
 /***/ }),
-/* 177 */
+/* 183 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var coreJsData = __webpack_require__(178);
+var coreJsData = __webpack_require__(184);
 
 /** Used to detect methods masquerading as native. */
 var maskSrcKey = (function() {
@@ -48636,10 +50264,10 @@ module.exports = isMasked;
 
 
 /***/ }),
-/* 178 */
+/* 184 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var root = __webpack_require__(14);
+var root = __webpack_require__(15);
 
 /** Used to detect overreaching core-js shims. */
 var coreJsData = root['__core-js_shared__'];
@@ -48648,7 +50276,7 @@ module.exports = coreJsData;
 
 
 /***/ }),
-/* 179 */
+/* 185 */
 /***/ (function(module, exports) {
 
 /** Used for built-in method references. */
@@ -48680,7 +50308,7 @@ module.exports = toSource;
 
 
 /***/ }),
-/* 180 */
+/* 186 */
 /***/ (function(module, exports) {
 
 /**
@@ -48699,11 +50327,11 @@ module.exports = getValue;
 
 
 /***/ }),
-/* 181 */
+/* 187 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseRest = __webpack_require__(182),
-    isIterateeCall = __webpack_require__(189);
+var baseRest = __webpack_require__(188),
+    isIterateeCall = __webpack_require__(195);
 
 /**
  * Creates a function like `_.assign`.
@@ -48742,12 +50370,12 @@ module.exports = createAssigner;
 
 
 /***/ }),
-/* 182 */
+/* 188 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var identity = __webpack_require__(24),
-    overRest = __webpack_require__(183),
-    setToString = __webpack_require__(185);
+var identity = __webpack_require__(25),
+    overRest = __webpack_require__(189),
+    setToString = __webpack_require__(191);
 
 /**
  * The base implementation of `_.rest` which doesn't validate or coerce arguments.
@@ -48765,10 +50393,10 @@ module.exports = baseRest;
 
 
 /***/ }),
-/* 183 */
+/* 189 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var apply = __webpack_require__(184);
+var apply = __webpack_require__(190);
 
 /* Built-in method references for those with the same name as other `lodash` methods. */
 var nativeMax = Math.max;
@@ -48807,7 +50435,7 @@ module.exports = overRest;
 
 
 /***/ }),
-/* 184 */
+/* 190 */
 /***/ (function(module, exports) {
 
 /**
@@ -48834,11 +50462,11 @@ module.exports = apply;
 
 
 /***/ }),
-/* 185 */
+/* 191 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseSetToString = __webpack_require__(186),
-    shortOut = __webpack_require__(188);
+var baseSetToString = __webpack_require__(192),
+    shortOut = __webpack_require__(194);
 
 /**
  * Sets the `toString` method of `func` to return `string`.
@@ -48854,12 +50482,12 @@ module.exports = setToString;
 
 
 /***/ }),
-/* 186 */
+/* 192 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var constant = __webpack_require__(187),
-    defineProperty = __webpack_require__(20),
-    identity = __webpack_require__(24);
+var constant = __webpack_require__(193),
+    defineProperty = __webpack_require__(21),
+    identity = __webpack_require__(25);
 
 /**
  * The base implementation of `setToString` without support for hot loop shorting.
@@ -48882,7 +50510,7 @@ module.exports = baseSetToString;
 
 
 /***/ }),
-/* 187 */
+/* 193 */
 /***/ (function(module, exports) {
 
 /**
@@ -48914,7 +50542,7 @@ module.exports = constant;
 
 
 /***/ }),
-/* 188 */
+/* 194 */
 /***/ (function(module, exports) {
 
 /** Used to detect hot functions by number of calls within a span of milliseconds. */
@@ -48957,13 +50585,13 @@ module.exports = shortOut;
 
 
 /***/ }),
-/* 189 */
+/* 195 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var eq = __webpack_require__(23),
-    isArrayLike = __webpack_require__(25),
-    isIndex = __webpack_require__(27),
-    isObject = __webpack_require__(9);
+var eq = __webpack_require__(24),
+    isArrayLike = __webpack_require__(26),
+    isIndex = __webpack_require__(28),
+    isObject = __webpack_require__(10);
 
 /**
  * Checks if the given arguments are from an iteratee call.
@@ -48993,12 +50621,12 @@ module.exports = isIterateeCall;
 
 
 /***/ }),
-/* 190 */
+/* 196 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var arrayLikeKeys = __webpack_require__(191),
-    baseKeysIn = __webpack_require__(201),
-    isArrayLike = __webpack_require__(25);
+var arrayLikeKeys = __webpack_require__(197),
+    baseKeysIn = __webpack_require__(207),
+    isArrayLike = __webpack_require__(26);
 
 /**
  * Creates an array of the own and inherited enumerable property names of `object`.
@@ -49031,15 +50659,15 @@ module.exports = keysIn;
 
 
 /***/ }),
-/* 191 */
+/* 197 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseTimes = __webpack_require__(192),
-    isArguments = __webpack_require__(193),
-    isArray = __webpack_require__(28),
-    isBuffer = __webpack_require__(195),
-    isIndex = __webpack_require__(27),
-    isTypedArray = __webpack_require__(197);
+var baseTimes = __webpack_require__(198),
+    isArguments = __webpack_require__(199),
+    isArray = __webpack_require__(29),
+    isBuffer = __webpack_require__(201),
+    isIndex = __webpack_require__(28),
+    isTypedArray = __webpack_require__(203);
 
 /** Used for built-in method references. */
 var objectProto = Object.prototype;
@@ -49086,7 +50714,7 @@ module.exports = arrayLikeKeys;
 
 
 /***/ }),
-/* 192 */
+/* 198 */
 /***/ (function(module, exports) {
 
 /**
@@ -49112,10 +50740,10 @@ module.exports = baseTimes;
 
 
 /***/ }),
-/* 193 */
+/* 199 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseIsArguments = __webpack_require__(194),
+var baseIsArguments = __webpack_require__(200),
     isObjectLike = __webpack_require__(7);
 
 /** Used for built-in method references. */
@@ -49154,7 +50782,7 @@ module.exports = isArguments;
 
 
 /***/ }),
-/* 194 */
+/* 200 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseGetTag = __webpack_require__(6),
@@ -49178,11 +50806,11 @@ module.exports = baseIsArguments;
 
 
 /***/ }),
-/* 195 */
+/* 201 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(module) {var root = __webpack_require__(14),
-    stubFalse = __webpack_require__(196);
+/* WEBPACK VAR INJECTION */(function(module) {var root = __webpack_require__(15),
+    stubFalse = __webpack_require__(202);
 
 /** Detect free variable `exports`. */
 var freeExports = typeof exports == 'object' && exports && !exports.nodeType && exports;
@@ -49223,7 +50851,7 @@ module.exports = isBuffer;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(11)(module)))
 
 /***/ }),
-/* 196 */
+/* 202 */
 /***/ (function(module, exports) {
 
 /**
@@ -49247,12 +50875,12 @@ module.exports = stubFalse;
 
 
 /***/ }),
-/* 197 */
+/* 203 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseIsTypedArray = __webpack_require__(198),
-    baseUnary = __webpack_require__(199),
-    nodeUtil = __webpack_require__(200);
+var baseIsTypedArray = __webpack_require__(204),
+    baseUnary = __webpack_require__(205),
+    nodeUtil = __webpack_require__(206);
 
 /* Node.js helper references. */
 var nodeIsTypedArray = nodeUtil && nodeUtil.isTypedArray;
@@ -49280,11 +50908,11 @@ module.exports = isTypedArray;
 
 
 /***/ }),
-/* 198 */
+/* 204 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseGetTag = __webpack_require__(6),
-    isLength = __webpack_require__(26),
+    isLength = __webpack_require__(27),
     isObjectLike = __webpack_require__(7);
 
 /** `Object#toString` result references. */
@@ -49346,7 +50974,7 @@ module.exports = baseIsTypedArray;
 
 
 /***/ }),
-/* 199 */
+/* 205 */
 /***/ (function(module, exports) {
 
 /**
@@ -49366,10 +50994,10 @@ module.exports = baseUnary;
 
 
 /***/ }),
-/* 200 */
+/* 206 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(module) {var freeGlobal = __webpack_require__(22);
+/* WEBPACK VAR INJECTION */(function(module) {var freeGlobal = __webpack_require__(23);
 
 /** Detect free variable `exports`. */
 var freeExports = typeof exports == 'object' && exports && !exports.nodeType && exports;
@@ -49395,12 +51023,12 @@ module.exports = nodeUtil;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(11)(module)))
 
 /***/ }),
-/* 201 */
+/* 207 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isObject = __webpack_require__(9),
-    isPrototype = __webpack_require__(202),
-    nativeKeysIn = __webpack_require__(203);
+var isObject = __webpack_require__(10),
+    isPrototype = __webpack_require__(208),
+    nativeKeysIn = __webpack_require__(209);
 
 /** Used for built-in method references. */
 var objectProto = Object.prototype;
@@ -49434,7 +51062,7 @@ module.exports = baseKeysIn;
 
 
 /***/ }),
-/* 202 */
+/* 208 */
 /***/ (function(module, exports) {
 
 /** Used for built-in method references. */
@@ -49458,7 +51086,7 @@ module.exports = isPrototype;
 
 
 /***/ }),
-/* 203 */
+/* 209 */
 /***/ (function(module, exports) {
 
 /**
@@ -49484,10 +51112,10 @@ module.exports = nativeKeysIn;
 
 
 /***/ }),
-/* 204 */
+/* 210 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isNumber = __webpack_require__(205);
+var isNumber = __webpack_require__(211);
 
 /**
  * Checks if `value` is `NaN`.
@@ -49528,7 +51156,7 @@ module.exports = isNaN;
 
 
 /***/ }),
-/* 205 */
+/* 211 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseGetTag = __webpack_require__(6),
@@ -49572,11 +51200,11 @@ module.exports = isNumber;
 
 
 /***/ }),
-/* 206 */
+/* 212 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseGetTag = __webpack_require__(6),
-    getPrototype = __webpack_require__(207),
+    getPrototype = __webpack_require__(213),
     isObjectLike = __webpack_require__(7);
 
 /** `Object#toString` result references. */
@@ -49640,10 +51268,10 @@ module.exports = isPlainObject;
 
 
 /***/ }),
-/* 207 */
+/* 213 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var overArg = __webpack_require__(208);
+var overArg = __webpack_require__(214);
 
 /** Built-in value references. */
 var getPrototype = overArg(Object.getPrototypeOf, Object);
@@ -49652,7 +51280,7 @@ module.exports = getPrototype;
 
 
 /***/ }),
-/* 208 */
+/* 214 */
 /***/ (function(module, exports) {
 
 /**
@@ -49673,11 +51301,11 @@ module.exports = overArg;
 
 
 /***/ }),
-/* 209 */
+/* 215 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseGetTag = __webpack_require__(6),
-    isArray = __webpack_require__(28),
+    isArray = __webpack_require__(29),
     isObjectLike = __webpack_require__(7);
 
 /** `Object#toString` result references. */
@@ -49709,7 +51337,7 @@ module.exports = isString;
 
 
 /***/ }),
-/* 210 */
+/* 216 */
 /***/ (function(module, exports) {
 
 /**
@@ -50810,22 +52438,22 @@ Object.keys(currencies).forEach(function (currency) {
 
 
 /***/ }),
-/* 211 */
+/* 217 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(212);
+module.exports = __webpack_require__(218);
 
 /***/ }),
-/* 212 */
+/* 218 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var utils = __webpack_require__(5);
-var bind = __webpack_require__(29);
-var Axios = __webpack_require__(214);
-var defaults = __webpack_require__(15);
+var bind = __webpack_require__(30);
+var Axios = __webpack_require__(220);
+var defaults = __webpack_require__(16);
 
 /**
  * Create an instance of Axios
@@ -50859,14 +52487,14 @@ axios.create = function create(instanceConfig) {
 
 // Expose Cancel & CancelToken
 axios.Cancel = __webpack_require__(34);
-axios.CancelToken = __webpack_require__(228);
+axios.CancelToken = __webpack_require__(234);
 axios.isCancel = __webpack_require__(33);
 
 // Expose all/spread
 axios.all = function all(promises) {
   return Promise.all(promises);
 };
-axios.spread = __webpack_require__(229);
+axios.spread = __webpack_require__(235);
 
 module.exports = axios;
 
@@ -50875,7 +52503,7 @@ module.exports.default = axios;
 
 
 /***/ }),
-/* 213 */
+/* 219 */
 /***/ (function(module, exports) {
 
 /*!
@@ -50902,18 +52530,18 @@ function isSlowBuffer (obj) {
 
 
 /***/ }),
-/* 214 */
+/* 220 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(15);
+var defaults = __webpack_require__(16);
 var utils = __webpack_require__(5);
-var InterceptorManager = __webpack_require__(223);
-var dispatchRequest = __webpack_require__(224);
-var isAbsoluteURL = __webpack_require__(226);
-var combineURLs = __webpack_require__(227);
+var InterceptorManager = __webpack_require__(229);
+var dispatchRequest = __webpack_require__(230);
+var isAbsoluteURL = __webpack_require__(232);
+var combineURLs = __webpack_require__(233);
 
 /**
  * Create a new instance of Axios
@@ -50995,7 +52623,7 @@ module.exports = Axios;
 
 
 /***/ }),
-/* 215 */
+/* 221 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -51014,7 +52642,7 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
 
 
 /***/ }),
-/* 216 */
+/* 222 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -51047,7 +52675,7 @@ module.exports = function settle(resolve, reject, response) {
 
 
 /***/ }),
-/* 217 */
+/* 223 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -51075,7 +52703,7 @@ module.exports = function enhanceError(error, config, code, request, response) {
 
 
 /***/ }),
-/* 218 */
+/* 224 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -51150,7 +52778,7 @@ module.exports = function buildURL(url, params, paramsSerializer) {
 
 
 /***/ }),
-/* 219 */
+/* 225 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -51194,7 +52822,7 @@ module.exports = function parseHeaders(headers) {
 
 
 /***/ }),
-/* 220 */
+/* 226 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -51269,7 +52897,7 @@ module.exports = (
 
 
 /***/ }),
-/* 221 */
+/* 227 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -51312,7 +52940,7 @@ module.exports = btoa;
 
 
 /***/ }),
-/* 222 */
+/* 228 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -51372,7 +53000,7 @@ module.exports = (
 
 
 /***/ }),
-/* 223 */
+/* 229 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -51431,16 +53059,16 @@ module.exports = InterceptorManager;
 
 
 /***/ }),
-/* 224 */
+/* 230 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var utils = __webpack_require__(5);
-var transformData = __webpack_require__(225);
+var transformData = __webpack_require__(231);
 var isCancel = __webpack_require__(33);
-var defaults = __webpack_require__(15);
+var defaults = __webpack_require__(16);
 
 /**
  * Throws a `Cancel` if cancellation has been requested.
@@ -51517,7 +53145,7 @@ module.exports = function dispatchRequest(config) {
 
 
 /***/ }),
-/* 225 */
+/* 231 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -51544,7 +53172,7 @@ module.exports = function transformData(data, headers, fns) {
 
 
 /***/ }),
-/* 226 */
+/* 232 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -51565,7 +53193,7 @@ module.exports = function isAbsoluteURL(url) {
 
 
 /***/ }),
-/* 227 */
+/* 233 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -51586,7 +53214,7 @@ module.exports = function combineURLs(baseURL, relativeURL) {
 
 
 /***/ }),
-/* 228 */
+/* 234 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -51650,7 +53278,7 @@ module.exports = CancelToken;
 
 
 /***/ }),
-/* 229 */
+/* 235 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -51684,13 +53312,13 @@ module.exports = function spread(callback) {
 
 
 /***/ }),
-/* 230 */
+/* 236 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(231);
+var content = __webpack_require__(237);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -51710,7 +53338,7 @@ if(false) {
 }
 
 /***/ }),
-/* 231 */
+/* 237 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)(undefined);
@@ -51724,7 +53352,7 @@ exports.push([module.i, "\n.mostrar[data-v-869c0168] {\n    display: block;\n}\n
 
 
 /***/ }),
-/* 232 */
+/* 238 */
 /***/ (function(module, exports) {
 
 /**
@@ -51757,7 +53385,7 @@ module.exports = function listToStyles (parentId, list) {
 
 
 /***/ }),
-/* 233 */
+/* 239 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -51930,7 +53558,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 234 */
+/* 240 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -51968,7 +53596,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.data.charter = $event.target.value
+        _vm.$set(_vm.data, "charter", $event.target.value)
       }
     }
   })])])]), _vm._v(" "), _c('div', {
@@ -51994,7 +53622,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.data.name = $event.target.value
+        _vm.$set(_vm.data, "name", $event.target.value)
       }
     }
   })])])]), _vm._v(" "), _c('div', {
@@ -52020,7 +53648,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.data.last = $event.target.value
+        _vm.$set(_vm.data, "last", $event.target.value)
       }
     }
   })])])]), _vm._v(" "), _c('div', {
@@ -52046,7 +53674,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.data.bautizmoDate = $event.target.value
+        _vm.$set(_vm.data, "bautizmoDate", $event.target.value)
       }
     }
   })])])]), _vm._v(" "), _c('div', {
@@ -52072,7 +53700,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.data.birthdate = $event.target.value
+        _vm.$set(_vm.data, "birthdate", $event.target.value)
       }
     }
   })])])]), _vm._v(" "), _c('div', {
@@ -52098,7 +53726,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.data.phone = $event.target.value
+        _vm.$set(_vm.data, "phone", $event.target.value)
       }
     }
   })])])]), _vm._v(" "), _c('div', {
@@ -52124,7 +53752,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.data.cell = $event.target.value
+        _vm.$set(_vm.data, "cell", $event.target.value)
       }
     }
   })])])]), _vm._v(" "), _c('div', {
@@ -52150,7 +53778,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.data.email = $event.target.value
+        _vm.$set(_vm.data, "email", $event.target.value)
       }
     }
   })])])]), _vm._v(" "), _c('div', {
@@ -52227,19 +53855,19 @@ if (false) {
 }
 
 /***/ }),
-/* 235 */
+/* 241 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(236)
+  __webpack_require__(242)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(238),
+  __webpack_require__(244),
   /* template */
-  __webpack_require__(243),
+  __webpack_require__(249),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -52247,7 +53875,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Creating\\CreateDepartament.vue"
+Component.options.__file = "/var/www/html/softAdventist/resources/assets/js/components/Creating/CreateDepartament.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] CreateDepartament.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -52271,13 +53899,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 236 */
+/* 242 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(237);
+var content = __webpack_require__(243);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -52297,7 +53925,7 @@ if(false) {
 }
 
 /***/ }),
-/* 237 */
+/* 243 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)(undefined);
@@ -52311,12 +53939,12 @@ exports.push([module.i, "\n.box-info {\n    font-size: 24px;\n    margin: 0 auto
 
 
 /***/ }),
-/* 238 */
+/* 244 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Lists_ListsDepartaments_vue__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Lists_ListsDepartaments_vue__ = __webpack_require__(17);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Lists_ListsDepartaments_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__Lists_ListsDepartaments_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_select__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_select___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_vue_select__);
@@ -52679,13 +54307,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 239 */
+/* 245 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(240);
+var content = __webpack_require__(246);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -52705,7 +54333,7 @@ if(false) {
 }
 
 /***/ }),
-/* 240 */
+/* 246 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)(undefined);
@@ -52719,7 +54347,7 @@ exports.push([module.i, "\n.tittle-2 {\n    text-align:left !important;\n    fon
 
 
 /***/ }),
-/* 241 */
+/* 247 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -52974,7 +54602,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 242 */
+/* 248 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -52995,7 +54623,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     },
     on: {
       "click": function($event) {
-        if (!('button' in $event) && _vm._k($event.keyCode, "prevet")) { return null; }
+        if (!('button' in $event) && _vm._k($event.keyCode, "prevet", undefined, $event.key)) { return null; }
         _vm.all(_vm.datos.path, _vm.datos.total)
       }
     }
@@ -53010,7 +54638,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     },
     on: {
       "click": function($event) {
-        if (!('button' in $event) && _vm._k($event.keyCode, "prevet")) { return null; }
+        if (!('button' in $event) && _vm._k($event.keyCode, "prevet", undefined, $event.key)) { return null; }
         _vm.all(_vm.datos.path, 15)
       }
     }
@@ -53025,7 +54653,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     },
     on: {
       "click": function($event) {
-        if (!('button' in $event) && _vm._k($event.keyCode, "prevet")) { return null; }
+        if (!('button' in $event) && _vm._k($event.keyCode, "prevet", undefined, $event.key)) { return null; }
         _vm.styleType($event)
       }
     }
@@ -53390,7 +55018,7 @@ if (false) {
 }
 
 /***/ }),
-/* 243 */
+/* 249 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -53427,7 +55055,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     model: {
       value: (_vm.data.name),
       callback: function($$v) {
-        _vm.data.name = $$v
+        _vm.$set(_vm.data, "name", $$v)
       },
       expression: "data.name"
     }
@@ -53459,7 +55087,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.data.percent_of_budget = $event.target.value
+        _vm.$set(_vm.data, "percent_of_budget", $event.target.value)
       }
     }
   })]), _vm._v(" "), _c('small', {
@@ -53490,7 +55118,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.data.balance = $event.target.value
+        _vm.$set(_vm.data, "balance", $event.target.value)
       }
     }
   })]), _vm._v(" "), _c('small', {
@@ -53650,19 +55278,19 @@ if (false) {
 }
 
 /***/ }),
-/* 244 */
+/* 250 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(245)
+  __webpack_require__(251)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(247),
+  __webpack_require__(253),
   /* template */
-  __webpack_require__(248),
+  __webpack_require__(254),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -53670,7 +55298,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Creating\\CreateAccounts.vue"
+Component.options.__file = "/var/www/html/softAdventist/resources/assets/js/components/Creating/CreateAccounts.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] CreateAccounts.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -53694,13 +55322,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 245 */
+/* 251 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(246);
+var content = __webpack_require__(252);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -53720,7 +55348,7 @@ if(false) {
 }
 
 /***/ }),
-/* 246 */
+/* 252 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)(undefined);
@@ -53734,7 +55362,7 @@ exports.push([module.i, "\n.box-info[data-v-1f5f67d0] {\n    font-size: 24px;\n 
 
 
 /***/ }),
-/* 247 */
+/* 253 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -53885,7 +55513,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 248 */
+/* 254 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -53930,7 +55558,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.data.name = $event.target.value
+        _vm.$set(_vm.data, "name", $event.target.value)
       }
     }
   })]), _vm._v(" "), _c('small', {
@@ -53951,7 +55579,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     model: {
       value: (_vm.data.departament_id),
       callback: function($$v) {
-        _vm.data.departament_id = $$v
+        _vm.$set(_vm.data, "departament_id", $$v)
       },
       expression: "data.departament_id"
     }
@@ -53997,19 +55625,19 @@ if (false) {
 }
 
 /***/ }),
-/* 249 */
+/* 255 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(250)
+  __webpack_require__(256)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(252),
+  __webpack_require__(258),
   /* template */
-  __webpack_require__(256),
+  __webpack_require__(262),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -54017,7 +55645,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Creating\\CreateInternalControl.vue"
+Component.options.__file = "/var/www/html/softAdventist/resources/assets/js/components/Creating/CreateInternalControl.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] CreateInternalControl.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -54041,13 +55669,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 250 */
+/* 256 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(251);
+var content = __webpack_require__(257);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -54067,7 +55695,7 @@ if(false) {
 }
 
 /***/ }),
-/* 251 */
+/* 257 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)(undefined);
@@ -54081,7 +55709,7 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 
 
 /***/ }),
-/* 252 */
+/* 258 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -54404,11 +56032,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 253 */
+/* 259 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Modal__ = __webpack_require__(254);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Modal__ = __webpack_require__(260);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_BaseModal__ = __webpack_require__(37);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_ModalController__ = __webpack_require__(38);
 /* unused harmony reexport BaseModal */
@@ -54417,7 +56045,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["a"] = (__WEBPACK_IMPORTED_MODULE_1__components_BaseModal__["a" /* default */]);
 
 /***/ }),
-/* 254 */
+/* 260 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -54425,7 +56053,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* unused harmony default export */ var _unused_webpack_default_export = ({template:'\n    <div v-show="isShowingModal" class="modal is-active">\n        <div class="modal-background" @click="close"></div>\n        <div class="modal-content">\n            <slot></slot>\n        </div>\n        <button class="modal-close" @click="close"></button>\n    </div>\n    ',mixins:[__WEBPACK_IMPORTED_MODULE_0__BaseModal__["a" /* default */]]});
 
 /***/ }),
-/* 255 */
+/* 261 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -54438,7 +56066,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 256 */
+/* 262 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -54483,7 +56111,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.data.saturday = $event.target.value
+        _vm.$set(_vm.data, "saturday", $event.target.value)
       }
     }
   })]), _vm._v(" "), _c('small', {
@@ -54514,7 +56142,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.data.number = $event.target.value
+        _vm.$set(_vm.data, "number", $event.target.value)
       }
     }
   })]), _vm._v(" "), _c('small', {
@@ -54545,7 +56173,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.data.number_of_envelopes = $event.target.value
+        _vm.$set(_vm.data, "number_of_envelopes", $event.target.value)
       }
     }
   })]), _vm._v(" "), _c('small', {
@@ -54576,7 +56204,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.data.balance = $event.target.value
+        _vm.$set(_vm.data, "balance", $event.target.value)
       }
     }
   })]), _vm._v(" "), _c('small', {
@@ -54729,19 +56357,19 @@ if (false) {
 }
 
 /***/ }),
-/* 257 */
+/* 263 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(258)
+  __webpack_require__(264)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(260),
+  __webpack_require__(266),
   /* template */
-  __webpack_require__(261),
+  __webpack_require__(267),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -54749,7 +56377,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Creating\\CreateWeeklyIncomes.vue"
+Component.options.__file = "/var/www/html/softAdventist/resources/assets/js/components/Creating/CreateWeeklyIncomes.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] CreateWeeklyIncomes.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -54773,13 +56401,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 258 */
+/* 264 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(259);
+var content = __webpack_require__(265);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -54799,7 +56427,7 @@ if(false) {
 }
 
 /***/ }),
-/* 259 */
+/* 265 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)(undefined);
@@ -54813,7 +56441,7 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 
 
 /***/ }),
-/* 260 */
+/* 266 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -54821,7 +56449,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_select__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_select___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue_select__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lassehaslev_vue_confirm__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_numeral__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_numeral__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_numeral___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_numeral__);
 //
 //
@@ -55470,7 +57098,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 261 */
+/* 267 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -55544,7 +57172,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     model: {
       value: (_vm.data.member_id),
       callback: function($$v) {
-        _vm.data.member_id = $$v
+        _vm.$set(_vm.data, "member_id", $$v)
       },
       expression: "data.member_id"
     }
@@ -55576,7 +57204,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.data.envelope_number = $event.target.value
+        _vm.$set(_vm.data, "envelope_number", $event.target.value)
       }
     }
   }), _vm._v(" "), _c('input', {
@@ -55588,16 +57216,16 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }],
     staticClass: "form-control",
     attrs: {
-      "type": "hidden"
+      "type": "hidden",
+      "value": "internal"
     },
     domProps: {
-      "value": _vm.internal,
       "value": (_vm.data.internal_control_id)
     },
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.data.internal_control_id = $event.target.value
+        _vm.$set(_vm.data, "internal_control_id", $event.target.value)
       }
     }
   })]), _vm._v(" "), _c('small', {
@@ -55628,7 +57256,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.data.tithes = $event.target.value
+        _vm.$set(_vm.data, "tithes", $event.target.value)
       }
     }
   })]), _vm._v(" "), _c('small', {
@@ -55659,7 +57287,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.data.offering = $event.target.value
+        _vm.$set(_vm.data, "offering", $event.target.value)
       }
     }
   })]), _vm._v(" "), _c('small', {
@@ -55690,7 +57318,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.data.background_inversion = $event.target.value
+        _vm.$set(_vm.data, "background_inversion", $event.target.value)
       }
     }
   })]), _vm._v(" "), _c('small', {
@@ -55726,7 +57354,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.campo.balance = $event.target.value
+        _vm.$set(_vm.campo, "balance", $event.target.value)
       }
     }
   }), _vm._v(" "), _c('v-select', {
@@ -55737,7 +57365,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     model: {
       value: (_vm.campo.church_l_f_income_account_id),
       callback: function($$v) {
-        _vm.campo.church_l_f_income_account_id = $$v
+        _vm.$set(_vm.campo, "church_l_f_income_account_id", $$v)
       },
       expression: "campo.church_l_f_income_account_id"
     }
@@ -55802,7 +57430,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.church.balance = $event.target.value
+        _vm.$set(_vm.church, "balance", $event.target.value)
       }
     }
   }), _vm._v(" "), _c('v-select', {
@@ -55813,7 +57441,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     model: {
       value: (_vm.church.income_account_id),
       callback: function($$v) {
-        _vm.church.income_account_id = $$v
+        _vm.$set(_vm.church, "income_account_id", $$v)
       },
       expression: "church.income_account_id"
     }
@@ -55992,15 +57620,15 @@ if (false) {
 }
 
 /***/ }),
-/* 262 */
+/* 268 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(263),
+  __webpack_require__(269),
   /* template */
-  __webpack_require__(268),
+  __webpack_require__(274),
   /* styles */
   null,
   /* scopeId */
@@ -56008,7 +57636,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Creating\\CreateExpenses.vue"
+Component.options.__file = "/var/www/html/softAdventist/resources/assets/js/components/Creating/CreateExpenses.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] CreateExpenses.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -56032,7 +57660,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 263 */
+/* 269 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -56179,13 +57807,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 264 */
+/* 270 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(265);
+var content = __webpack_require__(271);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -56205,7 +57833,7 @@ if(false) {
 }
 
 /***/ }),
-/* 265 */
+/* 271 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)(undefined);
@@ -56219,7 +57847,7 @@ exports.push([module.i, "\n.tittle-2 {\n    text-align:left !important;\n    fon
 
 
 /***/ }),
-/* 266 */
+/* 272 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -56463,7 +58091,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 267 */
+/* 273 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -56484,7 +58112,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     },
     on: {
       "click": function($event) {
-        if (!('button' in $event) && _vm._k($event.keyCode, "prevet")) { return null; }
+        if (!('button' in $event) && _vm._k($event.keyCode, "prevet", undefined, $event.key)) { return null; }
         _vm.all(_vm.datos.path, _vm.datos.total)
       }
     }
@@ -56499,7 +58127,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     },
     on: {
       "click": function($event) {
-        if (!('button' in $event) && _vm._k($event.keyCode, "prevet")) { return null; }
+        if (!('button' in $event) && _vm._k($event.keyCode, "prevet", undefined, $event.key)) { return null; }
         _vm.all(_vm.datos.path, 15)
       }
     }
@@ -56514,7 +58142,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     },
     on: {
       "click": function($event) {
-        if (!('button' in $event) && _vm._k($event.keyCode, "prevet")) { return null; }
+        if (!('button' in $event) && _vm._k($event.keyCode, "prevet", undefined, $event.key)) { return null; }
         _vm.styleType($event)
       }
     }
@@ -56847,7 +58475,7 @@ if (false) {
 }
 
 /***/ }),
-/* 268 */
+/* 274 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -56892,7 +58520,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.data.name = $event.target.value
+        _vm.$set(_vm.data, "name", $event.target.value)
       }
     }
   })]), _vm._v(" "), _c('small', {
@@ -56917,7 +58545,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     model: {
       value: (_vm.data.income_account_id),
       callback: function($$v) {
-        _vm.data.income_account_id = $$v
+        _vm.$set(_vm.data, "income_account_id", $$v)
       },
       expression: "data.income_account_id"
     }
@@ -56963,19 +58591,19 @@ if (false) {
 }
 
 /***/ }),
-/* 269 */
+/* 275 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(270)
+  __webpack_require__(276)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(272),
+  __webpack_require__(278),
   /* template */
-  __webpack_require__(273),
+  __webpack_require__(279),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -56983,7 +58611,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Creating\\CreateBank.vue"
+Component.options.__file = "/var/www/html/softAdventist/resources/assets/js/components/Creating/CreateBank.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] CreateBank.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -57007,13 +58635,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 270 */
+/* 276 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(271);
+var content = __webpack_require__(277);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -57033,7 +58661,7 @@ if(false) {
 }
 
 /***/ }),
-/* 271 */
+/* 277 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)(undefined);
@@ -57047,7 +58675,7 @@ exports.push([module.i, "\n.mostrar[data-v-36f84f24] {\n    display: block;\n}\n
 
 
 /***/ }),
-/* 272 */
+/* 278 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -57221,7 +58849,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 273 */
+/* 279 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -57266,7 +58894,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.data.code = $event.target.value
+        _vm.$set(_vm.data, "code", $event.target.value)
       }
     }
   })]), _vm._v(" "), _c('small', {
@@ -57297,7 +58925,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.data.name = $event.target.value
+        _vm.$set(_vm.data, "name", $event.target.value)
       }
     }
   })]), _vm._v(" "), _c('small', {
@@ -57328,7 +58956,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.data.initial_balance = $event.target.value
+        _vm.$set(_vm.data, "initial_balance", $event.target.value)
       }
     }
   })]), _vm._v(" "), _c('small', {
@@ -57632,19 +59260,19 @@ if (false) {
 }
 
 /***/ }),
-/* 274 */
+/* 280 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(275)
+  __webpack_require__(281)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(277),
-  /* template */
   __webpack_require__(283),
+  /* template */
+  __webpack_require__(289),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -57652,7 +59280,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Creating\\CreateChurchDeposits.vue"
+Component.options.__file = "/var/www/html/softAdventist/resources/assets/js/components/Creating/CreateChurchDeposits.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] CreateChurchDeposits.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -57676,13 +59304,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 275 */
+/* 281 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(276);
+var content = __webpack_require__(282);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -57702,7 +59330,7 @@ if(false) {
 }
 
 /***/ }),
-/* 276 */
+/* 282 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)(undefined);
@@ -57716,14 +59344,14 @@ exports.push([module.i, "\n.mostrar[data-v-788ece0e] {\n\t    display: block;\n}
 
 
 /***/ }),
-/* 277 */
+/* 283 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_select__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_select___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue_select__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_datepicker__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_datepicker__ = __webpack_require__(18);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_datepicker___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_vue_datepicker__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lassehaslev_vue_confirm__ = __webpack_require__(8);
 //
@@ -58183,13 +59811,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 278 */
+/* 284 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(279);
+var content = __webpack_require__(285);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -58209,7 +59837,7 @@ if(false) {
 }
 
 /***/ }),
-/* 279 */
+/* 285 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)(undefined);
@@ -58223,7 +59851,7 @@ exports.push([module.i, "\n.datepicker-overlay[data-v-679adedf] {\n  position: f
 
 
 /***/ }),
-/* 280 */
+/* 286 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -59059,7 +60687,7 @@ exports.default = {
 };
 
 /***/ }),
-/* 281 */
+/* 287 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
@@ -59085,214 +60713,222 @@ var map = {
 	"./be.js": 49,
 	"./bg": 50,
 	"./bg.js": 50,
-	"./bn": 51,
-	"./bn.js": 51,
-	"./bo": 52,
-	"./bo.js": 52,
-	"./br": 53,
-	"./br.js": 53,
-	"./bs": 54,
-	"./bs.js": 54,
-	"./ca": 55,
-	"./ca.js": 55,
-	"./cs": 56,
-	"./cs.js": 56,
-	"./cv": 57,
-	"./cv.js": 57,
-	"./cy": 58,
-	"./cy.js": 58,
-	"./da": 59,
-	"./da.js": 59,
-	"./de": 60,
-	"./de-at": 61,
-	"./de-at.js": 61,
-	"./de-ch": 62,
-	"./de-ch.js": 62,
-	"./de.js": 60,
-	"./dv": 63,
-	"./dv.js": 63,
-	"./el": 64,
-	"./el.js": 64,
-	"./en-au": 65,
-	"./en-au.js": 65,
-	"./en-ca": 66,
-	"./en-ca.js": 66,
-	"./en-gb": 67,
-	"./en-gb.js": 67,
-	"./en-ie": 68,
-	"./en-ie.js": 68,
-	"./en-nz": 69,
-	"./en-nz.js": 69,
-	"./eo": 70,
-	"./eo.js": 70,
-	"./es": 71,
-	"./es-do": 72,
-	"./es-do.js": 72,
-	"./es.js": 71,
-	"./et": 73,
-	"./et.js": 73,
-	"./eu": 74,
-	"./eu.js": 74,
-	"./fa": 75,
-	"./fa.js": 75,
-	"./fi": 76,
-	"./fi.js": 76,
-	"./fo": 77,
-	"./fo.js": 77,
-	"./fr": 78,
-	"./fr-ca": 79,
-	"./fr-ca.js": 79,
-	"./fr-ch": 80,
-	"./fr-ch.js": 80,
-	"./fr.js": 78,
-	"./fy": 81,
-	"./fy.js": 81,
-	"./gd": 82,
-	"./gd.js": 82,
-	"./gl": 83,
-	"./gl.js": 83,
-	"./gom-latn": 84,
-	"./gom-latn.js": 84,
-	"./he": 85,
-	"./he.js": 85,
-	"./hi": 86,
-	"./hi.js": 86,
-	"./hr": 87,
-	"./hr.js": 87,
-	"./hu": 88,
-	"./hu.js": 88,
-	"./hy-am": 89,
-	"./hy-am.js": 89,
-	"./id": 90,
-	"./id.js": 90,
-	"./is": 91,
-	"./is.js": 91,
-	"./it": 92,
-	"./it.js": 92,
-	"./ja": 93,
-	"./ja.js": 93,
-	"./jv": 94,
-	"./jv.js": 94,
-	"./ka": 95,
-	"./ka.js": 95,
-	"./kk": 96,
-	"./kk.js": 96,
-	"./km": 97,
-	"./km.js": 97,
-	"./kn": 98,
-	"./kn.js": 98,
-	"./ko": 99,
-	"./ko.js": 99,
-	"./ky": 100,
-	"./ky.js": 100,
-	"./lb": 101,
-	"./lb.js": 101,
-	"./lo": 102,
-	"./lo.js": 102,
-	"./lt": 103,
-	"./lt.js": 103,
-	"./lv": 104,
-	"./lv.js": 104,
-	"./me": 105,
-	"./me.js": 105,
-	"./mi": 106,
-	"./mi.js": 106,
-	"./mk": 107,
-	"./mk.js": 107,
-	"./ml": 108,
-	"./ml.js": 108,
-	"./mr": 109,
-	"./mr.js": 109,
-	"./ms": 110,
-	"./ms-my": 111,
-	"./ms-my.js": 111,
-	"./ms.js": 110,
-	"./my": 112,
-	"./my.js": 112,
-	"./nb": 113,
-	"./nb.js": 113,
-	"./ne": 114,
-	"./ne.js": 114,
-	"./nl": 115,
-	"./nl-be": 116,
-	"./nl-be.js": 116,
-	"./nl.js": 115,
-	"./nn": 117,
-	"./nn.js": 117,
-	"./pa-in": 118,
-	"./pa-in.js": 118,
-	"./pl": 119,
-	"./pl.js": 119,
-	"./pt": 120,
-	"./pt-br": 121,
-	"./pt-br.js": 121,
-	"./pt.js": 120,
-	"./ro": 122,
-	"./ro.js": 122,
-	"./ru": 123,
-	"./ru.js": 123,
-	"./sd": 124,
-	"./sd.js": 124,
-	"./se": 125,
-	"./se.js": 125,
-	"./si": 126,
-	"./si.js": 126,
-	"./sk": 127,
-	"./sk.js": 127,
-	"./sl": 128,
-	"./sl.js": 128,
-	"./sq": 129,
-	"./sq.js": 129,
-	"./sr": 130,
-	"./sr-cyrl": 131,
-	"./sr-cyrl.js": 131,
-	"./sr.js": 130,
-	"./ss": 132,
-	"./ss.js": 132,
-	"./sv": 133,
-	"./sv.js": 133,
-	"./sw": 134,
-	"./sw.js": 134,
-	"./ta": 135,
-	"./ta.js": 135,
-	"./te": 136,
-	"./te.js": 136,
-	"./tet": 137,
-	"./tet.js": 137,
-	"./th": 138,
-	"./th.js": 138,
-	"./tl-ph": 139,
-	"./tl-ph.js": 139,
-	"./tlh": 140,
-	"./tlh.js": 140,
-	"./tr": 141,
-	"./tr.js": 141,
-	"./tzl": 142,
-	"./tzl.js": 142,
-	"./tzm": 143,
-	"./tzm-latn": 144,
-	"./tzm-latn.js": 144,
-	"./tzm.js": 143,
-	"./uk": 145,
-	"./uk.js": 145,
-	"./ur": 146,
-	"./ur.js": 146,
-	"./uz": 147,
-	"./uz-latn": 148,
-	"./uz-latn.js": 148,
-	"./uz.js": 147,
-	"./vi": 149,
-	"./vi.js": 149,
-	"./x-pseudo": 150,
-	"./x-pseudo.js": 150,
-	"./yo": 151,
-	"./yo.js": 151,
-	"./zh-cn": 152,
-	"./zh-cn.js": 152,
-	"./zh-hk": 153,
-	"./zh-hk.js": 153,
-	"./zh-tw": 154,
-	"./zh-tw.js": 154
+	"./bm": 51,
+	"./bm.js": 51,
+	"./bn": 52,
+	"./bn.js": 52,
+	"./bo": 53,
+	"./bo.js": 53,
+	"./br": 54,
+	"./br.js": 54,
+	"./bs": 55,
+	"./bs.js": 55,
+	"./ca": 56,
+	"./ca.js": 56,
+	"./cs": 57,
+	"./cs.js": 57,
+	"./cv": 58,
+	"./cv.js": 58,
+	"./cy": 59,
+	"./cy.js": 59,
+	"./da": 60,
+	"./da.js": 60,
+	"./de": 61,
+	"./de-at": 62,
+	"./de-at.js": 62,
+	"./de-ch": 63,
+	"./de-ch.js": 63,
+	"./de.js": 61,
+	"./dv": 64,
+	"./dv.js": 64,
+	"./el": 65,
+	"./el.js": 65,
+	"./en-au": 66,
+	"./en-au.js": 66,
+	"./en-ca": 67,
+	"./en-ca.js": 67,
+	"./en-gb": 68,
+	"./en-gb.js": 68,
+	"./en-ie": 69,
+	"./en-ie.js": 69,
+	"./en-nz": 70,
+	"./en-nz.js": 70,
+	"./eo": 71,
+	"./eo.js": 71,
+	"./es": 72,
+	"./es-do": 73,
+	"./es-do.js": 73,
+	"./es-us": 74,
+	"./es-us.js": 74,
+	"./es.js": 72,
+	"./et": 75,
+	"./et.js": 75,
+	"./eu": 76,
+	"./eu.js": 76,
+	"./fa": 77,
+	"./fa.js": 77,
+	"./fi": 78,
+	"./fi.js": 78,
+	"./fo": 79,
+	"./fo.js": 79,
+	"./fr": 80,
+	"./fr-ca": 81,
+	"./fr-ca.js": 81,
+	"./fr-ch": 82,
+	"./fr-ch.js": 82,
+	"./fr.js": 80,
+	"./fy": 83,
+	"./fy.js": 83,
+	"./gd": 84,
+	"./gd.js": 84,
+	"./gl": 85,
+	"./gl.js": 85,
+	"./gom-latn": 86,
+	"./gom-latn.js": 86,
+	"./gu": 87,
+	"./gu.js": 87,
+	"./he": 88,
+	"./he.js": 88,
+	"./hi": 89,
+	"./hi.js": 89,
+	"./hr": 90,
+	"./hr.js": 90,
+	"./hu": 91,
+	"./hu.js": 91,
+	"./hy-am": 92,
+	"./hy-am.js": 92,
+	"./id": 93,
+	"./id.js": 93,
+	"./is": 94,
+	"./is.js": 94,
+	"./it": 95,
+	"./it.js": 95,
+	"./ja": 96,
+	"./ja.js": 96,
+	"./jv": 97,
+	"./jv.js": 97,
+	"./ka": 98,
+	"./ka.js": 98,
+	"./kk": 99,
+	"./kk.js": 99,
+	"./km": 100,
+	"./km.js": 100,
+	"./kn": 101,
+	"./kn.js": 101,
+	"./ko": 102,
+	"./ko.js": 102,
+	"./ky": 103,
+	"./ky.js": 103,
+	"./lb": 104,
+	"./lb.js": 104,
+	"./lo": 105,
+	"./lo.js": 105,
+	"./lt": 106,
+	"./lt.js": 106,
+	"./lv": 107,
+	"./lv.js": 107,
+	"./me": 108,
+	"./me.js": 108,
+	"./mi": 109,
+	"./mi.js": 109,
+	"./mk": 110,
+	"./mk.js": 110,
+	"./ml": 111,
+	"./ml.js": 111,
+	"./mr": 112,
+	"./mr.js": 112,
+	"./ms": 113,
+	"./ms-my": 114,
+	"./ms-my.js": 114,
+	"./ms.js": 113,
+	"./mt": 115,
+	"./mt.js": 115,
+	"./my": 116,
+	"./my.js": 116,
+	"./nb": 117,
+	"./nb.js": 117,
+	"./ne": 118,
+	"./ne.js": 118,
+	"./nl": 119,
+	"./nl-be": 120,
+	"./nl-be.js": 120,
+	"./nl.js": 119,
+	"./nn": 121,
+	"./nn.js": 121,
+	"./pa-in": 122,
+	"./pa-in.js": 122,
+	"./pl": 123,
+	"./pl.js": 123,
+	"./pt": 124,
+	"./pt-br": 125,
+	"./pt-br.js": 125,
+	"./pt.js": 124,
+	"./ro": 126,
+	"./ro.js": 126,
+	"./ru": 127,
+	"./ru.js": 127,
+	"./sd": 128,
+	"./sd.js": 128,
+	"./se": 129,
+	"./se.js": 129,
+	"./si": 130,
+	"./si.js": 130,
+	"./sk": 131,
+	"./sk.js": 131,
+	"./sl": 132,
+	"./sl.js": 132,
+	"./sq": 133,
+	"./sq.js": 133,
+	"./sr": 134,
+	"./sr-cyrl": 135,
+	"./sr-cyrl.js": 135,
+	"./sr.js": 134,
+	"./ss": 136,
+	"./ss.js": 136,
+	"./sv": 137,
+	"./sv.js": 137,
+	"./sw": 138,
+	"./sw.js": 138,
+	"./ta": 139,
+	"./ta.js": 139,
+	"./te": 140,
+	"./te.js": 140,
+	"./tet": 141,
+	"./tet.js": 141,
+	"./th": 142,
+	"./th.js": 142,
+	"./tl-ph": 143,
+	"./tl-ph.js": 143,
+	"./tlh": 144,
+	"./tlh.js": 144,
+	"./tr": 145,
+	"./tr.js": 145,
+	"./tzl": 146,
+	"./tzl.js": 146,
+	"./tzm": 147,
+	"./tzm-latn": 148,
+	"./tzm-latn.js": 148,
+	"./tzm.js": 147,
+	"./uk": 149,
+	"./uk.js": 149,
+	"./ur": 150,
+	"./ur.js": 150,
+	"./uz": 151,
+	"./uz-latn": 152,
+	"./uz-latn.js": 152,
+	"./uz.js": 151,
+	"./vi": 153,
+	"./vi.js": 153,
+	"./x-pseudo": 154,
+	"./x-pseudo.js": 154,
+	"./yo": 155,
+	"./yo.js": 155,
+	"./zh-cn": 156,
+	"./zh-cn.js": 156,
+	"./zh-hk": 157,
+	"./zh-hk.js": 157,
+	"./zh-tw": 158,
+	"./zh-tw.js": 158
 };
 function webpackContext(req) {
 	return __webpack_require__(webpackContextResolve(req));
@@ -59308,10 +60944,10 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 281;
+webpackContext.id = 287;
 
 /***/ }),
-/* 282 */
+/* 288 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -59343,7 +60979,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "foucus": _vm.showCheck,
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.date.time = $event.target.value
+        _vm.$set(_vm.date, "time", $event.target.value)
       }
     }
   })]), _vm._v(" "), (_vm.showInfo.check) ? _c('div', {
@@ -59514,7 +61150,7 @@ if (false) {
 }
 
 /***/ }),
-/* 283 */
+/* 289 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -59559,7 +61195,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.data.number = $event.target.value
+        _vm.$set(_vm.data, "number", $event.target.value)
       }
     }
   })]), _vm._v(" "), _c('small', {
@@ -59590,7 +61226,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.data.date = $event.target.value
+        _vm.$set(_vm.data, "date", $event.target.value)
       }
     }
   })]), _vm._v(" "), _c('small', {
@@ -59621,7 +61257,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.data.balance = $event.target.value
+        _vm.$set(_vm.data, "balance", $event.target.value)
       }
     }
   })]), _vm._v(" "), _c('small', {
@@ -59646,7 +61282,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     model: {
       value: (_vm.data.bank_id),
       callback: function($$v) {
-        _vm.data.bank_id = $$v
+        _vm.$set(_vm.data, "bank_id", $$v)
       },
       expression: "data.bank_id"
     }
@@ -59672,7 +61308,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     model: {
       value: (_vm.data.internal_control_id),
       callback: function($$v) {
-        _vm.data.internal_control_id = $$v
+        _vm.$set(_vm.data, "internal_control_id", $$v)
       },
       expression: "data.internal_control_id"
     }
@@ -59706,7 +61342,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.data.total = $event.target.value
+        _vm.$set(_vm.data, "total", $event.target.value)
       }
     }
   })]), _vm._v(" "), _c('small', {
@@ -60101,19 +61737,19 @@ if (false) {
 }
 
 /***/ }),
-/* 284 */
+/* 290 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(285)
+  __webpack_require__(291)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(287),
+  __webpack_require__(293),
   /* template */
-  __webpack_require__(288),
+  __webpack_require__(294),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -60121,7 +61757,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Creating\\CreateLocalDeposits.vue"
+Component.options.__file = "/var/www/html/softAdventist/resources/assets/js/components/Creating/CreateLocalDeposits.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] CreateLocalDeposits.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -60145,13 +61781,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 285 */
+/* 291 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(286);
+var content = __webpack_require__(292);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -60171,7 +61807,7 @@ if(false) {
 }
 
 /***/ }),
-/* 286 */
+/* 292 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)(undefined);
@@ -60185,14 +61821,14 @@ exports.push([module.i, "\n.mostrar[data-v-21e8185e] {\n    display: block;\n}\n
 
 
 /***/ }),
-/* 287 */
+/* 293 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_select__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_select___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue_select__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_datepicker__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_datepicker__ = __webpack_require__(18);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_datepicker___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_vue_datepicker__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lassehaslev_vue_confirm__ = __webpack_require__(8);
 //
@@ -60524,7 +62160,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 288 */
+/* 294 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -60569,7 +62205,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.data.number = $event.target.value
+        _vm.$set(_vm.data, "number", $event.target.value)
       }
     }
   })]), _vm._v(" "), _c('small', {
@@ -60600,7 +62236,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.data.date = $event.target.value
+        _vm.$set(_vm.data, "date", $event.target.value)
       }
     }
   })]), _vm._v(" "), _c('small', {
@@ -60631,7 +62267,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.data.balance = $event.target.value
+        _vm.$set(_vm.data, "balance", $event.target.value)
       }
     }
   })]), _vm._v(" "), _c('small', {
@@ -60656,7 +62292,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     model: {
       value: (_vm.data.bank_id),
       callback: function($$v) {
-        _vm.data.bank_id = $$v
+        _vm.$set(_vm.data, "bank_id", $$v)
       },
       expression: "data.bank_id"
     }
@@ -60682,7 +62318,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     model: {
       value: (_vm.data.internal_control_id),
       callback: function($$v) {
-        _vm.data.internal_control_id = $$v
+        _vm.$set(_vm.data, "internal_control_id", $$v)
       },
       expression: "data.internal_control_id"
     }
@@ -60716,7 +62352,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.data.total = $event.target.value
+        _vm.$set(_vm.data, "total", $event.target.value)
       }
     }
   })]), _vm._v(" "), _c('small', {
@@ -61007,19 +62643,19 @@ if (false) {
 }
 
 /***/ }),
-/* 289 */
+/* 295 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(290)
+  __webpack_require__(296)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(292),
+  __webpack_require__(298),
   /* template */
-  __webpack_require__(295),
+  __webpack_require__(301),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -61027,7 +62663,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Creating\\CreateCheck.vue"
+Component.options.__file = "/var/www/html/softAdventist/resources/assets/js/components/Creating/CreateCheck.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] CreateCheck.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -61051,13 +62687,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 290 */
+/* 296 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(291);
+var content = __webpack_require__(297);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -61077,7 +62713,7 @@ if(false) {
 }
 
 /***/ }),
-/* 291 */
+/* 297 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)(undefined);
@@ -61091,7 +62727,7 @@ exports.push([module.i, "\n.mostrar[data-v-30dfe946] {\n\t    display: block;\n}
 
 
 /***/ }),
-/* 292 */
+/* 298 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -61367,7 +63003,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
-__webpack_require__(293).polyfill();
+__webpack_require__(299).polyfill();
 /* harmony default export */ __webpack_exports__["default"] = ({
 	props: ['title', 'url', 'banks'],
 	components: { vSelect: __WEBPACK_IMPORTED_MODULE_0_vue_select___default.a },
@@ -61617,7 +63253,7 @@ __webpack_require__(293).polyfill();
 });
 
 /***/ }),
-/* 293 */
+/* 299 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(process, global) {var require;/*!
@@ -61757,7 +63393,7 @@ function flush() {
 function attemptVertx() {
   try {
     var r = require;
-    var vertx = __webpack_require__(294);
+    var vertx = __webpack_require__(300);
     vertxNext = vertx.runOnLoop || vertx.runOnContext;
     return useVertxTimer();
   } catch (e) {
@@ -62778,16 +64414,16 @@ return Promise$2;
 
 //# sourceMappingURL=es6-promise.map
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(30), __webpack_require__(10)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12), __webpack_require__(9)))
 
 /***/ }),
-/* 294 */
+/* 300 */
 /***/ (function(module, exports) {
 
 /* (ignored) */
 
 /***/ }),
-/* 295 */
+/* 301 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -62832,7 +64468,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.data.name = $event.target.value
+        _vm.$set(_vm.data, "name", $event.target.value)
       }
     }
   })]), _vm._v(" "), _c('small', {
@@ -62863,7 +64499,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.data.balance = $event.target.value
+        _vm.$set(_vm.data, "balance", $event.target.value)
       }
     }
   }) : _c('input', {
@@ -62884,7 +64520,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.data.balance = $event.target.value
+        _vm.$set(_vm.data, "balance", $event.target.value)
       }
     }
   })]), _vm._v(" "), _c('small', {
@@ -62915,7 +64551,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.data.number = $event.target.value
+        _vm.$set(_vm.data, "number", $event.target.value)
       }
     }
   })]), _vm._v(" "), _c('small', {
@@ -62946,7 +64582,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.data.date = $event.target.value
+        _vm.$set(_vm.data, "date", $event.target.value)
       }
     }
   })]), _vm._v(" "), _c('small', {
@@ -62968,7 +64604,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     model: {
       value: (_vm.data.bank),
       callback: function($$v) {
-        _vm.data.bank = $$v
+        _vm.$set(_vm.data, "bank", $$v)
       },
       expression: "data.bank"
     }
@@ -62992,7 +64628,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     model: {
       value: (_vm.data.type),
       callback: function($$v) {
-        _vm.data.type = $$v
+        _vm.$set(_vm.data, "type", $$v)
       },
       expression: "data.type"
     }
@@ -63024,7 +64660,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.data.detail = $event.target.value
+        _vm.$set(_vm.data, "detail", $event.target.value)
       }
     }
   })]), _vm._v(" "), _c('small', {
@@ -63048,7 +64684,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     model: {
       value: (_vm.data.controls),
       callback: function($$v) {
-        _vm.data.controls = $$v
+        _vm.$set(_vm.data, "controls", $$v)
       },
       expression: "data.controls"
     }
@@ -63512,19 +65148,19 @@ if (false) {
 }
 
 /***/ }),
-/* 296 */
+/* 302 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(297)
+  __webpack_require__(303)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(299),
+  __webpack_require__(305),
   /* template */
-  __webpack_require__(300),
+  __webpack_require__(306),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -63532,7 +65168,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Creating\\CreateChurchPublic.vue"
+Component.options.__file = "/var/www/html/softAdventist/resources/assets/js/components/Creating/CreateChurchPublic.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] CreateChurchPublic.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -63556,13 +65192,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 297 */
+/* 303 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(298);
+var content = __webpack_require__(304);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -63582,7 +65218,7 @@ if(false) {
 }
 
 /***/ }),
-/* 298 */
+/* 304 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)(undefined);
@@ -63596,7 +65232,7 @@ exports.push([module.i, "\n#map[data-v-64c4dd22] {\n    height: 300px;\n    widt
 
 
 /***/ }),
-/* 299 */
+/* 305 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -63866,7 +65502,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 300 */
+/* 306 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -63901,7 +65537,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     model: {
       value: (_vm.data.localfield),
       callback: function($$v) {
-        _vm.data.localfield = $$v
+        _vm.$set(_vm.data, "localfield", $$v)
       },
       expression: "data.localfield"
     }
@@ -63938,7 +65574,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.data.name = $event.target.value
+        _vm.$set(_vm.data, "name", $event.target.value)
       }
     }
   })]), _vm._v(" "), _c('small', {
@@ -63979,19 +65615,19 @@ if (false) {
 }
 
 /***/ }),
-/* 301 */
+/* 307 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(302)
+  __webpack_require__(308)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(304),
+  __webpack_require__(310),
   /* template */
-  __webpack_require__(305),
+  __webpack_require__(311),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -63999,7 +65635,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Editors\\EditorDepartament.vue"
+Component.options.__file = "/var/www/html/softAdventist/resources/assets/js/components/Editors/EditorDepartament.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] EditorDepartament.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -64023,13 +65659,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 302 */
+/* 308 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(303);
+var content = __webpack_require__(309);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -64049,7 +65685,7 @@ if(false) {
 }
 
 /***/ }),
-/* 303 */
+/* 309 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)(undefined);
@@ -64063,12 +65699,12 @@ exports.push([module.i, "\n.box-info {\n    font-size: 24px;\n    margin: 0 auto
 
 
 /***/ }),
-/* 304 */
+/* 310 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Lists_ListsDepartaments_vue__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Lists_ListsDepartaments_vue__ = __webpack_require__(17);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Lists_ListsDepartaments_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__Lists_ListsDepartaments_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_select__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_select___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_vue_select__);
@@ -64393,7 +66029,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 305 */
+/* 311 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -64540,19 +66176,19 @@ if (false) {
 }
 
 /***/ }),
-/* 306 */
+/* 312 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(307)
+  __webpack_require__(313)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(309),
+  __webpack_require__(315),
   /* template */
-  __webpack_require__(310),
+  __webpack_require__(316),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -64560,7 +66196,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Lists\\ListsIncomeAccounts.vue"
+Component.options.__file = "/var/www/html/softAdventist/resources/assets/js/components/Lists/ListsIncomeAccounts.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ListsIncomeAccounts.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -64584,13 +66220,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 307 */
+/* 313 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(308);
+var content = __webpack_require__(314);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -64610,7 +66246,7 @@ if(false) {
 }
 
 /***/ }),
-/* 308 */
+/* 314 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)(undefined);
@@ -64624,7 +66260,7 @@ exports.push([module.i, "\n.tittle-2 {\n    text-align:left !important;\n    fon
 
 
 /***/ }),
-/* 309 */
+/* 315 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -64879,7 +66515,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 310 */
+/* 316 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -64900,7 +66536,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     },
     on: {
       "click": function($event) {
-        if (!('button' in $event) && _vm._k($event.keyCode, "prevet")) { return null; }
+        if (!('button' in $event) && _vm._k($event.keyCode, "prevet", undefined, $event.key)) { return null; }
         _vm.all(_vm.datos.path, _vm.datos.total)
       }
     }
@@ -64915,7 +66551,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     },
     on: {
       "click": function($event) {
-        if (!('button' in $event) && _vm._k($event.keyCode, "prevet")) { return null; }
+        if (!('button' in $event) && _vm._k($event.keyCode, "prevet", undefined, $event.key)) { return null; }
         _vm.all(_vm.datos.path, 15)
       }
     }
@@ -64930,7 +66566,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     },
     on: {
       "click": function($event) {
-        if (!('button' in $event) && _vm._k($event.keyCode, "prevet")) { return null; }
+        if (!('button' in $event) && _vm._k($event.keyCode, "prevet", undefined, $event.key)) { return null; }
         _vm.styleType($event)
       }
     }
@@ -65286,19 +66922,19 @@ if (false) {
 }
 
 /***/ }),
-/* 311 */
+/* 317 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(312)
+  __webpack_require__(318)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(314),
+  __webpack_require__(320),
   /* template */
-  __webpack_require__(315),
+  __webpack_require__(321),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -65306,7 +66942,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Lists\\ListsExpenseAccounts.vue"
+Component.options.__file = "/var/www/html/softAdventist/resources/assets/js/components/Lists/ListsExpenseAccounts.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ListsExpenseAccounts.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -65330,13 +66966,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 312 */
+/* 318 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(313);
+var content = __webpack_require__(319);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -65356,7 +66992,7 @@ if(false) {
 }
 
 /***/ }),
-/* 313 */
+/* 319 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)(undefined);
@@ -65370,7 +67006,7 @@ exports.push([module.i, "\n.tittle-2 {\n    text-align:left !important;\n    fon
 
 
 /***/ }),
-/* 314 */
+/* 320 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -65623,7 +67259,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 315 */
+/* 321 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -65644,7 +67280,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     },
     on: {
       "click": function($event) {
-        if (!('button' in $event) && _vm._k($event.keyCode, "prevet")) { return null; }
+        if (!('button' in $event) && _vm._k($event.keyCode, "prevet", undefined, $event.key)) { return null; }
         _vm.all(_vm.datos.path, _vm.datos.total)
       }
     }
@@ -65659,7 +67295,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     },
     on: {
       "click": function($event) {
-        if (!('button' in $event) && _vm._k($event.keyCode, "prevet")) { return null; }
+        if (!('button' in $event) && _vm._k($event.keyCode, "prevet", undefined, $event.key)) { return null; }
         _vm.all(_vm.datos.path, 15)
       }
     }
@@ -65674,7 +67310,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     },
     on: {
       "click": function($event) {
-        if (!('button' in $event) && _vm._k($event.keyCode, "prevet")) { return null; }
+        if (!('button' in $event) && _vm._k($event.keyCode, "prevet", undefined, $event.key)) { return null; }
         _vm.styleType($event)
       }
     }
@@ -66007,19 +67643,19 @@ if (false) {
 }
 
 /***/ }),
-/* 316 */
+/* 322 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(317)
+  __webpack_require__(323)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(319),
+  __webpack_require__(325),
   /* template */
-  __webpack_require__(320),
+  __webpack_require__(326),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -66027,7 +67663,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Lists\\ListWeeklyInfo.vue"
+Component.options.__file = "/var/www/html/softAdventist/resources/assets/js/components/Lists/ListWeeklyInfo.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ListWeeklyInfo.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -66051,13 +67687,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 317 */
+/* 323 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(318);
+var content = __webpack_require__(324);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -66077,7 +67713,7 @@ if(false) {
 }
 
 /***/ }),
-/* 318 */
+/* 324 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)(undefined);
@@ -66091,13 +67727,13 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 
 
 /***/ }),
-/* 319 */
+/* 325 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lassehaslev_vue_confirm__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_numeral__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_numeral__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_numeral___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_numeral__);
 //
 //
@@ -66364,7 +68000,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 320 */
+/* 326 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -66748,19 +68384,19 @@ if (false) {
 }
 
 /***/ }),
-/* 321 */
+/* 327 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(322)
+  __webpack_require__(328)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(324),
+  __webpack_require__(330),
   /* template */
-  __webpack_require__(325),
+  __webpack_require__(331),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -66768,7 +68404,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Lists\\ListsMembers.vue"
+Component.options.__file = "/var/www/html/softAdventist/resources/assets/js/components/Lists/ListsMembers.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ListsMembers.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -66792,13 +68428,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 322 */
+/* 328 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(323);
+var content = __webpack_require__(329);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -66818,7 +68454,7 @@ if(false) {
 }
 
 /***/ }),
-/* 323 */
+/* 329 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)(undefined);
@@ -66832,7 +68468,7 @@ exports.push([module.i, "\n.tittle-2 {\n    text-align: left !important;\n    fo
 
 
 /***/ }),
-/* 324 */
+/* 330 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -67079,7 +68715,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 325 */
+/* 331 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -67100,7 +68736,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     },
     on: {
       "click": function($event) {
-        if (!('button' in $event) && _vm._k($event.keyCode, "prevet")) { return null; }
+        if (!('button' in $event) && _vm._k($event.keyCode, "prevet", undefined, $event.key)) { return null; }
         _vm.all(_vm.datos.path, _vm.datos.total)
       }
     }
@@ -67115,7 +68751,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     },
     on: {
       "click": function($event) {
-        if (!('button' in $event) && _vm._k($event.keyCode, "prevet")) { return null; }
+        if (!('button' in $event) && _vm._k($event.keyCode, "prevet", undefined, $event.key)) { return null; }
         _vm.all(_vm.datos.path, 15)
       }
     }
@@ -67130,7 +68766,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     },
     on: {
       "click": function($event) {
-        if (!('button' in $event) && _vm._k($event.keyCode, "prevet")) { return null; }
+        if (!('button' in $event) && _vm._k($event.keyCode, "prevet", undefined, $event.key)) { return null; }
         _vm.styleType($event)
       }
     }
@@ -67463,19 +69099,19 @@ if (false) {
 }
 
 /***/ }),
-/* 326 */
+/* 332 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(327)
+  __webpack_require__(333)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(329),
+  __webpack_require__(335),
   /* template */
-  __webpack_require__(330),
+  __webpack_require__(336),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -67483,7 +69119,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Lists\\ListsChecks.vue"
+Component.options.__file = "/var/www/html/softAdventist/resources/assets/js/components/Lists/ListsChecks.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ListsChecks.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -67507,13 +69143,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 327 */
+/* 333 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(328);
+var content = __webpack_require__(334);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -67533,7 +69169,7 @@ if(false) {
 }
 
 /***/ }),
-/* 328 */
+/* 334 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)(undefined);
@@ -67547,7 +69183,7 @@ exports.push([module.i, "\n.tittle-2 {\n    text-align:left !important;\n    fon
 
 
 /***/ }),
-/* 329 */
+/* 335 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -67802,7 +69438,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 330 */
+/* 336 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -67823,7 +69459,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     },
     on: {
       "click": function($event) {
-        if (!('button' in $event) && _vm._k($event.keyCode, "prevet")) { return null; }
+        if (!('button' in $event) && _vm._k($event.keyCode, "prevet", undefined, $event.key)) { return null; }
         _vm.all(_vm.datos.path, _vm.datos.total)
       }
     }
@@ -67838,7 +69474,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     },
     on: {
       "click": function($event) {
-        if (!('button' in $event) && _vm._k($event.keyCode, "prevet")) { return null; }
+        if (!('button' in $event) && _vm._k($event.keyCode, "prevet", undefined, $event.key)) { return null; }
         _vm.all(_vm.datos.path, 15)
       }
     }
@@ -67853,7 +69489,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     },
     on: {
       "click": function($event) {
-        if (!('button' in $event) && _vm._k($event.keyCode, "prevet")) { return null; }
+        if (!('button' in $event) && _vm._k($event.keyCode, "prevet", undefined, $event.key)) { return null; }
         _vm.styleType($event)
       }
     }
@@ -68218,19 +69854,19 @@ if (false) {
 }
 
 /***/ }),
-/* 331 */
+/* 337 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(332)
+  __webpack_require__(338)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(334),
+  __webpack_require__(340),
   /* template */
-  __webpack_require__(335),
+  __webpack_require__(341),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -68238,7 +69874,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Lists\\ListsInternalControls.vue"
+Component.options.__file = "/var/www/html/softAdventist/resources/assets/js/components/Lists/ListsInternalControls.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ListsInternalControls.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -68262,13 +69898,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 332 */
+/* 338 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(333);
+var content = __webpack_require__(339);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -68288,7 +69924,7 @@ if(false) {
 }
 
 /***/ }),
-/* 333 */
+/* 339 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)(undefined);
@@ -68302,7 +69938,7 @@ exports.push([module.i, "\n.tittle-2 {\n\t    text-align: left !important;\n\t  
 
 
 /***/ }),
-/* 334 */
+/* 340 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -68576,7 +70212,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 335 */
+/* 341 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -68597,7 +70233,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     },
     on: {
       "click": function($event) {
-        if (!('button' in $event) && _vm._k($event.keyCode, "prevet")) { return null; }
+        if (!('button' in $event) && _vm._k($event.keyCode, "prevet", undefined, $event.key)) { return null; }
         _vm.all(_vm.datos.path, _vm.datos.total)
       }
     }
@@ -68612,7 +70248,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     },
     on: {
       "click": function($event) {
-        if (!('button' in $event) && _vm._k($event.keyCode, "prevet")) { return null; }
+        if (!('button' in $event) && _vm._k($event.keyCode, "prevet", undefined, $event.key)) { return null; }
         _vm.all(_vm.datos.path, 15)
       }
     }
@@ -68627,7 +70263,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     },
     on: {
       "click": function($event) {
-        if (!('button' in $event) && _vm._k($event.keyCode, "prevet")) { return null; }
+        if (!('button' in $event) && _vm._k($event.keyCode, "prevet", undefined, $event.key)) { return null; }
         _vm.styleType($event)
       }
     }
@@ -69002,19 +70638,19 @@ if (false) {
 }
 
 /***/ }),
-/* 336 */
+/* 342 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(337)
+  __webpack_require__(343)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(339),
+  __webpack_require__(345),
   /* template */
-  __webpack_require__(340),
+  __webpack_require__(346),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -69022,7 +70658,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\Lists\\ListsCheckExpenses.vue"
+Component.options.__file = "/var/www/html/softAdventist/resources/assets/js/components/Lists/ListsCheckExpenses.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ListsCheckExpenses.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -69046,13 +70682,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 337 */
+/* 343 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(338);
+var content = __webpack_require__(344);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -69072,7 +70708,7 @@ if(false) {
 }
 
 /***/ }),
-/* 338 */
+/* 344 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)(undefined);
@@ -69086,7 +70722,7 @@ exports.push([module.i, "\n.tittle-2 {\n    text-align:left !important;\n    fon
 
 
 /***/ }),
-/* 339 */
+/* 345 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -69338,7 +70974,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 340 */
+/* 346 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -69359,7 +70995,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     },
     on: {
       "click": function($event) {
-        if (!('button' in $event) && _vm._k($event.keyCode, "prevet")) { return null; }
+        if (!('button' in $event) && _vm._k($event.keyCode, "prevet", undefined, $event.key)) { return null; }
         _vm.all(_vm.datos.path, _vm.datos.total)
       }
     }
@@ -69374,7 +71010,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     },
     on: {
       "click": function($event) {
-        if (!('button' in $event) && _vm._k($event.keyCode, "prevet")) { return null; }
+        if (!('button' in $event) && _vm._k($event.keyCode, "prevet", undefined, $event.key)) { return null; }
         _vm.all(_vm.datos.path, 15)
       }
     }
@@ -69389,7 +71025,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     },
     on: {
       "click": function($event) {
-        if (!('button' in $event) && _vm._k($event.keyCode, "prevet")) { return null; }
+        if (!('button' in $event) && _vm._k($event.keyCode, "prevet", undefined, $event.key)) { return null; }
         _vm.styleType($event)
       }
     }
@@ -69728,15 +71364,15 @@ if (false) {
 }
 
 /***/ }),
-/* 341 */
+/* 347 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(342),
+  __webpack_require__(348),
   /* template */
-  __webpack_require__(343),
+  __webpack_require__(349),
   /* styles */
   null,
   /* scopeId */
@@ -69744,7 +71380,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\TransferAccounts.vue"
+Component.options.__file = "/var/www/html/softAdventist/resources/assets/js/components/TransferAccounts.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] TransferAccounts.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -69768,7 +71404,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 342 */
+/* 348 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -70026,7 +71662,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 343 */
+/* 349 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -70158,7 +71794,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     model: {
       value: (_vm.data.income_account),
       callback: function($$v) {
-        _vm.data.income_account = $$v
+        _vm.$set(_vm.data, "income_account", $$v)
       },
       expression: "data.income_account"
     }
@@ -70185,7 +71821,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     model: {
       value: (_vm.data.income_account),
       callback: function($$v) {
-        _vm.data.income_account = $$v
+        _vm.$set(_vm.data, "income_account", $$v)
       },
       expression: "data.income_account"
     }
@@ -70222,19 +71858,19 @@ if (false) {
 }
 
 /***/ }),
-/* 344 */
+/* 350 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(345)
+  __webpack_require__(351)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(347),
+  __webpack_require__(353),
   /* template */
-  __webpack_require__(348),
+  __webpack_require__(354),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -70242,7 +71878,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\DepositLocalField.vue"
+Component.options.__file = "/var/www/html/softAdventist/resources/assets/js/components/DepositLocalField.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] DepositLocalField.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -70266,13 +71902,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 345 */
+/* 351 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(346);
+var content = __webpack_require__(352);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -70292,7 +71928,7 @@ if(false) {
 }
 
 /***/ }),
-/* 346 */
+/* 352 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)(undefined);
@@ -70306,14 +71942,14 @@ exports.push([module.i, "\n.mostrar[data-v-2b6975ed] {\n    display: block;\n}\n
 
 
 /***/ }),
-/* 347 */
+/* 353 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_select__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_select___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue_select__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_datepicker__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_datepicker__ = __webpack_require__(18);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_datepicker___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_vue_datepicker__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lassehaslev_vue_confirm__ = __webpack_require__(8);
 //
@@ -70738,7 +72374,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 348 */
+/* 354 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -70784,7 +72420,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.data.number = $event.target.value
+        _vm.$set(_vm.data, "number", $event.target.value)
       }
     }
   })]), _vm._v(" "), _c('small', {
@@ -70815,7 +72451,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.data.date = $event.target.value
+        _vm.$set(_vm.data, "date", $event.target.value)
       }
     }
   })]), _vm._v(" "), _c('small', {
@@ -70841,7 +72477,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     model: {
       value: (_vm.data.bank),
       callback: function($$v) {
-        _vm.data.bank = $$v
+        _vm.$set(_vm.data, "bank", $$v)
       },
       expression: "data.bank"
     }
@@ -70864,7 +72500,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     model: {
       value: (_vm.data.check),
       callback: function($$v) {
-        _vm.data.check = $$v
+        _vm.$set(_vm.data, "check", $$v)
       },
       expression: "data.check"
     }
@@ -71248,15 +72884,15 @@ if (false) {
 }
 
 /***/ }),
-/* 349 */
+/* 355 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(350),
+  __webpack_require__(356),
   /* template */
-  __webpack_require__(351),
+  __webpack_require__(357),
   /* styles */
   null,
   /* scopeId */
@@ -71264,7 +72900,7 @@ var Component = __webpack_require__(1)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "F:\\laragon\\www\\softAdventist\\resources\\assets\\js\\components\\RegistroExpenses.vue"
+Component.options.__file = "/var/www/html/softAdventist/resources/assets/js/components/RegistroExpenses.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] RegistroExpenses.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -71288,7 +72924,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 350 */
+/* 356 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -71681,7 +73317,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 351 */
+/* 357 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -71761,7 +73397,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.data.token_check = $event.target.value
+        _vm.$set(_vm.data, "token_check", $event.target.value)
       }
     }
   })])])])]) : _vm._e(), _vm._v(" "), _vm._m(0), _vm._v(" "), _c('div', {
@@ -71790,7 +73426,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.data.number = $event.target.value
+        _vm.$set(_vm.data, "number", $event.target.value)
       }
     }
   })]), _vm._v(" "), _c('small', {
@@ -71821,7 +73457,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.data.date = $event.target.value
+        _vm.$set(_vm.data, "date", $event.target.value)
       }
     }
   })]), _vm._v(" "), _c('small', {
@@ -71852,7 +73488,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.data.balance = $event.target.value
+        _vm.$set(_vm.data, "balance", $event.target.value)
       }
     }
   })]), _vm._v(" "), _c('small', {
@@ -71883,7 +73519,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.data.detail = $event.target.value
+        _vm.$set(_vm.data, "detail", $event.target.value)
       }
     }
   })]), _vm._v(" "), _c('small', {
@@ -71908,7 +73544,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     model: {
       value: (_vm.data.expense_account),
       callback: function($$v) {
-        _vm.data.expense_account = $$v
+        _vm.$set(_vm.data, "expense_account", $$v)
       },
       expression: "data.expense_account"
     }
@@ -72064,7 +73700,7 @@ if (false) {
 }
 
 /***/ }),
-/* 352 */
+/* 358 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

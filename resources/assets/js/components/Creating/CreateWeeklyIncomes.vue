@@ -58,7 +58,7 @@
                             <div class="input-group ">
                                 <span class="input-group-addon"><i class="fa fa-cog"></i></span>
                                 <input type="number" v-model="data.envelope_number" class="form-control">
-                                <input type="hidden" v-model="data.internal_control_id" :value="internal"
+                                <input type="hidden" v-model="data.internal_control_id" value="internal"
                                        class="form-control">
                             </div>
                             <small class="help-block">{{errors.envelope_number}}</small>
