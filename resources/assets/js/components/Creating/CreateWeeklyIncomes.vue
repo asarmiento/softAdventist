@@ -58,7 +58,7 @@
                             <div class="input-group ">
                                 <span class="input-group-addon"><i class="fa fa-cog"></i></span>
                                 <input type="number" v-model="data.envelope_number" class="form-control">
-                                
+
                             </div>
                             <small class="help-block">{{errors.envelope_number}}</small>
                         </div>
@@ -248,7 +248,7 @@
                     tithes: '',
                     offering: '',
                     background_inversion: '',
-                    internal_control_id: '',
+                    internal_control_id: this.internals,
                 },
                 campo: {
                     balance: '',
@@ -285,10 +285,10 @@
         created() {
            this.$http.get('/tesoreria/list-member-weekly/'+this.rows.saturday)
                 .then((response) => {
+                  console.log()
                     this.listMembers = response.data.infoWeeklys;
                     this.totalBalance = response.data.totalBalance;
-                    this.data.internal_control_id = response.data.id;
-                    this.totalRows = response.data.totalRows;
+                   this.totalRows = response.data.totalRows;
                     this.temp_local_field_incomes = response.data.tempLocalFieldIncomes;
                     this.temp_incomes = response.data.tempIncomes;
                     this.titleMembers = response.data.title;
@@ -305,7 +305,7 @@
             },
             internal() {
                 var dato = JSON.parse(this.internalcontrol);
-                return this.data.internal_control_id = dato.id;
+                return  dato.id;
             },
             dataMembers() {
                 return JSON.parse(this.members);
@@ -323,6 +323,7 @@
 
         methods: {
             send: function (event) {
+              this.data.internal_control_id =        this.internal;
                 var self = this;
                 axios.post('/tesoreria/save-weekly-incomes', this.data)
                     .then(response => {
