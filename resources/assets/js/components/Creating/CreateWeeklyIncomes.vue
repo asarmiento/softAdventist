@@ -288,6 +288,7 @@
                 .then((response) => {
                     this.listMembers = response.data.infoWeeklys;
                     this.totalBalance = response.data.totalBalance;
+                    this.data.internal_control_id = response.data.id;
                     this.totalRows = response.data.totalRows;
                     this.temp_local_field_incomes = response.data.tempLocalFieldIncomes;
                     this.temp_incomes = response.data.tempIncomes;
