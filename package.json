@@ -41,6 +41,7 @@
     "vue2-multi-uploader": "^1.4.1",
     "vue2-simplert": "^0.4.0",
     "vuejs-datepicker": "^0.9.1",
-    "vuejs-paginator": "^2.0.1"
+    "vuejs-paginator": "^2.0.1",
+    "webpack-livereload-plugin": "^1.0.0"
   }
 }

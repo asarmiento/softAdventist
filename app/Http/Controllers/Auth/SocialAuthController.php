@@ -30,15 +30,15 @@
 			{
 				// En caso de que no exista creamos un nuevo usuario con sus datos.
 				$user = User::create([
-					                     'identification_card' => '',
-					                     'name'                => $social_user->name,
-					                     'last_name'           => $social_user->name,
-					                     'password'            => bcrypt('event'),
-					                     'email'               => $social_user->email,
-					                     'type_user'           => 'event',
-					                     'avatar'              => $social_user->avatar,
-				                     ]);
-				\Log::info(json_encode($social_user));
+                'identification_card' => '',
+                'name'                => $social_user->name,
+                'last_name'           => $social_user->name,
+                'password'            => bcrypt('event'),
+                'email'               => $social_user->email,
+                'type_user'           => 'event',
+                'avatar'              => $social_user->avatar,
+            ]);
+                \Log::info(json_encode($social_user));
 				
 				return $this->authAndRedirect($user); // Login y redirección
 			}

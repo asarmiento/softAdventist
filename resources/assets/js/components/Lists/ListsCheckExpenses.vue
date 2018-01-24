@@ -195,6 +195,7 @@
             },
             pagePre(url) {
                 url += '&perPage=' + this.datos.per_page
+                url += '&search=' + this.txtSearch
                 var self = this;
                 this.$http.get(url).then((response) => {
                     self.datos = response.data.model;
@@ -203,6 +204,7 @@
             },
             pageNext(url) {
                 url += '&perPage=' + this.datos.per_page
+                url += '&search=' + this.txtSearch
                 var self = this;
                 this.$http.get(url).then((response) => {
                     self.datos = response.data.model;
@@ -214,6 +216,7 @@
                     var self = this;
                     url += '?page=' + number
                     url += '&perPage=' + this.datos.per_page
+                    url += '&search=' + this.txtSearch
                     this.$http.get(url).then((response) => {
                         self.datos = response.data.model;
                         self.my_pages = response.data.my_pages;
@@ -222,7 +225,7 @@
             },
             perPage(url, number) {
                 var self = this;
-                this.$http.get(url + '?perPage=' + number).then((response) => {
+                this.$http.get(url + '?perPage=' + number + '&search=' + this.txtSearch).then((response) => {
                     self.datos = response.data.model;
                     self.my_pages = response.data.my_pages;
                 });
@@ -234,7 +237,7 @@
                 } else {
                     this.typeAll = true;
                 }
-                this.$http.get(url + '?all=' + total).then((response) => {
+                this.$http.get(url + '?all=' + total + '&search=' + this.txtSearch).then((response) => {
                     self.datos = response.data.model;
                     self.my_pages = response.data.my_pages;
                 });
