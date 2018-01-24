@@ -63,6 +63,7 @@ class CheckController extends Controller
     {
         DB::beginTransaction();
         $data = $request->all();
+
         //verificamos que el numero de ck no exista ya registrado.
         if ($this->checkRepository->getModel()->where('number', $data['number'])->count() > 0):
             return response()->json([ 'name' => [ 'Cuenta Bancaria: '.$data['number'].' ya Existe' ] ],
@@ -82,7 +83,7 @@ class CheckController extends Controller
         $check = $this->checkRepository->getModel();
         $check->fill($data);
         if ($check->save()):
-            if ($data['controls']) {
+            if (is_array($data['controls'])) {
                 foreach ($data['controls'] as $internal) {
                     $idInternal = $this->internalControlRepository->token($internal['value']);
                     $check->internalControl()->attach($idInternal->id, [

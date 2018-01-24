@@ -24,6 +24,7 @@ class CheckExpenseRepository extends BaseRepository
 
     public function filterChurchRelationNot($relation, $check = null)
     {
+
         return $this->newQuery()->whereHas($relation, function ($q) {
             $q->where('church_id', 1);
         })->where('status', 'no aplicado')->where('check_id', $check)->get();

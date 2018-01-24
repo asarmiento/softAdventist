@@ -169,9 +169,6 @@
                     </div>
                 </div>
             </div>
-
-
-
             <div class="panel-heading">
                 <div class="panel-body">
                     <div class="bootstrap-table">

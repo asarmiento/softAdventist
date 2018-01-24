@@ -61,7 +61,6 @@ class ChurchDepositController extends Controller
     {
 
         $data = $request->all();
-
         try {
             if (number_format($data['balance'],2,'.','') > number_format($data['total'],2,'.','')):
                 return response()->json([
