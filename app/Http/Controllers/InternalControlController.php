@@ -34,7 +34,8 @@ class InternalControlController extends Controller
 
     public function index()
     {
-        $insternalControls  = $this->internalControlRepository->getModel()->where('church_id',userChurch()->id)->get();
+        $insternalControls  = $this->internalControlRepository->getModel()
+            ->where('church_id',userChurch()->id)->get();
         return view('IncomesAndExpenses.ListInternalControl',compact('insternalControls'));
     }
 

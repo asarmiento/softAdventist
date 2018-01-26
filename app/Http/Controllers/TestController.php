@@ -10,7 +10,11 @@
 namespace App\Http\Controllers;
 
 
+use App\Entities\CheckExpense;
+use App\Entities\Departaments\ExpenseAccount;
+use App\Entities\Departaments\IncomeAccount;
 use App\Entities\User;
+use App\Entities\WeeklyIncome;
 use App\Entities\YoungBoy;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Mail;
@@ -88,6 +92,26 @@ return redirect('/registrado/inscription');
     {
         $boy = YoungBoy::find(12);
         return view('vendor.notifications.emailerror',compact('boy'));
+    }
+
+
+    public function updateIncome()
+    {
+        $incomes = IncomeAccount::all();
+
+        foreach ($incomes AS $income){
+            $account = WeeklyIncome::where('income_account_id',$income->id)->sum('balance');
+
+            IncomeAccount::where('id',$income->id)->update(['balance'=>($income->initial+$account)]);
+        }
+
+        $expenses = ExpenseAccount::all();
+
+        foreach ($expenses AS $expens){
+            $accountE = CheckExpense::where('expense_account_id',$expens->id)->sum('balance');
+
+            ExpenseAccount::where('id',$expens->id)->update(['balance'=>($accountE)]);
+        }
     }
 
 

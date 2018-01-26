@@ -36,11 +36,12 @@ Route::get('/verification/{token}', ['uses'=>'Auth\RegisterController@verificaci
 Route::get('/activation/{email}', ['uses'=>'Auth\RegisterController@activation','as'=>'active']);
 Route::get('contacto', ['uses'=>'Auth\RegisterController@contact','as'=>'contact']);
 Route::post('contacto', ['uses'=>'Auth\RegisterController@contactPost','as'=>'contacto']);
+Route::get('test/update-income', ['uses'=>'TestController@updateIncome','as'=>'test']);
 /*Route::get('iglesia', ['uses'=>'Church\ChurchController@create','as'=>'create-church']);
 
     Route::group(['prefix'=>'registrado','middleware'=>'auth'],function (){
 
-    Route::get('test/index', ['uses'=>'TestController@index','as'=>'test']);
+    Route::get('test/index', ['uses'=>'TestController@updateIncome','as'=>'test']);
     Route::get('test/pendiente', ['uses'=>'TestController@pendiente','as'=>'pendiente']);
     Route::get('test/ver', ['uses'=>'TestController@ver','as'=>'test']);
     Route::get('test/mensaje', ['uses'=>'TestController@message','as'=>'test-mensaje']);
