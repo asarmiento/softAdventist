@@ -19,9 +19,12 @@
         <div class="cls-content">
             <div class="pull-right  " style="margin: 5px;"><a class="btn btn-default" href="{{route('contact')}}">Contactanos <i class="fa fa-send"></i></a></div>
             <div class="pull-right " style="margin: 5px;"><a class="btn btn-default" href="{{route('new-church')}}">Nueva Iglesia <i class="fa fa-map-marker"></i></a></div>
+            <div class="panel-body panel">
+                <h1>Inscripciones al Congreso Juvenil 2018 ACSCR <strong>“Se buscan Jovenes con Identidad”</strong>  Sitio de inscripción para directores.
+                    Si no es director acuda a su director para que pueda hacer la inscripción</h1>
+            </div>
             <div class="cls-content-sm panel">
-
-                <div class="panel-body">
+                 <div class="panel-body">
                     <div class="mar-ver pad-btm">
                         <h3 class="h4 mar-no">Iniciar Sesión</h3>
                         <p class="text-muted">Inicie Sesión con su Email</p>
