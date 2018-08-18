@@ -36,10 +36,10 @@ class Controller extends BaseController
 
     public function errores($data)
     {
-        return Response::json([
+        return [
             'success' => false,
             'errors' => $data,
-        ]);
+        ];
     }
 
     public function CreacionArray($data, $delimiter, $md5 = false)

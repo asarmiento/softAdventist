@@ -54,18 +54,25 @@
                         </div>
                         <button class="btn btn-primary btn-lg btn-block" type="submit">Iniciar Sesion</button>
                     </form>
-<div style="padding: 5px">
+<!--div style="padding: 5px">
 
 <i>Inicia Sesión Con :</i><a class="" href="{{ route('social.auth', 'facebook') }}">
     <i class="fa fa-facebook-official fa-4x" aria-hidden="true"></i>
 </a>
 
-</div>
+</div-->
 
                 </div>
 
-                <div class="pad-all">
-                    <a class="btn-link mar-rgt" href="{{ route('password.request') }}">
+                <div class="pad-all btn btn-danger">
+                    <a class="btn-link " href="{{ route('register') }}">
+                        Registrame
+                    </a>
+
+                    </br>
+                </div>
+                    <div class="pad-all ">
+                        <a class="btn-link mar-rgt" href="{{ route('password.request') }}">
                         Restablecer mi Contraseña!
                     </a>
                 </br>

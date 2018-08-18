@@ -9,12 +9,12 @@
 | routes are loaded by the RouteServiceProvider within a group which
 | contains the "web" middleware group. Now create something great!
 |
-*/
+*
 
 Route::get('/', function () {
     return view('auth.login');
-});
-Route::get('/ja', function () {
+});*/
+Route::get('/', function () {
     return view('auth.loginJa');
 });
 
@@ -195,7 +195,7 @@ Route::post('save-church-public', ['uses'=>'Church\ChurchController@store','as'=
         Route::get('transferencias-de-cuentas', ['uses'=>'Church\ChurchController@transfers','as'=>'transfer-of-accounts']);
         Route::post('save-transferencias', 'Church\ChurchController@transfersStore');
 
-        Route::get('lista-miembro1s', ['uses'=>'MemberController@index','as'=>'charge-members']);
+        Route::get('registro-miembros-cobros', ['uses'=>'MemberController@registerMemMatEscSab','as'=>'regMemMatEscSab']);
 
 
         Route::get('lista-miembros1', ['uses'=>'MemberController@index','as'=>'list-departament']);

@@ -29,10 +29,9 @@
     </script>
 </head>
 <body>
-
 @yield('content')
 
-
+</div>
 
 
     <!-- Scripts -->

@@ -20,6 +20,8 @@
         <!--Navbar Dropdown-->
         <!--================================-->
         <div class="navbar-content clearfix">
+            @if(currentUser())
+            @if(currentUser()->type == 'admin')
             <ul class="nav navbar-top-links pull-left">
 
                 <!--Navigation toogle button-->
@@ -70,7 +72,7 @@
                                     <li><a href="{{route('profile')}}">Mi Perfil</a></li>
                                     <li><a href="{{route('new-member')}}">Agregar Miembros</a></li>
                                     <li><a href="{{route('list-members')}}">Lista Miembros</a></li>
-                                    <li><a href="{{route('charge-members')}}">Cobro a Miembros</a></li>
+                                    <li><a href="{{route('regMemMatEscSab')}}">Cobro a Miembros</a></li>
                                     <li><a href="#" class="disabled"></a></li>
                                     <li class="divider"></li>
                                     <li class="dropdown-header">Cuentas Bancarias</li>
@@ -279,6 +281,8 @@
                     </a>
                 </li>
             </ul>
+                @endif
+                @endif
         </div>
         <!--================================-->
         <!--End Navbar Dropdown-->

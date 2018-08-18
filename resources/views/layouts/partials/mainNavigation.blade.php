@@ -1,6 +1,9 @@
 <!--MAIN NAVIGATION-->
 <!--===================================================-->
 <nav id="mainnav-container">
+
+
+
     <div id="mainnav">
         <!--Menu-->
         <!--================================-->
@@ -9,7 +12,10 @@
                 <div class="nano-content">
                     <!--Profile Widget-->
                     <!--================================-->
+                    @if(currentUser())
+                    @if(currentUser()->type == 'admin')
                     <div id="mainnav-profile" class="mainnav-profile">
+
                         <div class="profile-wrap">
                             <div class="pad-btm">
                                 <span class="label label-success pull-right"></span>
@@ -35,6 +41,7 @@
                                 <i class="pli-coin icon-lg icon-fw"></i> Link 3
                             </a>
                         </div>
+
                     </div>
                     <!--Shortcut buttons-->
                     <!--================================-->
@@ -257,6 +264,8 @@
                     </div>
                     <!--================================-->
                     <!--End widget-->
+                    @endif
+                    @endif
                 </div>
             </div>
         </div>

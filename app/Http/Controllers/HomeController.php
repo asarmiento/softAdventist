@@ -28,7 +28,11 @@ class HomeController extends Controller
 
     public function index()
     {
-        return view('home');
+        if (auth()->user()->type == 'event'){
+            return view('home');
+    }else {
+            return view('registered');
+        }
     }
     public function image($type,$month,$name)
     {try {

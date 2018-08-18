@@ -1,11 +1,12 @@
-@extends('layouts.app')
+@extends('layouts.system')
 
 @section('content')
 
-                <div class="panel-heading">Regístrate: <strong>En este paso solo estas creando un usuario para poder ingresar al sistema, debes verificar tu email despues de registrarte, buscalo en la Bandeja de entrada o en Spam(correos no deseados)</strong></div>
-                <div class="panel-body">
+                <div class="panel-body"><h1>Regístrate: <strong>En este paso solo estas creando un usuario para poder
+                            ingresar al sistema, debes verificar tu email despues de registrarte, buscalo en la Bandeja de entrada o en Spam(correos no deseados)</strong></h1></div>
+                <div class="panel-content panel col-lg-12">
                     
-                    <form class="form-horizontal" role="form" method="POST" action="{{ route('register') }}">
+                    <form class="form-horizontal " style="margin-top: 40px" role="form" method="POST" action="{{ route('register') }}">
                         {{ csrf_field() }}
 
                         <div class="form-group{{ $errors->has('identification_card') ? ' has-error' : '' }}">
@@ -61,7 +62,24 @@
                                 @endif
                             </div>
                         </div>
+                        <div class="form-group{{ $errors->has('church_id') ? ' has-error' : '' }}">
+                            <label for="email" class="col-md-4 control-label">Iglesia que Pertenece</label>
 
+                            <div class="col-md-6">
+                                <select name="church_id" class="form-control" required>
+                                    <option value="">Seleccione una Iglesia</option>
+                                    @foreach(\App\Entities\Church::where('type',true)->get() AS $church)
+                                    <option value="{{$church->id}}">{{$church->name}}</option>
+                                    @endforeach
+                                </select>
+
+                                @if ($errors->has('church_id'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('church_id') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
                         <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
                             <label for="password" class="col-md-4 control-label">Contraseña</label>
 
@@ -84,18 +102,26 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <div class="col-md-6 col-md-offset-4">
+                        <div class="form-group center-block col-md-12">
+                            <div class="col-md-5 ">
+
+                            </div>
+                           <div class="col-md-3 ">
                                 <button type="submit" class="btn btn-primary">
                                     Regístrarte
                                 </button>
+                            </div>
+                            <div class="col-md-3">
+                                <a href="{{url('/ja')}}" class="btn btn-default">
+                                    Regresar Login
+                                </a>
                             </div>
                         </div>
                     </form>
                    
                 </div>
             </div>
-            <div class="text-center">
+            <div class="row col-lg-12 text-center">
                 <a>Si tienes algun problema con la inscripción escribenos a: jaacscr@contadventista.org</a>
     
                 <!--video src="/videos/promo.mp4" autoplay loop controls width="500" height="400"></video-->

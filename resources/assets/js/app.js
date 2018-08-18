@@ -19,6 +19,7 @@ require('./bootstrap');
  * Componentes de ingreso de informacion nueva.
  */
 Vue.component('createMember', require('./components/Creating/CreateMember.vue'));
+Vue.component('createja', require('./components/Creating/CreateJaEvent.vue'));
 Vue.component('editMember', require('./components/Creating/CreateMember.vue'));
 Vue.component('createDepartament', require('./components/Creating/CreateDepartament.vue'));
 Vue.component('createIncomes', require('./components/Creating/CreateAccounts.vue'));

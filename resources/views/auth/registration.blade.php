@@ -9,6 +9,6 @@
 <h2>Sistema de Control Departamento de Jovenes ACSCR</h2>
 
 <p>
-    <label>Debe Presionar el link de Abajo para compobar tu correo, luego tedaran de alta para que puedas entrar al sistema</label>
+    <label>Debe Presionar el link de Abajo para aceptar el correo, luego tedaran de alta para que puedas entrar al sistema</label>
         <a href="{{$url}}">Presiona Aqui</a>
 </p>

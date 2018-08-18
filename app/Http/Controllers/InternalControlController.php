@@ -34,9 +34,9 @@ class InternalControlController extends Controller
 
     public function index()
     {
-        $insternalControls  = $this->internalControlRepository->getModel()
-            ->where('church_id',userChurch()->id)->get();
-        return view('IncomesAndExpenses.ListInternalControl',compact('insternalControls'));
+        $insternalControls = $this->internalControlRepository->getModel()
+            ->where('church_id', userChurch()->id)->get();
+        return view('IncomesAndExpenses.ListInternalControl', compact('insternalControls'));
     }
 
     /**
@@ -99,61 +99,63 @@ class InternalControlController extends Controller
     public function create()
     {
         $insternalControls = InternalControl::all();
-        return view('IncomesAndExpenses.createInternalControl',compact('insternalControls'));
+        return view('IncomesAndExpenses.createInternalControl', compact('insternalControls'));
     }
 
     public function store(InternalControlCreateRequest $request)
     {
         $data = $request->all();
-        $data['token'] = Crypt::encrypt($data['number'].$data['saturday']);
+        $data['token'] = Crypt::encrypt($data['number'] . $data['saturday']);
         $data['church_id'] = 1;
         //carbamos la fecha del ck para poder crear la carpeta donde se guardara la imagen
         $date = new Carbon($data['saturday']);
         //obtenemos el tipo de documento para concatenar la extención
         $type = explode('/', $data['typeIC']);
-        $data['image'] = $date->format('M-y').'/'.$data['number'].'-'.$data['church_id'].'.'.$type[1];
+        $data['image'] = $date->format('M-y') . '/' . $data['number'] . '-' . $data['church_id'] . '.' . $type[1];
 
         $internalControl = $this->internalControlRepository->getModel();
         $internalControl->fill($data);
-        if($internalControl->save()):
+        if ($internalControl->save()):
             //aqui movemos la imagen del cheque de la carpeta temporal a la carpeta del mes
-            Storage::move('internalControls/temp/'.$data['name'], 'internalControls/'.$internalControl->image);
-            return response()->json(['success'=>true, 'message'=>'Se creo con Exito!!!!','token'=>$internalControl->token],200);
+            Storage::move('internalControls/temp/' . $data['name'], 'internalControls/' . $internalControl->image);
+            return response()->json(['success' => true, 'message' => 'Se creo con Exito!!!!', 'token' => $internalControl->token], 200);
         endif;
-        return response()->json($internalControl->errors,422);
+        return response()->json($internalControl->errors, 422);
     }
-	public function balanceInfoCheck(Request $request)
-	{
-		$total =0;
-		foreach ($request->all() AS $key => $internal):
-			$controls = $this->internalControlRepository->getModel()
-				->where('internal_controls.token',$internal['value']);
-			
-			foreach ($controls->get() AS $control):
-				
-				if($controls->with('churchDeposit')->count()):
-					$churchDeposits = $this->internalControlRepository->sumJoinTablePivotDeposit($control->token);
-					
-					$total += ($control->localFieldIncome()->sum('balance') - $churchDeposits);
-				else:
-					$total += $control->localFieldIncome()->sum('balance');
-				endif;
-			
-			endforeach;
-		endforeach;
-		return response()->json(['balance'=>$total,'success'=>true],200);
-	}
-	
-    public function balanceInfo(Request $request)
+
+
+    public function balanceInfoCheck(Request $request)
     {
-        $total =0;
+        $total = 0;
         foreach ($request->all() AS $key => $internal):
             $controls = $this->internalControlRepository->getModel()
-                ->where('internal_controls.token',$internal['value']);
+                ->where('internal_controls.token', $internal['value']);
 
             foreach ($controls->get() AS $control):
 
-                if($controls->with('churchDeposit')->count()):
+                if ($controls->with('churchDeposit')->count()):
+                    $churchDeposits = $this->internalControlRepository->sumJoinTablePivotDeposit($control->token);
+
+                    $total += ($control->localFieldIncome()->sum('balance') - $churchDeposits);
+                else:
+                    $total += $control->localFieldIncome()->sum('balance');
+                endif;
+
+            endforeach;
+        endforeach;
+        return response()->json(['balance' => $total, 'success' => true], 200);
+    }
+
+    public function balanceInfo(Request $request)
+    {
+        $total = 0;
+        foreach ($request->all() AS $key => $internal):
+            $controls = $this->internalControlRepository->getModel()
+                ->where('internal_controls.token', $internal['value']);
+
+            foreach ($controls->get() AS $control):
+
+                if ($controls->with('churchDeposit')->count()):
                     $churchDeposits = $this->internalControlRepository->sumJoinTablePivotDeposit($control->token);
 
                     $total += ($control->balance - $churchDeposits);
@@ -163,13 +165,14 @@ class InternalControlController extends Controller
 
             endforeach;
         endforeach;
-        return response()->json(['balance'=>$total,'success'=>true],200);
+        return response()->json(['balance' => $total, 'success' => true], 200);
     }
 
     public function listInfos()
     {
         return $this->internalControlRepository->listPivotSelects();
     }
+
     public function InfosReport()
     {
         return $this->internalControlRepository->listReportSelects();
@@ -179,25 +182,29 @@ class InternalControlController extends Controller
     {
         return $this->internalControlRepository->listSinReportSelects();
     }
+
     public function upload(Request $request)
     {
         $file = $request->file('items');
-        $name = 'temp'.rand(1, 2000);
+        $name = 'temp' . rand(1, 2000);
         $file->storeAs('internalControls/temp', $name);
 
         return response()->json($name, 200);
     }
 
-    public function destroy(Request $request){
+    public function destroy(Request $request)
+    {
         $this->internalControlRepository->find($request->get('id'))->delete();
-        return response()->json(['success'=>true,'message'=>'Eliminado con Exito'], 200);
+        return response()->json(['success' => true, 'message' => 'Eliminado con Exito'], 200);
     }
-    public function image($month,$name)
-    {try {
-        return Storage::get('internalControls/'.$month.'/' . $name);
-    }catch (\Exception $e){
-        echo json_encode($e->getMessage());
-        die;
-    }
+
+    public function image($month, $name)
+    {
+        try {
+            return Storage::get('internalControls/' . $month . '/' . $name);
+        } catch (\Exception $e) {
+            echo json_encode($e->getMessage());
+            die;
+        }
     }
 }

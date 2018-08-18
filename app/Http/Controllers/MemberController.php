@@ -138,4 +138,8 @@ class MemberController extends Controller
         return response()->json($this->listEnvelopesCreate($date));
     }
 
+    public function registerMemMatEscSab()
+    {
+        return view('members.RegistroMemMatEscSab');
+    }
 }
