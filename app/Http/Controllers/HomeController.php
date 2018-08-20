@@ -193,7 +193,7 @@ class HomeController extends Controller
                 $retirement->fill($data);
                 if($retirement->save()) {
 
-                     Mail::send('youngBoys/registered',compact('data','youngBoy'),function ($e) use ($data,$retirement){
+                     Mail::send('youngBoys/registered',compact('data','retirement'),function ($e) use ($data,$retirement){
                           $e->from('registro@jovenesadventistascr.com','Departamento de Jovenes ACSCR');
                           $e->to($retirement->email,$retirement->nameComplete())->subject('Registrado en el Congreso Juvenil!');
                       });
