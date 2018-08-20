@@ -43,4 +43,14 @@ class YoungBoy extends Entity
     {
         return $this->belongsTo(Church::class,'church','id');
     }
+
+    public function churchD()
+    {
+        return $this->belongsTo(Church::class,'church','id');
+    }
+
+    public function nameComplete()
+    {
+        return $this->name.' '.$this->last_name;
+    }
 }
