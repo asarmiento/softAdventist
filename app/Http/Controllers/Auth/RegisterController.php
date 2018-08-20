@@ -178,7 +178,12 @@ class RegisterController extends Controller
         if($user):
         $user->status= 'Activo';
         $user->registration_token= null;
+
         $user->save();
+            Mail::send('auth/acept',compact('data'),function ($e) use ($user){
+                $e->from($user['email'],$user['name']);
+                $e->to('info@contadventista.org','Soporte SACR')->subject('Verifica tu Email!');
+            });
         endif;
         return redirect()->route('login')->with('alert','Email Verificado, Debe esperar que los Administradores activen su cuenta!');
     }
