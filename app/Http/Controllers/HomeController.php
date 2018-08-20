@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Entities\Retirement;
 use App\Entities\User;
 use App\Entities\YoungBoy;
+use App\Traits\DataViewerTraits;
 use Carbon\Carbon;
 use Codedge\Fpdf\Facades\Fpdf;
 use Illuminate\Http\Request;
@@ -16,6 +17,7 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class HomeController extends Controller
 {
+    use DataViewerTraits;
     /**
      * Create a new controller instance.
      *
@@ -170,60 +172,26 @@ class HomeController extends Controller
     public function registered(Request $request)
     {
         $data = $request->all();
-        $data['date'] =Carbon::now()->format('Y-m-d');
+            if(!$data['launch']){
+                $data['launch'] = false;
+            }
+        $data['code'] =$this->codeBoys();
+        $data['birthdate'] =Carbon::now()->format('Y-m-d');
+        $data['church'] = auth()->user()->member->church_id;
+        $data['user_id'] = auth()->user()->id;
+        $data['address'] = '';
 
-        if($request->has('type')):
-            $youngBoy = YoungBoy::find($data['type']);
-
-            $data['young_boy_id'] =$youngBoy->id;
-            $data['shirt_size'] =$youngBoy->retirements[0]->shirt_size;
-            $buscando = Retirement::where('young_boy_id',$youngBoy->id)->where('voucher',$data['voucher'])
-                ->count();
-            if($buscando>0):
-                return redirect()->back()->with('error', 'Tenemos un error, Ya existe ese Numero de Deposito');
-            else:
-                if(!$request->file('file')):
-                    return redirect()->back()->with('error', 'La imagen del deposito es obligatoria');
-                endif;
-                $file = $request->file('file');
-                //obtenemos el nombre del archivo
-                $nombre = currentUser()->email.'-'.$data['voucher'].'.'.$file->getClientOriginalExtension();
-            endif;
-
-        else:
-            $data['young_boy_id'] =currentUser()->youngBoy->id;
-            $data['shirt_size'] =currentUser()->youngBoy->retirements[0]->shirt_size;
-            $buscando = Retirement::where('young_boy_id',currentUser()->youngBoy->id)->where('voucher',$data['voucher'])
-                ->count();
-            if($buscando>0):
-                return redirect()->back()->with('error', 'Tenemos un error, Ya existe ese Numero de Deposito');
-            else:
-                if(!$request->file('file')):
-                    return redirect()->back()->with('error', 'La imagen del deposito es obligatoria');
-                endif;
-                $file = $request->file('file');
-                //obtenemos el nombre del archivo
-                $nombre = currentUser()->email.'-'.$data['voucher'].'.'.$file->getClientOriginalExtension();
-            endif;
-        endif;
-            $data['file'] = $file->getClientOriginalExtension();
-            //indicamos que queremos guardar un nuevo archivo en el disco local
-            \Storage::disk('local')->put($nombre,  \File::get($file));
-
-            $retirement =  new Retirement();
-            if($retirement->isValid($data)):
-
+                $retirement = new YoungBoy();
                 $retirement->fill($data);
-                $retirement->save();
-                $youngBoy = YoungBoy::find($retirement->young_boy_id);
+                if($retirement->save()) {
 
-                Mail::send('youngBoys/registered',compact('data','youngBoy'),function ($e) use ($data,$youngBoy){
-                    $e->from('jaacscr@contadventista.org','Departamento de Jovenes ACSCR');
-                    $e->to($youngBoy->user->email,$youngBoy->user->nameComplete())->subject('Abono para el Retiro!');
-                });
+                    /*  Mail::send('youngBoys/registered',compact('data','youngBoy'),function ($e) use ($data,$youngBoy){
+                          $e->from('jaacscr@contadventista.org','Departamento de Jovenes ACSCR');
+                          $e->to($youngBoy->user->email,$youngBoy->user->nameComplete())->subject('Abono para el Retiro!');
+                      });*/
 
-                return redirect()->route('home')->with('alert', 'Se Registro Con exito');
-            endif;
+                    return response()->json(['success'=>true,'message'=>'Se guardo Con Exito','boy'=>$retirement],200);
+                }
 
 
         return redirect()->back()->withInput($request->input())
@@ -232,12 +200,15 @@ class HomeController extends Controller
 
     public function lists()
     {
-        $users = User::whereHas('youngBoy',function ($q){
-            $q->whereHas('retirements',function ($r){
-                $r->where('date','>','2017-01-01');
-            });
-        })->where('type_user','joven')->get();
-        return view('youngBoys.listYoungBoys',compact('users'));
+        return YoungBoy::with('church')->with('user')->get();
+
+    }
+
+    public function delete(Request $request)
+    {
+        $id = $request->get('id');
+        DB::delete("DELETE FROM `young_boys` WHERE id = ".$id);
+        return response()->json(['success'=>true,'message'=>'Se guardo Con Exito'],200);
     }
 
     /*******************************************************

@@ -18,145 +18,148 @@
                             <small class="help-block">{{errors.code}}</small>
                         </div>
                     </div-->
-                    <div class=" col-lg-5 col-md-5  " :class="{'has-feedback has-error':errors.localfield.length > 0}">
+                    <div class="col-lg-3 col-md-3" :class="{'has-feedback has-error':errors.name.length > 0}">
                         <div class="panel-default ">
-                            <label>Campo Local Al Cual pertenece Tu Iglesia</label>
+                            <label>Nombre </label>
                             <div class="input-group ">
-                                <span class="input-group-addon"><i class="fa fa-bank"></i></span>
-                                <v-select v-model="data.localfield" :options="localfields"></v-select>
-                            </div>
-                            <small class="help-block">{{errors.localfield}}</small>
-                        </div>
-                    </div>
-                    <div class=" col-lg-3 col-md-3  "
-                         :class="{'has-feedback has-error':errors.name.length > 0}">
-                        <div class="panel-default ">
-                            <label for="name">Nombre de Tu Iglesia</label>
-                            <div class="input-group ">
-                                <span class="input-group-addon"><i class="fa fa-desktop"></i></span>
-                                <input id="name" type="text" v-model="data.name" class="form-control">
+                                <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                <input v-model="data.name"  class="form-control" />
                             </div>
                             <small class="help-block">{{errors.name}}</small>
                         </div>
                     </div>
-                    <div class="col-lg-12 col-md-12  text-center">
-                        <div class="btn">
-                            <button v-on:click="send" class="btn btn-success">Guardar</button>
+                    <div class=" col-lg-3 col-md-3  "
+                         :class="{'has-feedback has-error':errors.last_name.length > 0}">
+                        <div class="panel-default ">
+                            <label for="name">Apellido</label>
+                            <div class="input-group ">
+                                <span class="input-group-addon"><i class="fa fa-lastfm"></i></span>
+                                <input id="name" type="text" v-model="data.last_name" class="form-control">
+                            </div>
+                            <small class="help-block">{{errors.last_name}}</small>
                         </div>
                     </div>
+                    <div class=" col-lg-3 col-md-3  "
+                         :class="{'has-feedback has-error':errors.age.length > 0}">
+                        <div class="panel-default ">
+                            <label for="age">Edad</label>
+                            <div class="input-group ">
+                                <span class="input-group-addon"><i class="fa fa-lemon-o"></i></span>
+                                <input id="age" type="text" v-model="data.age" class="form-control">
+                            </div>
+                            <small class="help-block">{{errors.age}}</small>
+                        </div>
+                    </div>
+                    <div class=" col-lg-3 col-md-3  "
+                         :class="{'has-feedback has-error':errors.email.length > 0}">
+                        <div class="panel-default ">
+                            <label for="email">Email</label>
+                            <div class="input-group ">
+                                <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
+                                <input id="email" type="text" v-model="data.email" class="form-control">
+                            </div>
+                            <small class="help-block">{{errors.email}}</small>
+                        </div>
+                    </div>
+                    <div class=" col-lg-3 col-md-3  "
+                         :class="{'has-feedback has-error':errors.launch.length > 0}">
+                        <div class="panel-default ">
+                            <label for="launch">Almuerzo</label>
+                            <div class="input-group ">
+                                <input id="launch" type="checkbox" v-model="data.launch" class="">
+                            </div>
+                            <small class="help-block">{{errors.launch}}</small>
+                        </div>
+                    </div>
+                    <div class=" col-lg-3 col-md-3  ">
+                        <div class="panel-default ">
+                            <div class="input-group ">
+                                <a @click="send" class="btn btn-success"><span><i class="fa fa-send"></i></span></a>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="panel  col-sm-12">
+                <div  class="panel-body col-sm-12 table table-borderless"><strong>
+                    <div class="  col-md-2">
+                        Codigo Ingreso
+                    </div>
+                    <div class="  col-md-2">
+                        Nombre Del Joven
+                    </div>
+                    <div class="  col-md-2">
+                        Edad
+                    </div>
+                    <div class="  col-md-2">
+                        Email
+                    </div>
+                    <div  class="  col-md-2">
+                        Si desea Almuerzo
+                    </div>
+                    <div  class="  col-md-2">
+                        Eliminar
+                    </div>
+                </strong>
+                </div>
+                <div v-for="(boy,index) in boys" class="panel-body col-sm-12 table table-borderless">
+                        <div class="  col-md-2">
+                            {{boy.code}} 
+                        </div>
+                        <div class="  col-md-2">
+                            {{boy.name}} {{boy.last_name}}
+                        </div>
+                        <div class="  col-md-2">
+                            {{boy.age}}
+                        </div>
+                        <div class="  col-md-2">
+                            {{boy.email}}
+                        </div>
+                        <div v-if="boy.launch" class="  col-md-2">
+                            <span class="btn btn-primary"><i class="fa fa-hand-o-up"></i> Tiene Almuerzo</span>
+                        </div>
+                        <div v-else class=" col-md-2">
+                            <span class="btn btn-danger"><i class="fa fa-hand-o-down"></i> No Tiene Almuerzo</span>
+                        </div>
+                        <div  class=" col-md-2">
+                            <a @click="remove(index, boy.id)"><span class="btn btn-danger"><i class="fa fa-remove"></i> </span></a>
+                        </div>
                 </div>
             </div>
         </div>
-        <div id="map">{{initMap}}</div>
 
-        <!--div-- class="col-md-12 col-md-offset-0">
 
-            <div class="panel">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Lista de Cuentas Bancarias</h3>
-                </div>
-
-                <div class="panel-body">
-                    <div id="demo-dt-delete_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
-                        <div id="demo-dt-delete_filter" class="dataTables_filter">
-                            <label>Buscar: <input type="search" class="form-control input-sm" placeholder=""
-                                                  aria-controls="demo-dt-delete"></label>
-                        </div>
-                        <table id="demo-dt-delete"
-                               class="table table-striped table-bordered dataTable no-footer dtr-inline" cellspacing="0"
-                               width="100%" role="grid" aria-describedby="demo-dt-delete_info" style="width: 100%;">
-                            <thead>
-                            <tr role="row">
-                                <th class="sorting_asc" tabindex="0" aria-controls="demo-dt-delete" rowspan="1"
-                                    colspan="1" aria-sort="ascending"
-                                    aria-label="Name: activate to sort column descending" style="width: 277px;"></th>
-                                <th class="sorting" tabindex="0" aria-controls="demo-dt-delete" rowspan="1" colspan="1"
-                                    aria-sort="ascending" aria-label="Name: activate to sort column descending"
-                                    style="width: 277px;">Numero de Cuenta
-                                </th>
-                                <th class="sorting" tabindex="0" aria-controls="demo-dt-delete" rowspan="1" colspan="1"
-                                    aria-label="Position: activate to sort column ascending" style="width: 408px;">
-                                    Nombre de la cuenta
-                                </th>
-                                <th class="min-tablet sorting" tabindex="0" aria-controls="demo-dt-delete" rowspan="1"
-                                    colspan="1" aria-label="Office: activate to sort column ascending"
-                                    style="width: 203px;">Saldo Incial
-                                </th>
-                                <th class="min-tablet sorting" tabindex="0" aria-controls="demo-dt-delete" rowspan="1"
-                                    colspan="1" aria-label="Extn.: activate to sort column ascending"
-                                    style="width: 131px;">Debitos
-                                </th>
-                                <th class="min-tablet sorting" tabindex="0" aria-controls="demo-dt-delete" rowspan="1"
-                                    colspan="1" aria-label="Extn.: activate to sort column ascending"
-                                    style="width: 131px;">Creditos
-                                </th>
-                                <th class="min-tablet sorting" tabindex="0" aria-controls="demo-dt-delete" rowspan="1"
-                                    colspan="1" aria-label="Extn.: activate to sort column ascending"
-                                    style="width: 131px;">Balance
-                                </th>
-                                <th class="min-tablet sorting" tabindex="0" aria-controls="demo-dt-delete" rowspan="1"
-                                    colspan="1" aria-label="Extn.: activate to sort column ascending"
-                                    style="width: 131px;"></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr role="row" class="odd">
-                                <td class="sorting_1"><span class="btn btn-info fa fa-pencil"></span></td>
-
-                                <td><a target='_blank' class='btn btn-danger'>
-                                    <i class='fa fa-file-pdf-o'></i></a></td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <div class="dataTables_info" id="demo-dt-delete_info" role="status" aria-live="polite">Showing 1
-                            to 10 of 57 entries
-                        </div>
-                        <div class="dataTables_paginate paging_simple_numbers" id="demo-dt-delete_paginate">
-                            <ul class="pagination">
-                                <li class="paginate_button previous disabled" aria-controls="demo-dt-delete"
-                                    tabindex="0" id="demo-dt-delete_previous"><a href="#"><i
-                                        class="demo-psi-arrow-left"></i></a></li>
-                                <li class="paginate_button active" aria-controls="demo-dt-delete" tabindex="0"><a
-                                        href="#">1</a></li>
-                                <li class="paginate_button " aria-controls="demo-dt-delete" tabindex="0"><a
-                                        href="#">2</a></li>
-                                <li class="paginate_button " aria-controls="demo-dt-delete" tabindex="0"><a
-                                        href="#">3</a></li>
-                                <li class="paginate_button disabled" aria-controls="demo-dt-delete" tabindex="0"
-                                    id="demo-dt-delete_ellipsis"><a href="#">…</a></li>
-                                <li class="paginate_button " aria-controls="demo-dt-delete" tabindex="0"><a
-                                        href="#">6</a></li>
-                                <li class="paginate_button next" aria-controls="demo-dt-delete" tabindex="0"
-                                    id="demo-dt-delete_next"><a href="#"><i class="demo-psi-arrow-right"></i></a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div-->
     </div>
 
 </template>
 
 <script>
     import vSelect from "vue-select";
+    import swal from "sweetalert2"
    // import google from "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"
     export default {
         props: ['title', 'url'],
-        components: {vSelect},
+        components: {vSelect,swal},
         data () {
             return {
                 data: {
                     name: '',
-                    localfield: '',
-                    country: '',
+                    last_name: '',
+                    age: '',
+                    email: '',
+                    launch: '',
 
                 },
                 errors: {
-                    name: '',
-                    localfield: '',
+                  name: '',
+                  last_name: '',
+                  age: '',
+                  email: '',
+                  launch: '',
                 },
-                countrys: [],
+                boys: [],
                 localfields: [],
                 locations: [
                     {lat: 9.43632230, lng: -84.12949780},
@@ -165,77 +168,47 @@
             }
         },
         computed: {
-//             initMap: function() {
-//
-//        var map = new google.maps.Map(document.getElementById('map'), {
-//            zoom: 3,
-//            center: {lat: 12.385024, lng: -85.509573}
-//        });
-//
-//        // Create an array of alphabetical characters used to label the markers.
-//        var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-//
-//        // Add some markers to the map.
-//        // Note: The code uses the JavaScript Array.prototype.map() method to
-//        // create an array of markers based on a given "locations" array.
-//        // The map() method here has nothing to do with the Google Maps API.
-//        var markers = this.locations.map(function(location, i) {
-//            return new google.maps.Marker({
-//                position: location,
-//                label: labels[i % labels.length]
-//            });
-//        });
-//
-//        // Add a marker clusterer to manage the markers.
-//        var markerCluster = new MarkerClusterer(map, markers,
-//            {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
-//    }
+
         },
         created() {
-
-            this.$http.get('/paises')
-                .then((response) => {
-                this.countrys = response.data;
-        })
-            ; this.$http.get('/list-localfields-all')
-                .then((response) => {
-                this.localfields = response.data;
-        })
-            ;
+          this.$http.get('/registrado/lista-de-inscriptos').then((response) => {
+            this.boys = response.data;
+          });
 
         },
         methods: {
-            localField: function (event) {
-                console.log(this.data)
-                if (this.data.country) {
 
-                   /* axios.post('/tesoreria/list-unions-country', this.data.country)
-                        .then((response) => {
-
-                    this.countrys = response.data;
-                });*/
-                }
-            },
-            pdfInfo: function (token) {
-                return "/tesoreria/reporte-estado-de-cuenta-actual/" + token;
-            },
             send: function (event) {
+
+
                 var self = this;
-                axios.post('/tesoreria/' + self.url, this.data)
+                axios.post('/registrado/registered/boys' , this.data)
                     .then(response => {
                     if(response.data.success = true
                 )
                 {
-                    this.$alert({
-                        title: 'Se Guardo con Exito!!!',
-                        message: response.data.message
-                    });
+                  const toast = swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000
+                  });
+
+                  toast({
+                    type: 'success',
+                    title: 'Se guardo con exito el Joven'
+                  })
+                  self.boys.push(response.data.boy);
                     this.data.code = '';
                     this.data.name = '';
-                    this.data.initial_balance = '';
-                    this.errors.code = '';
-                    this.errors.name = '';
-                    this.errors.initial_balance = '';
+                    this.data.last_name = '';
+                    this.data.email = '';
+                    this.data.age = '';
+                    this.data.launch = '';
+
+                    this.errors.age = '';
+                    this.errors.launch = '';
+                    this.errors.email = '';
                 }
             }).
                 catch(function (error) {
@@ -250,18 +223,72 @@
                                 self.errors[index] = messages;
                             }
                         } else if (error.response.status === 401) {
-                            self.errors.response.invalid = true;
-                            self.errors.response.msg = data.msg.message;
+                           swal("Error generic",error.response.message,'error');
                         } else {
                             console.log(error);
-                            alert("Error generic");
+                            swal("Error generic",'Algo a ocurrido','error');
                         }
                     } else if (error.request) {
                         console.log(error.request);
-                        alert("Error empty");
+                      swal("Error generic",error.request,'error');
                     } else {
                         console.log('Error', error.message);
-                        alert("Error");
+                      swal("Error generic",error.message,'error');
+                    }
+                });
+            },
+          remove: function (index, event) {
+
+
+                var self = this;
+                axios.post('/registrado/delete/boys' , {'id':event})
+                    .then(response => {
+                    if(response.data.success = true
+                )
+                {
+                  const toast = swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000
+                  });
+
+                  toast({
+                    type: 'error',
+                    title: 'Se Borro con exito'
+                  })
+this.boys.splice(index,1)
+                  this.data.code = '';
+                    this.data.name = '';
+                    this.data.last_name = '';
+                    this.errors.age = '';
+                    this.errors.launch = '';
+                    this.errors.email = '';
+                }
+            }).
+                catch(function (error) {
+                    if (error.response) {
+                        let data = error.response.data;
+                        if (error.response.status === 422) {
+                            for (var index in data) {
+                                var messages = '';
+                                data[index].forEach(function (item) {
+                                    messages += item + ' '
+                                });
+                                self.errors[index] = messages;
+                            }
+                        } else if (error.response.status === 401) {
+                           swal("Error generic",error.response.message,'error');
+                        } else {
+                            console.log(error);
+                            swal("Error generic",'Algo a ocurrido','error');
+                        }
+                    } else if (error.request) {
+                        console.log(error.request);
+                      swal("Error generic",error.request,'error');
+                    } else {
+                        console.log('Error', error.message);
+                      swal("Error generic",error.message,'error');
                     }
                 });
             }

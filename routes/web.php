@@ -37,10 +37,10 @@ Route::get('/activation/{email}', ['uses'=>'Auth\RegisterController@activation',
 Route::get('contacto', ['uses'=>'Auth\RegisterController@contact','as'=>'contact']);
 Route::post('contacto', ['uses'=>'Auth\RegisterController@contactPost','as'=>'contacto']);
 Route::get('test/update-income', ['uses'=>'TestController@updateIncome','as'=>'test']);
-/*Route::get('iglesia', ['uses'=>'Church\ChurchController@create','as'=>'create-church']);
+//Route::get('iglesia', ['uses'=>'Church\ChurchController@create','as'=>'create-church']);
 
     Route::group(['prefix'=>'registrado','middleware'=>'auth'],function (){
-
+/*
     Route::get('test/index', ['uses'=>'TestController@updateIncome','as'=>'test']);
     Route::get('test/pendiente', ['uses'=>'TestController@pendiente','as'=>'pendiente']);
     Route::get('test/ver', ['uses'=>'TestController@ver','as'=>'test']);
@@ -50,13 +50,15 @@ Route::get('test/update-income', ['uses'=>'TestController@updateIncome','as'=>'t
     Route::get('pdf', ['uses'=>'HomeController@pdf','as'=>'pdf']);
     Route::get('excel', ['uses'=>'HomeController@excelList','as'=>'excelList']);
     Route::get('status/{id}', ['uses'=>'HomeController@status','as'=>'status-change']);
-    Route::get('lista-de-inscriptos', ['uses'=>'HomeController@lists','as'=>'lists-inscription']);
-    Route::post('inscription', ['uses'=>'HomeController@store','as'=>'save-inscription']);
-    Route::post('registered', ['uses'=>'HomeController@registered','as'=>'save-registered']);
+     Route::post('inscription', ['uses'=>'HomeController@store','as'=>'save-inscription']);
+*/
 
+        Route::get('lista-de-inscriptos', ['uses'=>'HomeController@lists','as'=>'lists-inscription']);
+        Route::post('registered/boys', ['uses'=>'HomeController@registered','as'=>'save-registered']);
+        Route::post('delete/boys', ['uses'=>'HomeController@delete','as'=>'delete-registered']);
 
 });
-*/
+
 
 Route::get('nueva-iglesia', ['uses'=>'Church\ChurchController@newChurch','as'=>'new-church']);
 Route::post('nueva-iglesia', ['uses'=>'Church\ChurchController@store','as'=>'store-church']);
@@ -66,9 +68,8 @@ Route::get('list-unions-country/{token}', ['uses'=>'UnionController@index','as'=
 Route::post('save-church-public', ['uses'=>'Church\ChurchController@store','as'=>'save-church-public']);
 
     Route::group(['prefix'=>'tesoreria','middleware'=>'auth'],function (){
-	
-	
-	   
+
+
 
         Route::get('/', 'HomeController@index');
         Route::get('/image/{type}/{month}/{name}', 'HomeController@image');

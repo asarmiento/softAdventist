@@ -8,6 +8,8 @@
 
 namespace App\Traits;
 
+use App\Entities\YoungBoy;
+
 trait DataViewerTraits
 {
     public function scopeSearchPaginateAndOrder($query, $count, $search = null,$otherFilters=false)
@@ -68,5 +70,19 @@ trait DataViewerTraits
             }
         }
         return $array;
+    }
+
+    function codeBoys()
+            {
+        $codes = YoungBoy::max('code');
+
+        if($codes)
+        {
+            $codes++ ;
+        }else{
+            $codes = 10000;
+        }
+
+                return $codes;
     }
 }

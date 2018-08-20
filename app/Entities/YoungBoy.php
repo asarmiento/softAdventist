@@ -10,7 +10,7 @@ namespace App\Entities;
 
 class YoungBoy extends Entity
 {
-    protected $fillable = ['code','church','age','birthdate','address','gender','user_id'];
+    protected $fillable = ['code','church','age','birthdate','address','gender','user_id','name','last_name','email','launch'];
 
 
     public function getRules()
@@ -37,5 +37,10 @@ class YoungBoy extends Entity
     public function user()
     {
         return $this->belongsTo('App\Entities\User');
+    }
+
+    public function church()
+    {
+        return $this->belongsTo(Church::class,'church','id');
     }
 }
