@@ -112,7 +112,7 @@
                                 </button>
                             </div>
                             <div class="col-md-3">
-                                <a href="{{url('/ja')}}" class="btn btn-default">
+                                <a href="{{url('/')}}" class="btn btn-default">
                                     Regresar Login
                                 </a>
                             </div>

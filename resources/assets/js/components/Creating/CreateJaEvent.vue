@@ -74,12 +74,15 @@
                     <div class=" col-lg-3 col-md-3  ">
                         <div class="panel-default ">
                             <div class="input-group ">
-                                <a @click="send" class="btn btn-success"><span><i class="fa fa-send"></i></span></a>
+                                <a @click="send" class="btn btn-success"><span><i class="fa fa-plus"></i></span> Agregar a Lista</a>
                             </div>
                         </div>
                     </div>
 
 
+                </div>
+                <div>
+                    <h1>Total de Almuerzos : {{ total }}</h1>
                 </div>
             </div>
             <div class="panel  col-sm-12">
@@ -215,17 +218,22 @@
           launch: '',
         },
         boys: [],
-        localfields: [],
+        total: 0,
         locations: [
           {lat: 9.43632230, lng: -84.12949780},
           {lat: 9.325817, lng: -83.951656},
-        ]
+        ],
+        formData: '',
+        items: '',
+        itemsNames: '',
+        itemsSizes: '',
       }
     },
     computed: {},
     created() {
       this.$http.get('/registrado/lista-de-inscriptos').then((response) => {
         this.boys = response.data;
+       this.total =  this.boys[0].total * 2500
       });
 
     },
@@ -250,6 +258,7 @@
                 type: 'success',
                 title: 'Se guardo con exito el Joven'
               })
+              this.total =  response.data.boy.total * 2500
               self.boys.push(response.data.boy);
               this.data.code = '';
               this.data.name = '';

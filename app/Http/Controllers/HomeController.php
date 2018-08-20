@@ -193,10 +193,11 @@ class HomeController extends Controller
                 $retirement->fill($data);
                 if($retirement->save()) {
 
-                    /*  Mail::send('youngBoys/registered',compact('data','youngBoy'),function ($e) use ($data,$youngBoy){
-                          $e->from('jaacscr@contadventista.org','Departamento de Jovenes ACSCR');
-                          $e->to($youngBoy->user->email,$youngBoy->user->nameComplete())->subject('Abono para el Retiro!');
-                      });*/
+                     Mail::send('youngBoys/registered',compact('data','youngBoy'),function ($e) use ($data,$retirement){
+                          $e->from('registro@jovenesadventistascr.com','Departamento de Jovenes ACSCR');
+                          $e->to($retirement->email,$retirement->nameComplete())->subject('Registrado en el Congreso Juvenil!');
+                      });
+                    $retirement->total = $retirement->where('launch',true)->count();
 
                     return response()->json(['success'=>true,'message'=>'Se guardo Con Exito','boy'=>$retirement],200);
                 }
@@ -208,7 +209,12 @@ class HomeController extends Controller
 
     public function lists()
     {
-        return YoungBoy::with('church')->with('user')->get();
+        $boys = YoungBoy::where('church',auth()->user()->member->church_id)->with('church')->with('user')->get();
+        $boys->map(function ($boy){
+            $boy->total = $boy->where('launch',true)->count();
+        });
+
+        return $boys;
 
     }
 

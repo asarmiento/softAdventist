@@ -25,53 +25,32 @@
             </div>
             <div class="cls-content-sm panel">
                  <div class="panel-body">
-                    <div class="mar-ver pad-btm">
-                        <h3 class="h4 mar-no">Iniciar Sesión</h3>
-                        <p class="text-muted">Inicie Sesión con su Email</p>
-                    </div>
-                    @if(session('alert'))
-                        <p class="alert alert-success">{{session('alert')}}</p>
-                    @endif
-                    <form  role="form" method="POST" action="{{ route('login') }}">
-                        {{ csrf_field() }}
-                        <div class="form-group {{ $errors->has('email') ? ' has-error' : '' }}">
-                            <input type="text" class="form-control" name="email" value="{{ old('email') }}"
-                                   placeholder="Correo Electrónico" autofocus>
-                            @if ($errors->has('email'))
-                                <span class="help-block">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
-                            @endif
-                        </div>
-                        <div class="form-group {{ $errors->has('password') ? ' has-error' : '' }}">
-                            <input type="password" class="form-control" placeholder="Contraseña" name="password">
-                            @if ($errors->has('password'))
-                                <span class="help-block">
-                                        <strong>{{ $errors->first('password') }}</strong>
-                                    </span>
-                            @endif
-                        </div>
-                        <div class="checkbox pad-btm text-left">
-                            <input id="demo-form-checkbox" name="remember"  {{ old('remember') ? 'checked' : '' }} class="magic-checkbox" type="checkbox">
-                            <label for="demo-form-checkbox" >Recordarme</label>
-                        </div>
-                        <button class="btn btn-primary btn-lg btn-block" type="submit">Iniciar Sesion</button>
-                    </form>
+
 <!--div style="padding: 5px">
 
 <i>Inicia Sesión Con :</i><a class="" href="{{ route('social.auth', 'facebook') }}">
     <i class="fa fa-facebook-official fa-4x" aria-hidden="true"></i>
 </a>
 
-</div-->
+</div--><div class="pad-all btn btn-success" style="color: white">
+        <a class="btn-link " style="color: white" href="{{ url('/ja') }}">
+            Iniciar Sesión
+        </a>
+
+        </br>
+    </div>
 
                 </div>
 
-
-                    <div class="pad-all ">
-                        <a class="btn-link mar-rgt" href="{{ route('password.request') }}">
-                        Restablecer mi Contraseña!
+                <div class="pad-all btn btn-primary" style="color: white">
+                    <a class="btn-link " style="color: white" href="{{ route('register') }}">
+                        Registrar
                     </a>
+
+                    </br>
+                    <p>Por primera vez.</p>
+                </div>
+
                 </br>
                     <a href="https://asarmiento.github.io/softAdventist/" target="_blank" class="btn-link  ">Conoce mas de SoftAdventist</a>
 
@@ -87,7 +66,7 @@
                         Elaborado por Sistemas Amigables de Costa Rica SAOR S.A.
                     </div>
                     <div class=" text-center">
-                        v3.0.4
+                        v3.0.5
                     </div>
                 </div>
             </div>
