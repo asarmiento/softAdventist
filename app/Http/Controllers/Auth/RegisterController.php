@@ -185,7 +185,7 @@ class RegisterController extends Controller
                 $e->to('info@contadventista.org','Soporte SACR')->subject('Verifica tu Email!');
             });
         endif;
-        return redirect()->route('login')->with('alert','Email Verificado, Debe esperar que los Administradores activen su cuenta!');
+        return redirect('/ja');
     }
 
     public function contact()
