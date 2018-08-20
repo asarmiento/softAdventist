@@ -176,7 +176,7 @@ class RegisterController extends Controller
     {
         $user = User::where('registration_token',$token)->first();
         if($user):
-        $user->status= 'Activo';
+        $user->status = 'activo';
         $user->registration_token= null;
 
         $user->save();
