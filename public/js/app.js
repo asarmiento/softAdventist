@@ -54551,154 +54551,270 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
 // import google from "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"
 /* harmony default export */ __webpack_exports__["default"] = ({
-    props: ['title', 'url'],
-    components: { vSelect: __WEBPACK_IMPORTED_MODULE_0_vue_select___default.a, swal: __WEBPACK_IMPORTED_MODULE_1_sweetalert2___default.a },
-    data: function data() {
-        return {
-            data: {
-                name: '',
-                last_name: '',
-                age: '',
-                email: '',
-                launch: ''
+  props: ['title', 'url'],
+  components: { vSelect: __WEBPACK_IMPORTED_MODULE_0_vue_select___default.a, swal: __WEBPACK_IMPORTED_MODULE_1_sweetalert2___default.a },
+  data: function data() {
+    return {
+      data: {
+        name: '',
+        last_name: '',
+        age: '',
+        email: '',
+        launch: ''
 
-            },
-            errors: {
-                name: '',
-                last_name: '',
-                age: '',
-                email: '',
-                launch: ''
-            },
-            boys: [],
-            localfields: [],
-            locations: [{ lat: 9.43632230, lng: -84.12949780 }, { lat: 9.325817, lng: -83.951656 }]
-        };
-    },
+      },
+      errors: {
+        name: '',
+        last_name: '',
+        age: '',
+        email: '',
+        launch: ''
+      },
+      boys: [],
+      localfields: [],
+      locations: [{ lat: 9.43632230, lng: -84.12949780 }, { lat: 9.325817, lng: -83.951656 }]
+    };
+  },
 
-    computed: {},
-    created: function created() {
-        var _this = this;
+  computed: {},
+  created: function created() {
+    var _this = this;
 
-        this.$http.get('/registrado/lista-de-inscriptos').then(function (response) {
-            _this.boys = response.data;
-        });
-    },
+    this.$http.get('/registrado/lista-de-inscriptos').then(function (response) {
+      _this.boys = response.data;
+    });
+  },
 
-    methods: {
+  methods: {
 
-        send: function send(event) {
-            var _this2 = this;
+    send: function send(event) {
+      var _this2 = this;
 
-            var self = this;
-            axios.post('/registrado/registered/boys', this.data).then(function (response) {
-                if (response.data.success = true) {
-                    var toast = __WEBPACK_IMPORTED_MODULE_1_sweetalert2___default.a.mixin({
-                        toast: true,
-                        position: 'top-end',
-                        showConfirmButton: false,
-                        timer: 3000
-                    });
+      var self = this;
+      axios.post('/registrado/registered/boys', this.data).then(function (response) {
+        if (response.data.success = true) {
+          var toast = __WEBPACK_IMPORTED_MODULE_1_sweetalert2___default.a.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+          });
 
-                    toast({
-                        type: 'success',
-                        title: 'Se guardo con exito el Joven'
-                    });
-                    self.boys.push(response.data.boy);
-                    _this2.data.code = '';
-                    _this2.data.name = '';
-                    _this2.data.last_name = '';
-                    _this2.data.email = '';
-                    _this2.data.age = '';
-                    _this2.data.launch = '';
+          toast({
+            type: 'success',
+            title: 'Se guardo con exito el Joven'
+          });
+          self.boys.push(response.data.boy);
+          _this2.data.code = '';
+          _this2.data.name = '';
+          _this2.data.last_name = '';
+          _this2.data.email = '';
+          _this2.data.age = '';
+          _this2.data.launch = '';
 
-                    _this2.errors.age = '';
-                    _this2.errors.launch = '';
-                    _this2.errors.email = '';
-                }
-            }).catch(function (error) {
-                if (error.response) {
-                    var data = error.response.data;
-                    if (error.response.status === 422) {
-                        for (var index in data) {
-                            var messages = '';
-                            data[index].forEach(function (item) {
-                                messages += item + ' ';
-                            });
-                            self.errors[index] = messages;
-                        }
-                    } else if (error.response.status === 401) {
-                        __WEBPACK_IMPORTED_MODULE_1_sweetalert2___default()("Error generic", error.response.message, 'error');
-                    } else {
-                        console.log(error);
-                        __WEBPACK_IMPORTED_MODULE_1_sweetalert2___default()("Error generic", 'Algo a ocurrido', 'error');
-                    }
-                } else if (error.request) {
-                    console.log(error.request);
-                    __WEBPACK_IMPORTED_MODULE_1_sweetalert2___default()("Error generic", error.request, 'error');
-                } else {
-                    console.log('Error', error.message);
-                    __WEBPACK_IMPORTED_MODULE_1_sweetalert2___default()("Error generic", error.message, 'error');
-                }
-            });
-        },
-        remove: function remove(index, event) {
-            var _this3 = this;
-
-            var self = this;
-            axios.post('/registrado/delete/boys', { 'id': event }).then(function (response) {
-                if (response.data.success = true) {
-                    var toast = __WEBPACK_IMPORTED_MODULE_1_sweetalert2___default.a.mixin({
-                        toast: true,
-                        position: 'top-end',
-                        showConfirmButton: false,
-                        timer: 3000
-                    });
-
-                    toast({
-                        type: 'error',
-                        title: 'Se Borro con exito'
-                    });
-                    _this3.boys.splice(index, 1);
-                    _this3.data.code = '';
-                    _this3.data.name = '';
-                    _this3.data.last_name = '';
-                    _this3.errors.age = '';
-                    _this3.errors.launch = '';
-                    _this3.errors.email = '';
-                }
-            }).catch(function (error) {
-                if (error.response) {
-                    var data = error.response.data;
-                    if (error.response.status === 422) {
-                        for (var index in data) {
-                            var messages = '';
-                            data[index].forEach(function (item) {
-                                messages += item + ' ';
-                            });
-                            self.errors[index] = messages;
-                        }
-                    } else if (error.response.status === 401) {
-                        __WEBPACK_IMPORTED_MODULE_1_sweetalert2___default()("Error generic", error.response.message, 'error');
-                    } else {
-                        console.log(error);
-                        __WEBPACK_IMPORTED_MODULE_1_sweetalert2___default()("Error generic", 'Algo a ocurrido', 'error');
-                    }
-                } else if (error.request) {
-                    console.log(error.request);
-                    __WEBPACK_IMPORTED_MODULE_1_sweetalert2___default()("Error generic", error.request, 'error');
-                } else {
-                    console.log('Error', error.message);
-                    __WEBPACK_IMPORTED_MODULE_1_sweetalert2___default()("Error generic", error.message, 'error');
-                }
-            });
+          _this2.errors.age = '';
+          _this2.errors.launch = '';
+          _this2.errors.email = '';
         }
+      }).catch(function (error) {
+        if (error.response) {
+          var data = error.response.data;
+          if (error.response.status === 422) {
+            for (var index in data) {
+              var messages = '';
+              data[index].forEach(function (item) {
+                messages += item + ' ';
+              });
+              self.errors[index] = messages;
+            }
+          } else if (error.response.status === 401) {
+            __WEBPACK_IMPORTED_MODULE_1_sweetalert2___default()("Error generic", error.response.message, 'error');
+          } else {
+            console.log(error);
+            __WEBPACK_IMPORTED_MODULE_1_sweetalert2___default()("Error generic", 'Algo a ocurrido', 'error');
+          }
+        } else if (error.request) {
+          console.log(error.request);
+          __WEBPACK_IMPORTED_MODULE_1_sweetalert2___default()("Error generic", error.request, 'error');
+        } else {
+          console.log('Error', error.message);
+          __WEBPACK_IMPORTED_MODULE_1_sweetalert2___default()("Error generic", error.message, 'error');
+        }
+      });
+    },
+    remove: function remove(index, event) {
+      var _this3 = this;
+
+      var self = this;
+      axios.post('/registrado/delete/boys', { 'id': event }).then(function (response) {
+        if (response.data.success = true) {
+          var toast = __WEBPACK_IMPORTED_MODULE_1_sweetalert2___default.a.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+          });
+
+          toast({
+            type: 'error',
+            title: 'Se Borro con exito'
+          });
+          _this3.boys.splice(index, 1);
+          _this3.data.code = '';
+          _this3.data.name = '';
+          _this3.data.last_name = '';
+          _this3.errors.age = '';
+          _this3.errors.launch = '';
+          _this3.errors.email = '';
+        }
+      }).catch(function (error) {
+        if (error.response) {
+          var data = error.response.data;
+          if (error.response.status === 422) {
+            for (var index in data) {
+              var messages = '';
+              data[index].forEach(function (item) {
+                messages += item + ' ';
+              });
+              self.errors[index] = messages;
+            }
+          } else if (error.response.status === 401) {
+            __WEBPACK_IMPORTED_MODULE_1_sweetalert2___default()("Error generic", error.response.message, 'error');
+          } else {
+            console.log(error);
+            __WEBPACK_IMPORTED_MODULE_1_sweetalert2___default()("Error generic", 'Algo a ocurrido', 'error');
+          }
+        } else if (error.request) {
+          console.log(error.request);
+          __WEBPACK_IMPORTED_MODULE_1_sweetalert2___default()("Error generic", error.request, 'error');
+        } else {
+          console.log('Error', error.message);
+          __WEBPACK_IMPORTED_MODULE_1_sweetalert2___default()("Error generic", error.message, 'error');
+        }
+      });
+    },
+    bytesToSize: function bytesToSize(bytes) {
+      var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+      if (bytes === 0) return 'n/a';
+      var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+      if (i === 0) return bytes + ' ' + sizes[i];
+      return (bytes / Math.pow(1024, i)).toFixed(2) + ' ' + sizes[i];
+    },
+    onChange: function onChange(e) {
+      this.formData = new FormData();
+      var files = e.target.files || e.dataTransfer.files;
+      var fileSizes = 0;
+      for (var fileIn in files) {
+        if (!isNaN(fileIn)) {
+          this.items = e.target.files[fileIn] || e.dataTransfer.files[fileIn];
+          this.itemsNames = files[fileIn].name;
+          this.data.typeIC = files[fileIn].type;
+          this.itemsSizes = this.bytesToSize(files[fileIn].size);
+          fileSizes = files[fileIn].size;
+          this.formData.append('items', this.items);
+          console.log(files[fileIn]);
+        }
+      }
+    },
+    removeItems: function removeItems() {
+      this.items = '';
+      this.itemsNames = '';
+      this.itemsSizes = '';
+    },
+    onSubmit: function onSubmit() {
+      var _this4 = this;
+
+      axios.post('/registrado/upload/boys', this.formData).then(function (response) {
+        _this4.data.file = response.data;
+        console.log(response.data);
+      }).catch(function (error) {
+        if (error.response) {
+          var data = error.response.data;
+          if (error.response.status === 422) {
+            for (var index in data) {
+              var messages = '';
+              data[index].forEach(function (item) {
+                messages += item + ' ';
+              });
+              self.errors[index] = messages;
+            }
+          } else if (error.response.status === 401) {
+            self.errors.response.invalid = true;
+            self.errors.response.msg = data.msg.message;
+          } else {
+            console.log(error);
+            alert("Error generic");
+          }
+        } else if (error.request) {
+          console.log(error.request);
+          alert("Error empty");
+        } else {
+          console.log('Error', error.message);
+          alert("Error");
+        }
+      });
     }
+  }
 });
 
 /***/ }),
@@ -54989,7 +55105,7 @@ var render = function() {
                   _vm._v(
                     "\n                        " +
                       _vm._s(boy.code) +
-                      " \n                    "
+                      "\n                    "
                   )
                 ]),
                 _vm._v(" "),
@@ -55041,7 +55157,112 @@ var render = function() {
           })
         ],
         2
-      )
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: " col-lg-5 col-md-5  " }, [
+        _c("div", { staticClass: "panel-body" }, [
+          _c("p", [_vm._v("Debe subir la imagen del Deposito .")]),
+          _vm._v(" "),
+          _c("div", { staticClass: "bord-top pad-ver" }, [
+            _c(
+              "span",
+              {
+                staticClass:
+                  "btn btn-file btn-success fileinput-button dz-clickable"
+              },
+              [
+                _c("i", { staticClass: "fa fa-plus" }),
+                _vm._v(
+                  "\n\t\t\t\t\t                Buscar Archivo...\n                                     "
+                ),
+                _c("input", {
+                  attrs: { type: "file", id: "items", name: "items" },
+                  on: { change: _vm.onChange }
+                })
+              ]
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "btn-group pull-right" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-primary",
+                  attrs: { id: "dz-upload-btn", type: "submit" },
+                  on: { click: _vm.onSubmit }
+                },
+                [
+                  _c("i", { staticClass: "fa fa-upload-cloud" }),
+                  _vm._v(" subir\n                            ")
+                ]
+              )
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { attrs: { id: "dz-previews" } }, [
+            _c(
+              "div",
+              {
+                staticClass: "pad-top bord-top dz-image-preview",
+                attrs: { id: "" }
+              },
+              [
+                _vm.itemsNames
+                  ? _c("div", { staticClass: "media" }, [
+                      _c("div", { staticClass: "media-body" }, [
+                        _c("div", { staticClass: "media-block" }, [
+                          _c("div", { staticClass: "media-body" }, [
+                            _c(
+                              "p",
+                              {
+                                staticClass:
+                                  "text-main text-bold mar-no text-overflow",
+                                attrs: { "data-dz-name": "" }
+                              },
+                              [
+                                _vm._v(
+                                  "\n                                                " +
+                                    _vm._s(_vm.itemsNames)
+                                )
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c("span", {
+                              staticClass: "dz-error text-danger text-sm",
+                              attrs: { "data-dz-errormessage": "" }
+                            }),
+                            _vm._v(" "),
+                            _c(
+                              "p",
+                              {
+                                staticClass: "text-sm",
+                                attrs: { "data-dz-size": "" }
+                              },
+                              [_c("strong", [_vm._v(_vm._s(_vm.itemsSizes))])]
+                            ),
+                            _vm._v(" "),
+                            _vm._m(9)
+                          ])
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "media-right" }, [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-xs btn-danger dz-cancel",
+                            attrs: { "data-dz-remove": "" },
+                            on: { click: _vm.removeItems }
+                          },
+                          [_c("i", { staticClass: "demo-pli-cross" })]
+                        )
+                      ])
+                    ])
+                  : _vm._e()
+              ]
+            )
+          ])
+        ])
+      ])
     ])
   ])
 }
@@ -55094,27 +55315,33 @@ var staticRenderFns = [
       [
         _c("strong", [
           _c("div", { staticClass: "  col-md-2" }, [
-            _vm._v("\n                    Codigo Ingreso\n                ")
+            _vm._v(
+              "\n                        Codigo Ingreso\n                    "
+            )
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "  col-md-2" }, [
-            _vm._v("\n                    Nombre Del Joven\n                ")
+            _vm._v(
+              "\n                        Nombre Del Joven\n                    "
+            )
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "  col-md-2" }, [
-            _vm._v("\n                    Edad\n                ")
+            _vm._v("\n                        Edad\n                    ")
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "  col-md-2" }, [
-            _vm._v("\n                    Email\n                ")
+            _vm._v("\n                        Email\n                    ")
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "  col-md-2" }, [
-            _vm._v("\n                    Si desea Almuerzo\n                ")
+            _vm._v(
+              "\n                        Si desea Almuerzo\n                    "
+            )
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "  col-md-2" }, [
-            _vm._v("\n                    Eliminar\n                ")
+            _vm._v("\n                        Eliminar\n                    ")
           ])
         ])
       ]
@@ -55145,6 +55372,36 @@ var staticRenderFns = [
     return _c("span", { staticClass: "btn btn-danger" }, [
       _c("i", { staticClass: "fa fa-remove" })
     ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      { staticStyle: { opacity: "50" }, attrs: { id: "dz-total-progress" } },
+      [
+        _c(
+          "div",
+          {
+            staticClass: "progress progress-xs active",
+            attrs: {
+              role: "progressbar",
+              "aria-valuemin": "0",
+              "aria-valuemax": "100",
+              "aria-valuenow": "0"
+            }
+          },
+          [
+            _c("div", {
+              staticClass: "progress-bar progress-bar-success",
+              staticStyle: { width: "100%" },
+              attrs: { "data-dz-uploadprogress": "" }
+            })
+          ]
+        )
+      ]
+    )
   }
 ]
 render._withStripped = true

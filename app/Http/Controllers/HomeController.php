@@ -168,6 +168,14 @@ class HomeController extends Controller
             return redirect()->back()->with('error', 'Verificar la información del asiento, sino contactarse con soporte de la applicación');
         }
     }
+    public function upload(Request $request)
+    {
+        $file = $request->file('items');
+        $name = 'temp' . rand(1, 2000);
+        $file->storeAs('boys', $name);
+
+        return response()->json($name, 200);
+    }
 
     public function registered(Request $request)
     {

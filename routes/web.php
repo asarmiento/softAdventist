@@ -56,6 +56,7 @@ Route::get('test/update-income', ['uses'=>'TestController@updateIncome','as'=>'t
         Route::get('lista-de-inscriptos', ['uses'=>'HomeController@lists','as'=>'lists-inscription']);
         Route::post('registered/boys', ['uses'=>'HomeController@registered','as'=>'save-registered']);
         Route::post('delete/boys', ['uses'=>'HomeController@delete','as'=>'delete-registered']);
+        Route::post('upload/boys', ['uses'=>'HomeController@upload','as'=>'upload-registered']);
 
 });
 
