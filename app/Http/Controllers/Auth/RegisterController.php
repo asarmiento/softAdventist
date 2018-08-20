@@ -180,7 +180,7 @@ class RegisterController extends Controller
         $user->registration_token= null;
 
         $user->save();
-            Mail::send('auth/acept',compact('data'),function ($e) use ($user){
+            Mail::send('auth/Acept',compact('data'),function ($e) use ($user){
                 $e->from($user['email'],$user['name']);
                 $e->to('info@contadventista.org','Soporte SACR')->subject('Verifica tu Email!');
             });
