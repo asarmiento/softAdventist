@@ -51,7 +51,10 @@ class Member extends Entity
         return $this->belongsTo(Member::getClass(), 'member_id', 'id')->where('date', $date);
     }
 
-
+    public function church()
+    {
+        return $this->belongsTo(Church::class);
+}
     public function weeklyIncomes()
     {
         return $this->hasMany(WeeklyIncome::getClass());

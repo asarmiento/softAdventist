@@ -64,9 +64,9 @@
                     <div class=" col-lg-3 col-md-3  "
                          :class="{'has-feedback has-error':errors.launch.length > 0}">
                         <div class="panel-default ">
-                            <label for="launch">Almuerzo</label>
+                            <label for="launch">Quiere Almuerzo?</label>
                             <div class="input-group ">
-                                <input id="launch" type="checkbox" v-model="data.launch" class="">
+                                <input id="launch" type="checkbox" v-model="data.launch" class="checkbox">
                             </div>
                             <small class="help-block">{{errors.launch}}</small>
                         </div>

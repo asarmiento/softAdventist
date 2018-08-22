@@ -58612,7 +58612,7 @@ var render = function() {
               [
                 _c("div", { staticClass: "panel-default " }, [
                   _c("label", { attrs: { for: "launch" } }, [
-                    _vm._v("Almuerzo")
+                    _vm._v("Quiere Almuerzo?")
                   ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "input-group " }, [
@@ -58625,6 +58625,7 @@ var render = function() {
                           expression: "data.launch"
                         }
                       ],
+                      staticClass: "checkbox",
                       attrs: { id: "launch", type: "checkbox" },
                       domProps: {
                         checked: Array.isArray(_vm.data.launch)

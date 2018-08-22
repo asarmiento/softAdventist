@@ -53,7 +53,7 @@
 
     </div>
 
-        @include('layouts.partials.footer')
+
 
 
     <!-- SCROLL PAGE BUTTON -->

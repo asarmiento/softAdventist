@@ -1,7 +1,7 @@
 @extends('layouts.system')
 
 @section('content')
-
+<div class="">
                 <div class="panel-body"><h1>Regístrate: <strong>En este paso solo estas creando un usuario para poder
                             ingresar al sistema, debes verificar tu email despues de registrarte, buscalo en la Bandeja de entrada o en Spam(correos no deseados)</strong></h1></div>
                 <div class="panel-content panel col-lg-12">
@@ -125,6 +125,7 @@
                 <a>Si tienes algun problema con la inscripción escribenos a: jaacscr@contadventista.org</a>
     
                 <!--video src="/videos/promo.mp4" autoplay loop controls width="500" height="400"></video-->
+            </div>
             </div>
 
 @endsection
