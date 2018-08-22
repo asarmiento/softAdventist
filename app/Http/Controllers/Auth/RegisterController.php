@@ -181,8 +181,8 @@ class RegisterController extends Controller
 
         $user->save();
             Mail::send('auth/Acept',compact('data'),function ($e) use ($user){
-                $e->from($user['email'],$user['name']);
-                $e->to('info@contadventista.org','Soporte SACR')->subject('Verifica tu Email!');
+                $e->from('registro@jovenesadventistascr.com', 'Departamento de Jovenes ACSCR');
+                $e->to($user->email,$user->name)->subject('Verifica tu Email!');
             });
         endif;
         return redirect('/ja');
