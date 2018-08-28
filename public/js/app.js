@@ -54639,7 +54639,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       formData: '',
       items: '',
       itemsNames: '',
-      itemsSizes: ''
+      itemsSizes: '',
+      launch: true
     };
   },
 
@@ -54654,9 +54655,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   },
 
   methods: {
-
-    send: function send(event) {
+    cambiarlunch: function cambiarlunch(id) {
       var _this2 = this;
+
+      this.$http.get('/registrado/update-de-lunch/' + id).then(function (response) {
+        _this2.boys = response.data;
+        _this2.total = _this2.boys[0].total * 2500;
+      });
+    },
+    send: function send(event) {
+      var _this3 = this;
 
       var self = this;
       axios.post('/registrado/registered/boys', this.data).then(function (response) {
@@ -54672,18 +54680,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             type: 'success',
             title: 'Se guardo con exito el Joven'
           });
-          _this2.total = response.data.boy.total * 2500;
+          _this3.total = response.data.boy.total * 2500;
           self.boys.push(response.data.boy);
-          _this2.data.code = '';
-          _this2.data.name = '';
-          _this2.data.last_name = '';
-          _this2.data.email = '';
-          _this2.data.age = '';
-          _this2.data.launch = '';
+          _this3.data.code = '';
+          _this3.data.name = '';
+          _this3.data.last_name = '';
+          _this3.data.email = '';
+          _this3.data.age = '';
+          _this3.data.launch = '';
 
-          _this2.errors.age = '';
-          _this2.errors.launch = '';
-          _this2.errors.email = '';
+          _this3.errors.age = '';
+          _this3.errors.launch = '';
+          _this3.errors.email = '';
         }
       }).catch(function (error) {
         if (error.response) {
@@ -54712,7 +54720,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       });
     },
     remove: function remove(index, event) {
-      var _this3 = this;
+      var _this4 = this;
 
       var self = this;
       axios.post('/registrado/delete/boys', { 'id': event }).then(function (response) {
@@ -54728,13 +54736,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             type: 'error',
             title: 'Se Borro con exito'
           });
-          _this3.boys.splice(index, 1);
-          _this3.data.code = '';
-          _this3.data.name = '';
-          _this3.data.last_name = '';
-          _this3.errors.age = '';
-          _this3.errors.launch = '';
-          _this3.errors.email = '';
+          _this4.boys.splice(index, 1);
+          _this4.data.code = '';
+          _this4.data.name = '';
+          _this4.data.last_name = '';
+          _this4.errors.age = '';
+          _this4.errors.launch = '';
+          _this4.errors.email = '';
         }
       }).catch(function (error) {
         if (error.response) {
@@ -54791,10 +54799,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.itemsSizes = '';
     },
     onSubmit: function onSubmit() {
-      var _this4 = this;
+      var _this5 = this;
 
       axios.post('/registrado/upload/boys', this.formData).then(function (response) {
-        _this4.data.file = response.data;
+        _this5.data.file = response.data;
         console.log(response.data);
       }).catch(function (error) {
         if (error.response) {
@@ -58731,8 +58739,32 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 boy.launch
-                  ? _c("div", { staticClass: "  col-md-2" }, [_vm._m(6, true)])
-                  : _c("div", { staticClass: " col-md-2" }, [_vm._m(7, true)]),
+                  ? _c("div", { staticClass: "  col-md-2" }, [
+                      _c(
+                        "a",
+                        {
+                          on: {
+                            click: function($event) {
+                              _vm.cambiarlunch(boy.id)
+                            }
+                          }
+                        },
+                        [_vm._m(6, true)]
+                      )
+                    ])
+                  : _c("div", { staticClass: " col-md-2" }, [
+                      _c(
+                        "a",
+                        {
+                          on: {
+                            click: function($event) {
+                              _vm.cambiarlunch(boy.id)
+                            }
+                          }
+                        },
+                        [_vm._m(7, true)]
+                      )
+                    ]),
                 _vm._v(" "),
                 _c("div", { staticClass: " col-md-2" }, [
                   _c(

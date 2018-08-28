@@ -121,10 +121,10 @@
                         {{boy.email}}
                     </div>
                     <div v-if="boy.launch" class="  col-md-2">
-                        <span class="btn btn-primary"><i class="fa fa-hand-o-up"></i> Tiene Almuerzo</span>
+                       <a @click="cambiarlunch(boy.id)" > <span class="btn btn-primary"><i class="fa fa-hand-o-up"></i> Tiene Almuerzo</span></a>
                     </div>
                     <div v-else class=" col-md-2">
-                        <span class="btn btn-danger"><i class="fa fa-hand-o-down"></i> No Tiene Almuerzo</span>
+                        <a @click="cambiarlunch(boy.id)" ><span class="btn btn-danger"><i class="fa fa-hand-o-down"></i> No Tiene Almuerzo</span></a>
                     </div>
                     <div class=" col-md-2">
                         <a @click="remove(index, boy.id)"><span class="btn btn-danger"><i
@@ -227,6 +227,7 @@
         items: '',
         itemsNames: '',
         itemsSizes: '',
+        launch: true,
       }
     },
     computed: {},
@@ -238,7 +239,12 @@
 
     },
     methods: {
-
+      cambiarlunch:function(id){
+        this.$http.get('/registrado/update-de-lunch/'+id).then((response) => {
+          this.boys = response.data;
+          this.total =  this.boys[0].total * 2500
+        });
+      },
       send: function (event) {
 
 

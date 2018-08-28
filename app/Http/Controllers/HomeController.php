@@ -217,6 +217,21 @@ class HomeController extends Controller
         return $boys;
 
     }
+   public function updatelaunch($id)
+    {
+        if(YoungBoy::find($id)->launch) {
+            YoungBoy::where('id', $id)->update(['launch' =>false]);
+        }else{
+            YoungBoy::where('id', $id)->update(['launch' =>true]);
+        }
+        $boys = YoungBoy::where('church',auth()->user()->member->church_id)->with('church')->with('user')->get();
+        $boys->map(function ($boy){
+            $boy->total = $boy->where('launch',true)->count();
+        });
+
+        return $boys;
+
+    }
 
     public function delete(Request $request)
     {
