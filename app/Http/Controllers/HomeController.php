@@ -211,7 +211,7 @@ class HomeController extends Controller
     {
         $boys = YoungBoy::where('church',auth()->user()->member->church_id)->with('church')->with('user')->get();
         $boys->map(function ($boy){
-            $boy->total = $boy->where('launch',true)->count();
+            $boy->total = $boy->where('launch',true)->where('church',auth()->user()->member->church_id)->count();
         });
 
         return $boys;
@@ -226,7 +226,7 @@ class HomeController extends Controller
         }
         $boys = YoungBoy::where('church',auth()->user()->member->church_id)->with('church')->with('user')->get();
         $boys->map(function ($boy){
-            $boy->total = $boy->where('launch',true)->count();
+            $boy->total = $boy->where('launch',true)->where('church',auth()->user()->member->church_id)->count();
         });
 
         return $boys;
