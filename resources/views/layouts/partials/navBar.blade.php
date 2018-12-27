@@ -20,8 +20,8 @@
         <!--Navbar Dropdown-->
         <!--================================-->
         <div class="navbar-content clearfix">
-            @if(currentUser())
-            @if(currentUser()->type == 'admin')
+
+
             <ul class="nav navbar-top-links pull-left">
 
                 <!--Navigation toogle button-->
@@ -281,8 +281,7 @@
                     </a>
                 </li>
             </ul>
-                @endif
-                @endif
+
         </div>
         <!--================================-->
         <!--End Navbar Dropdown-->

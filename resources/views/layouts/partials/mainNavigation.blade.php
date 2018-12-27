@@ -12,8 +12,7 @@
                 <div class="nano-content">
                     <!--Profile Widget-->
                     <!--================================-->
-                    @if(currentUser())
-                    @if(currentUser()->type == 'admin')
+
                     <div id="mainnav-profile" class="mainnav-profile">
 
                         <div class="profile-wrap">
@@ -264,8 +263,7 @@
                     </div>
                     <!--================================-->
                     <!--End widget-->
-                    @endif
-                    @endif
+                   
                 </div>
             </div>
         </div>
