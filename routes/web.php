@@ -15,8 +15,9 @@ Route::get('/', function () {
     return view('auth.login');
 });*/
 Route::get('/', function () {
-    return view('auth.InicioJa');
+    return view('auth.login');
 });
+
 Route::get('/ja', function () {
     return view('auth.loginJa');
 });
