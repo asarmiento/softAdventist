@@ -23,7 +23,7 @@ class CreateVisitorsTable extends Migration
             $table->integer('church_id')->unsigned()->index()->after('address');
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('no action');
-            $table->foreign('church_id')->references('id')->on('churchs')->onDelete('no action');
+            $table->foreign('church_id')->references('id')->on('churches')->onDelete('no action');
 
         });
     }
