@@ -16,7 +16,7 @@ class UserController extends Controller
 {
     public function create()
     {
-        return view('auth.CreateUser');
+        return view('auth.createUser');
     }
 
     public function labelSelect()
