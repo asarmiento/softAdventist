@@ -17,7 +17,8 @@ use App\Entities\LocalFields\LocalField;
  */
 class Union extends Entity
 {
-
+    protected $table = 'unions';
+    protected $fillable = ['name','token','country_id'];
     public function country()
     {
         return $this->belongsTo(Country::class);
@@ -43,5 +44,17 @@ class Union extends Entity
     public function localFields()
     {
         return $this->hasMany(LocalField::class);
+    }
+
+    public static function listsLabel()
+    {
+        $unions = self::all();
+        $lists = [];
+        foreach ($unions AS $union)
+        {
+            array_push($lists, ['label' =>  $union->name, 'value' => $union->id]);
+        }
+
+        return $lists;
     }
 }

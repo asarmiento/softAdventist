@@ -8,10 +8,7 @@ use App\Http\Requests\CreateMemberRequest;
 use App\Traits\DataViewerTraits;
 use App\Traits\ListInformMembersTraits;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Crypt;
-use function Sodium\randombytes_random16;
 use Validator;
-use Yajra\Datatables\Datatables;
 
 class MemberController extends Controller
 {
@@ -24,7 +21,7 @@ class MemberController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('admin')->only('create', 'edit', 'store', 'listMemberInfo');
+        $this->middleware('auth')->only('create', 'edit', 'store', 'listMemberInfo');
     }
 
 
@@ -69,7 +66,7 @@ class MemberController extends Controller
             $perPage = $request->perPage;
         }
 
-        $model = Member::where('church_id',userChurch()->id)->searchPaginateAndOrder($perPage, $request->get('search'));
+        $model = Member::where('church_id', userChurch()->id)->searchPaginateAndOrder($perPage, $request->get('search'));
 
         $array = $this->myPages($model);
 
@@ -77,15 +74,12 @@ class MemberController extends Controller
         $model['per_page'] = $perPage;
 
         $response = [
-            'model'    => $model,
-            'columns'  => $columns,
+            'model' => $model,
+            'columns' => $columns,
             'my_pages' => $array
         ];
         return $response;
     }
-
-
-
 
 
     public function create()
@@ -96,7 +90,7 @@ class MemberController extends Controller
 
     public function edit()
     {
-        $member = Member::where('church_id',userChurch()->id)->get();
+        $member = Member::where('church_id', userChurch()->id)->get();
 
         return view('members.create', compact('member'));
     }
@@ -107,25 +101,26 @@ class MemberController extends Controller
         $data = $request->all();
         $data = $this->CreacionArray($data, '');
         $user = User::where('email', $data['email'])->first();
-        $data['church_id'] = userChurch()->id;
         if (count($user) == 0):
             $user = User::create([
                 'identification_card' => $data['charter'],
-                'name'                => $data['name'],
-                'last_name'           => $data['last'],
-                'email'               => $data['email'],
-                'status'              => 'activo',
-                'avatar'              => '',
-                'token'               => str_random(40),
-                'password'            => bcrypt(123456),
+                'name' => $data['name'],
+                'last_name' => $data['last'],
+                'email' => $data['email'],
+                'status' => 'activo',
+                'avatar' => '',
+                'token' => str_random(40),
+                'password' => bcrypt(123456),
             ]);
         endif;
-
+        $data['civil_status']=$data['civil']['value'];
+        $user = User::where('email', currentUser()->email)->first();
+        $data['church_id'] = $user->member->church_id;
         $data['user_id'] = $user->id;
         $member = new Member();
         $member->fill($data);
         if ($member->save()):
-            return $this->exito(trans('El Miembro: ').$member->nameComplete());
+            return $this->exito(trans('El Miembro: ') . $member->nameComplete());
         endif;
 
         return $this->errores($member->errors);
@@ -141,5 +136,14 @@ class MemberController extends Controller
     public function registerMemMatEscSab()
     {
         return view('members.RegistroMemMatEscSab');
+    }
+
+    public function selectMembers()
+    {
+        return Member::listsLabel();
+    }
+    public function assistance()
+    {
+        return view('members.assistance');
     }
 }

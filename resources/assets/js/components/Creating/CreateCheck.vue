@@ -320,11 +320,11 @@
 	    },
 	    created()
 	    {
-		    this.$http.get( '/tesoreria/lista-de-cheques' ).then( ( response ) =>
+		    this.$http.get( '/softadventist/lista-de-cheques' ).then( ( response ) =>
 		    {
 			    this.checks = response.data;
 		    } );
-		    this.$http.get( '/tesoreria/lista-info-sin-deposito' )
+		    this.$http.get( '/softadventist/lista-info-sin-deposito' )
 			    .then( ( response ) =>
 			    {
 				    this.internals = response.data;
@@ -348,7 +348,7 @@
 		    {
 			    var self = this;
 			    if ( val ) {
-				    axios.post( '/tesoreria/balance-internal-control-check', val )
+				    axios.post( '/softadventist/balance-internal-control-check', val )
 					    .then( response =>
 					    {
 						    this.data.balance = response.data.balance;
@@ -370,7 +370,7 @@
 		    },
 		    remove: function ( data, index )
 		    {
-			    axios.post( '/tesoreria/delete-check', data )
+			    axios.post( '/softadventist/delete-check', data )
 				    .then( response =>
 				    {
 					    this.checks.splice( index, 1 );
@@ -411,15 +411,15 @@
 		    send: function ( event )
 		    {
 			    var self = this;
-			    axios.post( '/tesoreria/' + self.url, this.data )
+			    axios.post( '/softadventist/' + self.url, this.data )
 				    .then( response =>
 				    {
 					    if ( response.data.success = true ) {
 						    this.checks = response.data.list;
 						    if ( this.data.type.value === 'local_field' ) {
-							    document.location = '/tesoreria/depositos-al-campo-local/';
+							    document.location = '/softadventist/depositos-al-campo-local/';
 						    } else {
-							    document.location = '/tesoreria/registro-detalle-cheque/' + response.data.token;
+							    document.location = '/softadventist/registro-detalle-cheque/' + response.data.token;
 						    }
 						    this.data.number = '';
 						    this.data.name = '';
@@ -504,7 +504,7 @@
 		    },
 		    onSubmit()
 		    {
-			    axios.post( '/tesoreria/upload-check', this.formData )
+			    axios.post( '/softadventist/upload-check', this.formData )
 				    .then( response =>
 				    {
 					    this.data.ck = response.data

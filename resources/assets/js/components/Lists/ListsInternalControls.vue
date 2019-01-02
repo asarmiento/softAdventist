@@ -202,7 +202,7 @@
 	    methods   : {
 		    image( data )
 		    {
-			    this.$http.get( "/tesoreria/image/internalControls/" + data ).then( ( response ) =>
+			    this.$http.get( "/softadventist/image/internalControls/" + data ).then( ( response ) =>
 			    {
 				    return response.data;
 				
@@ -210,11 +210,11 @@
 			
 		    }, weekly( token )
 		    {
-			    return "/tesoreria/registro-de-ingresos/" + token;
+			    return "/softadventist/registro-de-ingresos/" + token;
 		    },
 		    pdfInfoWeekly( data )
 		    {
-			    return "/tesoreria/reporte-semanal/" + data;
+			    return "/softadventist/reporte-semanal/" + data;
 		    },
 		    styleType()
 		    {

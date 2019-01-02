@@ -121,10 +121,10 @@
         created() {
 
             var self = this;
-            this.$http.get('/tesoreria/lista-de-departamentos').then((response) => {
+            this.$http.get('/softadventist/lista-de-departamentos').then((response) => {
                 this.departaments = response.data;
             });
-            this.$http.get('/tesoreria/lists-departament-inactive').then((response) => {
+            this.$http.get('/softadventist/lists-departament-inactive').then((response) => {
                 self.datos = response.data.model;
                 self.my_pages = response.data.my_pages;
                 self.columns = response.data.columns;
@@ -144,7 +144,7 @@
 
             applied: function () {
                 var self = this;
-                axios.post('/tesoreria/applied-departament', event)
+                axios.post('/softadventist/applied-departament', event)
                     .then((response) => {
                         document.location = response.data.url;
 
@@ -177,7 +177,7 @@
             },
             send: function (event) {
                 var self = this;
-                axios.post('/tesoreria/' + self.url, this.data)
+                axios.post('/softadventist/' + self.url, this.data)
                     .then(response => {
                         if (response.data.success = true) {
 
@@ -223,7 +223,7 @@
             },
             removeLine: function (event, index) {
                 var self = this;
-                axios.post('/tesoreria/delete-departament', event)
+                axios.post('/softadventist/delete-departament', event)
                     .then((response) => {
                         self.datos.data.splice(index, 1);
                         self.total = response.data.count;

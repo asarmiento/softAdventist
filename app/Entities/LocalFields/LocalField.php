@@ -10,7 +10,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class LocalField extends Entity
 {
-    //
+    protected $table = 'local_fields';
+    protected $fillable = ['name','email','token','union_id'];
 
     public function  districts()
     {
@@ -21,5 +22,17 @@ class LocalField extends Entity
     public function union()
     {
         return $this->belongsTo(Union::class);
+    }
+
+    public static function listsLabel()
+    {
+        $unions = self::all();
+        $lists = [];
+        foreach ($unions AS $union)
+        {
+            array_push($lists, ['label' =>  $union->name, 'value' => $union->id]);
+        }
+
+        return $lists;
     }
 }

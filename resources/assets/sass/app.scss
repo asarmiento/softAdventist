@@ -107,6 +107,70 @@
   font-size: 14px;
 }
 
+
+@media only screen and (min-width: 320px) {
+    #sale-otro-table {
+        display: none;
+    }
+
+    #sale-pc-table {
+        display: block;
+    }
+
+    h1, h2 {
+        font-size: 18px;
+    }
+
+}
+
+/* Small devices (landscape phones, 576px and up)*/
+@media (min-width: 576px) {
+    #sale-otro-table {
+        display: none;
+    }
+
+    #sale-pc-table {
+        display: block;
+    }
+}
+
+/* Medium devices (tablets, 768px and up)*/
+@media (min-width: 768px) {
+    #sale-otro-table {
+        display: block;
+    }
+
+    #sale-pc-table {
+        display: none;
+    }
+}
+
+/* Large devices (desktops, 992px and up)*/
+@media (min-width: 992px) {
+    #sale-otro-table {
+        display: block;
+    }
+
+    #sale-pc-table {
+        display: none;
+    }
+}
+
+/* Extra large devices (large desktops, 1200px and up)*/
+@media (min-width: 1200px) {
+    #sale-otro-table {
+        display: block;
+    }
+
+    h1, h2 {
+        font-size: 28px;
+        text-align: center;
+    }
+
+    #sale-pc-table {
+        display: none;
+    }
+}
 // all boxes and radios have these parent wrappers
 .custom-checkbox, .custom-radio {
   // easy inline labels

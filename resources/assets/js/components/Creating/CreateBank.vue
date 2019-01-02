@@ -118,11 +118,11 @@
             },
         methods: {
             pdfInfo:function (token) {
-                return "/tesoreria/reporte-estado-de-cuenta-actual/"+token;
+                return "/softadventist/reporte-estado-de-cuenta-actual/"+token;
             },
             send: function (event) {
                 var self = this;
-                axios.post('/tesoreria/'+self.url, this.data)
+                axios.post('/softadventist/'+self.url, this.data)
                     .then(response => {
                         if(response.data.success = true){
                     this.$alert({title: 'Se Guardo con Exito!!!',

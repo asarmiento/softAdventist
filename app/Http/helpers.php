@@ -11,13 +11,29 @@ function currentUser()
     return auth()->user();
 }
 
-function churchSession($church)
+function userSession($user)
 {
-    \Session::put('church', $church);
+    \Session::put('user', $user);
+}
+
+function campoSession($campo)
+{
+
+    \Session::put('campo', $campo);
+}
+
+function userType()
+{
+
+    return \Session::get('user');
 }
 
 function userChurch()
 {
 
-    return \Session::get('church');
+    if(currentUser()->whereUserBelong->church_id){
+        return \App\Entities\Church::find(currentUser()->whereUserBelong->church_id);
+    }elseif (currentUser()->whereUserBelong->local_field_id){
+        return \App\Entities\Church::where('',currentUser()->whereUserBelong->local_field_id)->first();
+    }
 }

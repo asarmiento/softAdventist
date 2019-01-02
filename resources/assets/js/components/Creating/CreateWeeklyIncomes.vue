@@ -283,7 +283,7 @@
             }
         },
         created() {
-           this.$http.get('/tesoreria/list-member-weekly/'+this.rows.saturday)
+           this.$http.get('/softadventist/list-member-weekly/'+this.rows.saturday)
                 .then((response) => {
                   console.log()
                     this.listMembers = response.data.infoWeeklys;
@@ -293,7 +293,7 @@
                     this.temp_incomes = response.data.tempIncomes;
                     this.titleMembers = response.data.title;
                 });
-            this.$http.get('/tesoreria/check-finish-info/'+this.rows.token)
+            this.$http.get('/softadventist/check-finish-info/'+this.rows.token)
                 .then((response) => {
                     this.result = response.data.success;
                 });
@@ -325,7 +325,7 @@
             send: function (event) {
               this.data.internal_control_id =        this.internal;
                 var self = this;
-                axios.post('/tesoreria/save-weekly-incomes', this.data)
+                axios.post('/softadventist/save-weekly-incomes', this.data)
                     .then(response => {
                         if (response.data.success = true) {
                             self.listMembers.push(response.data.newMember[0]);
@@ -384,7 +384,7 @@
             sendCampo: function (event) {
                 event.preventDefault();
                 var self = this;
-                axios.post('/tesoreria/save-campo-temp-income', this.campo)
+                axios.post('/softadventist/save-campo-temp-income', this.campo)
                     .then(response => {
                         console.log(response.data.account)
                         this.temp_local_field_incomes.push(response.data.account);
@@ -428,7 +428,7 @@
             },
             removeCampo: function (Campo, index, event) {
                 var self = this;
-                axios.post('/tesoreria/remove-campo-temp-income', Campo)
+                axios.post('/softadventist/remove-campo-temp-income', Campo)
                     .then(response => {
                         this.temp_local_field_incomes.splice(index, 1);
                     }).catch(function (error) {
@@ -467,7 +467,7 @@
             sendIglesia: function (event) {
                 event.preventDefault();
                 var self = this;
-                axios.post('/tesoreria/save-iglesia-temp-income', this.church)
+                axios.post('/softadventist/save-iglesia-temp-income', this.church)
                     .then(response => {
                         self.temp_incomes.push(response.data.account);
                         this.church.balance = '';
@@ -510,7 +510,7 @@
             },
             removeChurch: function (Church, index, event) {
                 var self = this;
-                axios.post('/tesoreria/remove-iglesia-temp-income', Church)
+                axios.post('/softadventist/remove-iglesia-temp-income', Church)
                     .then(response => {
                         self.temp_incomes.splice(index, 1);
                     }).catch(function (error) {
@@ -548,7 +548,7 @@
             },
             removeline: function (line, index, event) {
                 var self = this;
-                axios.post('/tesoreria/remove-line-income', line)
+                axios.post('/softadventist/remove-line-income', line)
                     .then(response => {
                         self.result = response.data.message.success
                         self.listMembers.splice(index, 1);
@@ -589,11 +589,11 @@
             finish: function (saturday, event) {
 
                 var self = this;
-                axios.post('/tesoreria/finish-info-income', {'saturday':saturday})
+                axios.post('/softadventist/finish-info-income', {'saturday':saturday})
                     .then(response => {
                         if (response.data.success) {
                             ///this.$route.route.go('tesoreria/registro-control-interno');
-                            document.location = '/tesoreria/registro-control-interno';
+                            document.location = '/softadventist/registro-control-interno';
                         }
                     }).catch(function (error) {
                     if (error.response) {

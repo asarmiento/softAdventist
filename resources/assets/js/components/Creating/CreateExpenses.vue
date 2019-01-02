@@ -75,7 +75,7 @@
             },
         },
         created(){
-            this.$http.get('/tesoreria/lists-expenses').then((response) => {
+            this.$http.get('/softadventist/lists-expenses').then((response) => {
                 self.datos = response.data.model;
                 self.my_pages = response.data.my_pages;
                 self.columns = response.data.columns;
@@ -86,7 +86,7 @@
             send: function (event) {
                 console.log(this.data.selected);
                 var self = this;
-                axios.post('/tesoreria/'+self.url, this.data)
+                axios.post('/softadventist/'+self.url, this.data)
                     .then(response => {
                         if(response.data.success = true){
                     this.$alert({title: 'Se Guardo con Exito!!!',

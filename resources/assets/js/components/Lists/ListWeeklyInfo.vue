@@ -178,7 +178,7 @@
                return Number(parseFloat(list.sixty)+parseFloat(list.other_church)).toFixed(2);
            },
            pdfInfo: function (saturday) {
-               return "/tesoreria/reporte-semanal/"+saturday;
+               return "/softadventist/reporte-semanal/"+saturday;
            },
            styleType() {
                var self = this;

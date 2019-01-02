@@ -25,5 +25,15 @@ class Church extends Entity
         // TODO: Implement getUnique() method.
     }
 
+    public static function listsLabel()
+    {
+        $churchs = self::all();
+        $lists = [];
+        foreach ($churchs AS $church)
+        {
+            array_push($lists, ['label' =>  $church->name, 'value' => $church->id]);
+        }
 
+        return $lists;
+    }
 }

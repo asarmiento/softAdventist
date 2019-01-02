@@ -158,12 +158,12 @@
         },
         methods: {
             pdfInfo: function (data) {
-                return "/tesoreria/reporte-semanal/" + data;
+                return "/softadventist/reporte-semanal/" + data;
             },
             send: function (event) {
                 console.log(this.data.selected);
                 var self = this;
-                axios.post('/tesoreria/' + self.url, this.data)
+                axios.post('/softadventist/' + self.url, this.data)
                     .then(response => {
                         if (response.data.success = true) {
                             document.location = 'registro-de-ingresos/' + response.data.token;
@@ -210,7 +210,7 @@
                 });
             },
             remove: function (data, index) {
-                axios.post('/tesoreria/delete-internal-control', data)
+                axios.post('/softadventist/delete-internal-control', data)
                     .then(response => {
                         this.internalControls.splice(index, 1);
                         this.$alert({
@@ -273,7 +273,7 @@
                 this.itemsSizes = '';
             },
             onSubmit() {
-                axios.post('/tesoreria/upload-internal-control', this.formData)
+                axios.post('/softadventist/upload-internal-control', this.formData)
                     .then(response => {
                         this.data.name = response.data
                         console.log(response.data)

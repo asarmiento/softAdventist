@@ -179,7 +179,7 @@
         },
         methods: {
             pdfAccountSummary(data){
-               return  '/tesoreria/reporte-resumen-movimiento-departamento/'+data;
+               return  '/softadventist/reporte-resumen-movimiento-departamento/'+data;
             },
             styleType() {
                 var self = this;

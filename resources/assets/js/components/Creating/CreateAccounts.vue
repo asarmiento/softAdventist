@@ -90,7 +90,7 @@
             send: function (event) {
                 console.log(this.data.selected);
                 var self = this;
-                axios.post('/tesoreria/' + self.url, this.data)
+                axios.post('/softadventist/' + self.url, this.data)
                     .then(response => {
                         if (response.data.success = true) {
                             this.$alert({

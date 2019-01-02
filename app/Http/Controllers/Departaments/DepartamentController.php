@@ -322,7 +322,7 @@
 				$depChurch->update(['status' => 'activo']);
 				
 				/** Queda Pendiente el envio de email para notificar */
-				return response()->json(['url' => '/tesoreria/lista-departament'],
+				return response()->json(['url' => '/softadventist/lista-departament'],
 				                        200);
 			}
 			

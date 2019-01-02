@@ -73,23 +73,32 @@ Route::get('list-localfields-all', ['uses'=>'LocalField\LocalFieldController@ind
 Route::get('list-unions-country/{token}', ['uses'=>'UnionController@index','as'=>'country']);
 Route::post('save-church-public', ['uses'=>'Church\ChurchController@store','as'=>'save-church-public']);
 
-    Route::group(['prefix'=>'tesoreria','middleware'=>'auth'],function (){
-
-
+Route::group(['prefix'=>'softadventist','middleware'=>'auth'],function (){
 
         Route::get('/', 'HomeController@index');
         Route::get('/image/{type}/{month}/{name}', 'HomeController@image');
         Route::get('home', ['uses'=>'HomeController@index','as'=>'home']);
         Route::get('profile', ['uses'=>'HomeController@index','as'=>'profile']);
         //miembros
-        Route::get('nuevo-miembros', ['uses'=>'MemberController@create','as'=>'profile']);
+        Route::get('perfil-user', ['uses'=>'MemberController@create','as'=>'profile']);
         Route::get('nuevo-miembros', ['uses'=>'MemberController@create','as'=>'new-member']);
         Route::get('cobro-a-miembros', ['uses'=>'MemberController@charge','as'=>'charge-members']);
         Route::post('save-miembros', 'MemberController@store');
         Route::get('lista-miembros', ['uses'=>'MemberController@index','as'=>'list-members']);
         Route::get('lista-miembros-deuda', ['uses'=>'MemberController@index','as'=>'list-members-due']);
         Route::get('lists-miembros', ['uses'=>'MemberController@getData','as'=>'listMembers']);
-        /**
+        Route::get('lista-miembros-select', 'MemberController@selectMembers');
+       /**
+     * Visitantes
+     */
+    Route::get('asistencia-miembros-en-cultos', 'MemberController@assistance')->name('asistencia-member');
+    Route::get('nuevo-visitas', 'VisitorController@create')->name('new-visitor');
+    Route::post('save-visitor', 'VisitorController@store');
+    Route::post('save-assists', 'VisitorController@storeAssits');
+    Route::get('lista-visitas', 'VisitorController@index')->name('list-visitor');
+    Route::get('list-visitor', 'MemberController@getData');
+    Route::get('lista-asistencia', 'VisitorController@listAssits');
+    /**
          * Departamentos
          */
         Route::get('lista-de-departamentos', 'Departaments\DepartamentController@listDepartament');
@@ -216,6 +225,15 @@ Route::post('save-church-public', ['uses'=>'Church\ChurchController@store','as'=
         Route::get('pdf-de-gastos/{token}', 'ReportPdfController@checkDetail');
         Route::get('reporte-resumen-movimiento-departamento/{token}', 'ReportsPDF\ReportsDepartamentsController@pdfSummaryMoveDepartament');
         Route::get('reporte-estado-de-cuenta-actual/{token}', 'ReportPdfController@stateAccountNow');
-
-
+        /**
+         * Secretaria
+         */
+    Route::post('store-usuarios', 'UserController@store');
+    Route::get('crear/usuarios', 'UserController@create')->name('createUser');
+    Route::get('lista-user-select', 'UserController@labelSelect');
+    Route::get('lista-churchs-select', 'Church\ChurchController@listsSelect');
+    Route::get('lista-unions-select', 'UnionController@labelSelect');
+    Route::get('lista-local-select', 'LocalField\LocalFieldController@listsSelect');
+    Route::get('nuevo-cargo-usuario', 'LocalField\WhereUserBelongController@create')->name('nuevoCargoUsuario');
+    Route::post('nuevo-cargo-usuario', 'LocalField\WhereUserBelongController@store');
     });

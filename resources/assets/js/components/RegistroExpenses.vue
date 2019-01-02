@@ -195,11 +195,11 @@
                 this.data.token_check = this.check.token;
             }
             if (this.check) {
-                this.$http.get('/tesoreria/lista-de-gastos-not/' + this.check.id).then((response) => {
+                this.$http.get('/softadventist/lista-de-gastos-not/' + this.check.id).then((response) => {
                     this.balances = response.data;
                 });
             } else {
-                this.$http.get('/tesoreria/balance-de-gastos-not').then((response) => {
+                this.$http.get('/softadventist/balance-de-gastos-not').then((response) => {
                     this.balances = response.data;
                 });
             }
@@ -208,7 +208,7 @@
             send: function (event) {
                 console.log(this.data.selected);
                 var self = this;
-                axios.post('/tesoreria/' + self.url, this.data)
+                axios.post('/softadventist/' + self.url, this.data)
                     .then(response => {
                         if (response.data.success = true) {
                             this.$alert({
@@ -263,7 +263,7 @@
             },
             remove: function (check, index, event) {
                 var self = this;
-                axios.post('/tesoreria/remove', check)
+                axios.post('/softadventist/remove', check)
                     .then(response => {
                         if (response.data.success = true) {
                             this.expenses.splice(index, 1);
@@ -304,10 +304,10 @@
             },
             aplic: function (check, event) {
                 var self = this;
-                axios.post('/tesoreria/finish-expense-invoice', check)
+                axios.post('/softadventist/finish-expense-invoice', check)
                     .then(response => {
                         if (response.data.success = true) {
-                                document.location = '/tesoreria/pdf-de-gastos/' + response.data.message;
+                                document.location = '/softadventist/pdf-de-gastos/' + response.data.message;
                         }
                     }).catch(function (error) {
                     if (error.response) {
@@ -341,10 +341,10 @@
             },
             edit: function (token, event) {
                 var self = this;
-                axios.get('/tesoreria/edit-expense-invoice/' + token,)
+                axios.get('/softadventist/edit-expense-invoice/' + token,)
                     .then(response => {
                         if (response.data.success = true) {
-                            document.location = '/tesoreria/registro-detalle-cheque/' + token;
+                            document.location = '/softadventist/registro-detalle-cheque/' + token;
                         }
                     }).catch(function (error) {
                     if (error.response) {

@@ -23,6 +23,8 @@ class Member extends Entity
         'birthdate',
         'phone',
         'cell',
+        'civil_status',
+        'address',
         'email',
         'church_id',
         'token',
@@ -79,7 +81,17 @@ class Member extends Entity
     {
         return $this->hasMany(LocalFieldIncome::getClass());
     }
+    public static function listsLabel()
+    {
+        $members = self::all();
+        $lists = [];
+        foreach ($members AS $member)
+        {
+            array_push($lists, ['label' =>  $member->name.' '.$member->last, 'value' => $member->id]);
+        }
 
+        return $lists;
+    }
     public function scopeSearch($query, $search){
         if(trim($search) != ""){
             $query->where("name","LIKE","%$search%")

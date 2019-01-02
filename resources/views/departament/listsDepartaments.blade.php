@@ -2,7 +2,7 @@
 
 @section('content')
     <diV id="app">
-        <lists-departaments  source="/tesoreria/lists-departament" title="Lista Departamentos de la Iglesia"></lists-departaments>
+        <lists-departaments  source="/softadventist/lists-departament" title="Lista Departamentos de la Iglesia"></lists-departaments>
     </diV>
 @endsection
 @section('scripts')

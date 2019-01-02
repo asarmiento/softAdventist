@@ -209,7 +209,7 @@
                 console.log(this.data)
                 if (this.data.country) {
 
-                   /* axios.post('/tesoreria/list-unions-country', this.data.country)
+                   /* axios.post('/softadventist/list-unions-country', this.data.country)
                         .then((response) => {
 
                     this.countrys = response.data;
@@ -217,11 +217,11 @@
                 }
             },
             pdfInfo: function (token) {
-                return "/tesoreria/reporte-estado-de-cuenta-actual/" + token;
+                return "/softadventist/reporte-estado-de-cuenta-actual/" + token;
             },
             send: function (event) {
                 var self = this;
-                axios.post('/tesoreria/' + self.url, this.data)
+                axios.post('/softadventist/' + self.url, this.data)
                     .then(response => {
                     if(response.data.success = true
                 )

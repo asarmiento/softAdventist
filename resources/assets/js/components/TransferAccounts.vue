@@ -167,11 +167,11 @@
             },
         },
         created() {
-            this.$http.get('/tesoreria/lista-informes-reportados')
+            this.$http.get('/softadventist/lista-informes-reportados')
                 .then((response) => {
                     this.infosReport = response.data;
             });
-            this.$http.get('/tesoreria/lista-informes-sin-reportados')
+            this.$http.get('/softadventist/lista-informes-sin-reportados')
                 .then((response) => {
                     this.infosSinReport = response.data;
                 });
@@ -197,7 +197,7 @@
             send: function (event) {
                 console.log(this.data.selected);
                 var self = this;
-                axios.post('/tesoreria/' + self.url, this.data)
+                axios.post('/softadventist/' + self.url, this.data)
                     .then(response => {
                         if (response.data.success = true) {
                             this.$alert({

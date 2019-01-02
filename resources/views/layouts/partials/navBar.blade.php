@@ -70,19 +70,32 @@
                                 <ul class="list-unstyled">
                                     <li class="dropdown-header">Miembros</li>
                                     <li><a href="{{route('profile')}}">Mi Perfil</a></li>
-                                    <li><a href="{{route('new-member')}}">Agregar Miembros</a></li>
-                                    <li><a href="{{route('list-members')}}">Lista Miembros</a></li>
+                                    <li><a href="{{route('new-member')}}">Registrar Miembros</a></li>
+                                        <li><a href="{{route('list-members')}}">Lista Miembros</a></li>
+                                        <li><a href="{{route('asistencia-member')}}">Asistencia de Sábados</a></li>
+                                    @if(currentUser()->whereUserBelong->cargo == 'tesorero')
                                     <li><a href="{{route('regMemMatEscSab')}}">Cobro a Miembros</a></li>
+                                    @endif
                                     <li><a href="#" class="disabled"></a></li>
                                     <li class="divider"></li>
+                                    @if(currentUser()->whereUserBelong->cargo == 'tesorero')
                                     <li class="dropdown-header">Cuentas Bancarias</li>
                                     <li><a href="{{route('create-bank')}}">Cuentas Bancarias<span class="pull-right badge badge-purple"></span></a></li>
                                     <li><a href="{{route('register-deposit')}}">Depositos Iglesia</a></li>
                                     <li><a href="{{route('deposit-local-field')}}">Depositos al Campo Local</a></li>
                                     <li><a href="{{route('create-check')}}">Cheques</a></li>
+                                        <li><a href="#" class="disabled"></a></li>
+                                        <li class="divider"></li>
+                                    @endif
+                                </ul>
+                                <ul class="list-unstyled">
+                                    <li class="dropdown-header">Visitantes</li>
+                                    <li><a href="{{route('new-visitor')}}">Registrar Visitas</a></li>
+                                    <li><a href="{{route('list-visitor')}}">Lista Visitas</a></li>
                                 </ul>
 
                             </div>
+                            @if(currentUser()->whereUserBelong->cargo == 'tesorero')
                             <div class="col-sm-4 col-md-3">
 
                                 <!--Mega menu list-->
@@ -127,9 +140,11 @@
                                     </li-->
                                 </ul>
                             </div>
+                            @endif
                         </div>
                     </div>
                 </li>
+
                 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                 <!--End mega dropdown-->
 

@@ -19,6 +19,7 @@ require('./bootstrap');
  * Componentes de ingreso de informacion nueva.
  */
 Vue.component('createMember', require('./components/Creating/CreateMember.vue'));
+Vue.component('createVisitor', require('./components/Creating/CreateVisitor.vue'));
 Vue.component('createja', require('./components/Creating/CreateJaEvent.vue'));
 Vue.component('editMember', require('./components/Creating/CreateMember.vue'));
 Vue.component('createDepartament', require('./components/Creating/CreateDepartament.vue'));
@@ -31,6 +32,11 @@ Vue.component('createChurchDeposits', require('./components/Creating/CreateChurc
 Vue.component('createLocalDeposits', require('./components/Creating/CreateLocalDeposits.vue'));
 Vue.component('createCheck', require('./components/Creating/CreateCheck.vue'));
 Vue.component('createChurchPublic', require('./components/Creating/CreateChurchPublic.vue'));
+
+
+Vue.component('createUserCargo', require('./components/LocalField/CreateUserCargo.vue'));
+Vue.component('createUser', require('./components/Creating/CreateUser.vue'));
+Vue.component('createAssistance', require('./components/Creating/CreateAssistance.vue'));
 /**
  * Editores de tablas
  */
@@ -44,6 +50,7 @@ Vue.component('listsExpenses', require('./components/Lists/ListsExpenses.vue'));
 Vue.component('listsExpenseAccounts', require('./components/Lists/ListsExpenseAccounts.vue'));
 Vue.component('listWeeklyInfo', require('./components/Lists/ListWeeklyInfo.vue'));
 Vue.component('listsMembers', require('./components/Lists/ListsMembers.vue'));
+Vue.component('listsVisitor', require('./components/Lists/ListsVisitor.vue'));
 Vue.component('listsChecks', require('./components/Lists/ListsChecks.vue'));
 Vue.component('listsInternalControls', require('./components/Lists/ListsInternalControls.vue'));
 Vue.component('listsDepartaments', require('./components/Lists/ListsDepartaments.vue'));

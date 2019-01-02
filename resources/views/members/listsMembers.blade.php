@@ -2,7 +2,7 @@
 
 @section('content')
     <diV id="app">
-        <lists-members  source="/tesoreria/lists-miembros" title="Lista Miembro"></lists-members>
+        <lists-members  source="/softadventist/lists-miembros" title="Lista Miembro"></lists-members>
     </diV>
 @endsection
 @section('scripts')

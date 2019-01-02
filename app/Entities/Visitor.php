@@ -10,7 +10,7 @@ namespace App\Entities;
 
 class Visitor extends Entity
 {
-    protected $fillable = ['ip','date'];
+    protected $fillable = ['user_id','date','name','last_name','email','phone', 'address','church_id'];
     public function getRules()
     {
        return []; // TODO: Implement getRules() method.

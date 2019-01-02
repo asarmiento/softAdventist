@@ -4,7 +4,7 @@
 <div id="app">
     <lists-internal-controls
             title="Registro de Control Interno"
-            source="/tesoreria/list-control-interno"
+            source="/softadventist/list-control-interno"
     ></lists-internal-controls>
 </div>
 @endsection

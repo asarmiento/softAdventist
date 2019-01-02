@@ -10,6 +10,7 @@
 namespace App\Http\Controllers\LocalField;
 
 
+use App\Entities\LocalFields\LocalField;
 use App\Http\Controllers\Controller;
 use App\Repositories\LocalFiledRepository;
 
@@ -34,5 +35,12 @@ class LocalFieldController extends Controller
     public function index()
     {
         return $this->localFiledRepository->listSelectsSinFilterChurch();
+    }
+
+
+
+    public function listsSelect()
+    {
+        return LocalField::listsLabel();
     }
 }

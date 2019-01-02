@@ -149,7 +149,7 @@
             },
 
             onSubmit() {
-                axios.post('http://softadventist.dev/tesoreria/upload-check',  this.formData)
+                axios.post('http://softadventist.dev/softadventist/upload-check',  this.formData)
                     .then(response => {
                       console.log(response.data)
                      }).catch(function (error) {

@@ -9,7 +9,13 @@
 namespace App\Http\Controllers;
 
 
-class UnionController
+use App\Entities\Union;
+
+class UnionController extends Controller
 {
 
+    public function labelSelect()
+    {
+        return Union::listsLabel();
+    }
 }

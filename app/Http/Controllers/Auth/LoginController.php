@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Entities\Church;
 use App\Entities\Member;
+use App\Entities\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
@@ -28,7 +29,7 @@ class LoginController extends Controller
      * @var string
      */
 
-   // protected $redirectTo = '/tesoreria/home';
+    // protected $redirectTo = '/softadventist/home';
 
     /**
      * Create a new controller instance.
@@ -42,16 +43,16 @@ class LoginController extends Controller
 
     protected function credentials($request)
     {
-        $member = Member::where('email',$request->get('email'))->first();
+        $user = User::where('email', $request->get('email'))->first();
 
-        if($member) {
-            $church = Church::find($member->church_id);
-            churchSession($church);
-        }
+        //    churchSession($user);
+
+
+
         return [
-                'email'=>$request->get('email'),
-                'password'=>$request->get('password'),
-                'status'=>'activo'
+            'email' => $request->get('email'),
+            'password' => $request->get('password'),
+            'status' => 'activo'
         ];
     }
 

@@ -54,4 +54,9 @@ class ChurchController extends Controller
     {
         return view('departament.accounts.TransferAccounts');
     }
+
+    public function listsSelect()
+    {
+        return Church::listsLabel();
+    }
 }

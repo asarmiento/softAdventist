@@ -81,6 +81,24 @@
                                 </div>
                             </div>
                         </div>
+                        <div class=" col-lg-3 col-md-3 ">
+                            <div class="panel-default ">
+                                <label>Estado Civil</label>
+                                <div class="input-group" >
+                                    <span class="input-group-addon"><i class="fa fa-send"></i></span>
+                                    <v-select type="text" v-model="data.civil" :options="civil" class="form-control" ></v-select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class=" col-lg-3 col-md-3 ">
+                            <div class="panel-default ">
+                                <label>Dirección</label>
+                                <div class="input-group" >
+                                    <span class="input-group-addon"><i class="fa fa-send"></i></span>
+                                    <input type="text" v-model="data.address" class="form-control" >
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-lg-12 col-md-12  text-center">
                             <div class="btn">
                                 <button   v-on:click="send"  class="btn btn-success">Guardar</button>
@@ -94,9 +112,13 @@
 </template>
 
 <script>
+    import vSelect from "vue-select";
+    import Swal from 'sweetalert2'
+    import myDatepicker  from "vue-datepicker";
 
     export default {
-            data () {
+        components: {vSelect, myDatepicker,Swal},
+        data () {
                  return   {
                      data: {
                          charter: '',
@@ -104,24 +126,33 @@
                          last: '',
                          bautizmoDate: '',
                          birthdate: '',
+                         address: '',
+                         civil_status: '',
                          phone: '',
                          cell: '',
                          email: '',
-                     }
+                     },
+                     civil:[
+                         {"label":'Casado(a)',"value":'Casado(a)'},
+                         {"label":'Soltero(a)',"value":'Soltero(a)'},
+                         {"label":'Union Libre',"value":'Union Libre'},
+
+                     ]
                  }
             },
         methods: {
             send: function (event) {
-                axios.post('/tesoreria/save-miembros', this.data)
+                axios.post('/softadventist/save-miembros', this.data)
                     .then(response => {
                         if(response.data.success = true){
-                            this.$alert({title: 'Se Guardo con Exito!!!',
-                            message: response.data.message});
+                            Swal('Se Guardo con Exito!!!', response.data.message,'success');
                             this.data.charter= '';
                             this.data.name= '';
                             this.data.last= '';
                             this.data.bautizmoDate= '';
                             this.data.birthdate= '';
+                            this.data.address= '';
+                            this.data.civil_status= '';
                             this.data.phone= '';
                             this.data.cell= '';
                             this.data.email='';
@@ -167,9 +198,73 @@
     }
 </script>
 
-<style scoped>
+<style >
 
     .mostrar {
         display: block;
+    }
+
+    @media only screen and (min-width: 320px) {
+        #sale-otro-table {
+            display: none;
+        }
+
+        #sale-pc-table {
+            display: block;
+        }
+
+        h1, h2 {
+            font-size: 18px;
+        }
+
+    }
+
+    /* Small devices (landscape phones, 576px and up)*/
+    @media (min-width: 576px) {
+        #sale-otro-table {
+            display: none;
+        }
+
+        #sale-pc-table {
+            display: block;
+        }
+    }
+
+    /* Medium devices (tablets, 768px and up)*/
+    @media (min-width: 768px) {
+        #sale-otro-table {
+            display: block;
+        }
+
+        #sale-pc-table {
+            display: none;
+        }
+    }
+
+    /* Large devices (desktops, 992px and up)*/
+    @media (min-width: 992px) {
+        #sale-otro-table {
+            display: block;
+        }
+
+        #sale-pc-table {
+            display: none;
+        }
+    }
+
+    /* Extra large devices (large desktops, 1200px and up)*/
+    @media (min-width: 1200px) {
+        #sale-otro-table {
+            display: block;
+        }
+
+        h1, h2 {
+            font-size: 28px;
+            text-align: center;
+        }
+
+        #sale-pc-table {
+            display: none;
+        }
     }
 </style>

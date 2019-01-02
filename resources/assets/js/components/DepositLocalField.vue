@@ -252,16 +252,16 @@
             },
         },
         created(){
-            this.$http.get('/tesoreria/lista-de-cheques-local-field')
+            this.$http.get('/softadventist/lista-de-cheques-local-field')
                 .then((response) => {
                     this.checks =   response.data;
                 });
 
-            this.$http.get('/tesoreria/lista-cuenta-campo-local')
+            this.$http.get('/softadventist/lista-cuenta-campo-local')
                 .then((response) => {
                     this.banks = response.data;
                 });
-            this.$http.get('/tesoreria/lista-depositos')
+            this.$http.get('/softadventist/lista-depositos')
                 .then((response) => {
                     this.all_depositos = response.data;
                 });
@@ -272,7 +272,7 @@
             },
             remove_deposits: function (token, index, event) {
                 var self = this;
-                axios.post('/tesoreria/remove-deposit', token)
+                axios.post('/softadventist/remove-deposit', token)
                     .then(response => {
                         this.all_depositos.splice(index, 1);
                     }).catch(function (error) {
@@ -311,7 +311,7 @@
             send: function (event) {
 
                 var self = this;
-                axios.post('/tesoreria/' + self.url, this.data)
+                axios.post('/softadventist/' + self.url, this.data)
                     .then(response => {
                         if (response.data.success = true) {
                             this.internals = response.data.result;
@@ -386,7 +386,7 @@
                 this.itemsSizes = '';
             },
             onSubmit() {
-                axios.post('http://softadventist.dev/tesoreria/upload-local-field-deposit', this.formData)
+                axios.post('http://softadventist.dev/softadventist/upload-local-field-deposit', this.formData)
                     .then(response => {
                         this.data.name = response.data
                         console.log(response.data)

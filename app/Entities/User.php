@@ -2,6 +2,7 @@
 
 namespace App\Entities;
 
+use App\Entities\LocalFields\WhereUserBelong;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -45,5 +46,23 @@ class User extends Authenticatable
     public function member()
     {
         return $this->hasOne(Member::getClass());
+    }
+
+    public function whereUserBelong()
+    {
+        return $this->hasOne(WhereUserBelong::class);
+    }
+
+
+    public static function listsLabel()
+    {
+        $users = self::all();
+        $lists = [];
+        foreach ($users AS $user)
+        {
+            array_push($lists, ['label' =>  $user->name.' '.$user->last_name, 'value' => $user->id]);
+        }
+
+        return $lists;
     }
 }

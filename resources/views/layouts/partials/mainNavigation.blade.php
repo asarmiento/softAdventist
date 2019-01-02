@@ -51,6 +51,7 @@
                                     <i class="psi-cloud"></i>
                                 </a>
                             </li>
+                            @if(currentUser()->whereUserBelong->cargo == 'tesorero')
                             <li class="col-xs-4" data-content="Departamentos">
                                 <a class="shortcut-grid" href="{{route('list-departament')}}">
                                     <i class="psi-data-stream"></i>
@@ -61,6 +62,7 @@
                                     <i class="psi-phone-sms"></i>
                                 </a>
                             </li>
+                                @endif
                         </ul>
                     </div>
                     <!--================================-->
@@ -75,6 +77,7 @@
                                 <span class="menu-title">Registrar Miembros</span>
                             </a>
                         </li>
+                    @if(currentUser()->whereUserBelong->cargo == 'tesorero')
                         <!--Menu list item-->
                         <li>
                             <a href="{{route('create-internal-control')}}">
@@ -142,6 +145,21 @@
 
                             </ul>
                         </li>
+                        @endif
+                        <li>
+                            <a href="#">
+                                <i class="psi-hipster-headphones"></i>
+                                <span class="menu-title">
+									<strong>Configuración</strong>
+								</span>
+                                <i class="arrow"></i>
+                            </a>
+                            <!--Submenu-->
+                            <ul class="collapse">
+                                <li><a href="{{route('createUser')}}">Crear usuario</a></li>
+                                <li><a href="{{route('nuevoCargoUsuario')}}">Asignar Cargo a usuario</a></li>
+                            </ul>
+                        </li>
                         <!--Menu list item->
                         <li>
                             <a href="#">
@@ -151,7 +169,7 @@
 												<span class="label label-danger pull-right">Hot</span>
 											</span>
                             </a>
-                            <!--Submenu->
+                            < Submenu>
                             <ul class="collapse">
                                 <li><a href="#">Link</a></li>
                                 <li><a href="#">Another link</a></li>
@@ -161,7 +179,7 @@
 
                             </ul>
                         </li>
-                        <!--Menu list item->
+                        <Menu list item>
                         <li>
                             <a href="#">
                                 <i class="psi-cursor-click"></i>
@@ -170,7 +188,7 @@
 									<span class="pull-right badge badge-success">3</span>
 								</span>
                             </a>
-                            <!--Submenu-->
+                            <Submenu>
                         <ul class="collapse">
                             <li><a href="#">Link</a></li>
                             <li><a href="#">Another link</a></li>
@@ -263,7 +281,7 @@
                     </div>
                     <!--================================-->
                     <!--End widget-->
-                   
+
                 </div>
             </div>
         </div>

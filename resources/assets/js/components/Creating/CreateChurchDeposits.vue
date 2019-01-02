@@ -287,13 +287,13 @@
 	    },
 	    created()
 	    {
-		    this.$http.get( '/tesoreria/lista-info-sin-deposito' )
+		    this.$http.get( '/softadventist/lista-info-sin-deposito' )
 			    .then( ( response ) =>
 			    {
 				    this.internals = response.data;
 			    } );
 
-		    this.$http.get( '/tesoreria/lista-depositos' )
+		    this.$http.get( '/softadventist/lista-depositos' )
 			    .then( ( response ) =>
 			    {
 				    this.all_depositos = response.data;
@@ -307,7 +307,7 @@
 		    remove_deposits: function ( token, index, event )
 		    {
 			    var self = this;
-			    axios.post( '/tesoreria/remove-deposit', token )
+			    axios.post( '/softadventist/remove-deposit', token )
 				    .then( response =>
 				    {
 					    this.all_depositos.splice( index, 1 );
@@ -351,7 +351,7 @@
 		    {
 			    var self = this;
 			    if ( val ) {
-				    axios.post( '/tesoreria/balance-internal-control', val )
+				    axios.post( '/softadventist/balance-internal-control', val )
 					    .then( response =>
 					    {
 						    this.data.total = response.data.balance;
@@ -364,7 +364,7 @@
 		    {
 
 			    var self = this;
-			    axios.post( '/tesoreria/' + self.url, this.data )
+			    axios.post( '/softadventist/' + self.url, this.data )
 				    .then( response =>
 				    {
 					    if ( response.data.success = true ) {
@@ -457,7 +457,7 @@
 		    },
 		    onSubmit()
 		    {
-			    axios.post( '/tesoreria/upload-church-deposit', this.formData )
+			    axios.post( '/softadventist/upload-church-deposit', this.formData )
 				    .then( response =>
 				    {
 					    this.data.name = response.data

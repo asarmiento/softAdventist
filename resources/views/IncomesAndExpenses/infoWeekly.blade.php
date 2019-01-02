@@ -9,7 +9,7 @@
 @section('content')
     <div id="app">
         <list-weekly-info title="Lista de Informes Semanales"
-                          source="/tesoreria/list-de-informes-semanales"
+                          source="/softadventist/list-de-informes-semanales"
         ></list-weekly-info>
     </div>
 @endsection
