@@ -100,6 +100,6 @@ class VisitorController extends Controller
 
     public function listAssits()
     {
-        return Assistance::with('member')->with('visitor')->get();
+        return Assistance::with('member')->with('visitor')->where('church_id',userChurch()->id)->get();
     }
 }

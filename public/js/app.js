@@ -56490,7 +56490,7 @@ exports = module.exports = __webpack_require__(2)(false);
 
 
 // module
-exports.push([module.i, "\n.mostrar {\n    display: block;\n}\n@media only screen and (min-width: 320px) {\n#sale-otro-table {\n        display: none;\n}\n#sale-pc-table {\n        display: block;\n}\nh1, h2 {\n        font-size: 18px;\n}\n}\n\n/* Small devices (landscape phones, 576px and up)*/\n@media (min-width: 576px) {\n#sale-otro-table {\n        display: none;\n}\n#sale-pc-table {\n        display: block;\n}\n}\n\n/* Medium devices (tablets, 768px and up)*/\n@media (min-width: 768px) {\n#sale-otro-table {\n        display: block;\n}\n#sale-pc-table {\n        display: none;\n}\n}\n\n/* Large devices (desktops, 992px and up)*/\n@media (min-width: 992px) {\n#sale-otro-table {\n        display: block;\n}\n#sale-pc-table {\n        display: none;\n}\n}\n\n/* Extra large devices (large desktops, 1200px and up)*/\n@media (min-width: 1200px) {\n#sale-otro-table {\n        display: block;\n}\nh1, h2 {\n        font-size: 28px;\n        text-align: center;\n}\n#sale-pc-table {\n        display: none;\n}\n}\n", ""]);
+exports.push([module.i, "\n.mostrar {\n    display: block;\n}\n.material{\n    z-index: 5;\n}\n@media only screen and (min-width: 320px) {\n#sale-otro-table {\n        display: none;\n}\n#sale-pc-table {\n        display: block;\n}\nh1, h2 {\n        font-size: 18px;\n}\n}\n\n/* Small devices (landscape phones, 576px and up)*/\n@media (min-width: 576px) {\n#sale-otro-table {\n        display: none;\n}\n#sale-pc-table {\n        display: block;\n}\n}\n\n/* Medium devices (tablets, 768px and up)*/\n@media (min-width: 768px) {\n#sale-otro-table {\n        display: block;\n}\n#sale-pc-table {\n        display: none;\n}\n}\n\n/* Large devices (desktops, 992px and up)*/\n@media (min-width: 992px) {\n#sale-otro-table {\n        display: block;\n}\n#sale-pc-table {\n        display: none;\n}\n}\n\n/* Extra large devices (large desktops, 1200px and up)*/\n@media (min-width: 1200px) {\n#sale-otro-table {\n        display: block;\n}\nh1, h2 {\n        font-size: 28px;\n        text-align: center;\n}\n#sale-pc-table {\n        display: none;\n}\n}\n", ""]);
 
 // exports
 
@@ -56674,7 +56674,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 cell: '',
                 email: ''
             },
-            civil: [{ "label": 'Casado(a)', "value": 'Casado(a)' }, { "label": 'Soltero(a)', "value": 'Soltero(a)' }, { "label": 'Union Libre', "value": 'Union Libre' }]
+            civil: [{ "label": 'Casado(a)', "value": 'Casado(a)' }, { "label": 'Soltero(a)', "value": 'Soltero(a)' }, { "label": 'Divorciado(a)', "value": 'Divorciado(a)' }, { "label": 'Viudo(a)', "value": 'Viudo(a)' }, { "label": 'Union Libre', "value": 'Union Libre' }]
         };
     },
 
@@ -58477,7 +58477,7 @@ var render = function() {
             ]),
             _vm._v(" "),
             _c("div", { staticClass: " col-lg-3 col-md-3 " }, [
-              _c("div", { staticClass: "panel-default " }, [
+              _c("div", { staticClass: "panel-default material" }, [
                 _c("label", [_vm._v("Estado Civil")]),
                 _vm._v(" "),
                 _c(
@@ -73952,7 +73952,7 @@ exports = module.exports = __webpack_require__(2)(false);
 
 
 // module
-exports.push([module.i, "\n.linea-divisoria {\n    height: 1px;\n    background-color: #336731;\n    margin: 10px;\n}\n@media only screen and (min-width: 320px) {\n#sale-otro-table {\n        display: none;\n}\n#sale-pc-table {\n        display: block;\n}\nh1, h2 {\n        font-size: 18px;\n}\n}\n\n/* Small devices (landscape phones, 576px and up)*/\n@media (min-width: 576px) {\n#sale-otro-table {\n        display: none;\n}\n#sale-pc-table {\n        display: block;\n}\n}\n\n/* Medium devices (tablets, 768px and up)*/\n@media (min-width: 768px) {\n#sale-otro-table {\n        display: block;\n}\n#sale-pc-table {\n        display: none;\n}\n}\n\n/* Large devices (desktops, 992px and up)*/\n@media (min-width: 992px) {\n#sale-otro-table {\n        display: block;\n}\n#sale-pc-table {\n        display: none;\n}\n}\n\n/* Extra large devices (large desktops, 1200px and up)*/\n@media (min-width: 1200px) {\n#sale-otro-table {\n        display: block;\n}\nh1, h2 {\n        font-size: 28px;\n        text-align: center;\n}\n#sale-pc-table {\n        display: none;\n}\n}\n", ""]);
+exports.push([module.i, "\n.linea-divisoria {\n    height: 1px;\n    background-color: #336731;\n    margin: 10px;\n}\n.material{\n    z-index: 5;\n}\n@media only screen and (min-width: 320px) {\n#sale-otro-table {\n        display: none;\n}\n#sale-pc-table {\n        display: block;\n}\nh1, h2 {\n        font-size: 18px;\n}\n}\n\n/* Small devices (landscape phones, 576px and up)*/\n@media (min-width: 576px) {\n#sale-otro-table {\n        display: none;\n}\n#sale-pc-table {\n        display: block;\n}\n}\n\n/* Medium devices (tablets, 768px and up)*/\n@media (min-width: 768px) {\n#sale-otro-table {\n        display: block;\n}\n#sale-pc-table {\n        display: none;\n}\n}\n\n/* Large devices (desktops, 992px and up)*/\n@media (min-width: 992px) {\n#sale-otro-table {\n        display: block;\n}\n#sale-pc-table {\n        display: none;\n}\n}\n\n/* Extra large devices (large desktops, 1200px and up)*/\n@media (min-width: 1200px) {\n#sale-otro-table {\n        display: block;\n}\nh1, h2 {\n        font-size: 28px;\n        text-align: center;\n}\n#sale-pc-table {\n        display: none;\n}\n}\n", ""]);
 
 // exports
 
@@ -74227,12 +74227,12 @@ var render = function() {
               _c("div", { staticClass: "panel-default " }, [
                 _c(
                   "div",
-                  { staticClass: "input-group" },
+                  { staticClass: "input-group material" },
                   [
                     _vm._m(1),
                     _vm._v(" "),
                     _c("v-select", {
-                      staticClass: "form-control",
+                      staticClass: "form-control ",
                       attrs: {
                         options: _vm.listMembers,
                         placeholder: "Seleccione un Miembro"

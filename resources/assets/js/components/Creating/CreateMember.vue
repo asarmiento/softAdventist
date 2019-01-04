@@ -82,7 +82,7 @@
                             </div>
                         </div>
                         <div class=" col-lg-3 col-md-3 ">
-                            <div class="panel-default ">
+                            <div class="panel-default material">
                                 <label>Estado Civil</label>
                                 <div class="input-group" >
                                     <span class="input-group-addon"><i class="fa fa-send"></i></span>
@@ -135,6 +135,8 @@
                      civil:[
                          {"label":'Casado(a)',"value":'Casado(a)'},
                          {"label":'Soltero(a)',"value":'Soltero(a)'},
+                         {"label":'Divorciado(a)',"value":'Divorciado(a)'},
+                         {"label":'Viudo(a)',"value":'Viudo(a)'},
                          {"label":'Union Libre',"value":'Union Libre'},
 
                      ]
@@ -203,7 +205,9 @@
     .mostrar {
         display: block;
     }
-
+    .material{
+        z-index: 5;
+    }
     @media only screen and (min-width: 320px) {
         #sale-otro-table {
             display: none;

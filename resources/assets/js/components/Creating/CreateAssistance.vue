@@ -11,10 +11,10 @@
                 <div class="panel-body">
                     <div class=" col-lg-3 col-md-3 ">
                         <div class="panel-default ">
-                            <div class="input-group">
+                            <div class="input-group material">
                                 <span class="input-group-addon"><i class="fa fa-user"></i></span>
                                 <v-select v-model="visit.assists" :options="listMembers"
-                                          placeholder="Seleccione un Miembro" class="form-control"></v-select>
+                                          placeholder="Seleccione un Miembro" class="form-control "></v-select>
                             </div>
                         </div>
                     </div>
@@ -246,7 +246,9 @@
         margin: 10px;
     }
 
-
+    .material{
+        z-index: 5;
+    }
     @media only screen and (min-width: 320px) {
         #sale-otro-table {
             display: none;

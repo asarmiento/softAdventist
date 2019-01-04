@@ -140,7 +140,7 @@ class MemberController extends Controller
 
     public function selectMembers()
     {
-        return Member::listsLabel();
+        return Member::where('church_id',userChurch()->id)->listsLabel();
     }
     public function assistance()
     {
