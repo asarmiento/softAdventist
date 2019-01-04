@@ -115,7 +115,7 @@ class MemberController extends Controller
         endif;
         $data['civil_status']=$data['civil']['value'];
         $user = User::where('email', currentUser()->email)->first();
-        $data['church_id'] = $user->member->church_id;
+        $data['church_id'] = userChurch()->id;
         $data['user_id'] = $user->id;
         $member = new Member();
         $member->fill($data);
