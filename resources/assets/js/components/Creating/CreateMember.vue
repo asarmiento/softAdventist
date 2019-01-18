@@ -86,7 +86,7 @@
                                 <label>Estado Civil</label>
                                 <div class="input-group" >
                                     <span class="input-group-addon"><i class="fa fa-send"></i></span>
-                                    <v-select type="text" v-model="data.civil" :options="civil" class="form-control" ></v-select>
+                                    <v-select type="text" v-model="data.civil_status" :options="civil" class="form-control" ></v-select>
                                 </div>
                             </div>
                         </div>
@@ -143,7 +143,12 @@
                  }
             },
         methods: {
+
             send: function (event) {
+                if(this.data.civil_status === ""){
+                    Swal('Debe Elegir un Estado Civil', 'No se puede proceder','error');
+                    return false;
+                }
                 axios.post('/softadventist/save-miembros', this.data)
                     .then(response => {
                         if(response.data.success = true){

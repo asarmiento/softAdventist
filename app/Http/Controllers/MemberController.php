@@ -102,18 +102,23 @@ class MemberController extends Controller
         $data = $this->CreacionArray($data, '');
         $user = User::where('email', $data['email'])->first();
         if (count($user) == 0):
-            $user = User::create([
-                'identification_card' => $data['charter'],
-                'name' => $data['name'],
-                'last_name' => $data['last'],
-                'email' => $data['email'],
-                'status' => 'activo',
-                'avatar' => '',
-                'token' => str_random(40),
-                'password' => bcrypt(123456),
-            ]);
+            if(!empty($data['email'])) {
+                $user = User::create([
+                    'identification_card' => $data['charter'],
+                    'name' => $data['name'],
+                    'last_name' => $data['last'],
+                    'email' => $data['email'],
+                    'status' => 'activo',
+                    'avatar' => '',
+                    'token' => str_random(40),
+                    'password' => bcrypt(123456),
+                ]);
+            }
         endif;
-        $data['civil_status']=$data['civil']['value'];
+
+            if(is_array($data['civil_status'])) {
+                $data['civil_status'] = $data['civil_status']['value'];
+            }
         $user = User::where('email', currentUser()->email)->first();
         $data['church_id'] = userChurch()->id;
         $data['user_id'] = $user->id;

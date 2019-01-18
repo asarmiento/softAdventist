@@ -56679,9 +56679,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
 
     methods: {
+
         send: function send(event) {
             var _this = this;
 
+            if (this.data.civil_status === "") {
+                __WEBPACK_IMPORTED_MODULE_1_sweetalert2___default()('Debe Elegir un Estado Civil', 'No se puede proceder', 'error');
+                return false;
+            }
             axios.post('/softadventist/save-miembros', this.data).then(function (response) {
                 if (response.data.success = true) {
                     __WEBPACK_IMPORTED_MODULE_1_sweetalert2___default()('Se Guardo con Exito!!!', response.data.message, 'success');
@@ -58490,11 +58495,11 @@ var render = function() {
                       staticClass: "form-control",
                       attrs: { type: "text", options: _vm.civil },
                       model: {
-                        value: _vm.data.civil,
+                        value: _vm.data.civil_status,
                         callback: function($$v) {
-                          _vm.$set(_vm.data, "civil", $$v)
+                          _vm.$set(_vm.data, "civil_status", $$v)
                         },
-                        expression: "data.civil"
+                        expression: "data.civil_status"
                       }
                     })
                   ],
