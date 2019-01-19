@@ -98,6 +98,7 @@ Route::group(['prefix'=>'softadventist','middleware'=>'auth'],function (){
     Route::get('lista-visitas', 'VisitorController@index')->name('list-visitor');
     Route::get('list-visitor', 'MemberController@getData');
     Route::get('lista-asistencia', 'VisitorController@listAssits');
+    Route::get('lista-asistencia-visitas', 'VisitorController@listAssitsVisitor');
     /**
          * Departamentos
          */

@@ -74129,6 +74129,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             },
             listMembers: [],
             assits: "",
+            assitsVisit: "",
             pray_request_visit: "",
             pray_request: ""
         };
@@ -74141,6 +74142,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         });
         this.$http.get('/softadventist/lista-asistencia').then(function (response) {
             _this.assits = response.data;
+        });
+        this.$http.get('/softadventist/lista-asistencia-visitas').then(function (response) {
+            _this.assitsVisit = response.data;
         });
     },
 
@@ -74555,7 +74559,7 @@ var render = function() {
                 : _vm._e()
             }),
             _vm._v(" "),
-            _vm._l(_vm.assits, function(assitance) {
+            _vm._l(_vm.assitsVisit, function(assitance) {
               return assitance.visitor
                 ? _c("tr", [
                     _c("td", [

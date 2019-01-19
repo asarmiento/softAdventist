@@ -104,7 +104,12 @@ class VisitorController extends Controller
 
         return Assistance::with('member','visitor')->whereHas('member',function ($q){
             $q->where('church_id',userChurch()->id);
-        })->whereHas('visitor',function ($r){
+        })->where('date',Carbon::now()->toDateString())->get();
+    }
+    public function listAssitsVisitor()
+    {
+
+        return Assistance::with('member','visitor')->whereHas('visitor',function ($r){
             $r->orWhere('church_id',userChurch()->id);
         })->where('date',Carbon::now()->toDateString())->get();
     }

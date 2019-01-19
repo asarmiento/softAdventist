@@ -115,7 +115,7 @@
                     <td v-else class="label-primary label">Escuela Sabática</td>
                     <td v-if="assitance.pray_request"><label class="label-primary label">{{assitance.pray_request}}</label></td>
                 </tr>
-                <tr v-for="assitance in assits" v-if="assitance.visitor">
+                <tr v-for="assitance in assitsVisit" v-if="assitance.visitor">
 
                     <td>{{assitance.visitor.name}} {{assitance.visitor.last_name}}</td>
                     <td><label class="label label-danger">Visita</label></td>
@@ -153,6 +153,7 @@
                 },
                 listMembers: [],
                 assits: "",
+                assitsVisit: "",
                 pray_request_visit: "",
                 pray_request: "",
             }
@@ -167,6 +168,10 @@
             this.$http.get('/softadventist/lista-asistencia')
                 .then((response) => {
                     this.assits = response.data;
+                });
+            this.$http.get('/softadventist/lista-asistencia-visitas')
+                .then((response) => {
+                    this.assitsVisit = response.data;
                 });
         },
         methods: {
