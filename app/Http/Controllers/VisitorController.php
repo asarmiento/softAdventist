@@ -83,6 +83,7 @@ class VisitorController extends Controller
         $data['date'] = Carbon::now()->toDateString();
         $data['time'] = Carbon::now()->toTimeString();
         $data['liturgia'] = 0;
+        $data['church_id'] = userChurch()->id;
         $data['member_id'] = $data['assists']['value'];
         $data['user_id'] = currentUser()->id;
         if($data['time'] > '10:30'){
@@ -100,6 +101,11 @@ class VisitorController extends Controller
 
     public function listAssits()
     {
-        return Assistance::with('member')->with('visitor')->where('church_id',userChurch()->id)->get();
+
+        return Assistance::with('member','visitor')->whereHas('member',function ($q){
+            $q->where('church_id',userChurch()->id);
+        })->whereHas('visitor',function ($r){
+            $r->orWhere('church_id',userChurch()->id);
+        })->where('date',Carbon::now()->toDateString())->get();
     }
 }

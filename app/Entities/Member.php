@@ -83,7 +83,7 @@ class Member extends Entity
     }
     public static function listsLabel()
     {
-        $members = self::all();
+        $members = self::where('church_id',userChurch()->id)->get();
         $lists = [];
         foreach ($members AS $member)
         {
