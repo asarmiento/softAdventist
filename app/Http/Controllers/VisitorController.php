@@ -51,7 +51,7 @@ class VisitorController extends Controller
         $data = $request->all();
         $data['date'] = Carbon::now()->toDateString();
         $data['user_id']= currentUser()->id;
-        $data['church_id']= currentUser()->id;
+        $data['church_id'] = userChurch()->id;
         $pray_request = $data['pray_request'];
         $visitor = new Visitor();
         $visitor->fill($data);
