@@ -72,7 +72,9 @@
                                     <li><a href="{{route('profile')}}">Mi Perfil</a></li>
                                     <li><a href="{{route('new-member')}}">Registrar Miembros</a></li>
                                         <li><a href="{{route('list-members')}}">Lista Miembros</a></li>
+                                    @if(currentUser()->whereUserBelong->cargo == 'secretario')
                                         <li><a href="{{route('asistencia-member')}}">Asistencia de Sábados</a></li>
+                                    @endif
                                     @if(currentUser()->whereUserBelong->cargo == 'tesorero')
                                     <li><a href="{{route('regMemMatEscSab')}}">Cobro a Miembros</a></li>
                                     @endif
@@ -88,10 +90,17 @@
                                         <li class="divider"></li>
                                     @endif
                                 </ul>
+                                @if(currentUser()->whereUserBelong->cargo == 'secretario')
+
                                 <ul class="list-unstyled">
                                     <li class="dropdown-header">Visitantes</li>
                                     <li><a href="{{route('new-visitor')}}">Registrar Visitas</a></li>
                                     <li><a href="{{route('list-visitor')}}">Lista Visitas</a></li>
+                                </ul>
+                                @endif
+                                <ul class="list-unstyled">
+                                    <li class="dropdown-header">Departamento de Jovenes</li>
+                                    <li><a href="{{route('list-ja')}}">Lista de jovenes</a></li>
                                 </ul>
 
                             </div>

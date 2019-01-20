@@ -21,6 +21,8 @@
     <link href="{{ asset('css/line-icons/premium-line-icons.css') }}" rel="stylesheet">
     <link href="{{ asset('css/solid-icons/premium-solid-icons.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/demo/nifty-demo-icons.min.css')}}" rel="stylesheet">
+    <link href="{{ asset('css/demo/nifty-demo.min.css')}}" rel="stylesheet">
+    <link href="{{ asset('plugins/pace/pace.min.css')}}" rel="stylesheet">
 
 @yield('style')
 <!-- Scripts -->
@@ -75,6 +77,7 @@
 <script src="{{ asset('js/jquery.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.min.js') }}"></script>
 <script src="{{ asset('js/nifty.min.js') }}"></script>
+<script src="{{ asset('js/demo/nifty-demo.min.js') }}"></script>
 
 @yield('scripts')
 </body>

@@ -78,9 +78,9 @@ Route::group(['prefix'=>'softadventist','middleware'=>'auth'],function (){
         Route::get('/', 'HomeController@index');
         Route::get('/image/{type}/{month}/{name}', 'HomeController@image');
         Route::get('home', ['uses'=>'HomeController@index','as'=>'home']);
-        Route::get('profile', ['uses'=>'HomeController@index','as'=>'profile']);
+     //   Route::get('profile', ['uses'=>'HomeController@index','as'=>'profile']);
         //miembros
-        Route::get('perfil-user', ['uses'=>'MemberController@create','as'=>'profile']);
+     //   Route::get('perfil-user', ['uses'=>'MemberController@create','as'=>'profile']);
         Route::get('nuevo-miembros', ['uses'=>'MemberController@create','as'=>'new-member']);
         Route::get('cobro-a-miembros', ['uses'=>'MemberController@charge','as'=>'charge-members']);
         Route::post('save-miembros', 'MemberController@store');
@@ -99,6 +99,11 @@ Route::group(['prefix'=>'softadventist','middleware'=>'auth'],function (){
     Route::get('list-visitor', 'MemberController@getData');
     Route::get('lista-asistencia', 'VisitorController@listAssits');
     Route::get('lista-asistencia-visitas', 'VisitorController@listAssitsVisitor');
+    /**
+     * Clubes
+     */
+    Route::get('lista-perfiles-clubes', 'ClubesController@listProfile')->name('list-ja');
+    Route::get('perfile-clubes', 'ClubesController@profile')->name('profile');
     /**
          * Departamentos
          */

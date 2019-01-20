@@ -1,67 +1,92 @@
 <template>
-        <div class="row">
-            <div class="col-md-12 col-md-offset-0">
-                <div id="newMembers" class="panel panel-default">
-                    <div class="panel-heading">
-                        <div class="text-center " >
-                            <h1 >Agregar visitas </h1>
-                        </div>
-                    </div>
-                    <div class="panel-body">
-                        <div class=" col-lg-3 col-md-3 ">
-                            <div class="panel-default ">
-                                <label>Nombres</label>
-                                <div class="input-group" >
-                                    <span class="input-group-addon"><i class="fa fa-user"></i></span>
-                                    <input type="text" v-model="data.name" class="form-control" >
-                                </div>
+
+    <!---------------------------------->
+    <div class="row">
+    <div class="tab-base">
+
+        <!--Nav Tabs-->
+        <ul class="nav nav-tabs">
+            <li class="active">
+                <a data-toggle="tab" href="#demo-lft-tab-1">Aventurero </a>
+            </li>
+            <li>
+                <a data-toggle="tab" href="#demo-lft-tab-2">Conquistadores <span class="badge badge-purple">3</span></a>
+            </li>
+            <li>
+                <a data-toggle="tab" href="#demo-lft-tab-3">Guias Mayores</a>
+            </li>
+            <li>
+                <a data-toggle="tab" href="#demo-lft-tab-4">Lider Juvenil</a>
+            </li>
+        </ul>
+
+        <!--Tabs Content-->
+        <div class="tab-content">
+            <div id="demo-lft-tab-1" class="tab-pane fade active in">
+                <p class="text-main text-semibold">Aventurero</p>
+                <p>No tiene Registros</p>
+            </div>
+            <div id="demo-lft-tab-2" class="tab-pane fade">
+                <p class="text-main text-semibold">Conquistadores</p>
+                <div class="panel">
+                    <div class="panel-body demo-liquid-fixed">
+                        <div class="fixed-fluid">
+                            <div class="fixed-sm-250 pull-sm-left" style="text-align: center">
+                                <strong class="text-uppercase"><img src="/img/especialidades/apicultura.gif" width="120" height="100"></strong><br>
+                            </div>
+                            <div class="fluid">
+                                <ul>
+                                <li><strong class="text-uppercase">Especialidad : </strong> Apicultura</li>
+                                <li><strong class="text-uppercase">Fecha Finalización: </strong> 2001-09-25</li>
+                                <li><strong class="text-uppercase">Instructor: </strong> Carlos Alvarado </li>
+                                <li><strong class="text-uppercase">Iglesia: </strong> Central San Jose </li>
+                                </ul>
                             </div>
                         </div>
-                        <div class=" col-lg-3 col-md-3 ">
-                            <div class="panel-default ">
-                                <label>Apellidos</label>
-                                <div class="input-group" >
-                                    <span class="input-group-addon"><i class="fa fa-user-circle"></i></span>
-                                    <input type="text" v-model="data.last_name" class="form-control" >
-                                </div>
+                        <hr>
+                        <div class="fixed-fluid">
+                            <div class="fixed-sm-250 pull-sm-left" style="text-align: center">
+                                <strong class="text-uppercase"><img src="/img/especialidades/administración.png" width="120" height="100"></strong><br>
+                            </div>
+                            <div class="fluid">
+                                <ul>
+                                <li><strong class="text-uppercase">Especialidad : </strong> Administración</li>
+                                <li><strong class="text-uppercase">Fecha Finalización: </strong> 1998-09-25</li>
+                                <li><strong class="text-uppercase">Instructor: </strong> Glenn Mora </li>
+                                <li><strong class="text-uppercase">Iglesia: </strong> Hatillo </li>
+                                </ul>
                             </div>
                         </div>
-                        <div class=" col-lg-3 col-md-3 ">
-                            <div class="panel-default ">
-                                <label>Telefono</label>
-                                <div class="input-group" >
-                                    <span class="input-group-addon"><i class="fa fa-phone"></i></span>
-                                    <input type="text" v-model="data.phone" class="form-control" >
-                                </div>
+                        <hr>
+                        <div class="fixed-fluid">
+                            <div class="fixed-sm-250 pull-sm-left" style="text-align: center">
+                                <strong class="text-uppercase"><img src="/img/especialidades/internet-ay-honor_orig.png" width="120" height="100"></strong><br>
+                            </div>
+                            <div class="fluid">
+                                <ul>
+                                <li><strong class="text-uppercase">Especialidad : </strong> Internet</li>
+                                <li><strong class="text-uppercase">Fecha Finalización: </strong> 2009-10-25</li>
+                                <li><strong class="text-uppercase">Instructor: </strong> Edy Echenique </li>
+                                <li><strong class="text-uppercase">Iglesia: </strong> UNADECA </li>
+                                </ul>
                             </div>
                         </div>
-                        <div class=" col-lg-3 col-md-3 ">
-                            <div class="panel-default ">
-                                <label>Email</label>
-                                <div class="input-group" >
-                                    <span class="input-group-addon"><i class="fa fa-send"></i></span>
-                                    <input type="text" v-model="data.email" class="form-control" >
-                                </div>
-                            </div>
-                        </div>
-                        <div class=" col-lg-3 col-md-3 ">
-                            <div class="panel-default ">
-                                <label>Dirección</label>
-                                <div class="input-group" >
-                                    <span class="input-group-addon"><i class="fa fa-send"></i></span>
-                                    <input type="text" v-model="data.address" class="form-control" >
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-12 col-md-12  text-center">
-                            <div class="btn">
-                                <button   v-on:click="send"  class="btn btn-success">Guardar</button>
-                            </div>
-                        </div>
+
                     </div>
                 </div>
             </div>
+            <div id="demo-lft-tab-3" class="tab-pane fade">
+                <p class="text-main text-semibold">Guias Mayores</p>
+                <p>No Tiene Registros</p>
+            </div>
+            <div id="demo-lft-tab-4" class="tab-pane fade">
+                <p class="text-main text-semibold">Lider Juvenil</p>
+                <p>No Tiene Registros</p>
+            </div>
         </div>
+    </div>
+    </div>
+
 
 </template>
 
