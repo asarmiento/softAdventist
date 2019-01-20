@@ -104,6 +104,7 @@ Route::group(['prefix'=>'softadventist','middleware'=>'auth'],function (){
      */
     Route::get('lista-perfiles-clubes', 'ClubesController@listProfile')->name('list-ja');
     Route::get('perfile-clubes', 'ClubesController@profile')->name('profile');
+    Route::get('perfile-clubes', 'ClubesController@profile')->name('profile');
     /**
          * Departamentos
          */

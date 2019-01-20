@@ -69,7 +69,7 @@
                                 <!--Mega menu list-->
                                 <ul class="list-unstyled">
                                     <li class="dropdown-header">Miembros</li>
-                                    <li><a href="{{route('profile')}}">Mi Perfil</a></li>
+                                    <li><a href="/softadventist/perfile-clubes">Mi Perfil</a></li>
                                     <li><a href="{{route('new-member')}}">Registrar Miembros</a></li>
                                         <li><a href="{{route('list-members')}}">Lista Miembros</a></li>
                                     @if(currentUser()->whereUserBelong->cargo == 'secretario')
