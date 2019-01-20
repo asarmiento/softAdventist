@@ -84,7 +84,6 @@ class VisitorController extends Controller
         $data['date'] = Carbon::now()->toDateString();
         $data['time'] = Carbon::now()->toTimeString();
         $data['liturgia'] = 0;
-        $data['church_id'] = userChurch()->id;
         $data['member_id'] = $data['assists']['value'];
         $data['user_id'] = currentUser()->id;
         if($data['time'] > '10:30'){
