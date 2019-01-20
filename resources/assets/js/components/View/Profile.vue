@@ -27,7 +27,7 @@
                 <p>No tiene Registros</p>
             </div>
             <div id="demo-lft-tab-2" class="tab-pane fade">
-                <p class="text-main text-semibold">Conquistadores</p>
+                <p class="text-main text-semibold">Especialidades Obtenidas</p>
                 <div class="panel">
                     <div class="panel-body demo-liquid-fixed">
                         <div class="fixed-fluid">

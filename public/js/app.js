@@ -85102,7 +85102,7 @@ var staticRenderFns = [
             { staticClass: "tab-pane fade", attrs: { id: "demo-lft-tab-2" } },
             [
               _c("p", { staticClass: "text-main text-semibold" }, [
-                _vm._v("Conquistadores")
+                _vm._v("Especialidades Obtenidas")
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "panel" }, [
