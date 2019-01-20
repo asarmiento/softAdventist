@@ -100,7 +100,7 @@ Route::group(['prefix'=>'softadventist','middleware'=>'auth'],function (){
     Route::get('lista-asistencia', 'VisitorController@listAssits');
     Route::get('lista-asistencia-visitas', 'VisitorController@listAssitsVisitor');
     /**
-     * Clubes
+     * clubes
      */
     Route::get('lista-perfiles-clubes', 'ClubesController@listProfile')->name('list-ja');
     Route::get('perfile-clubes', 'ClubesController@profile')->name('profile');

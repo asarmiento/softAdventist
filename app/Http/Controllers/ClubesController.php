@@ -17,11 +17,11 @@ class ClubesController extends Controller
     }
     public function listProfile()
     {
-        return view('Clubes.ListProfile');
+        return view('clubes.ListProfile');
     }
 
     public function profile()
     {
-        return view('Clubes.Profile');
+        return view('clubes.profile');
     }
 }
