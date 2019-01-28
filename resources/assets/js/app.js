@@ -38,6 +38,11 @@ Vue.component('createUserCargo', require('./components/LocalField/CreateUserCarg
 Vue.component('createUser', require('./components/Creating/CreateUser.vue'));
 Vue.component('createAssistance', require('./components/Creating/CreateAssistance.vue'));
 /**
+ * Clubes Jovenes
+ */
+Vue.component('createCardMember', require('./components/Creating/CreateCardMember.vue'));
+Vue.component('createClubDirector', require('./components/Creating/CreateClubDirector.vue'));
+/**
  * Editores de tablas
  */
 

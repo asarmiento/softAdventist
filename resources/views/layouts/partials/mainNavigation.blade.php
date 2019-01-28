@@ -77,6 +77,31 @@
                                 <span class="menu-title">Registrar Miembros</span>
                             </a>
                         </li>
+                        <li class="list-header">Departamento Jovenes</li>
+                        <li class="active-link">
+                            <a href="{{route('list-ja')}}">
+                                <i class="fa fa-user-circle"></i>
+                                <span class="menu-title">Lista de Jovenes</span>
+                            </a>
+                        </li>
+                        <li class="active-link">
+                            <a href="{{route('register-club-director')}}">
+                                <i class="fa fa-angle-double-down"></i>
+                                <span class="menu-title">Registrar de Directores</span>
+                            </a>
+                        </li>
+                        <li class="active-link">
+                            <a href="{{route('register-card-ja')}}">
+                                <i class="fa fa-address-book"></i>
+                                <span class="menu-title">Registrar Tarjetas a jovenes</span>
+                            </a>
+                        </li>
+                        <li class="active-link">
+                            <a href="{{route('register-specialties-ja')}}">
+                                <i class="fa fa-address-card"></i>
+                                <span class="menu-title">Registrar Especialidades a jovenes</span>
+                            </a>
+                        </li>
                     @if(currentUser()->whereUserBelong->cargo == 'tesorero')
                         <!--Menu list item-->
                         <li>

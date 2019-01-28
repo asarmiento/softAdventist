@@ -9,6 +9,9 @@
 namespace App\Http\Controllers;
 
 
+use App\Entities\Departaments\Club;
+use App\Entities\Departaments\ClubDirector;
+
 class ClubesController extends Controller
 {
     public function __construct()
@@ -23,5 +26,29 @@ class ClubesController extends Controller
     public function profile()
     {
         return view('clubes.profile');
+    }
+
+    public function registerClubDirector()
+    {
+        return view('clubes.registerClubDirector');
+    }
+
+    public function registerCards()
+    {
+        return view('clubes.registerCards');
+    }
+
+    public function registerSpecialties()
+    {
+        return view('clubes.registerSpecialties');
+    }
+
+    public function listDirector()
+    {
+        return ClubDirector::listsLabel();
+    }
+    public function listClubes()
+    {
+        return Club::listsLabel();
     }
 }

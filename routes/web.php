@@ -104,7 +104,11 @@ Route::group(['prefix'=>'softadventist','middleware'=>'auth'],function (){
      */
     Route::get('lista-perfiles-clubes', 'ClubesController@listProfile')->name('list-ja');
     Route::get('perfile-clubes', 'ClubesController@profile')->name('profile');
-    Route::get('perfile-clubes', 'ClubesController@profile')->name('profile');
+    Route::get('lista-director-select', 'ClubesController@listDirector');
+    Route::get('lista-club-select', 'ClubesController@listClubes');
+    Route::get('registrar-directores-de-clubes', 'ClubesController@registerClubDirector')->name('register-club-director');
+    Route::get('registrar-tarjetas-a-jovenes', 'ClubesController@registerCards')->name('register-card-ja');
+    Route::get('registrar-especialidades-a-jovenes', 'ClubesController@registerSpecialties')->name('register-specialties-ja');
     /**
          * Departamentos
          */

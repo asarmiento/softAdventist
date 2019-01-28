@@ -101,6 +101,9 @@
                                 <ul class="list-unstyled">
                                     <li class="dropdown-header">Departamento de Jovenes</li>
                                     <li><a href="{{route('list-ja')}}">Lista de jovenes</a></li>
+                                    <li><a href="{{route('register-club-director')}}">Registro de Directores</a></li>
+                                    <li><a href="{{route('register-card-ja')}}">Registrar Tarjetas a jovenes</a></li>
+                                    <li><a href="{{route('register-specialties-ja')}}">Registrar Especialidades a jovenes</a></li>
                                 </ul>
 
                             </div>
