@@ -11,7 +11,7 @@
                     <div class="panel-body">
                         <div class=" col-lg-3 col-md-3 ">
                             <div class="panel-default ">
-                                <label>Cédula <strong style="background: red" >*</strong></label>
+                                <label>Cédula <strong style="color: red" >*</strong></label>
                                 <div class="input-group" >
                                     <span class="input-group-addon"><i class="fa fa-archive"></i></span>
                                     <input type="text" v-model="data.charter"  class="form-control" >
@@ -20,7 +20,7 @@
                         </div>
                         <div class=" col-lg-3 col-md-3 ">
                             <div class="panel-default ">
-                                <label>Nombres <strong style="background: red" >*</strong></label>
+                                <label>Nombres <strong style="color: red" >*</strong></label>
                                 <div class="input-group" >
                                     <span class="input-group-addon"><i class="fa fa-user"></i></span>
                                     <input type="text" v-model="data.name" class="form-control" >
@@ -29,7 +29,7 @@
                         </div>
                         <div class=" col-lg-3 col-md-3 ">
                             <div class="panel-default ">
-                                <label>Apellidos <strong style="background: red" >*</strong></label>
+                                <label>Apellidos <strong style="color: red" >*</strong></label>
                                 <div class="input-group" >
                                     <span class="input-group-addon"><i class="fa fa-user-circle"></i></span>
                                     <input type="text" v-model="data.last" class="form-control" >
@@ -83,7 +83,7 @@
                         </div>
                         <div class=" col-lg-3 col-md-3 ">
                             <div class="panel-default material">
-                                <label>Estado Civil <strong style="background: red" >*</strong></label>
+                                <label>Estado Civil <strong style="color: red" >*</strong></label>
                                 <div class="input-group" >
                                     <span class="input-group-addon"><i class="fa fa-send"></i></span>
                                     <v-select type="text" v-model="data.civil_status" :options="civil" class="form-control" ></v-select>
@@ -96,6 +96,15 @@
                                 <div class="input-group" >
                                     <span class="input-group-addon"><i class="fa fa-send"></i></span>
                                     <input type="text" v-model="data.address" class="form-control" >
+                                </div>
+                            </div>
+                        </div>
+                        <div class=" col-lg-3 col-md-3 ">
+                            <div class="panel-default ">
+                                <label>Iglesia <strong style="color: red" >*</strong></label>
+                                <div class="input-group" >
+                                    <span class="input-group-addon"><i class="fa fa-send"></i></span>
+                                    <v-select type="text" v-model="data.church" :options="churches" class="form-control" ></v-select>
                                 </div>
                             </div>
                         </div>
@@ -131,7 +140,7 @@
                          phone: '',
                          cell: '',
                          email: '',
-                         church: false,
+                         church: '',
                      },
                      civil:[
                          {"label":'Casado(a)',"value":'Casado(a)'},
@@ -140,9 +149,16 @@
                          {"label":'Viudo(a)',"value":'Viudo(a)'},
                          {"label":'Union Libre',"value":'Union Libre'},
 
-                     ]
+                     ],
+                     churches:[]
                  }
-            },
+            },created() {
+             this.$http.get('/softadventist/lista-churchs-select-campos').then((response) => {
+                this.churches = response.data;
+
+            });
+
+        },
         methods: {
 
             send: function (event) {

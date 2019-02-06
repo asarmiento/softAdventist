@@ -120,7 +120,11 @@ class MemberController extends Controller
                 $data['civil_status'] = $data['civil_status']['value'];
             }
         $user = User::where('email', currentUser()->email)->first();
-        $data['church_id'] = userChurch()->id;
+            if(!$data['church']) {
+                $data['church_id'] = userChurch()->id;
+            }else {
+                $data['church_id'] = $data['church']['value'];
+            }
         $data['user_id'] = $user->id;
         $member = new Member();
         $member->fill($data);
