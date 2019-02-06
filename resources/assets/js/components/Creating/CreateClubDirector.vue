@@ -109,6 +109,9 @@
                         if(response.data.success = true){
                             Swal('Se Guardo con Exito!!!', response.data.message,'success');
                             this.director = response.data.directors
+                            this.member= '';
+                                this.club= '';
+                                this.church= '';
                         }
                     })
                 .catch(function (error) {

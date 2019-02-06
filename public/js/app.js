@@ -76089,6 +76089,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 if (response.data.success = true) {
                     __WEBPACK_IMPORTED_MODULE_1_sweetalert2___default()('Se Guardo con Exito!!!', response.data.message, 'success');
                     _this2.director = response.data.directors;
+                    _this2.member = '';
+                    _this2.club = '';
+                    _this2.church = '';
                 }
             }).catch(function (error) {
                 if (error.response) {
