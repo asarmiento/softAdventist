@@ -62,7 +62,6 @@ class Member extends Entity
         return $this->hasMany(WeeklyIncome::getClass());
     }
 
-
     public function incomesAccounts()
     {
         return $this->belongsToMany(IncomeAccount::getClass(), 'weekly_incomes')->withPivot('envelope_number',

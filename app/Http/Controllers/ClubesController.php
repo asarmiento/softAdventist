@@ -10,13 +10,21 @@ namespace App\Http\Controllers;
 
 
 use App\Entities\Departaments\Club;
+use App\Entities\Departaments\ClubCard;
 use App\Entities\Departaments\ClubDirector;
+use App\Entities\Departaments\MemberClub;
+use App\Entities\Departaments\MemberClubByClubCard;
+use App\Traits\DataViewerTraits;
+use App\Traits\ListInformMembersTraits;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ClubesController extends Controller
 {
+    use ListInformMembersTraits;
+    use DataViewerTraits;
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -70,6 +78,10 @@ class ClubesController extends Controller
         return ClubDirector::listsLabel();
     }
 
+    public function listClubCard()
+    {
+        return ClubCard::listsLabel();
+    }
     /**
      * @return array
      */
@@ -95,4 +107,60 @@ class ClubesController extends Controller
         $directors = ClubDirector::with('member','club','church')->where('year',Carbon::now()->year)->get();
         return response()->json(['success' => true,"directors"=>$directors], 200);
     }
+
+    public function storeMemberCard(Request $request)
+    {
+        $data = $request->all();
+        $member = $data['member'];
+        $church = userChurch()->id;
+        $codeGm = null;
+        $codeLj= null;
+        $dir=NULL;
+
+        $memberClub = new MemberClub();
+            $memberClub->member_id=$member['value'];
+        $memberClub->date=Carbon::now()->toDateString();
+        $memberClub->code_gm=$codeGm;
+        $memberClub->code_lj=$codeLj;
+        $memberClub->status=false;
+        $memberClub->club_director_id=$dir ;
+        $memberClub->church_id=$church;
+        $memberClub->user_id= Auth::user()->id;
+
+        if($memberClub->save()) {
+            if($data['cardA']) {
+                MemberClubByClubCard::create(['member_club_id' => $memberClub->id, 'club_card_id' => 3]);
+            }
+            if($data['cardGm']) {
+                MemberClubByClubCard::create(['member_club_id' => $memberClub->id, 'club_card_id' => 4]);
+            }
+            $memberClub = [];
+            return response()->json(['success' => true, "miembros" => $memberClub], 200);
+        }
+    }
+
+    public function getDataMemberClub(Request $request)
+    {
+        $perPage = 10;
+        if ($request->has('perPage')) {
+            $perPage = $request->perPage;
+        }
+
+        $model = MemberClub::with('member','club','church')->
+        where('church_id', userChurch()->id)->searchPaginateAndOrder($perPage, $request->get('search'));
+
+        $array = $this->myPages($model);
+
+        $columns = [];
+        $model['per_page'] = $perPage;
+
+        $response = [
+            'model' => $model,
+            'columns' => $columns,
+            'my_pages' => $array
+        ];
+        return $response;
+    }
+
+
 }

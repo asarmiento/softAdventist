@@ -3,16 +3,17 @@
     <!---------------------------------->
     <div class="row">
         <div class="col-md-12 ">
-            <h1>Iglesia Adventista de Quepos</h1>
+            <h1>{{datos.data[0].church.name}}</h1>
         </div>
-        <div class="col-sm-4 col-md-3">
+        <div class="col-sm-4 col-md-3" v-for="items in datos.data">
 
 
             <!-- Contact Widget -->
             <!---------------------------------->
-            <div class="panel pos-rel">
+            <div class="panel pos-rel" >
                 <div class="pad-all text-center">
-                    <div class="widget-control">
+
+                    <div class="widget-control" >
                         <a href="#" class="add-tooltip btn btn-trans" data-original-title="Favorite">
                             <span class="favorite-color text-lg"><i class="demo-psi-star"></i></span>
                             Guia Mayor
@@ -33,15 +34,16 @@
                             </ul>
                         </div>
                     </div>
+
                     <a href="#">
                         <img alt="Profile Picture" class="img-lg img-circle mar-ver" src="/img/profile-photos/2.png">
-                        <p class="text-lg text-semibold mar-no text-main">Stephen Tran</p>
+                        <p class="text-lg text-semibold mar-no text-main">{{items.member}} </p>
                         <p class="text-sm">Marketing manager</p>
                         <p class="text-sm"><a href="/softadventist/perfile-clubes">Lista de Especialidades</a></p>
                     </a>
-                    <div class="pad-top btn-groups">
-                        <a href="#" class="btn btn-icon  icon-lg add-tooltip"  data-container="body">
-                            <img src="/img/Botones/Amigo.gif"   width="50" height="50">
+                    <div class="pad-top btn-groups" v-if="items.club" >
+                        <a href="#" v-for="card in items.club" class="btn btn-icon  icon-lg add-tooltip"  data-container="body">
+                            <img src="/img/Botones/Amigo.gif"   width="50" height="50"> {{card}}
                         </a>
                         <a href="#" class="btn btn-icon  icon-lg add-tooltip"  data-container="body">
                             <img src="/img/Botones/Compañero.gif"  width="50" height="50">
@@ -59,327 +61,7 @@
 
 
         </div>
-        <div class="col-sm-4 col-md-3">
 
-
-            <!-- Contact Widget -->
-            <!---------------------------------->
-            <div class="panel pos-rel">
-                <div class="pad-all text-center">
-                    <div class="widget-control">
-                        <a href="#" class="add-tooltip btn btn-trans" data-original-title="Favorite">
-                            <span class="unfavorite-color text-lg"><i class="demo-psi-star"></i></span>
-                            Conquistador
-                        </a>
-                        <div class="btn-group dropdown">
-                            <a href="#" class="dropdown-toggle btn btn-trans" data-toggle="dropdown" aria-expanded="false">
-                                <i class="pci-ver-dots"></i></a>
-                            <ul class="dropdown-menu dropdown-menu-right" style="">
-                                <li><a href="#"><i class="icon-lg icon-fw demo-psi-pen-5"></i> Edit</a></li>
-                                <li><a href="#"><i class="icon-lg icon-fw demo-pli-recycling"></i> Remove</a></li>
-                                <li class="divider"></li>
-                                <li><a href="#"><i class="icon-lg icon-fw demo-pli-mail"></i> Send a Message</a></li>
-                                <li><a href="#"><i class="icon-lg icon-fw demo-pli-calendar-4"></i> View Details</a></li>
-                                <li><a href="#"><i class="icon-lg icon-fw demo-pli-lock-user"></i> Lock</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <a href="#">
-                        <img alt="Profile Picture" class="img-lg img-circle mar-ver" src="/img/profile-photos/10.png">
-                        <p class="text-lg text-semibold mar-no text-main">Brenda Fuller</p>
-                        <p class="text-sm">Graphics designer</p>
-                        <p class="text-sm"><a href="/softadventist/perfile-clubes">Lista de Especialidades</a></p>
-                    </a>
-                    <div class="pad-top btn-groups">
-                        <a href="#" class="btn btn-icon  icon-lg add-tooltip"  data-container="body">
-                            <img src="/img/Botones/Amigo.gif"   width="50" height="50">
-                        </a>
-                        <a href="#" class="btn btn-icon  icon-lg add-tooltip"  data-container="body">
-                            <img src="/img/Botones/Compañero.gif"  width="50" height="50">
-                        </a>
-                        <a href="#" class="btn btn-icon icon-lg add-tooltip" data-container="body">
-                            <img src="/img/Botones/Viajero.gif"  width="50" height="50">
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <!---------------------------------->
-
-
-        </div>
-        <div class="col-sm-4 col-md-3">
-
-
-            <!-- Contact Widget -->
-            <!---------------------------------->
-            <div class="panel pos-rel">
-                <div class="pad-all text-center">
-                    <div class="widget-control">
-                        <a href="#" class="add-tooltip btn btn-trans" data-original-title="Favorite">
-                            <span class="unfavorite-color text-lg"><i class="demo-psi-star"></i></span>
-                            Conquistador
-                        </a>
-                        <div class="btn-group dropdown">
-                            <a href="#" class="dropdown-toggle btn btn-trans" data-toggle="dropdown" aria-expanded="false"><i class="pci-ver-dots"></i></a>
-                            <ul class="dropdown-menu dropdown-menu-right" style="">
-                                <li><a href="#"><i class="icon-lg icon-fw demo-psi-pen-5"></i> Edit</a></li>
-                                <li><a href="#"><i class="icon-lg icon-fw demo-pli-recycling"></i> Remove</a></li>
-                                <li class="divider"></li>
-                                <li><a href="#"><i class="icon-lg icon-fw demo-pli-mail"></i> Send a Message</a></li>
-                                <li><a href="#"><i class="icon-lg icon-fw demo-pli-calendar-4"></i> View Details</a></li>
-                                <li><a href="#"><i class="icon-lg icon-fw demo-pli-lock-user"></i> Lock</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <a href="#">
-                        <img alt="Profile Picture" class="img-lg img-circle mar-ver" src="/img/profile-photos/1.png">
-                        <p class="text-lg text-semibold mar-no text-main">Aaron Chavez</p>
-                        <p class="text-sm">CEO</p>
-                        <p class="text-sm"><a href="/softadventist/perfile-clubes">Lista de Especialidades</a></p>
-                    </a>
-                    <div class="pad-top btn-groups">
-                        <a href="#" class="btn btn-icon  icon-lg add-tooltip"  data-container="body">
-                            <img src="/img/Botones/Amigo.gif"   width="50" height="50">
-                        </a>
-                        <a href="#" class="btn btn-icon  icon-lg add-tooltip"  data-container="body">
-                            <img src="/img/Botones/Compañero.gif"  width="50" height="50">
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <!---------------------------------->
-
-
-        </div>
-        <div class="col-sm-4 col-md-3">
-
-
-            <!-- Contact Widget -->
-            <!---------------------------------->
-            <div class="panel pos-rel">
-                <div class="pad-all text-center">
-                    <div class="widget-control">
-                        <a href="#" class="add-tooltip btn btn-trans" data-original-title="Favorite">
-                            <span class="unfavorite-color text-lg"><i class="demo-psi-star"></i></span>
-                            Conquistador
-                        </a>
-                        <div class="btn-group dropdown">
-                            <a href="#" class="dropdown-toggle btn btn-trans" data-toggle="dropdown" aria-expanded="false"><i class="pci-ver-dots"></i></a>
-                            <ul class="dropdown-menu dropdown-menu-right" style="">
-                                <li><a href="#"><i class="icon-lg icon-fw demo-psi-pen-5"></i> Edit</a></li>
-                                <li><a href="#"><i class="icon-lg icon-fw demo-pli-recycling"></i> Remove</a></li>
-                                <li class="divider"></li>
-                                <li><a href="#"><i class="icon-lg icon-fw demo-pli-mail"></i> Send a Message</a></li>
-                                <li><a href="#"><i class="icon-lg icon-fw demo-pli-calendar-4"></i> View Details</a></li>
-                                <li><a href="#"><i class="icon-lg icon-fw demo-pli-lock-user"></i> Lock</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <a href="#">
-                        <img alt="Profile Picture" class="img-lg img-circle mar-ver" src="/img/profile-photos/5.png">
-                        <p class="text-lg text-semibold mar-no text-main">Donald Brown</p>
-                        <p class="text-sm">Programmer</p>
-                        <p class="text-sm"><a href="/softadventist/perfile-clubes">Lista de Especialidades</a></p>
-                    </a>
-                    <div class="pad-top btn-groups">
-                        <a href="#" class="btn btn-icon  icon-lg add-tooltip"  data-container="body">
-                            <img src="/img/Botones/Amigo.gif"   width="50" height="50">
-                        </a>
-                        <a href="#" class="btn btn-icon  icon-lg add-tooltip"  data-container="body">
-                            <img src="/img/Botones/Compañero.gif"  width="50" height="50">
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <!---------------------------------->
-
-
-        </div>
-        <div class="col-sm-4 col-md-3">
-
-
-            <!-- Contact Widget -->
-            <!---------------------------------->
-            <div class="panel pos-rel">
-                <div class="pad-all text-center">
-                    <div class="widget-control">
-                        <a href="#" class="add-tooltip btn btn-trans" data-original-title="Favorite">
-                            <span class="unfavorite-color text-lg"><i class="demo-psi-star"></i></span>
-                            Conquistador
-                        </a>
-                        <div class="btn-group dropdown">
-                            <a href="#" class="dropdown-toggle btn btn-trans" data-toggle="dropdown" aria-expanded="false"><i class="pci-ver-dots"></i></a>
-                            <ul class="dropdown-menu dropdown-menu-right" style="">
-                                <li><a href="#"><i class="icon-lg icon-fw demo-psi-pen-5"></i> Edit</a></li>
-                                <li><a href="#"><i class="icon-lg icon-fw demo-pli-recycling"></i> Remove</a></li>
-                                <li class="divider"></li>
-                                <li><a href="#"><i class="icon-lg icon-fw demo-pli-mail"></i> Send a Message</a></li>
-                                <li><a href="#"><i class="icon-lg icon-fw demo-pli-calendar-4"></i> View Details</a></li>
-                                <li><a href="#"><i class="icon-lg icon-fw demo-pli-lock-user"></i> Lock</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <a href="#">
-                        <img alt="Profile Picture" class="img-lg img-circle mar-ver" src="/img/profile-photos/9.png">
-                        <p class="text-lg text-semibold mar-no text-main">Lucy Moon</p>
-                        <p class="text-sm">Frontend Designer</p>
-                        <p class="text-sm"><a href="/softadventist/perfile-clubes">Lista de Especialidades</a></p>
-                    </a>
-                    <div class="pad-top btn-groups">
-                        <a href="#" class="btn btn-icon  icon-lg add-tooltip"  data-container="body">
-                            <img src="/img/Botones/Conejo.gif"   width="50" height="50">
-                        </a>
-                        <a href="#" class="btn btn-icon  icon-lg add-tooltip"  data-container="body">
-                            <img src="/img/Botones/Amigo.gif"   width="50" height="50">
-                        </a>
-                        <a href="#" class="btn btn-icon  icon-lg add-tooltip"  data-container="body">
-                            <img src="/img/Botones/Compañero.gif"  width="50" height="50">
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <!---------------------------------->
-
-
-        </div>
-        <div class="col-sm-4 col-md-3">
-
-
-            <!-- Contact Widget -->
-            <!---------------------------------->
-            <div class="panel pos-rel">
-                <div class="pad-all text-center">
-                    <div class="widget-control">
-                        <a href="#" class="add-tooltip btn btn-trans" data-original-title="Favorite">
-                            <span class="unfavorite-color text-lg"><i class="demo-psi-star"></i></span>
-                            Guia Mayor
-                        </a>
-                        <a href="#" class="add-tooltip btn btn-trans">
-                            Código: C1MG1504
-                        </a>
-                        <div class="btn-group dropdown">
-                            <a href="#" class="dropdown-toggle btn btn-trans" data-toggle="dropdown" aria-expanded="false"><i class="pci-ver-dots"></i></a>
-                            <ul class="dropdown-menu dropdown-menu-right" style="">
-                                <li><a href="#"><i class="icon-lg icon-fw demo-psi-pen-5"></i> Edit</a></li>
-                                <li><a href="#"><i class="icon-lg icon-fw demo-pli-recycling"></i> Remove</a></li>
-                                <li class="divider"></li>
-                                <li><a href="#"><i class="icon-lg icon-fw demo-pli-mail"></i> Send a Message</a></li>
-                                <li><a href="#"><i class="icon-lg icon-fw demo-pli-calendar-4"></i> View Details</a></li>
-                                <li><a href="#"><i class="icon-lg icon-fw demo-pli-lock-user"></i> Lock</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <a href="#">
-                        <img alt="Profile Picture" class="img-lg img-circle mar-ver" src="/img/profile-photos/4.png">
-                        <p class="text-lg text-semibold mar-no text-main">Howard Rios</p>
-                        <p class="text-sm">Marketing</p>
-                        <p class="text-sm"><a href="/softadventist/perfile-clubes">Lista de Especialidades</a></p>
-                    </a>
-                    <div class="pad-top btn-groups">
-                        <a href="#" class="btn btn-icon  icon-lg add-tooltip"  data-container="body">
-                            <img src="/img/Botones/Amigo.gif"   width="50" height="50">
-                        </a>
-                        <a href="#" class="btn btn-icon  icon-lg add-tooltip"  data-container="body">
-                            <img src="/img/Botones/Guia-Mayores.png"  width="50" height="50">
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <!---------------------------------->
-
-
-        </div>
-        <div class="col-sm-4 col-md-3">
-
-
-            <!-- Contact Widget -->
-            <!---------------------------------->
-            <div class="panel pos-rel">
-                <div class="pad-all text-center">
-                    <div class="widget-control">
-                        <a href="#" class="add-tooltip btn btn-trans" data-original-title="Favorite">
-                            <span class="favorite-color text-lg"><i class="demo-psi-star"></i></span>
-                            Guias Mayores
-                        </a>
-                        <a href="#" class="add-tooltip btn btn-trans">
-                            Código: C1MG1624
-                        </a>
-                        <div class="btn-group dropdown">
-                            <a href="#" class="dropdown-toggle btn btn-trans" data-toggle="dropdown" aria-expanded="false"><i class="pci-ver-dots"></i></a>
-                            <ul class="dropdown-menu dropdown-menu-right" style="">
-                                <li><a href="#"><i class="icon-lg icon-fw demo-psi-pen-5"></i> Edit</a></li>
-                                <li><a href="#"><i class="icon-lg icon-fw demo-pli-recycling"></i> Remove</a></li>
-                                <li class="divider"></li>
-                                <li><a href="#"><i class="icon-lg icon-fw demo-pli-mail"></i> Send a Message</a></li>
-                                <li><a href="#"><i class="icon-lg icon-fw demo-pli-calendar-4"></i> View Details</a></li>
-                                <li><a href="#"><i class="icon-lg icon-fw demo-pli-lock-user"></i> Lock</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <a href="#">
-                        <img alt="Profile Picture" class="img-lg img-circle mar-ver" src="/img/profile-photos/7.png">
-                        <p class="text-lg text-semibold mar-no text-main">Kathryn Obrien</p>
-                        <p class="text-sm">Co-CEO</p>
-                        <p class="text-sm"><a href="/softadventist/perfile-clubes">Lista de Especialidades</a></p>
-                    </a>
-                    <div class="pad-top btn-groups">
-                        <a href="#" class="btn btn-icon  icon-lg add-tooltip"  data-container="body">
-                            <img src="/img/Botones/Guia-Mayores.png"   width="50" height="50">
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <!---------------------------------->
-
-
-        </div>
-        <div class="col-sm-4 col-md-3">
-
-
-            <!-- Contact Widget -->
-            <!---------------------------------->
-            <div class="panel pos-rel">
-                <div class="pad-all text-center">
-                    <div class="widget-control">
-                        <a href="#" class="add-tooltip btn btn-trans" data-original-title="Favorite">
-                            <span class="unfavorite-color text-lg"><i class="demo-psi-star"></i></span>
-                            Guia Mayor
-                        </a>
-                        <a href="#" class="add-tooltip btn btn-trans">
-                            Código: C1MG1524
-                        </a>
-                        <div class="btn-group dropdown">
-                            <a href="#" class="dropdown-toggle btn btn-trans" data-toggle="dropdown" aria-expanded="false"><i class="pci-ver-dots"></i></a>
-                            <ul class="dropdown-menu dropdown-menu-right" style="">
-                                <li><a href="#"><i class="icon-lg icon-fw demo-psi-pen-5"></i> Edit</a></li>
-                                <li><a href="#"><i class="icon-lg icon-fw demo-pli-recycling"></i> Remove</a></li>
-                                <li class="divider"></li>
-                                <li><a href="#"><i class="icon-lg icon-fw demo-pli-mail"></i> Send a Message</a></li>
-                                <li><a href="#"><i class="icon-lg icon-fw demo-pli-calendar-4"></i> View Details</a></li>
-                                <li><a href="#"><i class="icon-lg icon-fw demo-pli-lock-user"></i> Lock</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <a href="#">
-                        <img alt="Profile Picture" class="img-lg img-circle mar-ver" src="/img/profile-photos/8.png">
-                        <p class="text-lg text-semibold mar-no text-main">Karen Murray</p>
-                        <p class="text-sm">Sales manager</p>
-                        <p class="text-sm"><a href="/softadventist/perfile-clubes">Lista de Especialidades</a></p>
-                    </a>
-                    <div class="pad-top btn-groups">
-                        <a href="#" class="btn btn-icon  icon-lg add-tooltip"  data-container="body">
-                            <img src="/img/Botones/Corderitos.gif"   width="50" height="50">
-                        </a>
-                       <a href="#" class="btn btn-icon  icon-lg add-tooltip"  data-container="body">
-                            <img src="/img/Botones/Guia-Mayores.png"   width="50" height="50">
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <!---------------------------------->
-
-
-        </div>
 
     </div>
 
@@ -403,9 +85,26 @@
                          phone: '',
                          email: '',
                      },
+                     txtSearch: '',
+                     counts: ['5', '10', '20', '50'],
+                     datos: [],
+                     my_pages: [],
+                     columns: [],
+                     typeAll: true,
+                     typeStyle: true,
 
                  }
             },
+        created() {
+
+            var self = this;
+            this.$http.get("/softadventist/data-member-tarjetas").then((response) => {
+                self.datos = response.data.model;
+                self.my_pages = response.data.my_pages;
+                self.columns = response.data.columns;
+            });
+
+        },
         methods: {
             send: function (event) {
                 axios.post('/softadventist/save-visitor', this.data)

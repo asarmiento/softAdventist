@@ -74800,7 +74800,7 @@ exports = module.exports = __webpack_require__(2)(false);
 
 
 // module
-exports.push([module.i, "\n.mostrar {\n    display: block;\n}\n.material{\n    z-index: 5;\n}\n@media only screen and (min-width: 320px) {\n#sale-otro-table {\n        display: none;\n}\n#sale-pc-table {\n        display: block;\n}\nh1, h2 {\n        font-size: 18px;\n}\n}\n\n/* Small devices (landscape phones, 576px and up)*/\n@media (min-width: 576px) {\n#sale-otro-table {\n        display: none;\n}\n#sale-pc-table {\n        display: block;\n}\n}\n\n/* Medium devices (tablets, 768px and up)*/\n@media (min-width: 768px) {\n#sale-otro-table {\n        display: block;\n}\n#sale-pc-table {\n        display: none;\n}\n}\n\n/* Large devices (desktops, 992px and up)*/\n@media (min-width: 992px) {\n#sale-otro-table {\n        display: block;\n}\n#sale-pc-table {\n        display: none;\n}\n}\n\n/* Extra large devices (large desktops, 1200px and up)*/\n@media (min-width: 1200px) {\n#sale-otro-table {\n        display: block;\n}\nh1, h2 {\n        font-size: 28px;\n        text-align: center;\n}\n#sale-pc-table {\n        display: none;\n}\n}\n", ""]);
+exports.push([module.i, "\n.mostrar {\n    display: block;\n}\n.material {\n    z-index: 5;\n}\n@media only screen and (min-width: 320px) {\n#sale-otro-table {\n        display: none;\n}\n#sale-pc-table {\n        display: block;\n}\nh1, h2 {\n        font-size: 18px;\n}\n}\n\n/* Small devices (landscape phones, 576px and up)*/\n@media (min-width: 576px) {\n#sale-otro-table {\n        display: none;\n}\n#sale-pc-table {\n        display: block;\n}\n}\n\n/* Medium devices (tablets, 768px and up)*/\n@media (min-width: 768px) {\n#sale-otro-table {\n        display: block;\n}\n#sale-pc-table {\n        display: none;\n}\n}\n\n/* Large devices (desktops, 992px and up)*/\n@media (min-width: 992px) {\n#sale-otro-table {\n        display: block;\n}\n#sale-pc-table {\n        display: none;\n}\n}\n\n/* Extra large devices (large desktops, 1200px and up)*/\n@media (min-width: 1200px) {\n#sale-otro-table {\n        display: block;\n}\nh1, h2 {\n        font-size: 28px;\n        text-align: center;\n}\n#sale-pc-table {\n        display: none;\n}\n}\n", ""]);
 
 // exports
 
@@ -74930,6 +74930,29 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -74940,19 +74963,34 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     data: function data() {
         return {
             data: {
-                code_gm: '',
                 member: '',
-                code_lj: '',
-                date: '',
-                club_director: '',
-                address: '',
-                civil_status: '',
-                phone: '',
-                cell: '',
-                email: ''
+                dateA: '',
+                cardA: false,
+                dateC: '',
+                cardC: false,
+                dateE: '',
+                cardE: false,
+                dateO: '',
+                cardO: false,
+                dateV: '',
+                cardV: false,
+                dateG: '',
+                cardG: false,
+                dateGm: '',
+                cardGm: false,
+                dateLj: '',
+                cardLj: false
             },
-            listMembers: "",
+            txtSearch: '',
+            counts: ['5', '10', '20', '50'],
+            datos: [],
+            my_pages: [],
+            columns: [],
+            typeAll: true,
+            typeStyle: true,
+            listMembers: [],
             club_directors: "",
+            cards: [],
             civil: [{ "label": 'Casado(a)', "value": 'Casado(a)' }, { "label": 'Soltero(a)', "value": 'Soltero(a)' }, { "label": 'Divorciado(a)', "value": 'Divorciado(a)' }, { "label": 'Viudo(a)', "value": 'Viudo(a)' }, { "label": 'Union Libre', "value": 'Union Libre' }]
         };
     },
@@ -74965,6 +75003,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         this.$http.get('/softadventist/lista-director-select').then(function (response) {
             _this.club_directors = response.data;
         });
+        this.$http.get('/softadventist/lista-tarjetas-select').then(function (response) {
+            _this.cards = response.data;
+        });
+        var self = this;
+        this.$http.get("/softadventist/data-member-tarjetas").then(function (response) {
+            self.datos = response.data.model;
+            self.my_pages = response.data.my_pages;
+            self.columns = response.data.columns;
+        });
     },
 
     methods: {
@@ -74972,11 +75019,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         send: function send(event) {
             var _this2 = this;
 
-            if (this.data.civil_status === "") {
-                __WEBPACK_IMPORTED_MODULE_1_sweetalert2___default()('Debe Elegir un Estado Civil', 'No se puede proceder', 'error');
-                return false;
-            }
-            axios.post('/softadventist/save-miembros', this.data).then(function (response) {
+            axios.post('/softadventist/save-miembros-card-club', this.data).then(function (response) {
                 if (response.data.success = true) {
                     __WEBPACK_IMPORTED_MODULE_1_sweetalert2___default()('Se Guardo con Exito!!!', response.data.message, 'success');
                     _this2.data.charter = '';
@@ -75044,7 +75087,7 @@ var render = function() {
           _vm._m(0),
           _vm._v(" "),
           _c("div", { staticClass: "panel-body" }, [
-            _c("div", { staticClass: " col-lg-3 col-md-3 " }, [
+            _c("div", { staticClass: " col-lg-6 col-md-6 col-xs-12" }, [
               _c("div", { staticClass: "panel-default " }, [
                 _c("label", [_vm._v("Miembro ")]),
                 _vm._v(" "),
@@ -75070,9 +75113,54 @@ var render = function() {
               ])
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: " col-lg-3 col-md-3 " }, [
+            _c("div", { staticClass: " col-lg-2 col-md-3 col-xs-12" }, [
               _c("div", { staticClass: "panel-default " }, [
-                _c("label", [_vm._v("Código de Guia Mayor")]),
+                _c("label", [_vm._v("Tarjeta Amigo")]),
+                _vm._v(" "),
+                _c("div", { staticClass: "input-group" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.data.cardA,
+                        expression: "data.cardA"
+                      }
+                    ],
+                    attrs: { type: "checkbox" },
+                    domProps: {
+                      checked: Array.isArray(_vm.data.cardA)
+                        ? _vm._i(_vm.data.cardA, null) > -1
+                        : _vm.data.cardA
+                    },
+                    on: {
+                      change: function($event) {
+                        var $$a = _vm.data.cardA,
+                          $$el = $event.target,
+                          $$c = $$el.checked ? true : false
+                        if (Array.isArray($$a)) {
+                          var $$v = null,
+                            $$i = _vm._i($$a, $$v)
+                          if ($$el.checked) {
+                            $$i < 0 &&
+                              _vm.$set(_vm.data, "cardA", $$a.concat([$$v]))
+                          } else {
+                            $$i > -1 &&
+                              _vm.$set(
+                                _vm.data,
+                                "cardA",
+                                $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                              )
+                          }
+                        } else {
+                          _vm.$set(_vm.data, "cardA", $$c)
+                        }
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("label", [_vm._v("Fecha de Investidura")]),
                 _vm._v(" "),
                 _c("div", { staticClass: "input-group" }, [
                   _vm._m(2),
@@ -75082,19 +75170,19 @@ var render = function() {
                       {
                         name: "model",
                         rawName: "v-model",
-                        value: _vm.data.code_gm,
-                        expression: "data.code_gm"
+                        value: _vm.data.dateA,
+                        expression: "data.dateA"
                       }
                     ],
                     staticClass: "form-control",
-                    attrs: { type: "text" },
-                    domProps: { value: _vm.data.code_gm },
+                    attrs: { type: "date" },
+                    domProps: { value: _vm.data.dateA },
                     on: {
                       input: function($event) {
                         if ($event.target.composing) {
                           return
                         }
-                        _vm.$set(_vm.data, "code_gm", $event.target.value)
+                        _vm.$set(_vm.data, "dateA", $event.target.value)
                       }
                     }
                   })
@@ -75102,9 +75190,54 @@ var render = function() {
               ])
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: " col-lg-3 col-md-3 " }, [
+            _c("div", { staticClass: " col-lg-2 col-md-3 col-xs-12 " }, [
               _c("div", { staticClass: "panel-default " }, [
-                _c("label", [_vm._v("Código de Lider Juvenil")]),
+                _c("label", [_vm._v("Tarjeta Compañero")]),
+                _vm._v(" "),
+                _c("div", { staticClass: "input-group" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.data.cardC,
+                        expression: "data.cardC"
+                      }
+                    ],
+                    attrs: { type: "checkbox" },
+                    domProps: {
+                      checked: Array.isArray(_vm.data.cardC)
+                        ? _vm._i(_vm.data.cardC, null) > -1
+                        : _vm.data.cardC
+                    },
+                    on: {
+                      change: function($event) {
+                        var $$a = _vm.data.cardC,
+                          $$el = $event.target,
+                          $$c = $$el.checked ? true : false
+                        if (Array.isArray($$a)) {
+                          var $$v = null,
+                            $$i = _vm._i($$a, $$v)
+                          if ($$el.checked) {
+                            $$i < 0 &&
+                              _vm.$set(_vm.data, "cardC", $$a.concat([$$v]))
+                          } else {
+                            $$i > -1 &&
+                              _vm.$set(
+                                _vm.data,
+                                "cardC",
+                                $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                              )
+                          }
+                        } else {
+                          _vm.$set(_vm.data, "cardC", $$c)
+                        }
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("label", [_vm._v("Fecha de Investidura")]),
                 _vm._v(" "),
                 _c("div", { staticClass: "input-group" }, [
                   _vm._m(3),
@@ -75114,19 +75247,19 @@ var render = function() {
                       {
                         name: "model",
                         rawName: "v-model",
-                        value: _vm.data.code_lj,
-                        expression: "data.code_lj"
+                        value: _vm.data.dateC,
+                        expression: "data.dateC"
                       }
                     ],
                     staticClass: "form-control",
-                    attrs: { type: "text" },
-                    domProps: { value: _vm.data.code_lj },
+                    attrs: { type: "date" },
+                    domProps: { value: _vm.data.dateC },
                     on: {
                       input: function($event) {
                         if ($event.target.composing) {
                           return
                         }
-                        _vm.$set(_vm.data, "code_lj", $event.target.value)
+                        _vm.$set(_vm.data, "dateC", $event.target.value)
                       }
                     }
                   })
@@ -75134,9 +75267,54 @@ var render = function() {
               ])
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: " col-lg-3 col-md-3 " }, [
+            _c("div", { staticClass: " col-lg-2 col-md-3 col-xs-12 " }, [
               _c("div", { staticClass: "panel-default " }, [
-                _c("label", [_vm._v("Fecha Bautizmo")]),
+                _c("label", [_vm._v("Tarjeta Explorador")]),
+                _vm._v(" "),
+                _c("div", { staticClass: "input-group" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.data.cardE,
+                        expression: "data.cardE"
+                      }
+                    ],
+                    attrs: { type: "checkbox" },
+                    domProps: {
+                      checked: Array.isArray(_vm.data.cardE)
+                        ? _vm._i(_vm.data.cardE, null) > -1
+                        : _vm.data.cardE
+                    },
+                    on: {
+                      change: function($event) {
+                        var $$a = _vm.data.cardE,
+                          $$el = $event.target,
+                          $$c = $$el.checked ? true : false
+                        if (Array.isArray($$a)) {
+                          var $$v = null,
+                            $$i = _vm._i($$a, $$v)
+                          if ($$el.checked) {
+                            $$i < 0 &&
+                              _vm.$set(_vm.data, "cardE", $$a.concat([$$v]))
+                          } else {
+                            $$i > -1 &&
+                              _vm.$set(
+                                _vm.data,
+                                "cardE",
+                                $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                              )
+                          }
+                        } else {
+                          _vm.$set(_vm.data, "cardE", $$c)
+                        }
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("label", [_vm._v("Fecha de Investidura")]),
                 _vm._v(" "),
                 _c("div", { staticClass: "input-group" }, [
                   _vm._m(4),
@@ -75146,19 +75324,19 @@ var render = function() {
                       {
                         name: "model",
                         rawName: "v-model",
-                        value: _vm.data.bautizmoDate,
-                        expression: "data.bautizmoDate"
+                        value: _vm.data.dateE,
+                        expression: "data.dateE"
                       }
                     ],
                     staticClass: "form-control",
                     attrs: { type: "date" },
-                    domProps: { value: _vm.data.bautizmoDate },
+                    domProps: { value: _vm.data.dateE },
                     on: {
                       input: function($event) {
                         if ($event.target.composing) {
                           return
                         }
-                        _vm.$set(_vm.data, "bautizmoDate", $event.target.value)
+                        _vm.$set(_vm.data, "dateE", $event.target.value)
                       }
                     }
                   })
@@ -75166,8 +75344,53 @@ var render = function() {
               ])
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: " col-lg-3 col-md-3 " }, [
+            _c("div", { staticClass: " col-lg-2 col-md-3 col-xs-12 " }, [
               _c("div", { staticClass: "panel-default " }, [
+                _c("label", [_vm._v("Tarjeta Orientador")]),
+                _vm._v(" "),
+                _c("div", { staticClass: "input-group" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.data.cardO,
+                        expression: "data.cardO"
+                      }
+                    ],
+                    attrs: { type: "checkbox" },
+                    domProps: {
+                      checked: Array.isArray(_vm.data.cardO)
+                        ? _vm._i(_vm.data.cardO, null) > -1
+                        : _vm.data.cardO
+                    },
+                    on: {
+                      change: function($event) {
+                        var $$a = _vm.data.cardO,
+                          $$el = $event.target,
+                          $$c = $$el.checked ? true : false
+                        if (Array.isArray($$a)) {
+                          var $$v = null,
+                            $$i = _vm._i($$a, $$v)
+                          if ($$el.checked) {
+                            $$i < 0 &&
+                              _vm.$set(_vm.data, "cardO", $$a.concat([$$v]))
+                          } else {
+                            $$i > -1 &&
+                              _vm.$set(
+                                _vm.data,
+                                "cardO",
+                                $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                              )
+                          }
+                        } else {
+                          _vm.$set(_vm.data, "cardO", $$c)
+                        }
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
                 _c("label", [_vm._v("Fecha de Investidura")]),
                 _vm._v(" "),
                 _c("div", { staticClass: "input-group" }, [
@@ -75178,19 +75401,19 @@ var render = function() {
                       {
                         name: "model",
                         rawName: "v-model",
-                        value: _vm.data.date,
-                        expression: "data.date"
+                        value: _vm.data.dateO,
+                        expression: "data.dateO"
                       }
                     ],
                     staticClass: "form-control",
                     attrs: { type: "date" },
-                    domProps: { value: _vm.data.date },
+                    domProps: { value: _vm.data.dateO },
                     on: {
                       input: function($event) {
                         if ($event.target.composing) {
                           return
                         }
-                        _vm.$set(_vm.data, "date", $event.target.value)
+                        _vm.$set(_vm.data, "dateO", $event.target.value)
                       }
                     }
                   })
@@ -75198,26 +75421,131 @@ var render = function() {
               ])
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: " col-lg-3 col-md-3 " }, [
+            _c("div", { staticClass: " col-lg-2 col-md-3 col-xs-12 " }, [
               _c("div", { staticClass: "panel-default " }, [
-                _c("label", [_vm._v("Telefono")]),
+                _c("label", [_vm._v("Tarjeta Viajero")]),
                 _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: "input-group" },
-                  [
-                    _vm._m(6),
-                    _vm._v(" "),
-                    _c("v-select", { attrs: { options: _vm.club_directors } })
-                  ],
-                  1
-                )
+                _c("div", { staticClass: "input-group" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.data.cardV,
+                        expression: "data.cardV"
+                      }
+                    ],
+                    attrs: { type: "checkbox" },
+                    domProps: {
+                      checked: Array.isArray(_vm.data.cardV)
+                        ? _vm._i(_vm.data.cardV, null) > -1
+                        : _vm.data.cardV
+                    },
+                    on: {
+                      change: function($event) {
+                        var $$a = _vm.data.cardV,
+                          $$el = $event.target,
+                          $$c = $$el.checked ? true : false
+                        if (Array.isArray($$a)) {
+                          var $$v = null,
+                            $$i = _vm._i($$a, $$v)
+                          if ($$el.checked) {
+                            $$i < 0 &&
+                              _vm.$set(_vm.data, "cardV", $$a.concat([$$v]))
+                          } else {
+                            $$i > -1 &&
+                              _vm.$set(
+                                _vm.data,
+                                "cardV",
+                                $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                              )
+                          }
+                        } else {
+                          _vm.$set(_vm.data, "cardV", $$c)
+                        }
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("label", [_vm._v("Fecha de Investidura")]),
+                _vm._v(" "),
+                _c("div", { staticClass: "input-group" }, [
+                  _vm._m(6),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.data.dateV,
+                        expression: "data.dateV"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: { type: "date" },
+                    domProps: { value: _vm.data.dateV },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.data, "dateV", $event.target.value)
+                      }
+                    }
+                  })
+                ])
               ])
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: " col-lg-3 col-md-3 " }, [
+            _c("div", { staticClass: " col-lg-2 col-md-3 col-xs-12 " }, [
               _c("div", { staticClass: "panel-default " }, [
-                _c("label", [_vm._v("Celular")]),
+                _c("label", [_vm._v("Tarjeta Guia")]),
+                _vm._v(" "),
+                _c("div", { staticClass: "input-group" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.data.cardG,
+                        expression: "data.cardG"
+                      }
+                    ],
+                    attrs: { type: "checkbox" },
+                    domProps: {
+                      checked: Array.isArray(_vm.data.cardG)
+                        ? _vm._i(_vm.data.cardG, null) > -1
+                        : _vm.data.cardG
+                    },
+                    on: {
+                      change: function($event) {
+                        var $$a = _vm.data.cardG,
+                          $$el = $event.target,
+                          $$c = $$el.checked ? true : false
+                        if (Array.isArray($$a)) {
+                          var $$v = null,
+                            $$i = _vm._i($$a, $$v)
+                          if ($$el.checked) {
+                            $$i < 0 &&
+                              _vm.$set(_vm.data, "cardG", $$a.concat([$$v]))
+                          } else {
+                            $$i > -1 &&
+                              _vm.$set(
+                                _vm.data,
+                                "cardG",
+                                $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                              )
+                          }
+                        } else {
+                          _vm.$set(_vm.data, "cardG", $$c)
+                        }
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("label", [_vm._v("Fecha de Investidura")]),
                 _vm._v(" "),
                 _c("div", { staticClass: "input-group" }, [
                   _vm._m(7),
@@ -75227,19 +75555,19 @@ var render = function() {
                       {
                         name: "model",
                         rawName: "v-model",
-                        value: _vm.data.cell,
-                        expression: "data.cell"
+                        value: _vm.data.dateG,
+                        expression: "data.dateG"
                       }
                     ],
                     staticClass: "form-control",
-                    attrs: { type: "text" },
-                    domProps: { value: _vm.data.cell },
+                    attrs: { type: "date" },
+                    domProps: { value: _vm.data.dateG },
                     on: {
                       input: function($event) {
                         if ($event.target.composing) {
                           return
                         }
-                        _vm.$set(_vm.data, "cell", $event.target.value)
+                        _vm.$set(_vm.data, "dateG", $event.target.value)
                       }
                     }
                   })
@@ -75247,9 +75575,54 @@ var render = function() {
               ])
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: " col-lg-3 col-md-3 " }, [
+            _c("div", { staticClass: "col-lg-2 col-md-3 col-xs-12 " }, [
               _c("div", { staticClass: "panel-default " }, [
-                _c("label", [_vm._v("Email")]),
+                _c("label", [_vm._v("Tarjeta Guia Mayor")]),
+                _vm._v(" "),
+                _c("div", { staticClass: "input-group" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.data.cardGm,
+                        expression: "data.cardGm"
+                      }
+                    ],
+                    attrs: { type: "checkbox" },
+                    domProps: {
+                      checked: Array.isArray(_vm.data.cardGm)
+                        ? _vm._i(_vm.data.cardGm, null) > -1
+                        : _vm.data.cardGm
+                    },
+                    on: {
+                      change: function($event) {
+                        var $$a = _vm.data.cardGm,
+                          $$el = $event.target,
+                          $$c = $$el.checked ? true : false
+                        if (Array.isArray($$a)) {
+                          var $$v = null,
+                            $$i = _vm._i($$a, $$v)
+                          if ($$el.checked) {
+                            $$i < 0 &&
+                              _vm.$set(_vm.data, "cardGm", $$a.concat([$$v]))
+                          } else {
+                            $$i > -1 &&
+                              _vm.$set(
+                                _vm.data,
+                                "cardGm",
+                                $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                              )
+                          }
+                        } else {
+                          _vm.$set(_vm.data, "cardGm", $$c)
+                        }
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("label", [_vm._v("Fecha de Investidura")]),
                 _vm._v(" "),
                 _c("div", { staticClass: "input-group" }, [
                   _vm._m(8),
@@ -75259,19 +75632,19 @@ var render = function() {
                       {
                         name: "model",
                         rawName: "v-model",
-                        value: _vm.data.email,
-                        expression: "data.email"
+                        value: _vm.data.dateGm,
+                        expression: "data.dateGm"
                       }
                     ],
                     staticClass: "form-control",
-                    attrs: { type: "text" },
-                    domProps: { value: _vm.data.email },
+                    attrs: { type: "date" },
+                    domProps: { value: _vm.data.dateGm },
                     on: {
                       input: function($event) {
                         if ($event.target.composing) {
                           return
                         }
-                        _vm.$set(_vm.data, "email", $event.target.value)
+                        _vm.$set(_vm.data, "dateGm", $event.target.value)
                       }
                     }
                   })
@@ -75279,73 +75652,91 @@ var render = function() {
               ])
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: " col-lg-3 col-md-3 " }, [
-              _c("div", { staticClass: "panel-default material" }, [
-                _c("label", [_vm._v("Estado Civil")]),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: "input-group" },
-                  [
-                    _vm._m(9),
-                    _vm._v(" "),
-                    _c("v-select", {
-                      staticClass: "form-control",
-                      attrs: { type: "text", options: _vm.civil },
-                      model: {
-                        value: _vm.data.civil_status,
-                        callback: function($$v) {
-                          _vm.$set(_vm.data, "civil_status", $$v)
-                        },
-                        expression: "data.civil_status"
-                      }
-                    })
-                  ],
-                  1
-                )
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: " col-lg-3 col-md-3 " }, [
+            _c("div", { staticClass: " col-lg-2 col-md-3 col-xs-12 " }, [
               _c("div", { staticClass: "panel-default " }, [
-                _c("label", [_vm._v("Dirección")]),
+                _c("label", [_vm._v("Tarjeta Lider Juvenir")]),
                 _vm._v(" "),
                 _c("div", { staticClass: "input-group" }, [
-                  _vm._m(10),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.data.cardLj,
+                        expression: "data.cardLj"
+                      }
+                    ],
+                    attrs: { type: "checkbox" },
+                    domProps: {
+                      checked: Array.isArray(_vm.data.cardLj)
+                        ? _vm._i(_vm.data.cardLj, null) > -1
+                        : _vm.data.cardLj
+                    },
+                    on: {
+                      change: function($event) {
+                        var $$a = _vm.data.cardLj,
+                          $$el = $event.target,
+                          $$c = $$el.checked ? true : false
+                        if (Array.isArray($$a)) {
+                          var $$v = null,
+                            $$i = _vm._i($$a, $$v)
+                          if ($$el.checked) {
+                            $$i < 0 &&
+                              _vm.$set(_vm.data, "cardLj", $$a.concat([$$v]))
+                          } else {
+                            $$i > -1 &&
+                              _vm.$set(
+                                _vm.data,
+                                "cardLj",
+                                $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                              )
+                          }
+                        } else {
+                          _vm.$set(_vm.data, "cardLj", $$c)
+                        }
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("label", [_vm._v("Fecha de Investidura")]),
+                _vm._v(" "),
+                _c("div", { staticClass: "input-group" }, [
+                  _vm._m(9),
                   _vm._v(" "),
                   _c("input", {
                     directives: [
                       {
                         name: "model",
                         rawName: "v-model",
-                        value: _vm.data.address,
-                        expression: "data.address"
+                        value: _vm.data.dateLj,
+                        expression: "data.dateLj"
                       }
                     ],
                     staticClass: "form-control",
-                    attrs: { type: "text" },
-                    domProps: { value: _vm.data.address },
+                    attrs: { type: "date" },
+                    domProps: { value: _vm.data.dateLj },
                     on: {
                       input: function($event) {
                         if ($event.target.composing) {
                           return
                         }
-                        _vm.$set(_vm.data, "address", $event.target.value)
+                        _vm.$set(_vm.data, "dateLj", $event.target.value)
                       }
                     }
                   })
                 ])
               ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-lg-12 col-md-12  text-center" }, [
-              _c("div", { staticClass: "btn" }, [
-                _c(
-                  "button",
-                  { staticClass: "btn btn-success", on: { click: _vm.send } },
-                  [_vm._v("Guardar")]
-                )
-              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-lg-12 col-md-12  text-center" }, [
+            _c("div", { staticClass: "btn" }, [
+              _c(
+                "button",
+                { staticClass: "btn btn-success", on: { click: _vm.send } },
+                [_vm._v("Guardar")]
+              )
             ])
           ])
         ]
@@ -75360,7 +75751,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "panel-heading" }, [
       _c("div", { staticClass: "text-center " }, [
-        _c("h1", [_vm._v("Registrar Tarjetas finalizadas a Jovenes ")])
+        _c("h1", [_vm._v("Registrar Clases Progresivas ")])
       ])
     ])
   },
@@ -75377,23 +75768,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("span", { staticClass: "input-group-addon" }, [
-      _c("i", { staticClass: "fa fa-user" })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("span", { staticClass: "input-group-addon" }, [
-      _c("i", { staticClass: "fa fa-user-circle" })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("span", { staticClass: "input-group-addon" }, [
-      _c("i", { staticClass: "fa fa-calendar" })
+      _c("i", { staticClass: "fa fa-calendar-o" })
     ])
   },
   function() {
@@ -75409,7 +75784,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("span", { staticClass: "input-group-addon" }, [
-      _c("i", { staticClass: "fa fa-phone" })
+      _c("i", { staticClass: "fa fa-calendar-o" })
     ])
   },
   function() {
@@ -75417,7 +75792,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("span", { staticClass: "input-group-addon" }, [
-      _c("i", { staticClass: "fa fa-phone-square" })
+      _c("i", { staticClass: "fa fa-calendar-o" })
     ])
   },
   function() {
@@ -75425,7 +75800,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("span", { staticClass: "input-group-addon" }, [
-      _c("i", { staticClass: "fa fa-send" })
+      _c("i", { staticClass: "fa fa-calendar-o" })
     ])
   },
   function() {
@@ -75433,7 +75808,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("span", { staticClass: "input-group-addon" }, [
-      _c("i", { staticClass: "fa fa-send" })
+      _c("i", { staticClass: "fa fa-calendar-o" })
     ])
   },
   function() {
@@ -75441,7 +75816,15 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("span", { staticClass: "input-group-addon" }, [
-      _c("i", { staticClass: "fa fa-send" })
+      _c("i", { staticClass: "fa fa-calendar-o" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "input-group-addon" }, [
+      _c("i", { staticClass: "fa fa-calendar-o" })
     ])
   }
 ]
@@ -84206,324 +84589,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -84539,9 +84604,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 address: '',
                 phone: '',
                 email: ''
-            }
+            },
+            txtSearch: '',
+            counts: ['5', '10', '20', '50'],
+            datos: [],
+            my_pages: [],
+            columns: [],
+            typeAll: true,
+            typeStyle: true
 
         };
+    },
+    created: function created() {
+
+        var self = this;
+        this.$http.get("/softadventist/data-member-tarjetas").then(function (response) {
+            self.datos = response.data.model;
+            self.my_pages = response.data.my_pages;
+            self.columns = response.data.columns;
+        });
     },
 
     methods: {
@@ -84607,1295 +84688,243 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c(
+    "div",
+    { staticClass: "row" },
+    [
+      _c("div", { staticClass: "col-md-12 " }, [
+        _c("h1", [_vm._v(_vm._s(_vm.datos.data[0].church.name))])
+      ]),
+      _vm._v(" "),
+      _vm._l(_vm.datos.data, function(items) {
+        return _c("div", { staticClass: "col-sm-4 col-md-3" }, [
+          _c("div", { staticClass: "panel pos-rel" }, [
+            _c("div", { staticClass: "pad-all text-center" }, [
+              _vm._m(0, true),
+              _vm._v(" "),
+              _c("a", { attrs: { href: "#" } }, [
+                _c("img", {
+                  staticClass: "img-lg img-circle mar-ver",
+                  attrs: {
+                    alt: "Profile Picture",
+                    src: "/img/profile-photos/2.png"
+                  }
+                }),
+                _vm._v(" "),
+                _c(
+                  "p",
+                  { staticClass: "text-lg text-semibold mar-no text-main" },
+                  [_vm._v(_vm._s(items.member) + " ")]
+                ),
+                _vm._v(" "),
+                _c("p", { staticClass: "text-sm" }, [
+                  _vm._v("Marketing manager")
+                ]),
+                _vm._v(" "),
+                _vm._m(1, true)
+              ]),
+              _vm._v(" "),
+              items.club
+                ? _c(
+                    "div",
+                    { staticClass: "pad-top btn-groups" },
+                    [
+                      _vm._l(items.club, function(card) {
+                        return _c(
+                          "a",
+                          {
+                            staticClass: "btn btn-icon  icon-lg add-tooltip",
+                            attrs: { href: "#", "data-container": "body" }
+                          },
+                          [
+                            _c("img", {
+                              attrs: {
+                                src: "/img/Botones/Amigo.gif",
+                                width: "50",
+                                height: "50"
+                              }
+                            }),
+                            _vm._v(
+                              " " + _vm._s(card) + "\n                    "
+                            )
+                          ]
+                        )
+                      }),
+                      _vm._v(" "),
+                      _vm._m(2, true),
+                      _vm._v(" "),
+                      _vm._m(3, true),
+                      _vm._v(" "),
+                      _vm._m(4, true)
+                    ],
+                    2
+                  )
+                : _vm._e()
+            ])
+          ])
+        ])
+      })
+    ],
+    2
+  )
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "col-md-12 " }, [
-        _c("h1", [_vm._v("Iglesia Adventista de Quepos")])
-      ]),
+    return _c("div", { staticClass: "widget-control" }, [
+      _c(
+        "a",
+        {
+          staticClass: "add-tooltip btn btn-trans",
+          attrs: { href: "#", "data-original-title": "Favorite" }
+        },
+        [
+          _c("span", { staticClass: "favorite-color text-lg" }, [
+            _c("i", { staticClass: "demo-psi-star" })
+          ]),
+          _vm._v("\n                        Guia Mayor\n                    ")
+        ]
+      ),
       _vm._v(" "),
-      _c("div", { staticClass: "col-sm-4 col-md-3" }, [
-        _c("div", { staticClass: "panel pos-rel" }, [
-          _c("div", { staticClass: "pad-all text-center" }, [
-            _c("div", { staticClass: "widget-control" }, [
-              _c(
-                "a",
-                {
-                  staticClass: "add-tooltip btn btn-trans",
-                  attrs: { href: "#", "data-original-title": "Favorite" }
-                },
-                [
-                  _c("span", { staticClass: "favorite-color text-lg" }, [
-                    _c("i", { staticClass: "demo-psi-star" })
-                  ]),
-                  _vm._v(
-                    "\n                        Guia Mayor\n                    "
-                  )
-                ]
-              ),
-              _vm._v(" "),
-              _c(
-                "a",
-                {
-                  staticClass: "add-tooltip btn btn-trans",
-                  attrs: { href: "#" }
-                },
-                [
-                  _vm._v(
-                    "\n                        Código: C1MG1514\n                    "
-                  )
-                ]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "btn-group dropdown" }, [
-                _c(
-                  "a",
-                  {
-                    staticClass: "dropdown-toggle btn btn-trans",
-                    attrs: {
-                      href: "#",
-                      "data-toggle": "dropdown",
-                      "aria-expanded": "false"
-                    }
-                  },
-                  [_c("i", { staticClass: "pci-ver-dots" })]
-                ),
-                _vm._v(" "),
-                _c("ul", { staticClass: "dropdown-menu dropdown-menu-right" }, [
-                  _c("li", [
-                    _c("a", { attrs: { href: "#" } }, [
-                      _c("i", {
-                        staticClass: "icon-lg icon-fw demo-psi-pen-5"
-                      }),
-                      _vm._v(" Edit")
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c("a", { attrs: { href: "#" } }, [
-                      _c("i", {
-                        staticClass: "icon-lg icon-fw demo-pli-recycling"
-                      }),
-                      _vm._v(" Remove")
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("li", { staticClass: "divider" }),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c("a", { attrs: { href: "#" } }, [
-                      _c("i", { staticClass: "icon-lg icon-fw demo-pli-mail" }),
-                      _vm._v(" Send a Message")
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c("a", { attrs: { href: "#" } }, [
-                      _c("i", {
-                        staticClass: "icon-lg icon-fw demo-pli-calendar-4"
-                      }),
-                      _vm._v(" View Details")
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c("a", { attrs: { href: "#" } }, [
-                      _c("i", {
-                        staticClass: "icon-lg icon-fw demo-pli-lock-user"
-                      }),
-                      _vm._v(" Lock")
-                    ])
-                  ])
-                ])
-              ])
-            ]),
-            _vm._v(" "),
+      _c(
+        "a",
+        { staticClass: "add-tooltip btn btn-trans", attrs: { href: "#" } },
+        [
+          _vm._v(
+            "\n                        Código: C1MG1514\n                    "
+          )
+        ]
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "btn-group dropdown" }, [
+        _c(
+          "a",
+          {
+            staticClass: "dropdown-toggle btn btn-trans",
+            attrs: {
+              href: "#",
+              "data-toggle": "dropdown",
+              "aria-expanded": "false"
+            }
+          },
+          [_c("i", { staticClass: "pci-ver-dots" })]
+        ),
+        _vm._v(" "),
+        _c("ul", { staticClass: "dropdown-menu dropdown-menu-right" }, [
+          _c("li", [
             _c("a", { attrs: { href: "#" } }, [
-              _c("img", {
-                staticClass: "img-lg img-circle mar-ver",
-                attrs: {
-                  alt: "Profile Picture",
-                  src: "/img/profile-photos/2.png"
-                }
-              }),
-              _vm._v(" "),
-              _c(
-                "p",
-                { staticClass: "text-lg text-semibold mar-no text-main" },
-                [_vm._v("Stephen Tran")]
-              ),
-              _vm._v(" "),
-              _c("p", { staticClass: "text-sm" }, [
-                _vm._v("Marketing manager")
-              ]),
-              _vm._v(" "),
-              _c("p", { staticClass: "text-sm" }, [
-                _c("a", { attrs: { href: "/softadventist/perfile-clubes" } }, [
-                  _vm._v("Lista de Especialidades")
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "pad-top btn-groups" }, [
-              _c(
-                "a",
-                {
-                  staticClass: "btn btn-icon  icon-lg add-tooltip",
-                  attrs: { href: "#", "data-container": "body" }
-                },
-                [
-                  _c("img", {
-                    attrs: {
-                      src: "/img/Botones/Amigo.gif",
-                      width: "50",
-                      height: "50"
-                    }
-                  })
-                ]
-              ),
-              _vm._v(" "),
-              _c(
-                "a",
-                {
-                  staticClass: "btn btn-icon  icon-lg add-tooltip",
-                  attrs: { href: "#", "data-container": "body" }
-                },
-                [
-                  _c("img", {
-                    attrs: {
-                      src: "/img/Botones/Compañero.gif",
-                      width: "50",
-                      height: "50"
-                    }
-                  })
-                ]
-              ),
-              _vm._v(" "),
-              _c(
-                "a",
-                {
-                  staticClass: "btn btn-icon icon-lg add-tooltip",
-                  attrs: { href: "#", "data-container": "body" }
-                },
-                [
-                  _c("img", {
-                    attrs: {
-                      src: "/img/Botones/Explorador.gif",
-                      width: "50",
-                      height: "50"
-                    }
-                  })
-                ]
-              ),
-              _vm._v(" "),
-              _c(
-                "a",
-                {
-                  staticClass: "btn btn-icon icon-lg add-tooltip",
-                  attrs: { href: "#", "data-container": "body" }
-                },
-                [
-                  _c("img", {
-                    attrs: {
-                      src: "/img/Botones/Guia-Mayores.png",
-                      width: "50",
-                      height: "50"
-                    }
-                  })
-                ]
-              )
+              _c("i", { staticClass: "icon-lg icon-fw demo-psi-pen-5" }),
+              _vm._v(" Edit")
             ])
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-sm-4 col-md-3" }, [
-        _c("div", { staticClass: "panel pos-rel" }, [
-          _c("div", { staticClass: "pad-all text-center" }, [
-            _c("div", { staticClass: "widget-control" }, [
-              _c(
-                "a",
-                {
-                  staticClass: "add-tooltip btn btn-trans",
-                  attrs: { href: "#", "data-original-title": "Favorite" }
-                },
-                [
-                  _c("span", { staticClass: "unfavorite-color text-lg" }, [
-                    _c("i", { staticClass: "demo-psi-star" })
-                  ]),
-                  _vm._v(
-                    "\n                        Conquistador\n                    "
-                  )
-                ]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "btn-group dropdown" }, [
-                _c(
-                  "a",
-                  {
-                    staticClass: "dropdown-toggle btn btn-trans",
-                    attrs: {
-                      href: "#",
-                      "data-toggle": "dropdown",
-                      "aria-expanded": "false"
-                    }
-                  },
-                  [_c("i", { staticClass: "pci-ver-dots" })]
-                ),
-                _vm._v(" "),
-                _c("ul", { staticClass: "dropdown-menu dropdown-menu-right" }, [
-                  _c("li", [
-                    _c("a", { attrs: { href: "#" } }, [
-                      _c("i", {
-                        staticClass: "icon-lg icon-fw demo-psi-pen-5"
-                      }),
-                      _vm._v(" Edit")
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c("a", { attrs: { href: "#" } }, [
-                      _c("i", {
-                        staticClass: "icon-lg icon-fw demo-pli-recycling"
-                      }),
-                      _vm._v(" Remove")
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("li", { staticClass: "divider" }),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c("a", { attrs: { href: "#" } }, [
-                      _c("i", { staticClass: "icon-lg icon-fw demo-pli-mail" }),
-                      _vm._v(" Send a Message")
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c("a", { attrs: { href: "#" } }, [
-                      _c("i", {
-                        staticClass: "icon-lg icon-fw demo-pli-calendar-4"
-                      }),
-                      _vm._v(" View Details")
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c("a", { attrs: { href: "#" } }, [
-                      _c("i", {
-                        staticClass: "icon-lg icon-fw demo-pli-lock-user"
-                      }),
-                      _vm._v(" Lock")
-                    ])
-                  ])
-                ])
-              ])
-            ]),
-            _vm._v(" "),
+          ]),
+          _vm._v(" "),
+          _c("li", [
             _c("a", { attrs: { href: "#" } }, [
-              _c("img", {
-                staticClass: "img-lg img-circle mar-ver",
-                attrs: {
-                  alt: "Profile Picture",
-                  src: "/img/profile-photos/10.png"
-                }
-              }),
-              _vm._v(" "),
-              _c(
-                "p",
-                { staticClass: "text-lg text-semibold mar-no text-main" },
-                [_vm._v("Brenda Fuller")]
-              ),
-              _vm._v(" "),
-              _c("p", { staticClass: "text-sm" }, [
-                _vm._v("Graphics designer")
-              ]),
-              _vm._v(" "),
-              _c("p", { staticClass: "text-sm" }, [
-                _c("a", { attrs: { href: "/softadventist/perfile-clubes" } }, [
-                  _vm._v("Lista de Especialidades")
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "pad-top btn-groups" }, [
-              _c(
-                "a",
-                {
-                  staticClass: "btn btn-icon  icon-lg add-tooltip",
-                  attrs: { href: "#", "data-container": "body" }
-                },
-                [
-                  _c("img", {
-                    attrs: {
-                      src: "/img/Botones/Amigo.gif",
-                      width: "50",
-                      height: "50"
-                    }
-                  })
-                ]
-              ),
-              _vm._v(" "),
-              _c(
-                "a",
-                {
-                  staticClass: "btn btn-icon  icon-lg add-tooltip",
-                  attrs: { href: "#", "data-container": "body" }
-                },
-                [
-                  _c("img", {
-                    attrs: {
-                      src: "/img/Botones/Compañero.gif",
-                      width: "50",
-                      height: "50"
-                    }
-                  })
-                ]
-              ),
-              _vm._v(" "),
-              _c(
-                "a",
-                {
-                  staticClass: "btn btn-icon icon-lg add-tooltip",
-                  attrs: { href: "#", "data-container": "body" }
-                },
-                [
-                  _c("img", {
-                    attrs: {
-                      src: "/img/Botones/Viajero.gif",
-                      width: "50",
-                      height: "50"
-                    }
-                  })
-                ]
-              )
+              _c("i", { staticClass: "icon-lg icon-fw demo-pli-recycling" }),
+              _vm._v(" Remove")
             ])
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-sm-4 col-md-3" }, [
-        _c("div", { staticClass: "panel pos-rel" }, [
-          _c("div", { staticClass: "pad-all text-center" }, [
-            _c("div", { staticClass: "widget-control" }, [
-              _c(
-                "a",
-                {
-                  staticClass: "add-tooltip btn btn-trans",
-                  attrs: { href: "#", "data-original-title": "Favorite" }
-                },
-                [
-                  _c("span", { staticClass: "unfavorite-color text-lg" }, [
-                    _c("i", { staticClass: "demo-psi-star" })
-                  ]),
-                  _vm._v(
-                    "\n                        Conquistador\n                    "
-                  )
-                ]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "btn-group dropdown" }, [
-                _c(
-                  "a",
-                  {
-                    staticClass: "dropdown-toggle btn btn-trans",
-                    attrs: {
-                      href: "#",
-                      "data-toggle": "dropdown",
-                      "aria-expanded": "false"
-                    }
-                  },
-                  [_c("i", { staticClass: "pci-ver-dots" })]
-                ),
-                _vm._v(" "),
-                _c("ul", { staticClass: "dropdown-menu dropdown-menu-right" }, [
-                  _c("li", [
-                    _c("a", { attrs: { href: "#" } }, [
-                      _c("i", {
-                        staticClass: "icon-lg icon-fw demo-psi-pen-5"
-                      }),
-                      _vm._v(" Edit")
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c("a", { attrs: { href: "#" } }, [
-                      _c("i", {
-                        staticClass: "icon-lg icon-fw demo-pli-recycling"
-                      }),
-                      _vm._v(" Remove")
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("li", { staticClass: "divider" }),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c("a", { attrs: { href: "#" } }, [
-                      _c("i", { staticClass: "icon-lg icon-fw demo-pli-mail" }),
-                      _vm._v(" Send a Message")
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c("a", { attrs: { href: "#" } }, [
-                      _c("i", {
-                        staticClass: "icon-lg icon-fw demo-pli-calendar-4"
-                      }),
-                      _vm._v(" View Details")
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c("a", { attrs: { href: "#" } }, [
-                      _c("i", {
-                        staticClass: "icon-lg icon-fw demo-pli-lock-user"
-                      }),
-                      _vm._v(" Lock")
-                    ])
-                  ])
-                ])
-              ])
-            ]),
-            _vm._v(" "),
+          ]),
+          _vm._v(" "),
+          _c("li", { staticClass: "divider" }),
+          _vm._v(" "),
+          _c("li", [
             _c("a", { attrs: { href: "#" } }, [
-              _c("img", {
-                staticClass: "img-lg img-circle mar-ver",
-                attrs: {
-                  alt: "Profile Picture",
-                  src: "/img/profile-photos/1.png"
-                }
-              }),
-              _vm._v(" "),
-              _c(
-                "p",
-                { staticClass: "text-lg text-semibold mar-no text-main" },
-                [_vm._v("Aaron Chavez")]
-              ),
-              _vm._v(" "),
-              _c("p", { staticClass: "text-sm" }, [_vm._v("CEO")]),
-              _vm._v(" "),
-              _c("p", { staticClass: "text-sm" }, [
-                _c("a", { attrs: { href: "/softadventist/perfile-clubes" } }, [
-                  _vm._v("Lista de Especialidades")
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "pad-top btn-groups" }, [
-              _c(
-                "a",
-                {
-                  staticClass: "btn btn-icon  icon-lg add-tooltip",
-                  attrs: { href: "#", "data-container": "body" }
-                },
-                [
-                  _c("img", {
-                    attrs: {
-                      src: "/img/Botones/Amigo.gif",
-                      width: "50",
-                      height: "50"
-                    }
-                  })
-                ]
-              ),
-              _vm._v(" "),
-              _c(
-                "a",
-                {
-                  staticClass: "btn btn-icon  icon-lg add-tooltip",
-                  attrs: { href: "#", "data-container": "body" }
-                },
-                [
-                  _c("img", {
-                    attrs: {
-                      src: "/img/Botones/Compañero.gif",
-                      width: "50",
-                      height: "50"
-                    }
-                  })
-                ]
-              )
+              _c("i", { staticClass: "icon-lg icon-fw demo-pli-mail" }),
+              _vm._v(" Send a Message")
             ])
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-sm-4 col-md-3" }, [
-        _c("div", { staticClass: "panel pos-rel" }, [
-          _c("div", { staticClass: "pad-all text-center" }, [
-            _c("div", { staticClass: "widget-control" }, [
-              _c(
-                "a",
-                {
-                  staticClass: "add-tooltip btn btn-trans",
-                  attrs: { href: "#", "data-original-title": "Favorite" }
-                },
-                [
-                  _c("span", { staticClass: "unfavorite-color text-lg" }, [
-                    _c("i", { staticClass: "demo-psi-star" })
-                  ]),
-                  _vm._v(
-                    "\n                        Conquistador\n                    "
-                  )
-                ]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "btn-group dropdown" }, [
-                _c(
-                  "a",
-                  {
-                    staticClass: "dropdown-toggle btn btn-trans",
-                    attrs: {
-                      href: "#",
-                      "data-toggle": "dropdown",
-                      "aria-expanded": "false"
-                    }
-                  },
-                  [_c("i", { staticClass: "pci-ver-dots" })]
-                ),
-                _vm._v(" "),
-                _c("ul", { staticClass: "dropdown-menu dropdown-menu-right" }, [
-                  _c("li", [
-                    _c("a", { attrs: { href: "#" } }, [
-                      _c("i", {
-                        staticClass: "icon-lg icon-fw demo-psi-pen-5"
-                      }),
-                      _vm._v(" Edit")
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c("a", { attrs: { href: "#" } }, [
-                      _c("i", {
-                        staticClass: "icon-lg icon-fw demo-pli-recycling"
-                      }),
-                      _vm._v(" Remove")
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("li", { staticClass: "divider" }),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c("a", { attrs: { href: "#" } }, [
-                      _c("i", { staticClass: "icon-lg icon-fw demo-pli-mail" }),
-                      _vm._v(" Send a Message")
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c("a", { attrs: { href: "#" } }, [
-                      _c("i", {
-                        staticClass: "icon-lg icon-fw demo-pli-calendar-4"
-                      }),
-                      _vm._v(" View Details")
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c("a", { attrs: { href: "#" } }, [
-                      _c("i", {
-                        staticClass: "icon-lg icon-fw demo-pli-lock-user"
-                      }),
-                      _vm._v(" Lock")
-                    ])
-                  ])
-                ])
-              ])
-            ]),
-            _vm._v(" "),
+          ]),
+          _vm._v(" "),
+          _c("li", [
             _c("a", { attrs: { href: "#" } }, [
-              _c("img", {
-                staticClass: "img-lg img-circle mar-ver",
-                attrs: {
-                  alt: "Profile Picture",
-                  src: "/img/profile-photos/5.png"
-                }
-              }),
-              _vm._v(" "),
-              _c(
-                "p",
-                { staticClass: "text-lg text-semibold mar-no text-main" },
-                [_vm._v("Donald Brown")]
-              ),
-              _vm._v(" "),
-              _c("p", { staticClass: "text-sm" }, [_vm._v("Programmer")]),
-              _vm._v(" "),
-              _c("p", { staticClass: "text-sm" }, [
-                _c("a", { attrs: { href: "/softadventist/perfile-clubes" } }, [
-                  _vm._v("Lista de Especialidades")
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "pad-top btn-groups" }, [
-              _c(
-                "a",
-                {
-                  staticClass: "btn btn-icon  icon-lg add-tooltip",
-                  attrs: { href: "#", "data-container": "body" }
-                },
-                [
-                  _c("img", {
-                    attrs: {
-                      src: "/img/Botones/Amigo.gif",
-                      width: "50",
-                      height: "50"
-                    }
-                  })
-                ]
-              ),
-              _vm._v(" "),
-              _c(
-                "a",
-                {
-                  staticClass: "btn btn-icon  icon-lg add-tooltip",
-                  attrs: { href: "#", "data-container": "body" }
-                },
-                [
-                  _c("img", {
-                    attrs: {
-                      src: "/img/Botones/Compañero.gif",
-                      width: "50",
-                      height: "50"
-                    }
-                  })
-                ]
-              )
+              _c("i", { staticClass: "icon-lg icon-fw demo-pli-calendar-4" }),
+              _vm._v(" View Details")
             ])
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-sm-4 col-md-3" }, [
-        _c("div", { staticClass: "panel pos-rel" }, [
-          _c("div", { staticClass: "pad-all text-center" }, [
-            _c("div", { staticClass: "widget-control" }, [
-              _c(
-                "a",
-                {
-                  staticClass: "add-tooltip btn btn-trans",
-                  attrs: { href: "#", "data-original-title": "Favorite" }
-                },
-                [
-                  _c("span", { staticClass: "unfavorite-color text-lg" }, [
-                    _c("i", { staticClass: "demo-psi-star" })
-                  ]),
-                  _vm._v(
-                    "\n                        Conquistador\n                    "
-                  )
-                ]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "btn-group dropdown" }, [
-                _c(
-                  "a",
-                  {
-                    staticClass: "dropdown-toggle btn btn-trans",
-                    attrs: {
-                      href: "#",
-                      "data-toggle": "dropdown",
-                      "aria-expanded": "false"
-                    }
-                  },
-                  [_c("i", { staticClass: "pci-ver-dots" })]
-                ),
-                _vm._v(" "),
-                _c("ul", { staticClass: "dropdown-menu dropdown-menu-right" }, [
-                  _c("li", [
-                    _c("a", { attrs: { href: "#" } }, [
-                      _c("i", {
-                        staticClass: "icon-lg icon-fw demo-psi-pen-5"
-                      }),
-                      _vm._v(" Edit")
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c("a", { attrs: { href: "#" } }, [
-                      _c("i", {
-                        staticClass: "icon-lg icon-fw demo-pli-recycling"
-                      }),
-                      _vm._v(" Remove")
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("li", { staticClass: "divider" }),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c("a", { attrs: { href: "#" } }, [
-                      _c("i", { staticClass: "icon-lg icon-fw demo-pli-mail" }),
-                      _vm._v(" Send a Message")
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c("a", { attrs: { href: "#" } }, [
-                      _c("i", {
-                        staticClass: "icon-lg icon-fw demo-pli-calendar-4"
-                      }),
-                      _vm._v(" View Details")
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c("a", { attrs: { href: "#" } }, [
-                      _c("i", {
-                        staticClass: "icon-lg icon-fw demo-pli-lock-user"
-                      }),
-                      _vm._v(" Lock")
-                    ])
-                  ])
-                ])
-              ])
-            ]),
-            _vm._v(" "),
+          ]),
+          _vm._v(" "),
+          _c("li", [
             _c("a", { attrs: { href: "#" } }, [
-              _c("img", {
-                staticClass: "img-lg img-circle mar-ver",
-                attrs: {
-                  alt: "Profile Picture",
-                  src: "/img/profile-photos/9.png"
-                }
-              }),
-              _vm._v(" "),
-              _c(
-                "p",
-                { staticClass: "text-lg text-semibold mar-no text-main" },
-                [_vm._v("Lucy Moon")]
-              ),
-              _vm._v(" "),
-              _c("p", { staticClass: "text-sm" }, [
-                _vm._v("Frontend Designer")
-              ]),
-              _vm._v(" "),
-              _c("p", { staticClass: "text-sm" }, [
-                _c("a", { attrs: { href: "/softadventist/perfile-clubes" } }, [
-                  _vm._v("Lista de Especialidades")
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "pad-top btn-groups" }, [
-              _c(
-                "a",
-                {
-                  staticClass: "btn btn-icon  icon-lg add-tooltip",
-                  attrs: { href: "#", "data-container": "body" }
-                },
-                [
-                  _c("img", {
-                    attrs: {
-                      src: "/img/Botones/Conejo.gif",
-                      width: "50",
-                      height: "50"
-                    }
-                  })
-                ]
-              ),
-              _vm._v(" "),
-              _c(
-                "a",
-                {
-                  staticClass: "btn btn-icon  icon-lg add-tooltip",
-                  attrs: { href: "#", "data-container": "body" }
-                },
-                [
-                  _c("img", {
-                    attrs: {
-                      src: "/img/Botones/Amigo.gif",
-                      width: "50",
-                      height: "50"
-                    }
-                  })
-                ]
-              ),
-              _vm._v(" "),
-              _c(
-                "a",
-                {
-                  staticClass: "btn btn-icon  icon-lg add-tooltip",
-                  attrs: { href: "#", "data-container": "body" }
-                },
-                [
-                  _c("img", {
-                    attrs: {
-                      src: "/img/Botones/Compañero.gif",
-                      width: "50",
-                      height: "50"
-                    }
-                  })
-                ]
-              )
-            ])
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-sm-4 col-md-3" }, [
-        _c("div", { staticClass: "panel pos-rel" }, [
-          _c("div", { staticClass: "pad-all text-center" }, [
-            _c("div", { staticClass: "widget-control" }, [
-              _c(
-                "a",
-                {
-                  staticClass: "add-tooltip btn btn-trans",
-                  attrs: { href: "#", "data-original-title": "Favorite" }
-                },
-                [
-                  _c("span", { staticClass: "unfavorite-color text-lg" }, [
-                    _c("i", { staticClass: "demo-psi-star" })
-                  ]),
-                  _vm._v(
-                    "\n                        Guia Mayor\n                    "
-                  )
-                ]
-              ),
-              _vm._v(" "),
-              _c(
-                "a",
-                {
-                  staticClass: "add-tooltip btn btn-trans",
-                  attrs: { href: "#" }
-                },
-                [
-                  _vm._v(
-                    "\n                        Código: C1MG1504\n                    "
-                  )
-                ]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "btn-group dropdown" }, [
-                _c(
-                  "a",
-                  {
-                    staticClass: "dropdown-toggle btn btn-trans",
-                    attrs: {
-                      href: "#",
-                      "data-toggle": "dropdown",
-                      "aria-expanded": "false"
-                    }
-                  },
-                  [_c("i", { staticClass: "pci-ver-dots" })]
-                ),
-                _vm._v(" "),
-                _c("ul", { staticClass: "dropdown-menu dropdown-menu-right" }, [
-                  _c("li", [
-                    _c("a", { attrs: { href: "#" } }, [
-                      _c("i", {
-                        staticClass: "icon-lg icon-fw demo-psi-pen-5"
-                      }),
-                      _vm._v(" Edit")
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c("a", { attrs: { href: "#" } }, [
-                      _c("i", {
-                        staticClass: "icon-lg icon-fw demo-pli-recycling"
-                      }),
-                      _vm._v(" Remove")
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("li", { staticClass: "divider" }),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c("a", { attrs: { href: "#" } }, [
-                      _c("i", { staticClass: "icon-lg icon-fw demo-pli-mail" }),
-                      _vm._v(" Send a Message")
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c("a", { attrs: { href: "#" } }, [
-                      _c("i", {
-                        staticClass: "icon-lg icon-fw demo-pli-calendar-4"
-                      }),
-                      _vm._v(" View Details")
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c("a", { attrs: { href: "#" } }, [
-                      _c("i", {
-                        staticClass: "icon-lg icon-fw demo-pli-lock-user"
-                      }),
-                      _vm._v(" Lock")
-                    ])
-                  ])
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("a", { attrs: { href: "#" } }, [
-              _c("img", {
-                staticClass: "img-lg img-circle mar-ver",
-                attrs: {
-                  alt: "Profile Picture",
-                  src: "/img/profile-photos/4.png"
-                }
-              }),
-              _vm._v(" "),
-              _c(
-                "p",
-                { staticClass: "text-lg text-semibold mar-no text-main" },
-                [_vm._v("Howard Rios")]
-              ),
-              _vm._v(" "),
-              _c("p", { staticClass: "text-sm" }, [_vm._v("Marketing")]),
-              _vm._v(" "),
-              _c("p", { staticClass: "text-sm" }, [
-                _c("a", { attrs: { href: "/softadventist/perfile-clubes" } }, [
-                  _vm._v("Lista de Especialidades")
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "pad-top btn-groups" }, [
-              _c(
-                "a",
-                {
-                  staticClass: "btn btn-icon  icon-lg add-tooltip",
-                  attrs: { href: "#", "data-container": "body" }
-                },
-                [
-                  _c("img", {
-                    attrs: {
-                      src: "/img/Botones/Amigo.gif",
-                      width: "50",
-                      height: "50"
-                    }
-                  })
-                ]
-              ),
-              _vm._v(" "),
-              _c(
-                "a",
-                {
-                  staticClass: "btn btn-icon  icon-lg add-tooltip",
-                  attrs: { href: "#", "data-container": "body" }
-                },
-                [
-                  _c("img", {
-                    attrs: {
-                      src: "/img/Botones/Guia-Mayores.png",
-                      width: "50",
-                      height: "50"
-                    }
-                  })
-                ]
-              )
-            ])
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-sm-4 col-md-3" }, [
-        _c("div", { staticClass: "panel pos-rel" }, [
-          _c("div", { staticClass: "pad-all text-center" }, [
-            _c("div", { staticClass: "widget-control" }, [
-              _c(
-                "a",
-                {
-                  staticClass: "add-tooltip btn btn-trans",
-                  attrs: { href: "#", "data-original-title": "Favorite" }
-                },
-                [
-                  _c("span", { staticClass: "favorite-color text-lg" }, [
-                    _c("i", { staticClass: "demo-psi-star" })
-                  ]),
-                  _vm._v(
-                    "\n                        Guias Mayores\n                    "
-                  )
-                ]
-              ),
-              _vm._v(" "),
-              _c(
-                "a",
-                {
-                  staticClass: "add-tooltip btn btn-trans",
-                  attrs: { href: "#" }
-                },
-                [
-                  _vm._v(
-                    "\n                        Código: C1MG1624\n                    "
-                  )
-                ]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "btn-group dropdown" }, [
-                _c(
-                  "a",
-                  {
-                    staticClass: "dropdown-toggle btn btn-trans",
-                    attrs: {
-                      href: "#",
-                      "data-toggle": "dropdown",
-                      "aria-expanded": "false"
-                    }
-                  },
-                  [_c("i", { staticClass: "pci-ver-dots" })]
-                ),
-                _vm._v(" "),
-                _c("ul", { staticClass: "dropdown-menu dropdown-menu-right" }, [
-                  _c("li", [
-                    _c("a", { attrs: { href: "#" } }, [
-                      _c("i", {
-                        staticClass: "icon-lg icon-fw demo-psi-pen-5"
-                      }),
-                      _vm._v(" Edit")
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c("a", { attrs: { href: "#" } }, [
-                      _c("i", {
-                        staticClass: "icon-lg icon-fw demo-pli-recycling"
-                      }),
-                      _vm._v(" Remove")
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("li", { staticClass: "divider" }),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c("a", { attrs: { href: "#" } }, [
-                      _c("i", { staticClass: "icon-lg icon-fw demo-pli-mail" }),
-                      _vm._v(" Send a Message")
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c("a", { attrs: { href: "#" } }, [
-                      _c("i", {
-                        staticClass: "icon-lg icon-fw demo-pli-calendar-4"
-                      }),
-                      _vm._v(" View Details")
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c("a", { attrs: { href: "#" } }, [
-                      _c("i", {
-                        staticClass: "icon-lg icon-fw demo-pli-lock-user"
-                      }),
-                      _vm._v(" Lock")
-                    ])
-                  ])
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("a", { attrs: { href: "#" } }, [
-              _c("img", {
-                staticClass: "img-lg img-circle mar-ver",
-                attrs: {
-                  alt: "Profile Picture",
-                  src: "/img/profile-photos/7.png"
-                }
-              }),
-              _vm._v(" "),
-              _c(
-                "p",
-                { staticClass: "text-lg text-semibold mar-no text-main" },
-                [_vm._v("Kathryn Obrien")]
-              ),
-              _vm._v(" "),
-              _c("p", { staticClass: "text-sm" }, [_vm._v("Co-CEO")]),
-              _vm._v(" "),
-              _c("p", { staticClass: "text-sm" }, [
-                _c("a", { attrs: { href: "/softadventist/perfile-clubes" } }, [
-                  _vm._v("Lista de Especialidades")
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "pad-top btn-groups" }, [
-              _c(
-                "a",
-                {
-                  staticClass: "btn btn-icon  icon-lg add-tooltip",
-                  attrs: { href: "#", "data-container": "body" }
-                },
-                [
-                  _c("img", {
-                    attrs: {
-                      src: "/img/Botones/Guia-Mayores.png",
-                      width: "50",
-                      height: "50"
-                    }
-                  })
-                ]
-              )
-            ])
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-sm-4 col-md-3" }, [
-        _c("div", { staticClass: "panel pos-rel" }, [
-          _c("div", { staticClass: "pad-all text-center" }, [
-            _c("div", { staticClass: "widget-control" }, [
-              _c(
-                "a",
-                {
-                  staticClass: "add-tooltip btn btn-trans",
-                  attrs: { href: "#", "data-original-title": "Favorite" }
-                },
-                [
-                  _c("span", { staticClass: "unfavorite-color text-lg" }, [
-                    _c("i", { staticClass: "demo-psi-star" })
-                  ]),
-                  _vm._v(
-                    "\n                        Guia Mayor\n                    "
-                  )
-                ]
-              ),
-              _vm._v(" "),
-              _c(
-                "a",
-                {
-                  staticClass: "add-tooltip btn btn-trans",
-                  attrs: { href: "#" }
-                },
-                [
-                  _vm._v(
-                    "\n                        Código: C1MG1524\n                    "
-                  )
-                ]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "btn-group dropdown" }, [
-                _c(
-                  "a",
-                  {
-                    staticClass: "dropdown-toggle btn btn-trans",
-                    attrs: {
-                      href: "#",
-                      "data-toggle": "dropdown",
-                      "aria-expanded": "false"
-                    }
-                  },
-                  [_c("i", { staticClass: "pci-ver-dots" })]
-                ),
-                _vm._v(" "),
-                _c("ul", { staticClass: "dropdown-menu dropdown-menu-right" }, [
-                  _c("li", [
-                    _c("a", { attrs: { href: "#" } }, [
-                      _c("i", {
-                        staticClass: "icon-lg icon-fw demo-psi-pen-5"
-                      }),
-                      _vm._v(" Edit")
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c("a", { attrs: { href: "#" } }, [
-                      _c("i", {
-                        staticClass: "icon-lg icon-fw demo-pli-recycling"
-                      }),
-                      _vm._v(" Remove")
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("li", { staticClass: "divider" }),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c("a", { attrs: { href: "#" } }, [
-                      _c("i", { staticClass: "icon-lg icon-fw demo-pli-mail" }),
-                      _vm._v(" Send a Message")
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c("a", { attrs: { href: "#" } }, [
-                      _c("i", {
-                        staticClass: "icon-lg icon-fw demo-pli-calendar-4"
-                      }),
-                      _vm._v(" View Details")
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c("a", { attrs: { href: "#" } }, [
-                      _c("i", {
-                        staticClass: "icon-lg icon-fw demo-pli-lock-user"
-                      }),
-                      _vm._v(" Lock")
-                    ])
-                  ])
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("a", { attrs: { href: "#" } }, [
-              _c("img", {
-                staticClass: "img-lg img-circle mar-ver",
-                attrs: {
-                  alt: "Profile Picture",
-                  src: "/img/profile-photos/8.png"
-                }
-              }),
-              _vm._v(" "),
-              _c(
-                "p",
-                { staticClass: "text-lg text-semibold mar-no text-main" },
-                [_vm._v("Karen Murray")]
-              ),
-              _vm._v(" "),
-              _c("p", { staticClass: "text-sm" }, [_vm._v("Sales manager")]),
-              _vm._v(" "),
-              _c("p", { staticClass: "text-sm" }, [
-                _c("a", { attrs: { href: "/softadventist/perfile-clubes" } }, [
-                  _vm._v("Lista de Especialidades")
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "pad-top btn-groups" }, [
-              _c(
-                "a",
-                {
-                  staticClass: "btn btn-icon  icon-lg add-tooltip",
-                  attrs: { href: "#", "data-container": "body" }
-                },
-                [
-                  _c("img", {
-                    attrs: {
-                      src: "/img/Botones/Corderitos.gif",
-                      width: "50",
-                      height: "50"
-                    }
-                  })
-                ]
-              ),
-              _vm._v(" "),
-              _c(
-                "a",
-                {
-                  staticClass: "btn btn-icon  icon-lg add-tooltip",
-                  attrs: { href: "#", "data-container": "body" }
-                },
-                [
-                  _c("img", {
-                    attrs: {
-                      src: "/img/Botones/Guia-Mayores.png",
-                      width: "50",
-                      height: "50"
-                    }
-                  })
-                ]
-              )
+              _c("i", { staticClass: "icon-lg icon-fw demo-pli-lock-user" }),
+              _vm._v(" Lock")
             ])
           ])
         ])
       ])
     ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", { staticClass: "text-sm" }, [
+      _c("a", { attrs: { href: "/softadventist/perfile-clubes" } }, [
+        _vm._v("Lista de Especialidades")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "a",
+      {
+        staticClass: "btn btn-icon  icon-lg add-tooltip",
+        attrs: { href: "#", "data-container": "body" }
+      },
+      [
+        _c("img", {
+          attrs: {
+            src: "/img/Botones/Compañero.gif",
+            width: "50",
+            height: "50"
+          }
+        })
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "a",
+      {
+        staticClass: "btn btn-icon icon-lg add-tooltip",
+        attrs: { href: "#", "data-container": "body" }
+      },
+      [
+        _c("img", {
+          attrs: {
+            src: "/img/Botones/Explorador.gif",
+            width: "50",
+            height: "50"
+          }
+        })
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "a",
+      {
+        staticClass: "btn btn-icon icon-lg add-tooltip",
+        attrs: { href: "#", "data-container": "body" }
+      },
+      [
+        _c("img", {
+          attrs: {
+            src: "/img/Botones/Guia-Mayores.png",
+            width: "50",
+            height: "50"
+          }
+        })
+      ]
+    )
   }
 ]
 render._withStripped = true
