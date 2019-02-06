@@ -59,4 +59,9 @@ class ChurchController extends Controller
     {
         return Church::listsLabel();
     }
+
+    public function listsSelectCampo()
+    {
+        return Church::listsLabelCampo();
+    }
 }

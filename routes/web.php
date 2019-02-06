@@ -88,6 +88,7 @@ Route::group(['prefix'=>'softadventist','middleware'=>'auth'],function (){
         Route::get('lista-miembros-deuda', ['uses'=>'MemberController@index','as'=>'list-members-due']);
         Route::get('lists-miembros', ['uses'=>'MemberController@getData','as'=>'listMembers']);
         Route::get('lista-miembros-select', 'MemberController@selectMembers');
+        Route::get('lista-miembros-select-campo', 'MemberController@selectMembersCampo');
        /**
      * Visitantes
      */
@@ -107,6 +108,7 @@ Route::group(['prefix'=>'softadventist','middleware'=>'auth'],function (){
     Route::get('lista-director-select', 'ClubesController@listDirector');
     Route::get('lista-club-select', 'ClubesController@listClubes');
     Route::get('registrar-directores-de-clubes', 'ClubesController@registerClubDirector')->name('register-club-director');
+    Route::post('store-directores-de-clubes', 'ClubesController@storeDirector');
     Route::get('registrar-tarjetas-a-jovenes', 'ClubesController@registerCards')->name('register-card-ja');
     Route::get('registrar-especialidades-a-jovenes', 'ClubesController@registerSpecialties')->name('register-specialties-ja');
     /**
@@ -243,6 +245,7 @@ Route::group(['prefix'=>'softadventist','middleware'=>'auth'],function (){
     Route::get('crear/usuarios', 'UserController@create')->name('createUser');
     Route::get('lista-user-select', 'UserController@labelSelect');
     Route::get('lista-churchs-select', 'Church\ChurchController@listsSelect');
+    Route::get('lista-churchs-select-campos', 'Church\ChurchController@listsSelectCampo');
     Route::get('lista-unions-select', 'UnionController@labelSelect');
     Route::get('lista-local-select', 'LocalField\LocalFieldController@listsSelect');
     Route::get('nuevo-cargo-usuario', 'LocalField\WhereUserBelongController@create')->name('nuevoCargoUsuario');

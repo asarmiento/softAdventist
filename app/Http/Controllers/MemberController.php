@@ -147,6 +147,12 @@ class MemberController extends Controller
     {
         return Member::listsLabel();
     }
+
+    public function selectMembersCampo()
+    {
+
+        return Member::listsLabelCampo();
+    }
     public function assistance()
     {
         return view('members.assistance');

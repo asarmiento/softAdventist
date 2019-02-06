@@ -2,37 +2,24 @@
 /**
  * Created by PhpStorm.
  * User: Anwar
- * Date: 27/1/2019
- * Time: 02:27:AM
+ * Date: 5/2/2019
+ * Time: 04:28:PM
  */
 
 namespace App\Entities\Departaments;
 
 
-use App\Entities\Church;
 use App\Entities\Entity;
 use App\Entities\Member;
 
-class ClubDirector extends Entity
+class MemberClub extends Entity
 {
-    protected $table = 'club_directors';
-    protected $fillable = [ 'year', 'member_id', 'club_id', 'church_id', 'user_id'];
+    protected $fillable = ['code_gm', 'code_lj', 'date', 'status', 'member_id', 'club_director_id', 'church_id', 'club_card_id', 'user_id'];
 
     public function member()
     {
         return $this->belongsTo(Member::class);
     }
-
-    public function club()
-    {
-        return $this->belongsTo(Club::class);
-    }
-
-    public function church()
-    {
-        return $this->belongsTo(Church::class);
-    }
-
     public static function listsLabel()
     {
         $directors = self::whereHas('member',function ($q){

@@ -30,10 +30,27 @@ function userType()
 
 function userChurch()
 {
-
     if(currentUser()->whereUserBelong->church_id){
         return \App\Entities\Church::find(currentUser()->whereUserBelong->church_id);
-    }elseif (currentUser()->whereUserBelong->local_field_id){
-        return \App\Entities\Church::where('',currentUser()->whereUserBelong->local_field_id)->first();
+    }else{
+        return false;
+    }
+}
+
+function userCampo()
+{
+    if (currentUser()->whereUserBelong->local_field_id){
+        return currentUser()->whereUserBelong->local_field_id;
+    }else{
+        return false;
+    }
+}
+
+function userUnion()
+{
+    if(currentUser()->whereUserBelong->union_id){
+        return currentUser()->whereUserBelong->union_id;
+    }else{
+        return false;
     }
 }

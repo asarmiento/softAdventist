@@ -31,6 +31,7 @@ class WhereUserBelongController extends Controller
     {
         $data = $request->all();
         $datos = [];
+
         if($data['church']==null)
         {
             $datos['church_id']=$data['church'];

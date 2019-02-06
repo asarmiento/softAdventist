@@ -92,6 +92,31 @@ class Member extends Entity
 
         return $lists;
     }
+    public static function listsLabelCampo()
+    {
+        if(userCampo()) {
+            $members = self::whereHas('church', function ($q) {
+                $q->whereHas('district', function ($r) {
+                    $r->where('local_field_id', userCampo());
+                });
+            })->get();
+        }else {
+            $members = self::whereHas('church', function ($q) {
+                $q->whereHas('district', function ($r) {
+                    $r->whereHas('localField',function ($e) {
+                        $e->where('union_id', userUnion());
+                    });
+                });
+            })->get();
+        }
+        $lists = [];
+        foreach ($members AS $member)
+        {
+            array_push($lists, ['label' =>  $member->name.' '.$member->last, 'value' => $member->id]);
+        }
+
+        return $lists;
+    }
     public function scopeSearch($query, $search){
         if(trim($search) != ""){
             $query->where("name","LIKE","%$search%")

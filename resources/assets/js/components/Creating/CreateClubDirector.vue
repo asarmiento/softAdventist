@@ -27,6 +27,15 @@
                                 </div>
                             </div>
                         </div>
+                        <!--div class=" col-lg-3 col-md-3 ">
+                            <div class="panel-default ">
+                                <label>Código de Guia Mayor</label>
+                                <div class="input-group" >
+                                    <span class="input-group-addon"><i class="fa fa-user-circle"></i></span>
+                                    <input type="text" v-model="data.code_gm" class="form-control" >
+                                </div>
+                            </div>
+                        </div>
                         <div class=" col-lg-3 col-md-3 ">
                             <div class="panel-default ">
                                 <label>Código de Lider Juvenil</label>
@@ -35,22 +44,13 @@
                                     <input type="text" v-model="data.code_lj" class="form-control" >
                                 </div>
                             </div>
-                        </div>
+                        </div-->
                         <div class=" col-lg-3 col-md-3 ">
                             <div class="panel-default ">
-                                <label>Fecha Bautizmo</label>
+                                <label>Iglesia a la que Pertenece</label>
                                 <div class="input-group" >
-                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                    <input type="date" v-model="data.bautizmoDate" class="form-control" >
-                                </div>
-                            </div>
-                        </div>
-                        <div class=" col-lg-3 col-md-3 ">
-                            <div class="panel-default ">
-                                <label>Fecha de Investidura</label>
-                                <div class="input-group" >
-                                    <span class="input-group-addon"><i class="fa fa-calendar-o"></i></span>
-                                    <input type="date" v-model="data.date" class="form-control" >
+                                    <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                    <v-select v-model="data.church" :options="listChurches"  ></v-select>
                                 </div>
                             </div>
                         </div>
@@ -76,30 +76,17 @@
         data () {
                  return   {
                      data: {
-                         code_gm: '',
                          member: '',
                          club: '',
-                         date: '',
-                         club_director: '',
-                         address: '',
-                         civil_status: '',
-                         phone: '',
-                         cell: '',
-                         email: '',
+                         church: '',
                      },
                      listMembers:"",
+                     listChurches:"",
                      listClubs:"",
-                     civil:[
-                         {"label":'Casado(a)',"value":'Casado(a)'},
-                         {"label":'Soltero(a)',"value":'Soltero(a)'},
-                         {"label":'Divorciado(a)',"value":'Divorciado(a)'},
-                         {"label":'Viudo(a)',"value":'Viudo(a)'},
-                         {"label":'Union Libre',"value":'Union Libre'},
-
-                     ]
+                     director:""
                  }
             }, created() {
-            this.$http.get('/softadventist/lista-miembros-select').then((response) => {
+            this.$http.get('/softadventist/lista-miembros-select-campo').then((response) => {
                 this.listMembers = response.data;
 
             });
@@ -107,29 +94,21 @@
                 this.listClubs = response.data;
 
             });
+            this.$http.get('/softadventist/lista-churchs-select-campos').then((response) => {
+                this.listChurches = response.data;
+
+            });
 
         },
         methods: {
 
             send: function (event) {
-                if(this.data.civil_status === ""){
-                    Swal('Debe Elegir un Estado Civil', 'No se puede proceder','error');
-                    return false;
-                }
-                axios.post('/softadventist/save-miembros', this.data)
+
+                axios.post('/softadventist/store-directores-de-clubes', this.data)
                     .then(response => {
                         if(response.data.success = true){
                             Swal('Se Guardo con Exito!!!', response.data.message,'success');
-                            this.data.charter= '';
-                            this.data.name= '';
-                            this.data.last= '';
-                            this.data.bautizmoDate= '';
-                            this.data.birthdate= '';
-                            this.data.address= '';
-                            this.data.civil_status= '';
-                            this.data.phone= '';
-                            this.data.cell= '';
-                            this.data.email='';
+                            this.director = response.data.directors
                         }
                     })
                 .catch(function (error) {
