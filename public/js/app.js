@@ -75838,6 +75838,38 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -75972,7 +76004,7 @@ var render = function() {
           _vm._m(0),
           _vm._v(" "),
           _c("div", { staticClass: "panel-body" }, [
-            _c("div", { staticClass: " col-lg-6 col-md-6 col-xs-12" }, [
+            _c("div", { staticClass: " col-lg-6 col-md-6 col-xs-12 " }, [
               _c("div", { staticClass: "panel-default " }, [
                 _c("label", [_vm._v("Miembro ")]),
                 _vm._v(" "),
@@ -75998,7 +76030,7 @@ var render = function() {
               ])
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: " col-lg-2 col-md-3 col-xs-12" }, [
+            _c("div", { staticClass: " col-lg-6 col-md-6 col-xs-12 " }, [
               _c("div", { staticClass: "panel-default " }, [
                 _c("label", [_vm._v("Tarjeta Amigo")]),
                 _vm._v(" "),
@@ -76071,11 +76103,13 @@ var render = function() {
                       }
                     }
                   })
-                ])
+                ]),
+                _vm._v(" "),
+                _vm._m(3)
               ])
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: " col-lg-2 col-md-3 col-xs-12 " }, [
+            _c("div", { staticClass: " col-lg-6 col-md-6 col-xs-12  " }, [
               _c("div", { staticClass: "panel-default " }, [
                 _c("label", [_vm._v("Tarjeta Compañero")]),
                 _vm._v(" "),
@@ -76125,7 +76159,7 @@ var render = function() {
                 _c("label", [_vm._v("Fecha de Investidura")]),
                 _vm._v(" "),
                 _c("div", { staticClass: "input-group" }, [
-                  _vm._m(3),
+                  _vm._m(4),
                   _vm._v(" "),
                   _c("input", {
                     directives: [
@@ -76148,11 +76182,13 @@ var render = function() {
                       }
                     }
                   })
-                ])
+                ]),
+                _vm._v(" "),
+                _vm._m(5)
               ])
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: " col-lg-2 col-md-3 col-xs-12 " }, [
+            _c("div", { staticClass: " col-lg-6 col-md-6 col-xs-12  " }, [
               _c("div", { staticClass: "panel-default " }, [
                 _c("label", [_vm._v("Tarjeta Explorador")]),
                 _vm._v(" "),
@@ -76202,7 +76238,7 @@ var render = function() {
                 _c("label", [_vm._v("Fecha de Investidura")]),
                 _vm._v(" "),
                 _c("div", { staticClass: "input-group" }, [
-                  _vm._m(4),
+                  _vm._m(6),
                   _vm._v(" "),
                   _c("input", {
                     directives: [
@@ -76225,11 +76261,13 @@ var render = function() {
                       }
                     }
                   })
-                ])
+                ]),
+                _vm._v(" "),
+                _vm._m(7)
               ])
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: " col-lg-2 col-md-3 col-xs-12 " }, [
+            _c("div", { staticClass: " col-lg-6 col-md-6 col-xs-12  " }, [
               _c("div", { staticClass: "panel-default " }, [
                 _c("label", [_vm._v("Tarjeta Orientador")]),
                 _vm._v(" "),
@@ -76279,7 +76317,7 @@ var render = function() {
                 _c("label", [_vm._v("Fecha de Investidura")]),
                 _vm._v(" "),
                 _c("div", { staticClass: "input-group" }, [
-                  _vm._m(5),
+                  _vm._m(8),
                   _vm._v(" "),
                   _c("input", {
                     directives: [
@@ -76302,11 +76340,13 @@ var render = function() {
                       }
                     }
                   })
-                ])
+                ]),
+                _vm._v(" "),
+                _vm._m(9)
               ])
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: " col-lg-2 col-md-3 col-xs-12 " }, [
+            _c("div", { staticClass: " col-lg-6 col-md-6 col-xs-12  " }, [
               _c("div", { staticClass: "panel-default " }, [
                 _c("label", [_vm._v("Tarjeta Viajero")]),
                 _vm._v(" "),
@@ -76356,7 +76396,7 @@ var render = function() {
                 _c("label", [_vm._v("Fecha de Investidura")]),
                 _vm._v(" "),
                 _c("div", { staticClass: "input-group" }, [
-                  _vm._m(6),
+                  _vm._m(10),
                   _vm._v(" "),
                   _c("input", {
                     directives: [
@@ -76379,11 +76419,13 @@ var render = function() {
                       }
                     }
                   })
-                ])
+                ]),
+                _vm._v(" "),
+                _vm._m(11)
               ])
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: " col-lg-2 col-md-3 col-xs-12 " }, [
+            _c("div", { staticClass: " col-lg-6 col-md-6 col-xs-12  " }, [
               _c("div", { staticClass: "panel-default " }, [
                 _c("label", [_vm._v("Tarjeta Guia")]),
                 _vm._v(" "),
@@ -76433,7 +76475,7 @@ var render = function() {
                 _c("label", [_vm._v("Fecha de Investidura")]),
                 _vm._v(" "),
                 _c("div", { staticClass: "input-group" }, [
-                  _vm._m(7),
+                  _vm._m(12),
                   _vm._v(" "),
                   _c("input", {
                     directives: [
@@ -76456,11 +76498,13 @@ var render = function() {
                       }
                     }
                   })
-                ])
+                ]),
+                _vm._v(" "),
+                _vm._m(13)
               ])
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: "col-lg-2 col-md-3 col-xs-12 " }, [
+            _c("div", { staticClass: "col-lg-6 col-md-6 col-xs-12  " }, [
               _c("div", { staticClass: "panel-default " }, [
                 _c("label", [_vm._v("Tarjeta Guia Mayor")]),
                 _vm._v(" "),
@@ -76510,7 +76554,7 @@ var render = function() {
                 _c("label", [_vm._v("Fecha de Investidura")]),
                 _vm._v(" "),
                 _c("div", { staticClass: "input-group" }, [
-                  _vm._m(8),
+                  _vm._m(14),
                   _vm._v(" "),
                   _c("input", {
                     directives: [
@@ -76533,11 +76577,13 @@ var render = function() {
                       }
                     }
                   })
-                ])
+                ]),
+                _vm._v(" "),
+                _vm._m(15)
               ])
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: " col-lg-2 col-md-3 col-xs-12 " }, [
+            _c("div", { staticClass: " col-lg-6 col-md-6 col-xs-12 " }, [
               _c("div", { staticClass: "panel-default " }, [
                 _c("label", [_vm._v("Tarjeta Lider Juvenir")]),
                 _vm._v(" "),
@@ -76587,7 +76633,7 @@ var render = function() {
                 _c("label", [_vm._v("Fecha de Investidura")]),
                 _vm._v(" "),
                 _c("div", { staticClass: "input-group" }, [
-                  _vm._m(9),
+                  _vm._m(16),
                   _vm._v(" "),
                   _c("input", {
                     directives: [
@@ -76610,7 +76656,9 @@ var render = function() {
                       }
                     }
                   })
-                ])
+                ]),
+                _vm._v(" "),
+                _vm._m(17)
               ])
             ])
           ]),
@@ -76660,8 +76708,10 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("span", { staticClass: "input-group-addon" }, [
-      _c("i", { staticClass: "fa fa-calendar-o" })
+    return _c("div", { staticClass: "input-group" }, [
+      _c("label", [_vm._v("Adjunte su tarjeta ")]),
+      _vm._v(" "),
+      _c("input", { attrs: { type: "file" } })
     ])
   },
   function() {
@@ -76676,8 +76726,10 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("span", { staticClass: "input-group-addon" }, [
-      _c("i", { staticClass: "fa fa-calendar-o" })
+    return _c("div", { staticClass: "input-group" }, [
+      _c("label", [_vm._v("Adjunte su tarjeta ")]),
+      _vm._v(" "),
+      _c("input", { attrs: { type: "file" } })
     ])
   },
   function() {
@@ -76692,8 +76744,10 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("span", { staticClass: "input-group-addon" }, [
-      _c("i", { staticClass: "fa fa-calendar-o" })
+    return _c("div", { staticClass: "input-group" }, [
+      _c("label", [_vm._v("Adjunte su tarjeta ")]),
+      _vm._v(" "),
+      _c("input", { attrs: { type: "file" } })
     ])
   },
   function() {
@@ -76708,8 +76762,82 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "input-group" }, [
+      _c("label", [_vm._v("Adjunte su tarjeta ")]),
+      _vm._v(" "),
+      _c("input", { attrs: { type: "file" } })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
     return _c("span", { staticClass: "input-group-addon" }, [
       _c("i", { staticClass: "fa fa-calendar-o" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "input-group" }, [
+      _c("label", [_vm._v("Adjunte su tarjeta ")]),
+      _vm._v(" "),
+      _c("input", { attrs: { type: "file" } })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "input-group-addon" }, [
+      _c("i", { staticClass: "fa fa-calendar-o" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "input-group" }, [
+      _c("label", [_vm._v("Adjunte su tarjeta ")]),
+      _vm._v(" "),
+      _c("input", { attrs: { type: "file" } })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "input-group-addon" }, [
+      _c("i", { staticClass: "fa fa-calendar-o" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "input-group" }, [
+      _c("label", [_vm._v("Adjunte su tarjeta ")]),
+      _vm._v(" "),
+      _c("input", { attrs: { type: "file" } })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "input-group-addon" }, [
+      _c("i", { staticClass: "fa fa-calendar-o" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "input-group" }, [
+      _c("label", [_vm._v("Adjunte su tarjeta ")]),
+      _vm._v(" "),
+      _c("input", { attrs: { type: "file" } })
     ])
   }
 ]

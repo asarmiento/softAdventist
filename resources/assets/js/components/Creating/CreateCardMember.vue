@@ -9,7 +9,7 @@
                     </div>
                 </div>
                 <div class="panel-body">
-                    <div class=" col-lg-6 col-md-6 col-xs-12">
+                    <div class=" col-lg-6 col-md-6 col-xs-12 ">
                         <div class="panel-default ">
                             <label>Miembro </label>
                             <div class="input-group">
@@ -18,7 +18,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class=" col-lg-2 col-md-3 col-xs-12">
+                    <div class=" col-lg-6 col-md-6 col-xs-12 ">
                         <div class="panel-default ">
                             <label>Tarjeta Amigo</label>
                             <div class="input-group">
@@ -29,9 +29,13 @@
                                 <span class="input-group-addon"><i class="fa fa-calendar-o"></i></span>
                                 <input type="date" v-model="data.dateA" class="form-control">
                             </div>
+                            <div class="input-group">
+                                <label>Adjunte su tarjeta </label>
+                                <input type="file" >
+                            </div>
                         </div>
                     </div>
-                    <div class=" col-lg-2 col-md-3 col-xs-12 ">
+                    <div class=" col-lg-6 col-md-6 col-xs-12  ">
                         <div class="panel-default ">
                             <label>Tarjeta Compañero</label>
                             <div class="input-group">
@@ -42,9 +46,13 @@
                                 <span class="input-group-addon"><i class="fa fa-calendar-o"></i></span>
                                 <input type="date" v-model="data.dateC" class="form-control">
                             </div>
+                            <div class="input-group">
+                                <label>Adjunte su tarjeta </label>
+                                <input type="file" >
+                            </div>
                         </div>
                     </div>
-                    <div class=" col-lg-2 col-md-3 col-xs-12 ">
+                    <div class=" col-lg-6 col-md-6 col-xs-12  ">
                         <div class="panel-default ">
                             <label>Tarjeta Explorador</label>
                             <div class="input-group">
@@ -55,9 +63,13 @@
                                 <span class="input-group-addon"><i class="fa fa-calendar-o"></i></span>
                                 <input type="date" v-model="data.dateE" class="form-control">
                             </div>
+                            <div class="input-group">
+                                <label>Adjunte su tarjeta </label>
+                                <input type="file" >
+                            </div>
                         </div>
                     </div>
-                    <div class=" col-lg-2 col-md-3 col-xs-12 ">
+                    <div class=" col-lg-6 col-md-6 col-xs-12  ">
                         <div class="panel-default ">
                             <label>Tarjeta Orientador</label>
                             <div class="input-group">
@@ -68,9 +80,13 @@
                                 <span class="input-group-addon"><i class="fa fa-calendar-o"></i></span>
                                 <input type="date" v-model="data.dateO" class="form-control">
                             </div>
+                            <div class="input-group">
+                                <label>Adjunte su tarjeta </label>
+                                <input type="file" >
+                            </div>
                         </div>
                     </div>
-                    <div class=" col-lg-2 col-md-3 col-xs-12 ">
+                    <div class=" col-lg-6 col-md-6 col-xs-12  ">
                         <div class="panel-default ">
                             <label>Tarjeta Viajero</label>
                             <div class="input-group">
@@ -81,9 +97,13 @@
                                 <span class="input-group-addon"><i class="fa fa-calendar-o"></i></span>
                                 <input type="date" v-model="data.dateV" class="form-control">
                             </div>
+                            <div class="input-group">
+                                <label>Adjunte su tarjeta </label>
+                                <input type="file" >
+                            </div>
                         </div>
                     </div>
-                    <div class=" col-lg-2 col-md-3 col-xs-12 ">
+                    <div class=" col-lg-6 col-md-6 col-xs-12  ">
                         <div class="panel-default ">
                             <label>Tarjeta Guia</label>
                             <div class="input-group">
@@ -94,9 +114,13 @@
                                 <span class="input-group-addon"><i class="fa fa-calendar-o"></i></span>
                                 <input type="date" v-model="data.dateG" class="form-control">
                             </div>
+                            <div class="input-group">
+                                <label>Adjunte su tarjeta </label>
+                                <input type="file" >
+                            </div>
                         </div>
                     </div>
-                    <div class="col-lg-2 col-md-3 col-xs-12 ">
+                    <div class="col-lg-6 col-md-6 col-xs-12  ">
                         <div class="panel-default ">
                             <label>Tarjeta Guia Mayor</label>
                             <div class="input-group">
@@ -107,9 +131,13 @@
                                 <span class="input-group-addon"><i class="fa fa-calendar-o"></i></span>
                                 <input type="date" v-model="data.dateGm" class="form-control">
                             </div>
+                            <div class="input-group">
+                                <label>Adjunte su tarjeta </label>
+                                <input type="file" >
+                            </div>
                         </div>
                     </div>
-                    <div class=" col-lg-2 col-md-3 col-xs-12 ">
+                    <div class=" col-lg-6 col-md-6 col-xs-12 ">
                         <div class="panel-default ">
                             <label>Tarjeta Lider Juvenir</label>
                             <div class="input-group">
@@ -119,6 +147,10 @@
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-calendar-o"></i></span>
                                 <input type="date" v-model="data.dateLj" class="form-control">
+                            </div>
+                            <div class="input-group">
+                                <label>Adjunte su tarjeta </label>
+                                <input type="file" >
                             </div>
                         </div>
                     </div>
