@@ -99,7 +99,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class=" col-lg-3 col-md-3 ">
+                        <div class=" col-lg-6 col-md-6 ">
                             <div class="panel-default ">
                                 <label>Iglesia <strong style="color: red" >*</strong></label>
                                 <div class="input-group" >
