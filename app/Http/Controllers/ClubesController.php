@@ -169,9 +169,16 @@ class ClubesController extends Controller
             $perPage = $request->perPage;
         }
 
-        $model = MemberClub::with('club')->with('church')->
-        where('church_id', userChurch()->id)->searchPaginateAndOrder($perPage, $request->get('search'));
-
+        if(userChurch()) {
+            $model = MemberClub::with('club')->with('church')->
+            where('church_id', userChurch()->id)->searchPaginateAndOrder($perPage, $request->get('search'));
+        }else{
+            $model = MemberClub::with('club')->with('church')->whereHas('church',function ($q){
+                $q->whereHas('district',function ($e){
+                    $e->where('local_field_id', userCampo());
+                });
+            })->searchPaginateAndOrder($perPage, $request->get('search'));
+        }
         $model->map(function ($e){
                 $member = Member::find($e->member_id);
                 $e->member = $member->name.' '.$member->last;
