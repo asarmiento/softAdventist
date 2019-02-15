@@ -40,7 +40,7 @@
                     <a href="#">
                         <img alt="Profile Picture" class="img-lg img-circle mar-ver" src="/img/profile-photos/2.png">
                         <p class="text-lg text-semibold mar-no text-main">{{(items.member)}}</p>
-                        <p class="text-sm">Marketing manager</p>
+                        <p class="text-sm">Iglesia: {{items.church}}</p>
                         <p class="text-sm"><a href="/softadventist/perfile-clubes">Lista de Especialidades</a></p>
                     </a>
                     <div class="pad-top btn-groups" v-if="items.club">

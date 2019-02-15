@@ -85801,7 +85801,7 @@ var render = function() {
                 ),
                 _vm._v(" "),
                 _c("p", { staticClass: "text-sm" }, [
-                  _vm._v("Marketing manager")
+                  _vm._v("Iglesia: " + _vm._s(items.church))
                 ]),
                 _vm._v(" "),
                 _vm._m(2, true)

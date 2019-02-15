@@ -170,10 +170,10 @@ class ClubesController extends Controller
         }
 
         if(userChurch()) {
-            $model = MemberClub::with('club')->with('church')->
+            $model = MemberClub::with('club')->
             where('church_id', userChurch()->id)->searchPaginateAndOrder($perPage, $request->get('search'));
         }else{
-            $model = MemberClub::with('club')->with('church')->whereHas('church',function ($q){
+            $model = MemberClub::with('club')->whereHas('church',function ($q){
                 $q->whereHas('district',function ($e){
                     $e->where('local_field_id', userCampo());
                 });
@@ -182,6 +182,7 @@ class ClubesController extends Controller
         $model->map(function ($e){
                 $member = Member::find($e->member_id);
                 $e->member = $member->name.' '.$member->last;
+                $e->church = $member->church->name;
         });
 
 
