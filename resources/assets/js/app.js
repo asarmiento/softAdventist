@@ -22,7 +22,6 @@ Vue.component('createMember', require('./components/Creating/CreateMember.vue'))
 Vue.component('createMemberCampo', require('./components/Creating/CreateMemberCampo.vue'));
 Vue.component('createVisitor', require('./components/Creating/CreateVisitor.vue'));
 Vue.component('createja', require('./components/Creating/CreateJaEvent.vue'));
-Vue.component('editMember', require('./components/Creating/CreateMember.vue'));
 Vue.component('createDepartament', require('./components/Creating/CreateDepartament.vue'));
 Vue.component('createIncomes', require('./components/Creating/CreateAccounts.vue'));
 Vue.component('createInternalControl', require('./components/Creating/CreateInternalControl.vue'));
@@ -47,6 +46,7 @@ Vue.component('createClubDirector', require('./components/Creating/CreateClubDir
  * Editores de tablas
  */
 
+Vue.component('editMember', require('./components/Editors/EditMember.vue'));
 Vue.component('editorsDepartament', require('./components/Editors/EditorDepartament.vue'));
 /**
  * Listas de datos en tablas tipo dataTable

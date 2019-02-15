@@ -101,7 +101,7 @@
                             this.data.last_name= '';
                             this.data.identification_card= '';
                             this.data.type_user= '';
-                            this.data.status= '';
+                            this.data.status= 'activo';
                             this.data.email='';
                         }
                     })

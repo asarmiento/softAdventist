@@ -82,8 +82,10 @@ Route::group(['prefix' => 'softadventist', 'middleware' => 'auth'], function () 
     //miembros
     //   Route::get('perfil-user', ['uses'=>'MemberController@create','as'=>'profile']);
     Route::get('nuevo-miembros', ['uses' => 'MemberController@create', 'as' => 'new-member']);
+    Route::get('modificar-miembro/{id}', ['uses' => 'MemberController@edit', 'as' => 'edit-member']);
     Route::get('cobro-a-miembros', ['uses' => 'MemberController@charge', 'as' => 'charge-members']);
     Route::post('save-miembros', 'MemberController@store');
+    Route::post('update-miembros', 'MemberController@update');
     Route::get('lista-miembros', ['uses' => 'MemberController@index', 'as' => 'list-members']);
     Route::get('lista-miembros-deuda', ['uses' => 'MemberController@index', 'as' => 'list-members-due']);
     Route::get('lists-miembros', ['uses' => 'MemberController@getData', 'as' => 'listMembers']);

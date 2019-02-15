@@ -65,9 +65,15 @@ class MemberController extends Controller
         if ($request->has('perPage')) {
             $perPage = $request->perPage;
         }
-
-        $model = Member::where('church_id', userChurch()->id)->searchPaginateAndOrder($perPage, $request->get('search'));
-
+        if(userChurch()) {
+            $model = Member::where('church_id', userChurch()->id)->searchPaginateAndOrder($perPage, $request->get('search'));
+        }else{
+            $model = Member::whereHas('church',function ($q){
+                $q->whereHas('district',function ($e){
+                    $e->where('local_field_id', userCampo());
+                });
+            })->searchPaginateAndOrder($perPage, $request->get('search'));
+        }
         $array = $this->myPages($model);
 
         $columns = Member::$columns;
@@ -88,11 +94,11 @@ class MemberController extends Controller
     }
 
 
-    public function edit()
+    public function edit($id)
     {
-        $member = Member::where('church_id', userChurch()->id)->get();
+        $member = Member::find($id);
 
-        return view('members.create', compact('member'));
+        return view('members.edit', compact('member'));
     }
 
 
@@ -136,6 +142,24 @@ class MemberController extends Controller
 
     }
 
+    public function update(Request $request)
+    {
+        $data = $request->all();
+        $data = $this->CreacionArray($data, '');
+
+
+        if(is_array($data['civil_status'])) {
+            $data['civil_status'] = $data['civil_status']['value'];
+        }
+
+        $member = Member::find($data['id']);
+        $member->fill($data);
+        if ($member->save()):
+            return $this->exito(trans('El Miembro: ') . $member->nameComplete());
+        endif;
+
+        return $this->errores($member->errors);
+    }
 
     public function listMemberInfo($date)
     {

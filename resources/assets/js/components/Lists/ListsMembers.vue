@@ -50,7 +50,7 @@
                                 <div class="fht-cell"></div>
                             </th>
                             <th style="" data-field="track" tabindex="0">
-                                <div class="th-inner ">Mat. Esc. Pendiente</div>
+                                <div class="th-inner ">Acción</div>
                                 <div class="fht-cell"></div>
                             </th>
                         </tr>
@@ -65,7 +65,7 @@
                             <td style="">{{dato.bautizmoDate}}</td>
                             <td style=""></td>
                             <td style="text-align: center; ">
-                                <div class="label label-table label-success"></div>
+                                <a :href="editMember(dato.id)"><i class="fa fa-edit"></i></a>
                             </td>
                         </tr>
                         </tbody>
@@ -172,6 +172,9 @@
             });
         },
         methods: {
+            editMember(id){
+                return "modificar-miembro/"+id;
+            },
             styleType() {
                 var self = this;
                 if (this.typeStyle) {
