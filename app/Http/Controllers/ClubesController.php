@@ -128,15 +128,31 @@ class ClubesController extends Controller
         $memberClub->user_id= Auth::user()->id;
 
         if($memberClub->save()) {
+
             if($data['cardA']) {
+                MemberClubByClubCard::create(['member_club_id' => $memberClub->id, 'club_card_id' => 1]);
+            }
+            if($data['cardC']) {
+                MemberClubByClubCard::create(['member_club_id' => $memberClub->id, 'club_card_id' => 2]);
+            }
+            if($data['cardE']) {
                 MemberClubByClubCard::create(['member_club_id' => $memberClub->id, 'club_card_id' => 3]);
             }
-            if($data['cardGm']) {
+            if($data['cardO']) {
                 MemberClubByClubCard::create(['member_club_id' => $memberClub->id, 'club_card_id' => 4]);
             }
+            if($data['cardV']) {
+                MemberClubByClubCard::create(['member_club_id' => $memberClub->id, 'club_card_id' => 5]);
+            }
+            if($data['cardG']) {
+                MemberClubByClubCard::create(['member_club_id' => $memberClub->id, 'club_card_id' => 6]);
+            }
+
             $memberClub = [];
             return response()->json(['success' => true, "miembros" => $memberClub], 200);
         }
+
+        return response()->json(['success' => false, "message" => $memberClub->errors], 401);
     }
 
     public function getDataMemberClub(Request $request)

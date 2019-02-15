@@ -75685,7 +75685,7 @@ exports = module.exports = __webpack_require__(2)(false);
 
 
 // module
-exports.push([module.i, "\n.mostrar {\n    display: block;\n}\n.material {\n    z-index: 5;\n}\n@media only screen and (min-width: 320px) {\n#sale-otro-table {\n        display: none;\n}\n#sale-pc-table {\n        display: block;\n}\nh1, h2 {\n        font-size: 18px;\n}\n}\n\n/* Small devices (landscape phones, 576px and up)*/\n@media (min-width: 576px) {\n#sale-otro-table {\n        display: none;\n}\n#sale-pc-table {\n        display: block;\n}\n}\n\n/* Medium devices (tablets, 768px and up)*/\n@media (min-width: 768px) {\n#sale-otro-table {\n        display: block;\n}\n#sale-pc-table {\n        display: none;\n}\n}\n\n/* Large devices (desktops, 992px and up)*/\n@media (min-width: 992px) {\n#sale-otro-table {\n        display: block;\n}\n#sale-pc-table {\n        display: none;\n}\n}\n\n/* Extra large devices (large desktops, 1200px and up)*/\n@media (min-width: 1200px) {\n#sale-otro-table {\n        display: block;\n}\nh1, h2 {\n        font-size: 28px;\n        text-align: center;\n}\n#sale-pc-table {\n        display: none;\n}\n}\n", ""]);
+exports.push([module.i, "\n.mostrar {\n        display: block;\n}\n.material {\n        z-index: 5;\n}\n#amigo {\n         background-color: #106BA0;\n        width: 0.1px;\n        height: 0.1px;\n        opacity: 0;\n        overflow: hidden;\n        position: absolute;\n        z-index: -1;\n}\nlabel[for=\" amigo\"] {\n        font-size: 14px;\n        font-weight: 600;\n        color: #fff;\n        background-color: #106BA0;\n        display: inline-block;\n        -webkit-transition: all .5s;\n        transition: all .5s;\n        cursor: pointer;\n        padding: 15px 40px !important;\n        text-transform: uppercase;\n        width: -webkit-fit-content;\n        width: -moz-fit-content;\n        width: fit-content;\n        text-align: center;\n}\n.amigo{\n        font-size: 14px;\n        font-weight: 600;\n        color: #fff;\n        margin: 5px;\n        background-color: #106BA0;\n        display: inline-block;\n        -webkit-transition: all .5s;\n        transition: all .5s;\n        cursor: pointer;\n        padding: 15px 40px !important;\n        text-transform: uppercase;\n        width: -webkit-fit-content;\n        width: -moz-fit-content;\n        width: fit-content;\n        text-align: center;\n}\n#companero {\n        background-color: #a01c27;\n        width: 0.1px;\n        height: 0.1px;\n        opacity: 0;\n        overflow: hidden;\n        position: absolute;\n        z-index: -1;\n}\nlabel[for=\" companero\"] {\n        font-size: 14px;\n        font-weight: 600;\n        color: #fff;\n        background-color: #a01c27;\n        display: inline-block;\n        -webkit-transition: all .5s;\n        transition: all .5s;\n        cursor: pointer;\n        padding: 15px 40px !important;\n        text-transform: uppercase;\n        width: -webkit-fit-content;\n        width: -moz-fit-content;\n        width: fit-content;\n        text-align: center;\n}\n.companero{\n        font-size: 14px;\n        font-weight: 600;\n        color: #fff;\n        margin: 5px;\n        background-color: #a01c27;\n        display: inline-block;\n        -webkit-transition: all .5s;\n        transition: all .5s;\n        cursor: pointer;\n        padding: 15px 40px !important;\n        text-transform: uppercase;\n        width: -webkit-fit-content;\n        width: -moz-fit-content;\n        width: fit-content;\n        text-align: center;\n}\n#explorador {\n        background-color: #186e37;\n        width: 0.1px;\n        height: 0.1px;\n        opacity: 0;\n        overflow: hidden;\n        position: absolute;\n        z-index: -1;\n}\nlabel[for=\" explorador\"] {\n        font-size: 14px;\n        font-weight: 600;\n        color: #fff;\n        background-color: #186e37;\n        display: inline-block;\n        -webkit-transition: all .5s;\n        transition: all .5s;\n        cursor: pointer;\n        padding: 15px 40px !important;\n        text-transform: uppercase;\n        width: -webkit-fit-content;\n        width: -moz-fit-content;\n        width: fit-content;\n        text-align: center;\n}\n.explorador{\n        font-size: 14px;\n        font-weight: 600;\n        color: #fff;\n        margin: 5px;\n        background-color: #186e37;\n        display: inline-block;\n        -webkit-transition: all .5s;\n        transition: all .5s;\n        cursor: pointer;\n        padding: 15px 40px !important;\n        text-transform: uppercase;\n        width: -webkit-fit-content;\n        width: -moz-fit-content;\n        width: fit-content;\n        text-align: center;\n}\n#orientador {\n        background-color: #c2c2c4;\n        width: 0.1px;\n        height: 0.1px;\n        opacity: 0;\n        overflow: hidden;\n        position: absolute;\n        z-index: -1;\n}\nlabel[for=\" orientador\"] {\n        font-size: 14px;\n        font-weight: 600;\n        color: #0f023f;\n        background-color: #c2c2c4;\n        display: inline-block;\n        -webkit-transition: all .5s;\n        transition: all .5s;\n        cursor: pointer;\n        padding: 15px 40px !important;\n        text-transform: uppercase;\n        width: -webkit-fit-content;\n        width: -moz-fit-content;\n        width: fit-content;\n        text-align: center;\n}\n.orientador{\n        font-size: 14px;\n        font-weight: 600;\n        color: #0f023f;\n        margin: 5px;\n        background-color: #c2c2c4;\n        display: inline-block;\n        -webkit-transition: all .5s;\n        transition: all .5s;\n        cursor: pointer;\n        padding: 15px 40px !important;\n        text-transform: uppercase;\n        width: -webkit-fit-content;\n        width: -moz-fit-content;\n        width: fit-content;\n        text-align: center;\n}\n#viajero {\n        background-color: #6f117f;\n        width: 0.1px;\n        height: 0.1px;\n        opacity: 0;\n        overflow: hidden;\n        position: absolute;\n        z-index: -1;\n}\nlabel[for=\" viajero\"] {\n        font-size: 14px;\n        font-weight: 600;\n        color: #fff;\n        background-color: #6f117f;\n        display: inline-block;\n        -webkit-transition: all .5s;\n        transition: all .5s;\n        cursor: pointer;\n        padding: 15px 40px !important;\n        text-transform: uppercase;\n        width: -webkit-fit-content;\n        width: -moz-fit-content;\n        width: fit-content;\n        text-align: center;\n}\n.viajero{\n        font-size: 14px;\n        font-weight: 600;\n        color: #fff;\n        margin: 5px;\n        background-color: #6f117f;\n        display: inline-block;\n        -webkit-transition: all .5s;\n        transition: all .5s;\n        cursor: pointer;\n        padding: 15px 40px !important;\n        text-transform: uppercase;\n        width: -webkit-fit-content;\n        width: -moz-fit-content;\n        width: fit-content;\n        text-align: center;\n}\n#guia {\n        background-color: #dedf3d;\n        width: 0.1px;\n        height: 0.1px;\n        opacity: 0;\n        overflow: hidden;\n        position: absolute;\n        z-index: -1;\n}\nlabel[for=\" guia\"] {\n        font-size: 14px;\n        font-weight: 600;\n        color: #0f023f;\n        background-color: #dedf3d;\n        display: inline-block;\n        -webkit-transition: all .5s;\n        transition: all .5s;\n        cursor: pointer;\n        padding: 15px 40px !important;\n        text-transform: uppercase;\n        width: -webkit-fit-content;\n        width: -moz-fit-content;\n        width: fit-content;\n        text-align: center;\n}\n.guia{\n        font-size: 14px;\n        font-weight: 600;\n        color: #0f023f;\n        margin: 5px;\n        background-color: #dedf3d;\n        display: inline-block;\n        -webkit-transition: all .5s;\n        transition: all .5s;\n        cursor: pointer;\n        padding: 15px 40px !important;\n        text-transform: uppercase;\n        width: -webkit-fit-content;\n        width: -moz-fit-content;\n        width: fit-content;\n        text-align: center;\n}\n@media only screen and (min-width: 320px) {\n#sale-otro-table {\n            display: none;\n}\n#sale-pc-table {\n            display: block;\n}\nh1, h2 {\n            font-size: 18px;\n}\n}\n\n    /* Small devices (landscape phones, 576px and up)*/\n@media (min-width: 576px) {\n#sale-otro-table {\n            display: none;\n}\n#sale-pc-table {\n            display: block;\n}\n}\n\n    /* Medium devices (tablets, 768px and up)*/\n@media (min-width: 768px) {\n#sale-otro-table {\n            display: block;\n}\n#sale-pc-table {\n            display: none;\n}\n}\n\n    /* Large devices (desktops, 992px and up)*/\n@media (min-width: 992px) {\n#sale-otro-table {\n            display: block;\n}\n#sale-pc-table {\n            display: none;\n}\n}\n\n    /* Extra large devices (large desktops, 1200px and up)*/\n@media (min-width: 1200px) {\n#sale-otro-table {\n            display: block;\n}\nh1, h2 {\n            font-size: 28px;\n            text-align: center;\n}\n#sale-pc-table {\n            display: none;\n}\n}\n", ""]);
 
 // exports
 
@@ -75702,6 +75702,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_sweetalert2___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_sweetalert2__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue_datepicker__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue_datepicker___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_vue_datepicker__);
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -75892,11 +75898,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 dateV: '',
                 cardV: false,
                 dateG: '',
-                cardG: false,
-                dateGm: '',
-                cardGm: false,
-                dateLj: '',
-                cardLj: false
+                cardG: false
             },
             txtSearch: '',
             counts: ['5', '10', '20', '50'],
@@ -75908,7 +75910,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             listMembers: [],
             club_directors: "",
             cards: [],
-            civil: [{ "label": 'Casado(a)', "value": 'Casado(a)' }, { "label": 'Soltero(a)', "value": 'Soltero(a)' }, { "label": 'Divorciado(a)', "value": 'Divorciado(a)' }, { "label": 'Viudo(a)', "value": 'Viudo(a)' }, { "label": 'Union Libre', "value": 'Union Libre' }]
+            formData: '',
+            guia: '',
+            itemsNames: '',
+            itemsSizes: ''
         };
     },
     created: function created() {
@@ -75916,18 +75921,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
         this.$http.get('/softadventist/lista-miembros-select').then(function (response) {
             _this.listMembers = response.data;
-        });
-        this.$http.get('/softadventist/lista-director-select').then(function (response) {
-            _this.club_directors = response.data;
-        });
-        this.$http.get('/softadventist/lista-tarjetas-select').then(function (response) {
-            _this.cards = response.data;
-        });
-        var self = this;
-        this.$http.get("/softadventist/data-member-tarjetas").then(function (response) {
-            self.datos = response.data.model;
-            self.my_pages = response.data.my_pages;
-            self.columns = response.data.columns;
         });
     },
 
@@ -75939,16 +75932,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             axios.post('/softadventist/save-miembros-card-club', this.data).then(function (response) {
                 if (response.data.success = true) {
                     __WEBPACK_IMPORTED_MODULE_1_sweetalert2___default()('Se Guardo con Exito!!!', response.data.message, 'success');
-                    _this2.data.charter = '';
-                    _this2.data.name = '';
-                    _this2.data.last = '';
-                    _this2.data.bautizmoDate = '';
-                    _this2.data.birthdate = '';
-                    _this2.data.address = '';
-                    _this2.data.civil_status = '';
-                    _this2.data.phone = '';
-                    _this2.data.cell = '';
-                    _this2.data.email = '';
+                    _this2.data.member = '';
+                    _this2.data.cardA = false;
+                    _this2.data.cardC = false;
+                    _this2.data.cardE = false;
+                    _this2.data.cardO = false;
+                    _this2.data.cardV = false;
+                    _this2.data.cardG = false;
                 }
             }).catch(function (error) {
                 if (error.response) {
@@ -75983,8 +75973,68 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 }
             });
         }
-    }
+    },
+    bytesToSize: function bytesToSize(bytes) {
+        var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+        if (bytes === 0) return 'n/a';
+        var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+        if (i === 0) return bytes + ' ' + sizes[i];
+        return (bytes / Math.pow(1024, i)).toFixed(2) + ' ' + sizes[i];
+    },
+    onChange: function onChange(e) {
+        this.formData = new FormData();
+        var files = e.target.files || e.dataTransfer.files;
+        var fileSizes = 0;
+        for (var fileIn in files) {
+            if (!isNaN(fileIn)) {
+                this.items = e.target.files[fileIn] || e.dataTransfer.files[fileIn];
+                this.itemsNames = files[fileIn].name;
+                this.data.typeIC = files[fileIn].type;
+                this.itemsSizes = this.bytesToSize(files[fileIn].size);
+                fileSizes = files[fileIn].size;
+                this.formData.append('items', this.items);
+                console.log(files[fileIn]);
+            }
+        }
+    },
+    removeItems: function removeItems() {
+        this.items = '';
+        this.itemsNames = '';
+        this.itemsSizes = '';
+    },
+    onSubmit: function onSubmit() {
+        var _this3 = this;
 
+        axios.post('/softadventist/upload-internal-control', this.formData).then(function (response) {
+            _this3.data.name = response.data;
+            console.log(response.data);
+        }).catch(function (error) {
+            if (error.response) {
+                var data = error.response.data;
+                if (error.response.status === 422) {
+                    for (var index in data) {
+                        var messages = '';
+                        data[index].forEach(function (item) {
+                            messages += item + ' ';
+                        });
+                        self.errors[index] = messages;
+                    }
+                } else if (error.response.status === 401) {
+                    self.errors.response.invalid = true;
+                    self.errors.response.msg = data.msg.message;
+                } else {
+                    console.log(error);
+                    alert("Error generic");
+                }
+            } else if (error.request) {
+                console.log(error.request);
+                alert("Error empty");
+            } else {
+                console.log('Error', error.message);
+                alert("Error");
+            }
+        });
+    }
 });
 
 /***/ }),
@@ -76030,635 +76080,651 @@ var render = function() {
               ])
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: " col-lg-6 col-md-6 col-xs-12 " }, [
-              _c("div", { staticClass: "panel-default " }, [
-                _c("label", [_vm._v("Tarjeta Amigo")]),
-                _vm._v(" "),
-                _c("div", { staticClass: "input-group" }, [
-                  _c("input", {
-                    directives: [
+            _c("div", { staticClass: " col-lg-12 col-md-12 col-xs-12 " }, [
+              _c("div", { staticClass: " col-lg-12 col-md-12 col-xs-12 " }, [
+                _c("div", { staticClass: "box " }, [
+                  _c("div", { staticClass: "input-group col-md-4" }, [
+                    _c(
+                      "label",
                       {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.data.cardA,
-                        expression: "data.cardA"
-                      }
-                    ],
-                    attrs: { type: "checkbox" },
-                    domProps: {
-                      checked: Array.isArray(_vm.data.cardA)
-                        ? _vm._i(_vm.data.cardA, null) > -1
-                        : _vm.data.cardA
-                    },
-                    on: {
-                      change: function($event) {
-                        var $$a = _vm.data.cardA,
-                          $$el = $event.target,
-                          $$c = $$el.checked ? true : false
-                        if (Array.isArray($$a)) {
-                          var $$v = null,
-                            $$i = _vm._i($$a, $$v)
-                          if ($$el.checked) {
-                            $$i < 0 &&
-                              _vm.$set(_vm.data, "cardA", $$a.concat([$$v]))
+                        staticStyle: { color: "#106BA0", "font-size": "16px" }
+                      },
+                      [_vm._v("Tarjeta de Amigo ")]
+                    ),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.data.cardA,
+                          expression: "data.cardA"
+                        }
+                      ],
+                      staticClass: "amigo",
+                      attrs: { type: "checkbox" },
+                      domProps: {
+                        checked: Array.isArray(_vm.data.cardA)
+                          ? _vm._i(_vm.data.cardA, null) > -1
+                          : _vm.data.cardA
+                      },
+                      on: {
+                        change: function($event) {
+                          var $$a = _vm.data.cardA,
+                            $$el = $event.target,
+                            $$c = $$el.checked ? true : false
+                          if (Array.isArray($$a)) {
+                            var $$v = null,
+                              $$i = _vm._i($$a, $$v)
+                            if ($$el.checked) {
+                              $$i < 0 &&
+                                _vm.$set(_vm.data, "cardA", $$a.concat([$$v]))
+                            } else {
+                              $$i > -1 &&
+                                _vm.$set(
+                                  _vm.data,
+                                  "cardA",
+                                  $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                                )
+                            }
                           } else {
-                            $$i > -1 &&
-                              _vm.$set(
-                                _vm.data,
-                                "cardA",
-                                $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                              )
+                            _vm.$set(_vm.data, "cardA", $$c)
                           }
-                        } else {
-                          _vm.$set(_vm.data, "cardA", $$c)
                         }
                       }
-                    }
-                  })
-                ]),
-                _vm._v(" "),
-                _c("label", [_vm._v("Fecha de Investidura")]),
-                _vm._v(" "),
-                _c("div", { staticClass: "input-group" }, [
-                  _vm._m(2),
+                    }),
+                    _vm._v(" "),
+                    _c("img", {
+                      staticClass: "responsive ",
+                      attrs: {
+                        src: "/img/Botones/Amigo.gif",
+                        width: "30",
+                        height: "30"
+                      }
+                    })
+                  ]),
                   _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.data.dateA,
-                        expression: "data.dateA"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    attrs: { type: "date" },
-                    domProps: { value: _vm.data.dateA },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
+                  _c("label", [_vm._v("Fecha de Investidura")]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "input-group col-md-3" }, [
+                    _vm._m(2),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.data.dateA,
+                          expression: "data.dateA"
                         }
-                        _vm.$set(_vm.data, "dateA", $event.target.value)
+                      ],
+                      staticClass: "form-control",
+                      attrs: { type: "date" },
+                      domProps: { value: _vm.data.dateA },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.data, "dateA", $event.target.value)
+                        }
                       }
-                    }
-                  })
-                ]),
-                _vm._v(" "),
-                _vm._m(3)
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: " col-lg-6 col-md-6 col-xs-12  " }, [
-              _c("div", { staticClass: "panel-default " }, [
-                _c("label", [_vm._v("Tarjeta Compañero")]),
-                _vm._v(" "),
-                _c("div", { staticClass: "input-group" }, [
-                  _c("input", {
-                    directives: [
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _vm._m(3)
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: " col-lg-12 col-md-12 col-xs-12  " }, [
+                _c("div", { staticClass: "panel-default " }, [
+                  _c("div", { staticClass: "input-group  col-md-4" }, [
+                    _c(
+                      "label",
                       {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.data.cardC,
-                        expression: "data.cardC"
-                      }
-                    ],
-                    attrs: { type: "checkbox" },
-                    domProps: {
-                      checked: Array.isArray(_vm.data.cardC)
-                        ? _vm._i(_vm.data.cardC, null) > -1
-                        : _vm.data.cardC
-                    },
-                    on: {
-                      change: function($event) {
-                        var $$a = _vm.data.cardC,
-                          $$el = $event.target,
-                          $$c = $$el.checked ? true : false
-                        if (Array.isArray($$a)) {
-                          var $$v = null,
-                            $$i = _vm._i($$a, $$v)
-                          if ($$el.checked) {
-                            $$i < 0 &&
-                              _vm.$set(_vm.data, "cardC", $$a.concat([$$v]))
+                        staticStyle: { color: "#a01c27", "font-size": "16px" }
+                      },
+                      [_vm._v("Tarjeta de Compañero")]
+                    ),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.data.cardC,
+                          expression: "data.cardC"
+                        }
+                      ],
+                      attrs: { type: "checkbox" },
+                      domProps: {
+                        checked: Array.isArray(_vm.data.cardC)
+                          ? _vm._i(_vm.data.cardC, null) > -1
+                          : _vm.data.cardC
+                      },
+                      on: {
+                        change: function($event) {
+                          var $$a = _vm.data.cardC,
+                            $$el = $event.target,
+                            $$c = $$el.checked ? true : false
+                          if (Array.isArray($$a)) {
+                            var $$v = null,
+                              $$i = _vm._i($$a, $$v)
+                            if ($$el.checked) {
+                              $$i < 0 &&
+                                _vm.$set(_vm.data, "cardC", $$a.concat([$$v]))
+                            } else {
+                              $$i > -1 &&
+                                _vm.$set(
+                                  _vm.data,
+                                  "cardC",
+                                  $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                                )
+                            }
                           } else {
-                            $$i > -1 &&
-                              _vm.$set(
-                                _vm.data,
-                                "cardC",
-                                $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                              )
+                            _vm.$set(_vm.data, "cardC", $$c)
                           }
-                        } else {
-                          _vm.$set(_vm.data, "cardC", $$c)
                         }
                       }
-                    }
-                  })
-                ]),
-                _vm._v(" "),
-                _c("label", [_vm._v("Fecha de Investidura")]),
-                _vm._v(" "),
-                _c("div", { staticClass: "input-group" }, [
-                  _vm._m(4),
+                    }),
+                    _vm._v(" "),
+                    _c("img", {
+                      staticClass: "responsive ",
+                      attrs: {
+                        src: "/img/Botones/Compañero.gif",
+                        width: "30",
+                        height: "30"
+                      }
+                    })
+                  ]),
                   _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.data.dateC,
-                        expression: "data.dateC"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    attrs: { type: "date" },
-                    domProps: { value: _vm.data.dateC },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
+                  _c("label", [_vm._v("Fecha de Investidura")]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "input-group  col-md-3" }, [
+                    _vm._m(4),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.data.dateC,
+                          expression: "data.dateC"
                         }
-                        _vm.$set(_vm.data, "dateC", $event.target.value)
+                      ],
+                      staticClass: "form-control",
+                      attrs: { type: "date" },
+                      domProps: { value: _vm.data.dateC },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.data, "dateC", $event.target.value)
+                        }
                       }
-                    }
-                  })
-                ]),
-                _vm._v(" "),
-                _vm._m(5)
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: " col-lg-6 col-md-6 col-xs-12  " }, [
-              _c("div", { staticClass: "panel-default " }, [
-                _c("label", [_vm._v("Tarjeta Explorador")]),
-                _vm._v(" "),
-                _c("div", { staticClass: "input-group" }, [
-                  _c("input", {
-                    directives: [
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _vm._m(5)
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: " col-lg-12 col-md-12 col-xs-12  " }, [
+                _c("div", { staticClass: "panel-default " }, [
+                  _c("div", { staticClass: "input-group  col-md-4" }, [
+                    _c(
+                      "label",
                       {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.data.cardE,
-                        expression: "data.cardE"
-                      }
-                    ],
-                    attrs: { type: "checkbox" },
-                    domProps: {
-                      checked: Array.isArray(_vm.data.cardE)
-                        ? _vm._i(_vm.data.cardE, null) > -1
-                        : _vm.data.cardE
-                    },
-                    on: {
-                      change: function($event) {
-                        var $$a = _vm.data.cardE,
-                          $$el = $event.target,
-                          $$c = $$el.checked ? true : false
-                        if (Array.isArray($$a)) {
-                          var $$v = null,
-                            $$i = _vm._i($$a, $$v)
-                          if ($$el.checked) {
-                            $$i < 0 &&
-                              _vm.$set(_vm.data, "cardE", $$a.concat([$$v]))
+                        staticStyle: { "font-size": "16px", color: "#186e37" }
+                      },
+                      [_vm._v("Tarjeta de Explorador")]
+                    ),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.data.cardE,
+                          expression: "data.cardE"
+                        }
+                      ],
+                      attrs: { type: "checkbox" },
+                      domProps: {
+                        checked: Array.isArray(_vm.data.cardE)
+                          ? _vm._i(_vm.data.cardE, null) > -1
+                          : _vm.data.cardE
+                      },
+                      on: {
+                        change: function($event) {
+                          var $$a = _vm.data.cardE,
+                            $$el = $event.target,
+                            $$c = $$el.checked ? true : false
+                          if (Array.isArray($$a)) {
+                            var $$v = null,
+                              $$i = _vm._i($$a, $$v)
+                            if ($$el.checked) {
+                              $$i < 0 &&
+                                _vm.$set(_vm.data, "cardE", $$a.concat([$$v]))
+                            } else {
+                              $$i > -1 &&
+                                _vm.$set(
+                                  _vm.data,
+                                  "cardE",
+                                  $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                                )
+                            }
                           } else {
-                            $$i > -1 &&
-                              _vm.$set(
-                                _vm.data,
-                                "cardE",
-                                $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                              )
+                            _vm.$set(_vm.data, "cardE", $$c)
                           }
-                        } else {
-                          _vm.$set(_vm.data, "cardE", $$c)
                         }
                       }
-                    }
-                  })
-                ]),
-                _vm._v(" "),
-                _c("label", [_vm._v("Fecha de Investidura")]),
-                _vm._v(" "),
-                _c("div", { staticClass: "input-group" }, [
-                  _vm._m(6),
+                    }),
+                    _vm._v(" "),
+                    _c("img", {
+                      staticClass: "responsive ",
+                      attrs: {
+                        src: "/img/Botones/Explorador.gif",
+                        width: "30",
+                        height: "30"
+                      }
+                    })
+                  ]),
                   _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.data.dateE,
-                        expression: "data.dateE"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    attrs: { type: "date" },
-                    domProps: { value: _vm.data.dateE },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
+                  _c("label", [_vm._v("Fecha de Investidura")]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "input-group col-md-3" }, [
+                    _vm._m(6),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.data.dateE,
+                          expression: "data.dateE"
                         }
-                        _vm.$set(_vm.data, "dateE", $event.target.value)
+                      ],
+                      staticClass: "form-control",
+                      attrs: { type: "date" },
+                      domProps: { value: _vm.data.dateE },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.data, "dateE", $event.target.value)
+                        }
                       }
-                    }
-                  })
-                ]),
-                _vm._v(" "),
-                _vm._m(7)
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: " col-lg-6 col-md-6 col-xs-12  " }, [
-              _c("div", { staticClass: "panel-default " }, [
-                _c("label", [_vm._v("Tarjeta Orientador")]),
-                _vm._v(" "),
-                _c("div", { staticClass: "input-group" }, [
-                  _c("input", {
-                    directives: [
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _vm._m(7)
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: " col-lg-12 col-md-12 col-xs-12 " }, [
+                _c("div", { staticClass: "panel-default " }, [
+                  _c("div", { staticClass: "input-group col-md-4" }, [
+                    _c(
+                      "label",
                       {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.data.cardO,
-                        expression: "data.cardO"
-                      }
-                    ],
-                    attrs: { type: "checkbox" },
-                    domProps: {
-                      checked: Array.isArray(_vm.data.cardO)
-                        ? _vm._i(_vm.data.cardO, null) > -1
-                        : _vm.data.cardO
-                    },
-                    on: {
-                      change: function($event) {
-                        var $$a = _vm.data.cardO,
-                          $$el = $event.target,
-                          $$c = $$el.checked ? true : false
-                        if (Array.isArray($$a)) {
-                          var $$v = null,
-                            $$i = _vm._i($$a, $$v)
-                          if ($$el.checked) {
-                            $$i < 0 &&
-                              _vm.$set(_vm.data, "cardO", $$a.concat([$$v]))
+                        staticStyle: { "font-size": "16px", color: "#111723" }
+                      },
+                      [_vm._v("Tarjeta Orientador")]
+                    ),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.data.cardO,
+                          expression: "data.cardO"
+                        }
+                      ],
+                      attrs: { type: "checkbox" },
+                      domProps: {
+                        checked: Array.isArray(_vm.data.cardO)
+                          ? _vm._i(_vm.data.cardO, null) > -1
+                          : _vm.data.cardO
+                      },
+                      on: {
+                        change: function($event) {
+                          var $$a = _vm.data.cardO,
+                            $$el = $event.target,
+                            $$c = $$el.checked ? true : false
+                          if (Array.isArray($$a)) {
+                            var $$v = null,
+                              $$i = _vm._i($$a, $$v)
+                            if ($$el.checked) {
+                              $$i < 0 &&
+                                _vm.$set(_vm.data, "cardO", $$a.concat([$$v]))
+                            } else {
+                              $$i > -1 &&
+                                _vm.$set(
+                                  _vm.data,
+                                  "cardO",
+                                  $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                                )
+                            }
                           } else {
-                            $$i > -1 &&
-                              _vm.$set(
-                                _vm.data,
-                                "cardO",
-                                $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                              )
+                            _vm.$set(_vm.data, "cardO", $$c)
                           }
-                        } else {
-                          _vm.$set(_vm.data, "cardO", $$c)
                         }
                       }
-                    }
-                  })
-                ]),
-                _vm._v(" "),
-                _c("label", [_vm._v("Fecha de Investidura")]),
-                _vm._v(" "),
-                _c("div", { staticClass: "input-group" }, [
-                  _vm._m(8),
+                    }),
+                    _vm._v(" "),
+                    _c("img", {
+                      staticClass: "responsive ",
+                      attrs: {
+                        src: "/img/Botones/Orientador.gif",
+                        width: "30",
+                        height: "30"
+                      }
+                    })
+                  ]),
                   _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.data.dateO,
-                        expression: "data.dateO"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    attrs: { type: "date" },
-                    domProps: { value: _vm.data.dateO },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
+                  _c("label", [_vm._v("Fecha de Investidura")]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "input-group col-md-3" }, [
+                    _vm._m(8),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.data.dateO,
+                          expression: "data.dateO"
                         }
-                        _vm.$set(_vm.data, "dateO", $event.target.value)
+                      ],
+                      staticClass: "form-control",
+                      attrs: { type: "date" },
+                      domProps: { value: _vm.data.dateO },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.data, "dateO", $event.target.value)
+                        }
                       }
-                    }
-                  })
-                ]),
-                _vm._v(" "),
-                _vm._m(9)
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: " col-lg-6 col-md-6 col-xs-12  " }, [
-              _c("div", { staticClass: "panel-default " }, [
-                _c("label", [_vm._v("Tarjeta Viajero")]),
-                _vm._v(" "),
-                _c("div", { staticClass: "input-group" }, [
-                  _c("input", {
-                    directives: [
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _vm._m(9)
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "  col-lg-12 col-md-12 col-xs-12   " }, [
+                _c("div", { staticClass: "panel-default " }, [
+                  _c("div", { staticClass: "input-group col-md-4 col-xs-12" }, [
+                    _c(
+                      "label",
                       {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.data.cardV,
-                        expression: "data.cardV"
-                      }
-                    ],
-                    attrs: { type: "checkbox" },
-                    domProps: {
-                      checked: Array.isArray(_vm.data.cardV)
-                        ? _vm._i(_vm.data.cardV, null) > -1
-                        : _vm.data.cardV
-                    },
-                    on: {
-                      change: function($event) {
-                        var $$a = _vm.data.cardV,
-                          $$el = $event.target,
-                          $$c = $$el.checked ? true : false
-                        if (Array.isArray($$a)) {
-                          var $$v = null,
-                            $$i = _vm._i($$a, $$v)
-                          if ($$el.checked) {
-                            $$i < 0 &&
-                              _vm.$set(_vm.data, "cardV", $$a.concat([$$v]))
+                        staticStyle: { "font-size": "16px", color: "#811eac" }
+                      },
+                      [_vm._v("Tarjeta de Viajero")]
+                    ),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.data.cardV,
+                          expression: "data.cardV"
+                        }
+                      ],
+                      attrs: { type: "checkbox" },
+                      domProps: {
+                        checked: Array.isArray(_vm.data.cardV)
+                          ? _vm._i(_vm.data.cardV, null) > -1
+                          : _vm.data.cardV
+                      },
+                      on: {
+                        change: function($event) {
+                          var $$a = _vm.data.cardV,
+                            $$el = $event.target,
+                            $$c = $$el.checked ? true : false
+                          if (Array.isArray($$a)) {
+                            var $$v = null,
+                              $$i = _vm._i($$a, $$v)
+                            if ($$el.checked) {
+                              $$i < 0 &&
+                                _vm.$set(_vm.data, "cardV", $$a.concat([$$v]))
+                            } else {
+                              $$i > -1 &&
+                                _vm.$set(
+                                  _vm.data,
+                                  "cardV",
+                                  $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                                )
+                            }
                           } else {
-                            $$i > -1 &&
-                              _vm.$set(
-                                _vm.data,
-                                "cardV",
-                                $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                              )
+                            _vm.$set(_vm.data, "cardV", $$c)
                           }
-                        } else {
-                          _vm.$set(_vm.data, "cardV", $$c)
                         }
                       }
-                    }
-                  })
-                ]),
-                _vm._v(" "),
-                _c("label", [_vm._v("Fecha de Investidura")]),
-                _vm._v(" "),
-                _c("div", { staticClass: "input-group" }, [
-                  _vm._m(10),
+                    }),
+                    _vm._v(" "),
+                    _c("img", {
+                      staticClass: "responsive ",
+                      attrs: {
+                        src: "/img/Botones/Viajero.gif",
+                        width: "30",
+                        height: "30"
+                      }
+                    })
+                  ]),
                   _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.data.dateV,
-                        expression: "data.dateV"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    attrs: { type: "date" },
-                    domProps: { value: _vm.data.dateV },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
+                  _c("label", [_vm._v("Fecha de Investidura")]),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "input-group col-md-3  col-xs-12" },
+                    [
+                      _vm._m(10),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.data.dateV,
+                            expression: "data.dateV"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: { type: "date" },
+                        domProps: { value: _vm.data.dateV },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(_vm.data, "dateV", $event.target.value)
+                          }
                         }
-                        _vm.$set(_vm.data, "dateV", $event.target.value)
-                      }
-                    }
-                  })
-                ]),
+                      })
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _vm._m(11)
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: " col-lg-12 col-md-12 col-xs-12  " }, [
+                _c(
+                  "div",
+                  { staticClass: "panel-default col-md-4  col-xs-12 " },
+                  [
+                    _c("div", { staticClass: "input-group" }, [
+                      _c(
+                        "label",
+                        {
+                          staticStyle: { color: "#0f023f", "font-size": "16px" }
+                        },
+                        [_vm._v("Tarjeta de Guia")]
+                      ),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.data.cardG,
+                            expression: "data.cardG"
+                          }
+                        ],
+                        attrs: { type: "checkbox" },
+                        domProps: {
+                          checked: Array.isArray(_vm.data.cardG)
+                            ? _vm._i(_vm.data.cardG, null) > -1
+                            : _vm.data.cardG
+                        },
+                        on: {
+                          change: function($event) {
+                            var $$a = _vm.data.cardG,
+                              $$el = $event.target,
+                              $$c = $$el.checked ? true : false
+                            if (Array.isArray($$a)) {
+                              var $$v = null,
+                                $$i = _vm._i($$a, $$v)
+                              if ($$el.checked) {
+                                $$i < 0 &&
+                                  _vm.$set(_vm.data, "cardG", $$a.concat([$$v]))
+                              } else {
+                                $$i > -1 &&
+                                  _vm.$set(
+                                    _vm.data,
+                                    "cardG",
+                                    $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                                  )
+                              }
+                            } else {
+                              _vm.$set(_vm.data, "cardG", $$c)
+                            }
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("img", {
+                        staticClass: "responsive ",
+                        attrs: {
+                          src: "/img/Botones/Guia.gif",
+                          width: "30",
+                          height: "30"
+                        }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("label", [_vm._v("Fecha de Investidura")]),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "input-group col-md-3  col-xs-12" },
+                      [
+                        _vm._m(12),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.data.dateG,
+                              expression: "data.dateG"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: { type: "date" },
+                          domProps: { value: _vm.data.dateG },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(_vm.data, "dateG", $event.target.value)
+                            }
+                          }
+                        })
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _vm._m(13)
+                  ]
+                ),
                 _vm._v(" "),
-                _vm._m(11)
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: " col-lg-6 col-md-6 col-xs-12  " }, [
-              _c("div", { staticClass: "panel-default " }, [
-                _c("label", [_vm._v("Tarjeta Guia")]),
-                _vm._v(" "),
-                _c("div", { staticClass: "input-group" }, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.data.cardG,
-                        expression: "data.cardG"
-                      }
-                    ],
-                    attrs: { type: "checkbox" },
-                    domProps: {
-                      checked: Array.isArray(_vm.data.cardG)
-                        ? _vm._i(_vm.data.cardG, null) > -1
-                        : _vm.data.cardG
+                _c("div", { attrs: { id: "dz-previews" } }, [
+                  _c(
+                    "div",
+                    {
+                      staticClass: "pad-top bord-top dz-image-preview",
+                      attrs: { id: "" }
                     },
-                    on: {
-                      change: function($event) {
-                        var $$a = _vm.data.cardG,
-                          $$el = $event.target,
-                          $$c = $$el.checked ? true : false
-                        if (Array.isArray($$a)) {
-                          var $$v = null,
-                            $$i = _vm._i($$a, $$v)
-                          if ($$el.checked) {
-                            $$i < 0 &&
-                              _vm.$set(_vm.data, "cardG", $$a.concat([$$v]))
-                          } else {
-                            $$i > -1 &&
-                              _vm.$set(
-                                _vm.data,
-                                "cardG",
-                                $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                    [
+                      _vm.itemsNames
+                        ? _c("div", { staticClass: "media" }, [
+                            _c("div", { staticClass: "media-body" }, [
+                              _c("div", { staticClass: "media-block" }, [
+                                _c("div", { staticClass: "media-body" }, [
+                                  _c(
+                                    "p",
+                                    {
+                                      staticClass:
+                                        "text-main text-bold mar-no text-overflow",
+                                      attrs: { "data-dz-name": "" }
+                                    },
+                                    [
+                                      _vm._v(
+                                        "\n                                                " +
+                                          _vm._s(_vm.itemsNames)
+                                      )
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c("span", {
+                                    staticClass: "dz-error text-danger text-sm",
+                                    attrs: { "data-dz-errormessage": "" }
+                                  }),
+                                  _vm._v(" "),
+                                  _c(
+                                    "p",
+                                    {
+                                      staticClass: "text-sm",
+                                      attrs: { "data-dz-size": "" }
+                                    },
+                                    [
+                                      _c("strong", [
+                                        _vm._v(_vm._s(_vm.itemsSizes))
+                                      ])
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _vm._m(14)
+                                ])
+                              ])
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "media-right" }, [
+                              _c(
+                                "button",
+                                {
+                                  staticClass:
+                                    "btn btn-xs btn-danger dz-cancel",
+                                  attrs: { "data-dz-remove": "" },
+                                  on: { click: _vm.removeItems }
+                                },
+                                [_c("i", { staticClass: "demo-pli-cross" })]
                               )
-                          }
-                        } else {
-                          _vm.$set(_vm.data, "cardG", $$c)
-                        }
-                      }
-                    }
-                  })
-                ]),
-                _vm._v(" "),
-                _c("label", [_vm._v("Fecha de Investidura")]),
-                _vm._v(" "),
-                _c("div", { staticClass: "input-group" }, [
-                  _vm._m(12),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.data.dateG,
-                        expression: "data.dateG"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    attrs: { type: "date" },
-                    domProps: { value: _vm.data.dateG },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(_vm.data, "dateG", $event.target.value)
-                      }
-                    }
-                  })
-                ]),
-                _vm._v(" "),
-                _vm._m(13)
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-lg-6 col-md-6 col-xs-12  " }, [
-              _c("div", { staticClass: "panel-default " }, [
-                _c("label", [_vm._v("Tarjeta Guia Mayor")]),
-                _vm._v(" "),
-                _c("div", { staticClass: "input-group" }, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.data.cardGm,
-                        expression: "data.cardGm"
-                      }
-                    ],
-                    attrs: { type: "checkbox" },
-                    domProps: {
-                      checked: Array.isArray(_vm.data.cardGm)
-                        ? _vm._i(_vm.data.cardGm, null) > -1
-                        : _vm.data.cardGm
-                    },
-                    on: {
-                      change: function($event) {
-                        var $$a = _vm.data.cardGm,
-                          $$el = $event.target,
-                          $$c = $$el.checked ? true : false
-                        if (Array.isArray($$a)) {
-                          var $$v = null,
-                            $$i = _vm._i($$a, $$v)
-                          if ($$el.checked) {
-                            $$i < 0 &&
-                              _vm.$set(_vm.data, "cardGm", $$a.concat([$$v]))
-                          } else {
-                            $$i > -1 &&
-                              _vm.$set(
-                                _vm.data,
-                                "cardGm",
-                                $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                              )
-                          }
-                        } else {
-                          _vm.$set(_vm.data, "cardGm", $$c)
-                        }
-                      }
-                    }
-                  })
-                ]),
-                _vm._v(" "),
-                _c("label", [_vm._v("Fecha de Investidura")]),
-                _vm._v(" "),
-                _c("div", { staticClass: "input-group" }, [
-                  _vm._m(14),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.data.dateGm,
-                        expression: "data.dateGm"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    attrs: { type: "date" },
-                    domProps: { value: _vm.data.dateGm },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(_vm.data, "dateGm", $event.target.value)
-                      }
-                    }
-                  })
-                ]),
-                _vm._v(" "),
-                _vm._m(15)
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: " col-lg-6 col-md-6 col-xs-12 " }, [
-              _c("div", { staticClass: "panel-default " }, [
-                _c("label", [_vm._v("Tarjeta Lider Juvenir")]),
-                _vm._v(" "),
-                _c("div", { staticClass: "input-group" }, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.data.cardLj,
-                        expression: "data.cardLj"
-                      }
-                    ],
-                    attrs: { type: "checkbox" },
-                    domProps: {
-                      checked: Array.isArray(_vm.data.cardLj)
-                        ? _vm._i(_vm.data.cardLj, null) > -1
-                        : _vm.data.cardLj
-                    },
-                    on: {
-                      change: function($event) {
-                        var $$a = _vm.data.cardLj,
-                          $$el = $event.target,
-                          $$c = $$el.checked ? true : false
-                        if (Array.isArray($$a)) {
-                          var $$v = null,
-                            $$i = _vm._i($$a, $$v)
-                          if ($$el.checked) {
-                            $$i < 0 &&
-                              _vm.$set(_vm.data, "cardLj", $$a.concat([$$v]))
-                          } else {
-                            $$i > -1 &&
-                              _vm.$set(
-                                _vm.data,
-                                "cardLj",
-                                $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                              )
-                          }
-                        } else {
-                          _vm.$set(_vm.data, "cardLj", $$c)
-                        }
-                      }
-                    }
-                  })
-                ]),
-                _vm._v(" "),
-                _c("label", [_vm._v("Fecha de Investidura")]),
-                _vm._v(" "),
-                _c("div", { staticClass: "input-group" }, [
-                  _vm._m(16),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.data.dateLj,
-                        expression: "data.dateLj"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    attrs: { type: "date" },
-                    domProps: { value: _vm.data.dateLj },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(_vm.data, "dateLj", $event.target.value)
-                      }
-                    }
-                  })
-                ]),
-                _vm._v(" "),
-                _vm._m(17)
+                            ])
+                          ])
+                        : _vm._e()
+                    ]
+                  )
+                ])
               ])
             ])
           ]),
@@ -76708,10 +76774,12 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "input-group" }, [
-      _c("label", [_vm._v("Adjunte su tarjeta ")]),
+    return _c("div", { staticClass: "col-md-4 amigo" }, [
+      _c("label", { attrs: { for: "amigo" } }, [
+        _vm._v("Adjunte su tarjeta de Amigo ")
+      ]),
       _vm._v(" "),
-      _c("input", { attrs: { type: "file" } })
+      _c("input", { attrs: { type: "file", id: "amigo" } })
     ])
   },
   function() {
@@ -76726,10 +76794,12 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "input-group" }, [
-      _c("label", [_vm._v("Adjunte su tarjeta ")]),
+    return _c("div", { staticClass: "input-group companero  col-md-3" }, [
+      _c("label", { attrs: { for: "companero" } }, [
+        _vm._v("Adjunte su tarjeta de Compañero ")
+      ]),
       _vm._v(" "),
-      _c("input", { attrs: { type: "file" } })
+      _c("input", { attrs: { type: "file", id: "companero" } })
     ])
   },
   function() {
@@ -76744,10 +76814,12 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "input-group" }, [
-      _c("label", [_vm._v("Adjunte su tarjeta ")]),
+    return _c("div", { staticClass: "input-group col-md-3 explorador" }, [
+      _c("label", { attrs: { for: "explorador" } }, [
+        _vm._v("Adjunte su tarjeta de Explorador ")
+      ]),
       _vm._v(" "),
-      _c("input", { attrs: { type: "file" } })
+      _c("input", { attrs: { type: "file", id: "explorador" } })
     ])
   },
   function() {
@@ -76762,10 +76834,12 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "input-group" }, [
-      _c("label", [_vm._v("Adjunte su tarjeta ")]),
+    return _c("div", { staticClass: "input-group col-md-3 orientador" }, [
+      _c("label", { attrs: { for: "orientador" } }, [
+        _vm._v("Adjunte su tarjeta de Orientador ")
+      ]),
       _vm._v(" "),
-      _c("input", { attrs: { type: "file" } })
+      _c("input", { attrs: { type: "file", id: "orientador" } })
     ])
   },
   function() {
@@ -76780,11 +76854,17 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "input-group" }, [
-      _c("label", [_vm._v("Adjunte su tarjeta ")]),
-      _vm._v(" "),
-      _c("input", { attrs: { type: "file" } })
-    ])
+    return _c(
+      "div",
+      { staticClass: "input-group col-md-3  col-xs-12 viajero" },
+      [
+        _c("label", { attrs: { for: "viajero" } }, [
+          _vm._v("Adjunte su tarjeta de Viajero ")
+        ]),
+        _vm._v(" "),
+        _c("input", { attrs: { type: "file", id: "viajero" } })
+      ]
+    )
   },
   function() {
     var _vm = this
@@ -76798,47 +76878,43 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "input-group" }, [
-      _c("label", [_vm._v("Adjunte su tarjeta ")]),
+    return _c("div", { staticClass: "input-group guia col-md-3  col-xs-12" }, [
+      _c("label", { attrs: { for: "guia" } }, [
+        _vm._v("Adjunte su tarjeta de Guia ")
+      ]),
       _vm._v(" "),
-      _c("input", { attrs: { type: "file" } })
+      _c("input", { attrs: { type: "file", id: "guia", name: "items" } })
     ])
   },
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("span", { staticClass: "input-group-addon" }, [
-      _c("i", { staticClass: "fa fa-calendar-o" })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "input-group" }, [
-      _c("label", [_vm._v("Adjunte su tarjeta ")]),
-      _vm._v(" "),
-      _c("input", { attrs: { type: "file" } })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("span", { staticClass: "input-group-addon" }, [
-      _c("i", { staticClass: "fa fa-calendar-o" })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "input-group" }, [
-      _c("label", [_vm._v("Adjunte su tarjeta ")]),
-      _vm._v(" "),
-      _c("input", { attrs: { type: "file" } })
-    ])
+    return _c(
+      "div",
+      { staticStyle: { opacity: "50" }, attrs: { id: "dz-total-progress" } },
+      [
+        _c(
+          "div",
+          {
+            staticClass: "progress progress-xs active",
+            attrs: {
+              role: "progressbar",
+              "aria-valuemin": "0",
+              "aria-valuemax": "100",
+              "aria-valuenow": "0"
+            }
+          },
+          [
+            _c("div", {
+              staticClass: "progress-bar progress-bar-success",
+              staticStyle: { width: "15%" },
+              attrs: { "data-dz-uploadprogress": "" }
+            })
+          ]
+        )
+      ]
+    )
   }
 ]
 render._withStripped = true
