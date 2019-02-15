@@ -12,13 +12,9 @@ use App\Entities\YoungBoy;
 
 trait DataViewerTraits
 {
-    public function scopeSearchPaginateAndOrder($query, $count, $search = null,$otherFilters=false)
+    public function scopeSearchPaginateAndOrder($query, $count, $search = null)
     {
-        if($otherFilters){
-            return $query->search($search);
-        }else{
-            return $query->search($search)->paginate($count);
-        }
+        return $query->search($search)->paginate($count);
     }
 
     /**

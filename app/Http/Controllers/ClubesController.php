@@ -14,6 +14,7 @@ use App\Entities\Departaments\ClubCard;
 use App\Entities\Departaments\ClubDirector;
 use App\Entities\Departaments\MemberClub;
 use App\Entities\Departaments\MemberClubByClubCard;
+use App\Entities\Member;
 use App\Traits\DataViewerTraits;
 use App\Traits\ListInformMembersTraits;
 use Carbon\Carbon;
@@ -116,36 +117,42 @@ class ClubesController extends Controller
         $codeGm = null;
         $codeLj= null;
         $dir=NULL;
+        if(MemberClub::where('member_id',$member['value'])->count()>0) {
+            MemberClub::where('member_id',$member['value'])->update(['church_id' => $church]);
+            $id = $member['value'];
+        }else{
+            $memberClub = new MemberClub();
+            $memberClub->member_id = $member['value'];
+            $memberClub->date = Carbon::now()->toDateString();
+            $memberClub->code_gm = $codeGm;
+            $memberClub->code_lj = $codeLj;
+            $memberClub->status = false;
+            $memberClub->club_director_id = $dir;
+            $memberClub->church_id = $church;
+            $memberClub->user_id = Auth::user()->id;
+            $memberClub->save();
+            $id= $memberClub->id;
+        }
 
-        $memberClub = new MemberClub();
-            $memberClub->member_id=$member['value'];
-        $memberClub->date=Carbon::now()->toDateString();
-        $memberClub->code_gm=$codeGm;
-        $memberClub->code_lj=$codeLj;
-        $memberClub->status=false;
-        $memberClub->club_director_id=$dir ;
-        $memberClub->church_id=$church;
-        $memberClub->user_id= Auth::user()->id;
-
-        if($memberClub->save()) {
+        if($id) {
 
             if($data['cardA']) {
-                MemberClubByClubCard::create(['member_club_id' => $memberClub->id, 'club_card_id' => 1]);
+                MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 1]);
             }
             if($data['cardC']) {
-                MemberClubByClubCard::create(['member_club_id' => $memberClub->id, 'club_card_id' => 2]);
+                MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 2]);
             }
             if($data['cardE']) {
-                MemberClubByClubCard::create(['member_club_id' => $memberClub->id, 'club_card_id' => 3]);
+                MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 3]);
             }
             if($data['cardO']) {
-                MemberClubByClubCard::create(['member_club_id' => $memberClub->id, 'club_card_id' => 4]);
+                MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 4]);
             }
             if($data['cardV']) {
-                MemberClubByClubCard::create(['member_club_id' => $memberClub->id, 'club_card_id' => 5]);
+                MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 5]);
             }
             if($data['cardG']) {
-                MemberClubByClubCard::create(['member_club_id' => $memberClub->id, 'club_card_id' => 6]);
+                MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 6]);
             }
 
             $memberClub = [];
@@ -162,8 +169,14 @@ class ClubesController extends Controller
             $perPage = $request->perPage;
         }
 
-        $model = MemberClub::with('member','club','church')->
+        $model = MemberClub::with('club')->with('church')->
         where('church_id', userChurch()->id)->searchPaginateAndOrder($perPage, $request->get('search'));
+
+        $model->map(function ($e){
+                $member = Member::find($e->member_id);
+                $e->member = $member->name.' '.$member->last;
+        });
+
 
         $array = $this->myPages($model);
 

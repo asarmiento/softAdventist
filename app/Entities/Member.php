@@ -12,7 +12,7 @@ use App\Traits\DataViewerTraits;
 
 class Member extends Entity
 {
-
+    protected $table = 'members';
     protected $timestamp;
 
     protected $fillable = [

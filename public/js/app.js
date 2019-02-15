@@ -85675,12 +85675,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
 
 
 
@@ -85712,28 +85706,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         var self = this;
         this.$http.get("/softadventist/data-member-tarjetas").then(function (response) {
             self.datos = response.data.model;
-            self.my_pages = response.data.my_pages;
-            self.columns = response.data.columns;
+
+            // self.my_pages = response.data.my_pages;
+            // self.columns = response.data.columns;
         });
     },
 
     methods: {
-        send: function send(event) {
-            var _this = this;
+        urlButton: function urlButton(card) {
+            return "/img/Botones/" + card.name + ".gif";
+        },
+        nameComplate: function nameComplate(member) {
+            return member;
+        },
 
+        send: function send(event) {
             axios.post('/softadventist/save-visitor', this.data).then(function (response) {
                 if (response.data.success = true) {
                     __WEBPACK_IMPORTED_MODULE_1_sweetalert2___default()('Se Guardo con Exito!!!', response.data.message, 'success');
-                    _this.data.charter = '';
-                    _this.data.name = '';
-                    _this.data.last = '';
-                    _this.data.bautizmoDate = '';
-                    _this.data.birthdate = '';
-                    _this.data.address = '';
-                    _this.data.civil_status = '';
-                    _this.data.phone = '';
-                    _this.data.cell = '';
-                    _this.data.email = '';
                 }
             }).catch(function (error) {
                 if (error.response) {
@@ -85806,7 +85796,7 @@ var render = function() {
                 _c(
                   "p",
                   { staticClass: "text-lg text-semibold mar-no text-main" },
-                  [_vm._v(_vm._s(items.member) + " ")]
+                  [_vm._v(_vm._s(items.member))]
                 ),
                 _vm._v(" "),
                 _c("p", { staticClass: "text-sm" }, [
@@ -85820,36 +85810,24 @@ var render = function() {
                 ? _c(
                     "div",
                     { staticClass: "pad-top btn-groups" },
-                    [
-                      _vm._l(items.club, function(card) {
-                        return _c(
-                          "a",
-                          {
-                            staticClass: "btn btn-icon  icon-lg add-tooltip",
-                            attrs: { href: "#", "data-container": "body" }
-                          },
-                          [
-                            _c("img", {
-                              attrs: {
-                                src: "/img/Botones/Amigo.gif",
-                                width: "50",
-                                height: "50"
-                              }
-                            }),
-                            _vm._v(
-                              " " + _vm._s(card) + "\n                    "
-                            )
-                          ]
-                        )
-                      }),
-                      _vm._v(" "),
-                      _vm._m(2, true),
-                      _vm._v(" "),
-                      _vm._m(3, true),
-                      _vm._v(" "),
-                      _vm._m(4, true)
-                    ],
-                    2
+                    _vm._l(items.club, function(card) {
+                      return _c(
+                        "a",
+                        {
+                          staticClass: "btn btn-icon  icon-lg add-tooltip",
+                          attrs: { href: "#", "data-container": "body" }
+                        },
+                        [
+                          _c("img", {
+                            attrs: {
+                              src: _vm.urlButton(card),
+                              width: "50",
+                              height: "50"
+                            }
+                          })
+                        ]
+                      )
+                    })
                   )
                 : _vm._e()
             ])
@@ -85954,69 +85932,6 @@ var staticRenderFns = [
         _vm._v("Lista de Especialidades")
       ])
     ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "a",
-      {
-        staticClass: "btn btn-icon  icon-lg add-tooltip",
-        attrs: { href: "#", "data-container": "body" }
-      },
-      [
-        _c("img", {
-          attrs: {
-            src: "/img/Botones/Compañero.gif",
-            width: "50",
-            height: "50"
-          }
-        })
-      ]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "a",
-      {
-        staticClass: "btn btn-icon icon-lg add-tooltip",
-        attrs: { href: "#", "data-container": "body" }
-      },
-      [
-        _c("img", {
-          attrs: {
-            src: "/img/Botones/Explorador.gif",
-            width: "50",
-            height: "50"
-          }
-        })
-      ]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "a",
-      {
-        staticClass: "btn btn-icon icon-lg add-tooltip",
-        attrs: { href: "#", "data-container": "body" }
-      },
-      [
-        _c("img", {
-          attrs: {
-            src: "/img/Botones/Guia-Mayores.png",
-            width: "50",
-            height: "50"
-          }
-        })
-      ]
-    )
   }
 ]
 render._withStripped = true

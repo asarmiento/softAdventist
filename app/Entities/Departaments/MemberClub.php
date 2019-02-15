@@ -17,12 +17,14 @@ use App\Traits\DataViewerTraits;
 class MemberClub extends Entity
 {
     protected $table='members_in_clubs';
+
     protected $fillable = ['code_gm', 'code_lj', 'date', 'status', 'member_id', 'club_director_id', 'church_id', 'user_id'];
 
     use DataViewerTraits;
+
     public function member()
     {
-        return $this->belongsTo(Member::class);
+        return $this->belongsTo(Member::class,'member_id','id')->select('name','last');
     }
 
     public function club()
