@@ -126,7 +126,15 @@ class MemberController extends Controller
             $data['civil_status'] = $data['civil_status']['value'];
         }
         if (is_array($data['type'])) {
-            $data['type'] = $data['type']['value'];
+            if($data['type']['value'] == 'Adventista') {
+
+
+                $data['type'] = true;
+            }else{
+                $data['type'] = false;
+            }
+        }else{
+            return $this->errores('Debe seleccionar el estado del Miembro');
         }
         $user = User::where('email', currentUser()->email)->first();
         if (!$data['church']) {
