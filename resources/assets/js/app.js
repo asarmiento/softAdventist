@@ -41,6 +41,7 @@ Vue.component('createAssistance', require('./components/Creating/CreateAssistanc
  * Clubes Jovenes
  */
 Vue.component('createCardMember', require('./components/Creating/CreateCardMember.vue'));
+Vue.component('createCardMemberCampo', require('./components/Creating/CreateCardMemberCampo.vue'));
 Vue.component('createClubDirector', require('./components/Creating/CreateClubDirector.vue'));
 /**
  * Editores de tablas

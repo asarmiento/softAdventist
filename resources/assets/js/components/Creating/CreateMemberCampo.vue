@@ -11,7 +11,7 @@
                     <div class="panel-body">
                         <div class=" col-lg-3 col-md-3 ">
                             <div class="panel-default ">
-                                <label>Cédula <strong style="color: red" >*</strong></label>
+                                <label>Cédula </label>
                                 <div class="input-group" >
                                     <span class="input-group-addon"><i class="fa fa-archive"></i></span>
                                     <input type="text" v-model="data.charter"  class="form-control" >
@@ -99,6 +99,15 @@
                                 </div>
                             </div>
                         </div>
+                        <div class=" col-lg-3 col-md-3 ">
+                            <div class="panel-default material">
+                                <label>Estado de Miembro <strong style="color: red" >*</strong></label>
+                                <div class="input-group" >
+                                    <span class="input-group-addon"><i class="fa fa-send"></i></span>
+                                    <v-select type="text" v-model="data.type" :options="types" class="form-control" ></v-select>
+                                </div>
+                            </div>
+                        </div>
                         <div class=" col-lg-6 col-md-6 ">
                             <div class="panel-default ">
                                 <label>Iglesia <strong style="color: red" >*</strong></label>
@@ -138,6 +147,7 @@
                          address: '',
                          civil_status: '',
                          phone: '',
+                         type: '',
                          cell: '',
                          email: '',
                          church: '',
@@ -148,6 +158,11 @@
                          {"label":'Divorciado(a)',"value":'Divorciado(a)'},
                          {"label":'Viudo(a)',"value":'Viudo(a)'},
                          {"label":'Union Libre',"value":'Union Libre'},
+
+                     ],
+                     types:[
+                         {"label":'Adventista',"value":'Adventista'},
+                         {"label":'No Adventista',"value":'No Adventista'},
 
                      ],
                      churches:[]
@@ -166,6 +181,10 @@
                     Swal('Debe Elegir un Estado Civil', 'No se puede proceder','error');
                     return false;
                 }
+                if(this.data.type === ""){
+                    Swal('Debe Elegir un Estado de Miembro', 'No se puede proceder','error');
+                    return false;
+                }
                 axios.post('/softadventist/save-miembros', this.data)
                     .then(response => {
                         if(response.data.success = true){
@@ -179,6 +198,7 @@
                             this.data.civil_status= '';
                             this.data.phone= '';
                             this.data.cell= '';
+                            this.data.type= '';
                             this.data.email='';
                         }
                     })

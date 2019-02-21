@@ -33246,6 +33246,7 @@ Vue.component('createAssistance', __webpack_require__(337));
  * Clubes Jovenes
  */
 Vue.component('createCardMember', __webpack_require__(342));
+Vue.component('createCardMemberCampo', __webpack_require__(438));
 Vue.component('createClubDirector', __webpack_require__(347));
 /**
  * Editores de tablas
@@ -58973,6 +58974,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -58991,11 +59001,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 address: '',
                 civil_status: '',
                 phone: '',
+                type: '',
                 cell: '',
                 email: '',
                 church: ''
             },
             civil: [{ "label": 'Casado(a)', "value": 'Casado(a)' }, { "label": 'Soltero(a)', "value": 'Soltero(a)' }, { "label": 'Divorciado(a)', "value": 'Divorciado(a)' }, { "label": 'Viudo(a)', "value": 'Viudo(a)' }, { "label": 'Union Libre', "value": 'Union Libre' }],
+            types: [{ "label": 'Adventista', "value": 'Adventista' }, { "label": 'No Adventista', "value": 'No Adventista' }],
             churches: []
         };
     },
@@ -59016,6 +59028,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 __WEBPACK_IMPORTED_MODULE_1_sweetalert2___default()('Debe Elegir un Estado Civil', 'No se puede proceder', 'error');
                 return false;
             }
+            if (this.data.type === "") {
+                __WEBPACK_IMPORTED_MODULE_1_sweetalert2___default()('Debe Elegir un Estado de Miembro', 'No se puede proceder', 'error');
+                return false;
+            }
             axios.post('/softadventist/save-miembros', this.data).then(function (response) {
                 if (response.data.success = true) {
                     __WEBPACK_IMPORTED_MODULE_1_sweetalert2___default()('Se Guardo con Exito!!!', response.data.message, 'success');
@@ -59028,6 +59044,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     _this2.data.civil_status = '';
                     _this2.data.phone = '';
                     _this2.data.cell = '';
+                    _this2.data.type = '';
                     _this2.data.email = '';
                 }
             }).catch(function (error) {
@@ -59086,10 +59103,10 @@ var render = function() {
           _c("div", { staticClass: "panel-body" }, [
             _c("div", { staticClass: " col-lg-3 col-md-3 " }, [
               _c("div", { staticClass: "panel-default " }, [
-                _vm._m(1),
+                _c("label", [_vm._v("Cédula ")]),
                 _vm._v(" "),
                 _c("div", { staticClass: "input-group" }, [
-                  _vm._m(2),
+                  _vm._m(1),
                   _vm._v(" "),
                   _c("input", {
                     directives: [
@@ -59118,10 +59135,10 @@ var render = function() {
             _vm._v(" "),
             _c("div", { staticClass: " col-lg-3 col-md-3 " }, [
               _c("div", { staticClass: "panel-default " }, [
-                _vm._m(3),
+                _vm._m(2),
                 _vm._v(" "),
                 _c("div", { staticClass: "input-group" }, [
-                  _vm._m(4),
+                  _vm._m(3),
                   _vm._v(" "),
                   _c("input", {
                     directives: [
@@ -59150,10 +59167,10 @@ var render = function() {
             _vm._v(" "),
             _c("div", { staticClass: " col-lg-3 col-md-3 " }, [
               _c("div", { staticClass: "panel-default " }, [
-                _vm._m(5),
+                _vm._m(4),
                 _vm._v(" "),
                 _c("div", { staticClass: "input-group" }, [
-                  _vm._m(6),
+                  _vm._m(5),
                   _vm._v(" "),
                   _c("input", {
                     directives: [
@@ -59185,7 +59202,7 @@ var render = function() {
                 _c("label", [_vm._v("Fecha Bautizmo")]),
                 _vm._v(" "),
                 _c("div", { staticClass: "input-group" }, [
-                  _vm._m(7),
+                  _vm._m(6),
                   _vm._v(" "),
                   _c("input", {
                     directives: [
@@ -59217,7 +59234,7 @@ var render = function() {
                 _c("label", [_vm._v("Fecha Nacimiento")]),
                 _vm._v(" "),
                 _c("div", { staticClass: "input-group" }, [
-                  _vm._m(8),
+                  _vm._m(7),
                   _vm._v(" "),
                   _c("input", {
                     directives: [
@@ -59249,7 +59266,7 @@ var render = function() {
                 _c("label", [_vm._v("Telefono")]),
                 _vm._v(" "),
                 _c("div", { staticClass: "input-group" }, [
-                  _vm._m(9),
+                  _vm._m(8),
                   _vm._v(" "),
                   _c("input", {
                     directives: [
@@ -59281,7 +59298,7 @@ var render = function() {
                 _c("label", [_vm._v("Celular")]),
                 _vm._v(" "),
                 _c("div", { staticClass: "input-group" }, [
-                  _vm._m(10),
+                  _vm._m(9),
                   _vm._v(" "),
                   _c("input", {
                     directives: [
@@ -59313,7 +59330,7 @@ var render = function() {
                 _c("label", [_vm._v("Email")]),
                 _vm._v(" "),
                 _c("div", { staticClass: "input-group" }, [
-                  _vm._m(11),
+                  _vm._m(10),
                   _vm._v(" "),
                   _c("input", {
                     directives: [
@@ -59342,13 +59359,13 @@ var render = function() {
             _vm._v(" "),
             _c("div", { staticClass: " col-lg-3 col-md-3 " }, [
               _c("div", { staticClass: "panel-default material" }, [
-                _vm._m(12),
+                _vm._m(11),
                 _vm._v(" "),
                 _c(
                   "div",
                   { staticClass: "input-group" },
                   [
-                    _vm._m(13),
+                    _vm._m(12),
                     _vm._v(" "),
                     _c("v-select", {
                       staticClass: "form-control",
@@ -59372,7 +59389,7 @@ var render = function() {
                 _c("label", [_vm._v("Dirección")]),
                 _vm._v(" "),
                 _c("div", { staticClass: "input-group" }, [
-                  _vm._m(14),
+                  _vm._m(13),
                   _vm._v(" "),
                   _c("input", {
                     directives: [
@@ -59399,15 +59416,42 @@ var render = function() {
               ])
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: " col-lg-6 col-md-6 " }, [
-              _c("div", { staticClass: "panel-default " }, [
-                _vm._m(15),
+            _c("div", { staticClass: " col-lg-3 col-md-3 " }, [
+              _c("div", { staticClass: "panel-default material" }, [
+                _vm._m(14),
                 _vm._v(" "),
                 _c(
                   "div",
                   { staticClass: "input-group" },
                   [
-                    _vm._m(16),
+                    _vm._m(15),
+                    _vm._v(" "),
+                    _c("v-select", {
+                      staticClass: "form-control",
+                      attrs: { type: "text", options: _vm.types },
+                      model: {
+                        value: _vm.data.type,
+                        callback: function($$v) {
+                          _vm.$set(_vm.data, "type", $$v)
+                        },
+                        expression: "data.type"
+                      }
+                    })
+                  ],
+                  1
+                )
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: " col-lg-6 col-md-6 " }, [
+              _c("div", { staticClass: "panel-default " }, [
+                _vm._m(16),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "input-group" },
+                  [
+                    _vm._m(17),
                     _vm._v(" "),
                     _c("v-select", {
                       staticClass: "form-control",
@@ -59450,15 +59494,6 @@ var staticRenderFns = [
       _c("div", { staticClass: "text-center " }, [
         _c("h1", [_vm._v("Nuevo de Miembro ")])
       ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("label", [
-      _vm._v("Cédula "),
-      _c("strong", { staticStyle: { color: "red" } }, [_vm._v("*")])
     ])
   },
   function() {
@@ -59558,6 +59593,23 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("span", { staticClass: "input-group-addon" }, [
       _c("i", { staticClass: "fa fa-send" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "input-group-addon" }, [
+      _c("i", { staticClass: "fa fa-send" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("label", [
+      _vm._v("Estado de Miembro "),
+      _c("strong", { staticStyle: { color: "red" } }, [_vm._v("*")])
     ])
   },
   function() {
@@ -74000,6 +74052,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -74014,12 +74075,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 local: '',
                 cargo: '',
                 church: '',
+                departament: '',
                 user: ''
             },
             users: "",
             churchs: "",
             unions: "",
             locals: "",
+            departaments: "",
             cargos: [{ "label": "presidente", "value": "Presidente" }, { "label": "tesorero", "value": "tesorero" }, { "label": "secretario", "value": "secretario" }, { "label": "departamental", "value": "departamental" }, { "label": "pastor", "value": "pastor" }, { "label": "director", "value": "director" }, { "label": "digitador", "value": "digitador" }, { "label": "miembro", "value": "miembro" }]
         };
     },
@@ -74028,6 +74091,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
         this.$http.get('/softadventist/lista-user-select').then(function (response) {
             _this.users = response.data;
+        });
+        this.$http.get('/softadventist/lista-de-departamentos-select').then(function (response) {
+            _this.departaments = response.data;
         });
 
         this.$http.get('/softadventist/lista-churchs-select').then(function (response) {
@@ -74238,6 +74304,32 @@ var render = function() {
               ])
             ]),
             _vm._v(" "),
+            _c("div", { staticClass: " col-lg-6 col-md-6 " }, [
+              _c("div", { staticClass: "panel-default " }, [
+                _c("label", [_vm._v("Departamento Encargado")]),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "input-group" },
+                  [
+                    _vm._m(6),
+                    _vm._v(" "),
+                    _c("v-select", {
+                      attrs: { options: _vm.departaments },
+                      model: {
+                        value: _vm.data.departament,
+                        callback: function($$v) {
+                          _vm.$set(_vm.data, "departament", $$v)
+                        },
+                        expression: "data.departament"
+                      }
+                    })
+                  ],
+                  1
+                )
+              ])
+            ]),
+            _vm._v(" "),
             _c("div", { staticClass: "col-lg-12 col-md-12  text-center" }, [
               _c("div", { staticClass: "btn" }, [
                 _c(
@@ -74294,6 +74386,14 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("span", { staticClass: "input-group-addon" }, [
       _c("i", { staticClass: "fa fa-user" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "input-group-addon" }, [
+      _c("i", { staticClass: "fa fa-calendar" })
     ])
   },
   function() {
@@ -90266,6 +90366,678 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 424 */,
+/* 425 */,
+/* 426 */,
+/* 427 */,
+/* 428 */,
+/* 429 */,
+/* 430 */,
+/* 431 */,
+/* 432 */,
+/* 433 */,
+/* 434 */,
+/* 435 */,
+/* 436 */,
+/* 437 */,
+/* 438 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(439)
+}
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(441)
+/* template */
+var __vue_template__ = __webpack_require__(442)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\Creating\\CreateCardMemberCampo.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-f7a0d108", Component.options)
+  } else {
+    hotAPI.reload("data-v-f7a0d108", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 439 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(440);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(3)("f791b0fc", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-f7a0d108\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./CreateCardMemberCampo.vue", function() {
+     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-f7a0d108\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./CreateCardMemberCampo.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 440 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(2)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.mostrar {\n        display: block;\n}\n.material {\n        z-index: 5;\n}\n#amigo {\n         background-color: #106BA0;\n        width: 0.1px;\n        height: 0.1px;\n        opacity: 0;\n        overflow: hidden;\n        position: absolute;\n        z-index: -1;\n}\nlabel[for=\" amigo\"] {\n        font-size: 14px;\n        font-weight: 600;\n        color: #fff;\n        background-color: #106BA0;\n        display: inline-block;\n        -webkit-transition: all .5s;\n        transition: all .5s;\n        cursor: pointer;\n        padding: 15px 40px !important;\n        text-transform: uppercase;\n        width: -webkit-fit-content;\n        width: -moz-fit-content;\n        width: fit-content;\n        text-align: center;\n}\n.amigo{\n        font-size: 14px;\n        font-weight: 600;\n        color: #fff;\n        margin: 5px;\n        background-color: #106BA0;\n        display: inline-block;\n        -webkit-transition: all .5s;\n        transition: all .5s;\n        cursor: pointer;\n        padding: 15px 40px !important;\n        text-transform: uppercase;\n        width: -webkit-fit-content;\n        width: -moz-fit-content;\n        width: fit-content;\n        text-align: center;\n}\n#companero {\n        background-color: #a01c27;\n        width: 0.1px;\n        height: 0.1px;\n        opacity: 0;\n        overflow: hidden;\n        position: absolute;\n        z-index: -1;\n}\nlabel[for=\" companero\"] {\n        font-size: 14px;\n        font-weight: 600;\n        color: #fff;\n        background-color: #a01c27;\n        display: inline-block;\n        -webkit-transition: all .5s;\n        transition: all .5s;\n        cursor: pointer;\n        padding: 15px 40px !important;\n        text-transform: uppercase;\n        width: -webkit-fit-content;\n        width: -moz-fit-content;\n        width: fit-content;\n        text-align: center;\n}\n.companero{\n        font-size: 14px;\n        font-weight: 600;\n        color: #fff;\n        margin: 5px;\n        background-color: #a01c27;\n        display: inline-block;\n        -webkit-transition: all .5s;\n        transition: all .5s;\n        cursor: pointer;\n        padding: 15px 40px !important;\n        text-transform: uppercase;\n        width: -webkit-fit-content;\n        width: -moz-fit-content;\n        width: fit-content;\n        text-align: center;\n}\n#explorador {\n        background-color: #186e37;\n        width: 0.1px;\n        height: 0.1px;\n        opacity: 0;\n        overflow: hidden;\n        position: absolute;\n        z-index: -1;\n}\nlabel[for=\" explorador\"] {\n        font-size: 14px;\n        font-weight: 600;\n        color: #fff;\n        background-color: #186e37;\n        display: inline-block;\n        -webkit-transition: all .5s;\n        transition: all .5s;\n        cursor: pointer;\n        padding: 15px 40px !important;\n        text-transform: uppercase;\n        width: -webkit-fit-content;\n        width: -moz-fit-content;\n        width: fit-content;\n        text-align: center;\n}\n.explorador{\n        font-size: 14px;\n        font-weight: 600;\n        color: #fff;\n        margin: 5px;\n        background-color: #186e37;\n        display: inline-block;\n        -webkit-transition: all .5s;\n        transition: all .5s;\n        cursor: pointer;\n        padding: 15px 40px !important;\n        text-transform: uppercase;\n        width: -webkit-fit-content;\n        width: -moz-fit-content;\n        width: fit-content;\n        text-align: center;\n}\n#orientador {\n        background-color: #c2c2c4;\n        width: 0.1px;\n        height: 0.1px;\n        opacity: 0;\n        overflow: hidden;\n        position: absolute;\n        z-index: -1;\n}\nlabel[for=\" orientador\"] {\n        font-size: 14px;\n        font-weight: 600;\n        color: #0f023f;\n        background-color: #c2c2c4;\n        display: inline-block;\n        -webkit-transition: all .5s;\n        transition: all .5s;\n        cursor: pointer;\n        padding: 15px 40px !important;\n        text-transform: uppercase;\n        width: -webkit-fit-content;\n        width: -moz-fit-content;\n        width: fit-content;\n        text-align: center;\n}\n.orientador{\n        font-size: 14px;\n        font-weight: 600;\n        color: #0f023f;\n        margin: 5px;\n        background-color: #c2c2c4;\n        display: inline-block;\n        -webkit-transition: all .5s;\n        transition: all .5s;\n        cursor: pointer;\n        padding: 15px 40px !important;\n        text-transform: uppercase;\n        width: -webkit-fit-content;\n        width: -moz-fit-content;\n        width: fit-content;\n        text-align: center;\n}\n#viajero {\n        background-color: #6f117f;\n        width: 0.1px;\n        height: 0.1px;\n        opacity: 0;\n        overflow: hidden;\n        position: absolute;\n        z-index: -1;\n}\nlabel[for=\" viajero\"] {\n        font-size: 14px;\n        font-weight: 600;\n        color: #fff;\n        background-color: #6f117f;\n        display: inline-block;\n        -webkit-transition: all .5s;\n        transition: all .5s;\n        cursor: pointer;\n        padding: 15px 40px !important;\n        text-transform: uppercase;\n        width: -webkit-fit-content;\n        width: -moz-fit-content;\n        width: fit-content;\n        text-align: center;\n}\n.viajero{\n        font-size: 14px;\n        font-weight: 600;\n        color: #fff;\n        margin: 5px;\n        background-color: #6f117f;\n        display: inline-block;\n        -webkit-transition: all .5s;\n        transition: all .5s;\n        cursor: pointer;\n        padding: 15px 40px !important;\n        text-transform: uppercase;\n        width: -webkit-fit-content;\n        width: -moz-fit-content;\n        width: fit-content;\n        text-align: center;\n}\n#guia {\n        background-color: #dedf3d;\n        width: 0.1px;\n        height: 0.1px;\n        opacity: 0;\n        overflow: hidden;\n        position: absolute;\n        z-index: -1;\n}\nlabel[for=\" guia\"] {\n        font-size: 14px;\n        font-weight: 600;\n        color: #0f023f;\n        background-color: #dedf3d;\n        display: inline-block;\n        -webkit-transition: all .5s;\n        transition: all .5s;\n        cursor: pointer;\n        padding: 15px 40px !important;\n        text-transform: uppercase;\n        width: -webkit-fit-content;\n        width: -moz-fit-content;\n        width: fit-content;\n        text-align: center;\n}\n.guia{\n        font-size: 14px;\n        font-weight: 600;\n        color: #0f023f;\n        margin: 5px;\n        background-color: #dedf3d;\n        display: inline-block;\n        -webkit-transition: all .5s;\n        transition: all .5s;\n        cursor: pointer;\n        padding: 15px 40px !important;\n        text-transform: uppercase;\n        width: -webkit-fit-content;\n        width: -moz-fit-content;\n        width: fit-content;\n        text-align: center;\n}\n@media only screen and (min-width: 320px) {\n#sale-otro-table {\n            display: none;\n}\n#sale-pc-table {\n            display: block;\n}\nh1, h2 {\n            font-size: 18px;\n}\n}\n\n    /* Small devices (landscape phones, 576px and up)*/\n@media (min-width: 576px) {\n#sale-otro-table {\n            display: none;\n}\n#sale-pc-table {\n            display: block;\n}\n}\n\n    /* Medium devices (tablets, 768px and up)*/\n@media (min-width: 768px) {\n#sale-otro-table {\n            display: block;\n}\n#sale-pc-table {\n            display: none;\n}\n}\n\n    /* Large devices (desktops, 992px and up)*/\n@media (min-width: 992px) {\n#sale-otro-table {\n            display: block;\n}\n#sale-pc-table {\n            display: none;\n}\n}\n\n    /* Extra large devices (large desktops, 1200px and up)*/\n@media (min-width: 1200px) {\n#sale-otro-table {\n            display: block;\n}\nh1, h2 {\n            font-size: 28px;\n            text-align: center;\n}\n#sale-pc-table {\n            display: none;\n}\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 441 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_select__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_select___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue_select__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_sweetalert2__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_sweetalert2___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_sweetalert2__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue_datepicker__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue_datepicker___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_vue_datepicker__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    components: { vSelect: __WEBPACK_IMPORTED_MODULE_0_vue_select___default.a, myDatepicker: __WEBPACK_IMPORTED_MODULE_2_vue_datepicker___default.a, Swal: __WEBPACK_IMPORTED_MODULE_1_sweetalert2___default.a },
+    data: function data() {
+        return {
+            data: {
+                member: '',
+                dateA: '',
+                cardA: false,
+                dateC: '',
+                cardC: false,
+                dateE: '',
+                cardE: false,
+                dateO: '',
+                cardO: false,
+                dateV: '',
+                cardV: false,
+                dateG: '',
+                cardG: false
+            },
+            txtSearch: '',
+            counts: ['5', '10', '20', '50'],
+            datos: [],
+            my_pages: [],
+            columns: [],
+            typeAll: true,
+            typeStyle: true,
+            listMembers: [],
+            club_directors: "",
+            cards: [],
+            formData: '',
+            guia: '',
+            itemsNames: '',
+            itemsSizes: ''
+        };
+    },
+    created: function created() {
+        var _this = this;
+
+        this.$http.get('/softadventist/lista-miembros-select').then(function (response) {
+            _this.listMembers = response.data;
+        });
+    },
+
+    methods: {
+
+        send: function send(event) {
+            var _this2 = this;
+
+            axios.post('/softadventist/save-miembros-card-club', this.data).then(function (response) {
+                if (response.data.success = true) {
+                    __WEBPACK_IMPORTED_MODULE_1_sweetalert2___default()('Se Guardo con Exito!!!', response.data.message, 'success');
+                    _this2.data.member = '';
+                    _this2.data.cardA = false;
+                    _this2.data.cardC = false;
+                    _this2.data.cardE = false;
+                    _this2.data.cardO = false;
+                    _this2.data.cardV = false;
+                    _this2.data.cardG = false;
+                }
+            }).catch(function (error) {
+                if (error.response) {
+                    var data = error.response.data;
+                    if (error.response.status === 422) {
+                        for (var index in data) {
+                            var messages = '';
+                            data[index].forEach(function (item) {
+                                messages += item + ' ';
+                            });
+                            self.errors[index] = messages;
+                        }
+                    } else if (error.response.status === 401) {
+                        self.errors.response.invalid = true;
+                        self.errors.response.msg = data.msg.message;
+                    } else if (error.response.status === 500) {
+                        console.log(data);
+                        for (var index in data) {
+                            var messages = '';
+                            data[index].forEach(function (item) {
+                                messages += item + ' ';
+                            });
+                            self.errors[index] = messages;
+                        }
+                    }
+                } else if (error.request) {
+                    console.log(error.request);
+                    alert("Error empty");
+                } else {
+                    console.log('Error', error.message);
+                    alert("Error");
+                }
+            });
+        }
+    },
+    bytesToSize: function bytesToSize(bytes) {
+        var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+        if (bytes === 0) return 'n/a';
+        var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+        if (i === 0) return bytes + ' ' + sizes[i];
+        return (bytes / Math.pow(1024, i)).toFixed(2) + ' ' + sizes[i];
+    },
+    onChange: function onChange(e) {
+        this.formData = new FormData();
+        var files = e.target.files || e.dataTransfer.files;
+        var fileSizes = 0;
+        for (var fileIn in files) {
+            if (!isNaN(fileIn)) {
+                this.items = e.target.files[fileIn] || e.dataTransfer.files[fileIn];
+                this.itemsNames = files[fileIn].name;
+                this.data.typeIC = files[fileIn].type;
+                this.itemsSizes = this.bytesToSize(files[fileIn].size);
+                fileSizes = files[fileIn].size;
+                this.formData.append('items', this.items);
+                console.log(files[fileIn]);
+            }
+        }
+    },
+    removeItems: function removeItems() {
+        this.items = '';
+        this.itemsNames = '';
+        this.itemsSizes = '';
+    },
+    onSubmit: function onSubmit() {
+        var _this3 = this;
+
+        axios.post('/softadventist/upload-internal-control', this.formData).then(function (response) {
+            _this3.data.name = response.data;
+            console.log(response.data);
+        }).catch(function (error) {
+            if (error.response) {
+                var data = error.response.data;
+                if (error.response.status === 422) {
+                    for (var index in data) {
+                        var messages = '';
+                        data[index].forEach(function (item) {
+                            messages += item + ' ';
+                        });
+                        self.errors[index] = messages;
+                    }
+                } else if (error.response.status === 401) {
+                    self.errors.response.invalid = true;
+                    self.errors.response.msg = data.msg.message;
+                } else {
+                    console.log(error);
+                    alert("Error generic");
+                }
+            } else if (error.request) {
+                console.log(error.request);
+                alert("Error empty");
+            } else {
+                console.log('Error', error.message);
+                alert("Error");
+            }
+        });
+    }
+});
+
+/***/ }),
+/* 442 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "row" }, [
+    _c("div", { staticClass: "col-md-12 col-md-offset-0" }, [
+      _c(
+        "div",
+        { staticClass: "panel panel-default", attrs: { id: "newMembers" } },
+        [
+          _vm._m(0),
+          _vm._v(" "),
+          _c("div", { staticClass: "panel-body" }, [
+            _c("div", { staticClass: " col-lg-6 col-md-6 col-xs-12 " }, [
+              _c("div", { staticClass: "panel-default " }, [
+                _c("label", [_vm._v("Miembro ")]),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "input-group" },
+                  [
+                    _vm._m(1),
+                    _vm._v(" "),
+                    _c("v-select", {
+                      attrs: { options: _vm.listMembers },
+                      model: {
+                        value: _vm.data.member,
+                        callback: function($$v) {
+                          _vm.$set(_vm.data, "member", $$v)
+                        },
+                        expression: "data.member"
+                      }
+                    })
+                  ],
+                  1
+                )
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: " col-lg-12 col-md-12 col-xs-12 " }, [
+              _c("div", { staticClass: " col-lg-6 col-md-6 col-xs-12 " }, [
+                _c("div", { staticClass: "box " }, [
+                  _c("div", { staticClass: "input-group col-md-4" }, [
+                    _c(
+                      "label",
+                      {
+                        staticStyle: { color: "#106BA0", "font-size": "16px" }
+                      },
+                      [_vm._v("Tarjeta de Guia Mayor ")]
+                    ),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.data.cardA,
+                          expression: "data.cardA"
+                        }
+                      ],
+                      staticClass: "amigo",
+                      attrs: { type: "checkbox" },
+                      domProps: {
+                        checked: Array.isArray(_vm.data.cardA)
+                          ? _vm._i(_vm.data.cardA, null) > -1
+                          : _vm.data.cardA
+                      },
+                      on: {
+                        change: function($event) {
+                          var $$a = _vm.data.cardA,
+                            $$el = $event.target,
+                            $$c = $$el.checked ? true : false
+                          if (Array.isArray($$a)) {
+                            var $$v = null,
+                              $$i = _vm._i($$a, $$v)
+                            if ($$el.checked) {
+                              $$i < 0 &&
+                                _vm.$set(_vm.data, "cardA", $$a.concat([$$v]))
+                            } else {
+                              $$i > -1 &&
+                                _vm.$set(
+                                  _vm.data,
+                                  "cardA",
+                                  $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                                )
+                            }
+                          } else {
+                            _vm.$set(_vm.data, "cardA", $$c)
+                          }
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("img", {
+                      staticClass: "responsive ",
+                      attrs: {
+                        src: "/img/Botones/Amigo.gif",
+                        width: "30",
+                        height: "30"
+                      }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c("label", [_vm._v("Fecha de Investidura")]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "input-group col-md-3" }, [
+                    _vm._m(2),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.data.dateA,
+                          expression: "data.dateA"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { type: "date" },
+                      domProps: { value: _vm.data.dateA },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.data, "dateA", $event.target.value)
+                        }
+                      }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _vm._m(3)
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: " col-lg-6 col-md-6 col-xs-12  " }, [
+                _c("div", { staticClass: "panel-default " }, [
+                  _c("div", { staticClass: "input-group  col-md-4" }, [
+                    _c(
+                      "label",
+                      {
+                        staticStyle: { color: "#a01c27", "font-size": "16px" }
+                      },
+                      [_vm._v("Tarjeta de Lider Juvenil")]
+                    ),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.data.cardC,
+                          expression: "data.cardC"
+                        }
+                      ],
+                      attrs: { type: "checkbox" },
+                      domProps: {
+                        checked: Array.isArray(_vm.data.cardC)
+                          ? _vm._i(_vm.data.cardC, null) > -1
+                          : _vm.data.cardC
+                      },
+                      on: {
+                        change: function($event) {
+                          var $$a = _vm.data.cardC,
+                            $$el = $event.target,
+                            $$c = $$el.checked ? true : false
+                          if (Array.isArray($$a)) {
+                            var $$v = null,
+                              $$i = _vm._i($$a, $$v)
+                            if ($$el.checked) {
+                              $$i < 0 &&
+                                _vm.$set(_vm.data, "cardC", $$a.concat([$$v]))
+                            } else {
+                              $$i > -1 &&
+                                _vm.$set(
+                                  _vm.data,
+                                  "cardC",
+                                  $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                                )
+                            }
+                          } else {
+                            _vm.$set(_vm.data, "cardC", $$c)
+                          }
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("img", {
+                      staticClass: "responsive ",
+                      attrs: {
+                        src: "/img/Botones/Compañero.gif",
+                        width: "30",
+                        height: "30"
+                      }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c("label", [_vm._v("Fecha de Investidura")]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "input-group  col-md-3" }, [
+                    _vm._m(4),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.data.dateC,
+                          expression: "data.dateC"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { type: "date" },
+                      domProps: { value: _vm.data.dateC },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.data, "dateC", $event.target.value)
+                        }
+                      }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _vm._m(5)
+                ])
+              ])
+            ])
+          ])
+        ]
+      )
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "col-lg-12 col-md-12  text-center" }, [
+      _c("div", { staticClass: "btn" }, [
+        _c(
+          "button",
+          {
+            staticClass: "btn btn-success",
+            attrs: { disabled: "" },
+            on: { click: _vm.send }
+          },
+          [_vm._v("Guardar")]
+        )
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "panel-heading" }, [
+      _c("div", { staticClass: "text-center " }, [
+        _c("h1", [_vm._v("Registrar Clases Progresivas ")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "input-group-addon" }, [
+      _c("i", { staticClass: "fa fa-archive" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "input-group-addon" }, [
+      _c("i", { staticClass: "fa fa-calendar-o" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md-4 amigo" }, [
+      _c("label", { attrs: { for: "amigo" } }, [
+        _vm._v("Adjunte su tarjeta de Amigo ")
+      ]),
+      _vm._v(" "),
+      _c("input", { attrs: { type: "file", id: "amigo" } })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "input-group-addon" }, [
+      _c("i", { staticClass: "fa fa-calendar-o" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "input-group companero  col-md-3" }, [
+      _c("label", { attrs: { for: "companero" } }, [
+        _vm._v("Adjunte su tarjeta de Compañero ")
+      ]),
+      _vm._v(" "),
+      _c("input", { attrs: { type: "file", id: "companero" } })
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-f7a0d108", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

@@ -62,6 +62,10 @@ class ClubesController extends Controller
     {
         return view('clubes.registerCards');
     }
+    public function registerCardsGMLJ()
+    {
+        return view('clubes.registerCardsCampo');
+    }
 
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -162,6 +166,10 @@ class ClubesController extends Controller
         return response()->json(['success' => false, "message" => $memberClub->errors], 401);
     }
 
+    /**
+     * @param Request $request
+     * @return array
+     */
     public function getDataMemberClub(Request $request)
     {
         $perPage = 10;
@@ -198,6 +206,8 @@ class ClubesController extends Controller
         ];
         return $response;
     }
+
+
 
 
 }

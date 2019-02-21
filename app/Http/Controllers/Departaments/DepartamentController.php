@@ -5,7 +5,8 @@
 	use App\Entities\Departaments\Departament;
 	use App\Entities\Departaments\ExpenseAccount;
 	use App\Entities\Departaments\IncomeAccount;
-	use App\Http\Controllers\Controller;
+    use App\Entities\Departaments\ListDepartament;
+    use App\Http\Controllers\Controller;
 	use App\Http\Requests\DepartamentCreateRequest;
 	use App\Repositories\Church\Departaments\ListDepartamentRepository;
 	use App\Repositories\DepartamentRepository;
@@ -254,7 +255,12 @@
 		{
 			return $this->listDepartamentRepository->listSelectsSinFilterChurch();
 		}
-		
+
+		public function listDepartamentsSelect()
+		{
+			return ListDepartament::listsLabel();
+		}
+
 		
 		/**
 		 * -----------------------------------------------------------------------

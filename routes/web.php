@@ -115,11 +115,13 @@ Route::group(['prefix' => 'softadventist', 'middleware' => 'auth'], function () 
     Route::post('store-directores-de-clubes', 'ClubesController@storeDirector');
     Route::post('save-miembros-card-club', 'ClubesController@storeMemberCard');
     Route::get('registrar-tarjetas-a-jovenes', 'ClubesController@registerCards')->name('register-card-ja');
+    Route::get('registrar-tarjetas-a-jovenes-guia-lider', 'ClubesController@registerCardsGMLJ')->name('register-card-gm-lj');
     Route::get('registrar-especialidades-a-jovenes', 'ClubesController@registerSpecialties')->name('register-specialties-ja');
     /**
      * Departamentos
      */
     Route::get('lista-de-departamentos', 'Departaments\DepartamentController@listDepartament');
+    Route::get('lista-de-departamentos-select', 'Departaments\DepartamentController@listDepartamentsSelect');
     Route::get('crear-departamento', ['uses' => 'Departaments\DepartamentController@create', 'as' => 'create-departament']);
     Route::get('lista-departament', ['uses' => 'Departaments\DepartamentController@index', 'as' => 'lists-departament']);
     Route::get('lists-departament', 'Departaments\DepartamentController@getData');

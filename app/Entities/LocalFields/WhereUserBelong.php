@@ -10,6 +10,7 @@ namespace app\Entities\LocalFields;
 
 
 use App\Entities\Church;
+use App\Entities\Departaments\ListDepartament;
 use App\Entities\Entity;
 use App\Entities\Union;
 
@@ -21,7 +22,7 @@ class WhereUserBelong extends Entity
 {
     protected $table = 'where_user_belongs';
 
-    protected $fillable = ['user_id', 'cargo', 'church_id', 'local_field_id', 'union_id'];
+    protected $fillable = ['user_id', 'cargo', 'church_id', 'local_field_id', 'union_id','list_departament_id'];
 
 
     public function church()
@@ -37,5 +38,10 @@ class WhereUserBelong extends Entity
     public function union()
     {
         return $this->belongsTo(Union::class);
+    }
+
+    public function listDeparmaent()
+    {
+        return $this->belongsTo(ListDepartament::class);
     }
 }

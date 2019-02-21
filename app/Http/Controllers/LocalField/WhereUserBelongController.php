@@ -50,6 +50,12 @@ class WhereUserBelongController extends Controller
         }else{
             $datos['local_field_id']=$data['local']['value'];
         }
+        if($data['departament'] == null)
+        {
+            $datos['list_departament_id']=$data['departament'];
+        }else{
+            $datos['list_departament_id']=$data['departament']['value'];
+        }
         if($data['cargo']==null)
         {
             $datos['cargo']=$data['cargo'];
@@ -62,7 +68,6 @@ class WhereUserBelongController extends Controller
         }else{
             $datos['user_id']=$data['user']['value'];
         }
-
 
 
         $user = new WhereUserBelong();

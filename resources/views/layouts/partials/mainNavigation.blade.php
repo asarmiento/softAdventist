@@ -171,6 +171,7 @@
                             </ul>
                         </li>
                         @endif
+                        @if(userCampo())
                         <li>
                             <a href="#">
                                 <i class="psi-hipster-headphones"></i>
@@ -185,128 +186,10 @@
                                 <li><a href="{{route('nuevoCargoUsuario')}}">Asignar Cargo a usuario</a></li>
                             </ul>
                         </li>
-                        <!--Menu list item->
-                        <li>
-                            <a href="#">
-                                <i class="psi-fuel"></i>
-                                <span class="menu-title">
-												With label
-												<span class="label label-danger pull-right">Hot</span>
-											</span>
-                            </a>
-                            < Submenu>
-                            <ul class="collapse">
-                                <li><a href="#">Link</a></li>
-                                <li><a href="#">Another link</a></li>
-                                <li><a href="#">Some else here</a></li>
-                                <li class="list-divider"></li>
-                                <li><a href="#">Separate link</a></li>
+                        @endif
 
-                            </ul>
-                        </li>
-                        <Menu list item>
-                        <li>
-                            <a href="#">
-                                <i class="psi-cursor-click"></i>
-                                <span class="menu-title">
-									With badge
-									<span class="pull-right badge badge-success">3</span>
-								</span>
-                            </a>
-                            <Submenu>
-                        <ul class="collapse">
-                            <li><a href="#">Link</a></li>
-                            <li><a href="#">Another link</a></li>
-                            <li><a href="#">Some else here</a></li>
-                            <li class="list-divider"></li>
-                            <li><a href="#">Separate link</a></li>
 
-                        </ul>
-                        </li>
-                        <!--li class="list-divider"></li-->
-                        <!--Category name->
-                        <li class="list-header">Multi level</li>
-                        <!--Menu list item->
-                        <li-->
-                        <a href="#">
-                            <i class="psi-geo-2-star"></i>
-                            <span class="menu-title">Menu Level</span>
-                            <i class="arrow"></i>
-                        </a>
-
-                        <!--Submenu-->
-                        <ul class="collapse">
-                            <li><a href="#">Second Level Item</a></li>
-                            <li><a href="#">Second Level Item</a></li>
-                            <li><a href="#">Second Level Item</a></li>
-                            <li class="list-divider"></li>
-                            <li>
-                                <a href="#">Third Level<i class="arrow"></i></a>
-
-                                <!--Submenu-->
-                                <ul class="collapse">
-                                    <li><a href="#">Third Level Item</a></li>
-                                    <li><a href="#">Third Level Item</a></li>
-                                    <li><a href="#">Third Level Item</a></li>
-                                    <li><a href="#">Third Level Item</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#">Third Level<i class="arrow"></i></a>
-
-                                <!--Submenu-->
-                                <ul class="collapse">
-                                    <li><a href="#">Third Level Item</a></li>
-                                    <li><a href="#">Third Level Item</a></li>
-                                    <li><a href="#">Third Level Item</a></li>
-                                    <li class="list-divider"></li>
-                                    <li><a href="#">Third Level Item</a></li>
-                                    <li><a href="#">Third Level Item</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                        </li-->
-                    </ul>
-                    <!--Widget-->
-                    <!--================================-->
-                    <div class="mainnav-widget">
-
-                        <!-- Show the button on collapsed navigation -->
-                        <div class="show-small">
-                            <a href="#" data-toggle="menu-widget" data-target="#demo-wg-server">
-                                <i class="fa fa-desktop"></i>
-                            </a>
-                        </div>
-
-                        <!-- Hide the content on collapsed navigation -->
-                        <div id="demo-wg-server" class="hide-small mainnav-widget-content">
-                            <ul class="list-group">
-                                <li class="list-header pad-no pad-ver">Simple Widget</li>
-                                <li class="mar-btm">
-                                    <span class="label label-primary pull-right">15%</span>
-                                    <p>CPU Usage</p>
-                                    <div class="progress progress-sm">
-                                        <div class="progress-bar progress-bar-primary" style="width: 15%;">
-                                            <span class="sr-only">15%</span>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="mar-btm">
-                                    <span class="label label-purple pull-right">75%</span>
-                                    <p>Bandwidth</p>
-                                    <div class="progress progress-sm">
-                                        <div class="progress-bar progress-bar-purple" style="width: 75%;">
-                                            <span class="sr-only">75%</span>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="pad-ver"><a href="#" class="btn btn-success btn-bock">View Details</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <!--================================-->
-                    <!--End widget-->
-
+                </ul>
                 </div>
             </div>
         </div>

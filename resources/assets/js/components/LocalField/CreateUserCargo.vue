@@ -54,6 +54,15 @@
                             </div>
                         </div>
                     </div>
+                    <div class=" col-lg-6 col-md-6 ">
+                        <div class="panel-default ">
+                            <label>Departamento Encargado</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                <v-select v-model="data.departament" :options="departaments" ></v-select>
+                            </div>
+                        </div>
+                    </div>
                     <div class="col-lg-12 col-md-12  text-center">
                         <div class="btn">
                             <button v-on:click="send" class="btn btn-success">Guardar</button>
@@ -80,12 +89,14 @@
                     local: '',
                     cargo: '',
                     church: '',
+                    departament: '',
                     user: '',
                 },
                 users:"",
                 churchs:"",
                 unions:"",
                 locals:"",
+                departaments:"",
                 cargos:[
                     {"label":"presidente","value":"Presidente"},
                     {"label":"tesorero","value":"tesorero"},
@@ -101,6 +112,10 @@
             this.$http.get('/softadventist/lista-user-select')
                 .then((response) => {
                     this.users = response.data;
+                });
+            this.$http.get('/softadventist/lista-de-departamentos-select')
+                .then((response) => {
+                    this.departaments = response.data;
                 });
 
             this.$http.get('/softadventist/lista-churchs-select')

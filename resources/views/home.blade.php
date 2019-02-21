@@ -1,6 +1,7 @@
 @extends('layouts.system')
 @section('content')
-<div class="panel-body" style="width: 90%; margin: 0 auto; padding-top: 0em">
+    @if(currentUser()->whereUserBelong->cargo == 'tesorero')
+<div  class="panel-body" style="width: 90%; margin: 0 auto; padding-top: 0em">
     <h2 style="text-align: center">Manual de la Iglesia revisión 2015 p.76-80</h2>
    <div class="panel-default">
         <div class="col-md-12">
@@ -93,4 +94,9 @@
         </div>
     </div>
 </div>
+        @else
+        <div  class="panel-body" >
+            <img src="/img/logo union.png" width="100%" height="100%" class="img-responsive">
+        </div>
+    @endif
 @endsection
