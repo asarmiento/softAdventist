@@ -22,6 +22,7 @@ class Member extends Entity
         'bautizmoDate',
         'birthdate',
         'phone',
+        'type',
         'cell',
         'civil_status',
         'address',

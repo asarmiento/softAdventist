@@ -11,7 +11,7 @@
                     <div class="panel-body">
                         <div class=" col-lg-3 col-md-3 ">
                             <div class="panel-default ">
-                                <label>Cédula <strong style="background: red" >*</strong></label>
+                                <label>Cédula </label>
                                 <div class="input-group" >
                                     <span class="input-group-addon"><i class="fa fa-archive"></i></span>
                                     <input type="text" v-model="data.charter"  class="form-control" >
@@ -20,7 +20,7 @@
                         </div>
                         <div class=" col-lg-3 col-md-3 ">
                             <div class="panel-default ">
-                                <label>Nombres <strong style="background: red" >*</strong></label>
+                                <label>Nombres <strong style="color: red" >*</strong></label>
                                 <div class="input-group" >
                                     <span class="input-group-addon"><i class="fa fa-user"></i></span>
                                     <input type="text" v-model="data.name" class="form-control" >
@@ -29,7 +29,7 @@
                         </div>
                         <div class=" col-lg-3 col-md-3 ">
                             <div class="panel-default ">
-                                <label>Apellidos <strong style="background: red" >*</strong></label>
+                                <label>Apellidos <strong style="color: red" >*</strong></label>
                                 <div class="input-group" >
                                     <span class="input-group-addon"><i class="fa fa-user-circle"></i></span>
                                     <input type="text" v-model="data.last" class="form-control" >
@@ -83,10 +83,19 @@
                         </div>
                         <div class=" col-lg-3 col-md-3 ">
                             <div class="panel-default material">
-                                <label>Estado Civil <strong style="background: red" >*</strong></label>
+                                <label>Estado Civil <strong style="color: red" >*</strong></label>
                                 <div class="input-group" >
                                     <span class="input-group-addon"><i class="fa fa-send"></i></span>
                                     <v-select type="text" v-model="data.civil_status" :options="civil" class="form-control" ></v-select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class=" col-lg-3 col-md-3 ">
+                            <div class="panel-default material">
+                                <label>Estado de Miembro <strong style="color: red" >*</strong></label>
+                                <div class="input-group" >
+                                    <span class="input-group-addon"><i class="fa fa-send"></i></span>
+                                    <v-select type="text" v-model="data.type" :options="types" class="form-control" ></v-select>
                                 </div>
                             </div>
                         </div>
@@ -129,6 +138,7 @@
                          address: '',
                          civil_status: '',
                          phone: '',
+                         type: '',
                          cell: '',
                          email: '',
                          church: false,
@@ -139,6 +149,11 @@
                          {"label":'Divorciado(a)',"value":'Divorciado(a)'},
                          {"label":'Viudo(a)',"value":'Viudo(a)'},
                          {"label":'Union Libre',"value":'Union Libre'},
+
+                     ],
+                     types:[
+                         {"label":'Adventista',"value":'Adventista'},
+                         {"label":'No Adventista',"value":'No Adventista'},
 
                      ]
                  }
@@ -163,6 +178,7 @@
                             this.data.civil_status= '';
                             this.data.phone= '';
                             this.data.cell= '';
+                            this.data.type= '';
                             this.data.email='';
                         }
                     })

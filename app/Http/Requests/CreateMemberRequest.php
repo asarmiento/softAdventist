@@ -24,7 +24,6 @@ class CreateMemberRequest extends FormRequest
     public function rules()
     {
         return [
-            'charter'    =>'required',
             'name'    =>'required',
             'last'      =>'required'
         ];

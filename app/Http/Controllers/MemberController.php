@@ -65,11 +65,11 @@ class MemberController extends Controller
         if ($request->has('perPage')) {
             $perPage = $request->perPage;
         }
-        if(userChurch()) {
+        if (userChurch()) {
             $model = Member::where('church_id', userChurch()->id)->searchPaginateAndOrder($perPage, $request->get('search'));
-        }else{
-            $model = Member::whereHas('church',function ($q){
-                $q->whereHas('district',function ($e){
+        } else {
+            $model = Member::whereHas('church', function ($q) {
+                $q->whereHas('district', function ($e) {
                     $e->where('local_field_id', userCampo());
                 });
             })->searchPaginateAndOrder($perPage, $request->get('search'));
@@ -108,7 +108,7 @@ class MemberController extends Controller
         $data = $this->CreacionArray($data, '');
         $user = User::where('email', $data['email'])->first();
         if (count($user) == 0):
-            if(!empty($data['email'])) {
+            if (!empty($data['email'])) {
                 $user = User::create([
                     'identification_card' => $data['charter'],
                     'name' => $data['name'],
@@ -122,15 +122,18 @@ class MemberController extends Controller
             }
         endif;
 
-            if(is_array($data['civil_status'])) {
-                $data['civil_status'] = $data['civil_status']['value'];
-            }
+        if (is_array($data['civil_status'])) {
+            $data['civil_status'] = $data['civil_status']['value'];
+        }
+        if (is_array($data['type'])) {
+            $data['type'] = $data['type']['value'];
+        }
         $user = User::where('email', currentUser()->email)->first();
-            if(!$data['church']) {
-                $data['church_id'] = userChurch()->id;
-            }else {
-                $data['church_id'] = $data['church']['value'];
-            }
+        if (!$data['church']) {
+            $data['church_id'] = userChurch()->id;
+        } else {
+            $data['church_id'] = $data['church']['value'];
+        }
         $data['user_id'] = $user->id;
         $member = new Member();
         $member->fill($data);
@@ -148,7 +151,7 @@ class MemberController extends Controller
         $data = $this->CreacionArray($data, '');
 
 
-        if(is_array($data['civil_status'])) {
+        if (is_array($data['civil_status'])) {
             $data['civil_status'] = $data['civil_status']['value'];
         }
 
@@ -181,6 +184,7 @@ class MemberController extends Controller
 
         return Member::listsLabelCampo();
     }
+
     public function assistance()
     {
         return view('members.assistance');
