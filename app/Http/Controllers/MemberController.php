@@ -184,7 +184,11 @@ class MemberController extends Controller
 
     public function selectMembers()
     {
+        if (userCampo() > 0) {
+            return Member::listsLabelCampo();
+        }else{
         return Member::listsLabel();
+    }
     }
 
     public function selectMembersCampo()

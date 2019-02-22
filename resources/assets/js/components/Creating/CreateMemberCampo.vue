@@ -86,7 +86,7 @@
                                 <label>Estado Civil <strong style="color: red" >*</strong></label>
                                 <div class="input-group" >
                                     <span class="input-group-addon"><i class="fa fa-send"></i></span>
-                                    <v-select type="text" v-model="data.civil_status" :options="civil" class="form-control" ></v-select>
+                                    <v-select type="text" id="estado" v-model="data.civil_status" :options="civil" class="form-control" ></v-select>
                                 </div>
                             </div>
                         </div>
@@ -104,7 +104,7 @@
                                 <label>Estado de Miembro <strong style="color: red" >*</strong></label>
                                 <div class="input-group" >
                                     <span class="input-group-addon"><i class="fa fa-send"></i></span>
-                                    <v-select type="text" v-model="data.type" :options="types" class="form-control" ></v-select>
+                                    <v-select type="text" id="type" v-model="data.type" :options="types" class="form-control" ></v-select>
                                 </div>
                             </div>
                         </div>
@@ -250,6 +250,12 @@
     .material{
         z-index: 5;
     }
+    #estado{
+        z-index: 6;
+    }
+    #type{
+        z-index: 5;
+    }
     @media only screen and (min-width: 320px) {
         #sale-otro-table {
             display: none;
@@ -261,6 +267,9 @@
 
         h1, h2 {
             font-size: 18px;
+        }
+        #newMembers{
+            min-height: 750px;
         }
 
     }
@@ -274,6 +283,9 @@
         #sale-pc-table {
             display: block;
         }
+        #newMembers{
+            min-height: 750px;
+        }
     }
 
     /* Medium devices (tablets, 768px and up)*/
@@ -285,6 +297,9 @@
         #sale-pc-table {
             display: none;
         }
+        #newMembers{
+            min-height: 750px;
+        }
     }
 
     /* Large devices (desktops, 992px and up)*/
@@ -295,6 +310,9 @@
 
         #sale-pc-table {
             display: none;
+        }
+        #newMembers{
+            min-height: 750px;
         }
     }
 
@@ -311,6 +329,9 @@
 
         #sale-pc-table {
             display: none;
+        }
+        #newMembers{
+            min-height: 750px;
         }
     }
 </style>
