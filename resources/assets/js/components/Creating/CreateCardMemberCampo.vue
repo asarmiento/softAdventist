@@ -17,13 +17,31 @@
                             </div>
                         </div>
                     </div>
+                    <div class=" col-lg-6 col-md-6 col-xs-12 ">
+                        <div class="panel-default ">
+                            <label>Código Guia Mayor</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-archive"></i></span>
+                                <input v-model="data.codeGm" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class=" col-lg-6 col-md-6 col-xs-12 ">
+                        <div class="panel-default ">
+                            <label>Código Lider Juvenil</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-archive"></i></span>
+                                <input v-model="data.codelj" disabled class="form-control">
+                            </div>
+                        </div>
+                    </div>
                     <div class=" col-lg-12 col-md-12 col-xs-12 ">
                     <div class=" col-lg-6 col-md-6 col-xs-12 ">
                         <div class="box ">
                             <div class="input-group col-md-4">
                                 <label style="color:#106BA0;font-size: 16px">Tarjeta de Guia Mayor </label>
                                 <input type="checkbox" v-model="data.cardA" class="amigo">
-                                <img src="/img/Botones/Amigo.gif" class="responsive " width="30" height="30" >
+                                <img src="/img/Botones/Guia Mayor.gif" class="responsive " width="30" height="30" >
                             </div>
                             <label>Fecha de Investidura</label>
                             <div class="input-group col-md-3">
@@ -31,7 +49,7 @@
                                 <input type="date" v-model="data.dateA" class="form-control">
                             </div>
                             <div class="col-md-4 amigo">
-                                <label for="amigo">Adjunte su tarjeta de Amigo </label>
+                                <label for="amigo">Adjunte su tarjeta de Guia Mayor </label>
                                 <input type="file" id="amigo" >
                             </div>
                         </div>
@@ -41,7 +59,7 @@
                             <div class="input-group  col-md-4">
                                 <label style="color:#a01c27 ; font-size: 16px">Tarjeta de Lider Juvenil</label>
                                 <input type="checkbox" v-model="data.cardC">
-                                <img src="/img/Botones/Compañero.gif" class="responsive " width="30" height="30" >
+                                <img src="/img/Botones/Lider Juvenil.gif" class="responsive " width="30" height="30" >
                             </div>
                             <label>Fecha de Investidura</label>
                             <div class="input-group  col-md-3">
@@ -49,7 +67,7 @@
                                 <input type="date" v-model="data.dateC" class="form-control">
                             </div>
                             <div class="input-group companero  col-md-3">
-                                <label for="companero">Adjunte su tarjeta de Compañero </label>
+                                <label for="companero">Adjunte su tarjeta de Lider Juvenil </label>
                                 <input type="file" id="companero">
                             </div>
                         </div>
@@ -62,12 +80,10 @@
                 </div>
                 <div class="col-lg-12 col-md-12  text-center">
                     <div class="btn">
-                        <button v-on:click="send" disabled class="btn btn-success">Guardar</button>
+                        <button v-on:click="send"  class="btn btn-success">Guardar</button>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 </template>
 
 <script>
@@ -85,14 +101,8 @@
                     cardA: false,
                     dateC: '',
                     cardC: false,
-                    dateE: '',
-                    cardE: false,
-                    dateO: '',
-                    cardO: false,
-                    dateV: '',
-                    cardV: false,
-                    dateG: '',
-                    cardG: false,
+                    codeGm: '',
+                    codelj: '',
                 },
                 txtSearch: '',
                 counts: ['5', '10', '20', '50'],
@@ -114,6 +124,10 @@
                 this.listMembers = response.data;
 
             });
+            this.$http.get('/softadventist/code-liderjuvenil').then((response) => {
+                this.data.codelj = response.data;
+
+            });
 
 
         },
@@ -121,7 +135,7 @@
 
             send: function (event) {
 
-                axios.post('/softadventist/save-miembros-card-club', this.data)
+                axios.post('/softadventist/save-miembros-card-club-guia', this.data)
                     .then(response => {
                         if (response.data.success = true) {
                             Swal('Se Guardo con Exito!!!', response.data.message, 'success');

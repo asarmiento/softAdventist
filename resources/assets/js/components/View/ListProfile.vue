@@ -16,9 +16,9 @@
                 </div>
 
                 <!--Accordion content-->
-                <div class="panel-collapse collapse in" :id="items.url">
+                <div class="panel-collapse collapse in" :id="(items.name)">
                     <div class="panel-body">
-                        <div  class="col-sm-4 col-md-3" v-for="itemes in items.member">
+                        <div  class="col-sm-4 col-md-3" v-for="itemes in items.members_c">
 
 
                             <!-- Contact Widget -->
@@ -46,14 +46,13 @@
 
                                     <a href="#">
                                         <img alt="Profile Picture" class="img-lg img-circle mar-ver" src="/img/profile-photos/2.png">
-                                        <p class="text-lg text-semibold mar-no text-main">{{(items.member)}}</p>
-                                        <p class="text-sm">Iglesia: {{items.church}}</p>
+                                        <p class="text-lg text-semibold mar-no text-main">{{(itemes.name)}} {{(itemes.last)}}</p>
                                         <p class="text-sm"><a href="/softadventist/perfile-clubes">Lista de Especialidades</a></p>
                                     </a>
-                                    <div class="pad-top btn-groups" v-if="items.club">
-                                        <a href="#" v-for="card in items.club" class="btn btn-icon  icon-lg add-tooltip"
+                                    <div class="pad-top btn-groups" v-if="itemes.member_club">
+                                        <a href="#" v-for="card in itemes.member_club" class="btn btn-icon  icon-lg add-tooltip"
                                            data-container="body">
-                                            <img :src="urlButton(card)" width="50" height="50">
+                                            <img v-for="buttonT in card.club" :src="urlButton(buttonT)" width="50" height="50">
                                         </a>
 
                                     </div>
@@ -157,10 +156,16 @@
                // self.my_pages = response.data.my_pages;
                // self.columns = response.data.columns;
             });
-
         },
         methods: {
+
+            reducir (card) {
+
+
+               return card.substr(1);
+            },
             urlButton(card) {
+
                 return "/img/Botones/" + card.name + ".gif";
             },
             nameComplate(member) {
@@ -189,7 +194,8 @@
                                 self.errors.response.invalid = true;
                                 self.errors.response.msg = data.msg.message;
                             } else if (error.response.status === 500) {
-                                console.log(data);
+
+
                                 for (var index in data) {
                                     var messages = '';
                                     data[index].forEach(function (item) {
@@ -199,11 +205,9 @@
                                 }
                             }
                         } else if (error.request) {
-                            console.log(error.request);
-                            alert("Error empty");
+                             alert("Error empty");
                         } else {
-                            console.log('Error', error.message);
-                            alert("Error");
+                              alert("Error");
                         }
                     });
             }

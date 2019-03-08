@@ -78588,6 +78588,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -78603,14 +78619,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 cardA: false,
                 dateC: '',
                 cardC: false,
-                dateE: '',
-                cardE: false,
-                dateO: '',
-                cardO: false,
-                dateV: '',
-                cardV: false,
-                dateG: '',
-                cardG: false
+                codeGm: '',
+                codelj: ''
             },
             txtSearch: '',
             counts: ['5', '10', '20', '50'],
@@ -78634,6 +78644,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         this.$http.get('/softadventist/lista-miembros-select').then(function (response) {
             _this.listMembers = response.data;
         });
+        this.$http.get('/softadventist/code-liderjuvenil').then(function (response) {
+            _this.data.codelj = response.data;
+        });
     },
 
     methods: {
@@ -78641,7 +78654,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         send: function send(event) {
             var _this2 = this;
 
-            axios.post('/softadventist/save-miembros-card-club', this.data).then(function (response) {
+            axios.post('/softadventist/save-miembros-card-club-guia', this.data).then(function (response) {
                 if (response.data.success = true) {
                     __WEBPACK_IMPORTED_MODULE_1_sweetalert2___default()('Se Guardo con Exito!!!', response.data.message, 'success');
                     _this2.data.member = '';
@@ -78792,6 +78805,69 @@ var render = function() {
               ])
             ]),
             _vm._v(" "),
+            _c("div", { staticClass: " col-lg-6 col-md-6 col-xs-12 " }, [
+              _c("div", { staticClass: "panel-default " }, [
+                _c("label", [_vm._v("Código Guia Mayor")]),
+                _vm._v(" "),
+                _c("div", { staticClass: "input-group" }, [
+                  _vm._m(2),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.data.codeGm,
+                        expression: "data.codeGm"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    domProps: { value: _vm.data.codeGm },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.data, "codeGm", $event.target.value)
+                      }
+                    }
+                  })
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: " col-lg-6 col-md-6 col-xs-12 " }, [
+              _c("div", { staticClass: "panel-default " }, [
+                _c("label", [_vm._v("Código Lider Juvenil")]),
+                _vm._v(" "),
+                _c("div", { staticClass: "input-group" }, [
+                  _vm._m(3),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.data.codelj,
+                        expression: "data.codelj"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: { disabled: "" },
+                    domProps: { value: _vm.data.codelj },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.data, "codelj", $event.target.value)
+                      }
+                    }
+                  })
+                ])
+              ])
+            ]),
+            _vm._v(" "),
             _c("div", { staticClass: " col-lg-12 col-md-12 col-xs-12 " }, [
               _c("div", { staticClass: " col-lg-6 col-md-6 col-xs-12 " }, [
                 _c("div", { staticClass: "box " }, [
@@ -78849,7 +78925,7 @@ var render = function() {
                     _c("img", {
                       staticClass: "responsive ",
                       attrs: {
-                        src: "/img/Botones/Amigo.gif",
+                        src: "/img/Botones/Guia Mayor.gif",
                         width: "30",
                         height: "30"
                       }
@@ -78859,7 +78935,7 @@ var render = function() {
                   _c("label", [_vm._v("Fecha de Investidura")]),
                   _vm._v(" "),
                   _c("div", { staticClass: "input-group col-md-3" }, [
-                    _vm._m(2),
+                    _vm._m(4),
                     _vm._v(" "),
                     _c("input", {
                       directives: [
@@ -78884,7 +78960,7 @@ var render = function() {
                     })
                   ]),
                   _vm._v(" "),
-                  _vm._m(3)
+                  _vm._m(5)
                 ])
               ]),
               _vm._v(" "),
@@ -78943,7 +79019,7 @@ var render = function() {
                     _c("img", {
                       staticClass: "responsive ",
                       attrs: {
-                        src: "/img/Botones/Compañero.gif",
+                        src: "/img/Botones/Lider Juvenil.gif",
                         width: "30",
                         height: "30"
                       }
@@ -78953,7 +79029,7 @@ var render = function() {
                   _c("label", [_vm._v("Fecha de Investidura")]),
                   _vm._v(" "),
                   _c("div", { staticClass: "input-group  col-md-3" }, [
-                    _vm._m(4),
+                    _vm._m(6),
                     _vm._v(" "),
                     _c("input", {
                       directives: [
@@ -78978,7 +79054,7 @@ var render = function() {
                     })
                   ]),
                   _vm._v(" "),
-                  _vm._m(5)
+                  _vm._m(7)
                 ])
               ])
             ])
@@ -78991,11 +79067,7 @@ var render = function() {
       _c("div", { staticClass: "btn" }, [
         _c(
           "button",
-          {
-            staticClass: "btn btn-success",
-            attrs: { disabled: "" },
-            on: { click: _vm.send }
-          },
+          { staticClass: "btn btn-success", on: { click: _vm.send } },
           [_vm._v("Guardar")]
         )
       ])
@@ -79026,6 +79098,22 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("span", { staticClass: "input-group-addon" }, [
+      _c("i", { staticClass: "fa fa-archive" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "input-group-addon" }, [
+      _c("i", { staticClass: "fa fa-archive" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "input-group-addon" }, [
       _c("i", { staticClass: "fa fa-calendar-o" })
     ])
   },
@@ -79035,7 +79123,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "col-md-4 amigo" }, [
       _c("label", { attrs: { for: "amigo" } }, [
-        _vm._v("Adjunte su tarjeta de Amigo ")
+        _vm._v("Adjunte su tarjeta de Guia Mayor ")
       ]),
       _vm._v(" "),
       _c("input", { attrs: { type: "file", id: "amigo" } })
@@ -79055,7 +79143,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "input-group companero  col-md-3" }, [
       _c("label", { attrs: { for: "companero" } }, [
-        _vm._v("Adjunte su tarjeta de Compañero ")
+        _vm._v("Adjunte su tarjeta de Lider Juvenil ")
       ]),
       _vm._v(" "),
       _c("input", { attrs: { type: "file", id: "companero" } })
@@ -88680,7 +88768,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
 
 
 
@@ -88721,7 +88808,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
 
     methods: {
+        reducir: function reducir(card) {
+
+            return card.substr(1);
+        },
         urlButton: function urlButton(card) {
+
             return "/img/Botones/" + card.name + ".gif";
         },
         nameComplate: function nameComplate(member) {
@@ -88748,7 +88840,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                         self.errors.response.invalid = true;
                         self.errors.response.msg = data.msg.message;
                     } else if (error.response.status === 500) {
-                        console.log(data);
+
                         for (var index in data) {
                             var messages = '';
                             data[index].forEach(function (item) {
@@ -88758,10 +88850,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                         }
                     }
                 } else if (error.request) {
-                    console.log(error.request);
                     alert("Error empty");
                 } else {
-                    console.log('Error', error.message);
                     alert("Error");
                 }
             });
@@ -88813,13 +88903,13 @@ var render = function() {
                   "div",
                   {
                     staticClass: "panel-collapse collapse in",
-                    attrs: { id: items.url }
+                    attrs: { id: items.name }
                   },
                   [
                     _c(
                       "div",
                       { staticClass: "panel-body" },
-                      _vm._l(items.member, function(itemes) {
+                      _vm._l(items.members_c, function(itemes) {
                         return _c("div", { staticClass: "col-sm-4 col-md-3" }, [
                           _c("div", { staticClass: "panel pos-rel" }, [
                             _c("div", { staticClass: "pad-all text-center" }, [
@@ -88840,21 +88930,23 @@ var render = function() {
                                     staticClass:
                                       "text-lg text-semibold mar-no text-main"
                                   },
-                                  [_vm._v(_vm._s(items.member))]
+                                  [
+                                    _vm._v(
+                                      _vm._s(itemes.name) +
+                                        " " +
+                                        _vm._s(itemes.last)
+                                    )
+                                  ]
                                 ),
-                                _vm._v(" "),
-                                _c("p", { staticClass: "text-sm" }, [
-                                  _vm._v("Iglesia: " + _vm._s(items.church))
-                                ]),
                                 _vm._v(" "),
                                 _vm._m(2, true)
                               ]),
                               _vm._v(" "),
-                              items.club
+                              itemes.member_club
                                 ? _c(
                                     "div",
                                     { staticClass: "pad-top btn-groups" },
-                                    _vm._l(items.club, function(card) {
+                                    _vm._l(itemes.member_club, function(card) {
                                       return _c(
                                         "a",
                                         {
@@ -88865,15 +88957,15 @@ var render = function() {
                                             "data-container": "body"
                                           }
                                         },
-                                        [
-                                          _c("img", {
+                                        _vm._l(card.club, function(buttonT) {
+                                          return _c("img", {
                                             attrs: {
-                                              src: _vm.urlButton(card),
+                                              src: _vm.urlButton(buttonT),
                                               width: "50",
                                               height: "50"
                                             }
                                           })
-                                        ]
+                                        })
                                       )
                                     })
                                   )

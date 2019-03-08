@@ -36,6 +36,10 @@ class Church extends Entity
     {
         return $this->hasMany(Member::class);
     }
+    public function membersC()
+    {
+        return $this->hasMany(Member::class)->whereHas('memberClub');
+    }
    public function memberClub()
     {
         return $this->hasMany(MemberClub::class);

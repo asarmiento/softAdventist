@@ -226,6 +226,55 @@ class ClubesController extends Controller
         return response()->json(['success' => false, "message" => $memberClub->errors], 401);
     }
 
+    public function storeMemberCardGuiaLider(Request $request)
+    {
+        $data = $request->all();
+        $member = $data['member'];
+        $IdMember = Member::find($member['value']);
+
+        $church = $IdMember->church_id;
+        $codeGm =null;
+        $codeLj= null;
+        if($data['cardC']){
+            $codeLj = $data['codelj'];
+        }
+        if($data['cardA']){
+            $codeGm = $data['codeGm'];
+        }
+        $dir=NULL;
+        if(MemberClub::where('member_id',$member['value'])->count()>0) {
+            MemberClub::where('member_id',$member['value'])->update(['church_id' => $church]);
+            $id = $member['value'];
+        }else{
+            $memberClub = new MemberClub();
+            $memberClub->member_id = $member['value'];
+            $memberClub->date = Carbon::now()->toDateString();
+            $memberClub->code_gm = $codeGm;
+            $memberClub->code_lj = $codeLj;
+            $memberClub->status = false;
+            $memberClub->club_director_id = $dir;
+            $memberClub->church_id = $church;
+            $memberClub->user_id = Auth::user()->id;
+            $memberClub->save();
+            $id= $memberClub->id;
+        }
+
+        if($id) {
+
+            if($data['cardA']) {
+                MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 13]);
+            }
+            if($data['cardC']) {
+                MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 14]);
+            }
+
+            $memberClub = [];
+            return response()->json(['success' => true, "miembros" => $memberClub], 200);
+        }
+
+        return response()->json(['success' => false, "message" => $memberClub->errors], 401);
+    }
+
     /**
      * @param Request $request
      * @return array
@@ -250,7 +299,7 @@ class ClubesController extends Controller
 
         }else{
 
-            $model = Church::with('members.memberClub.club')->whereHas('district',function ($e){
+            $model = Church::with('membersC.memberClub.club')->whereHas('district',function ($e){
                 $e->where('local_field_id', userCampo());
             })->whereHas('members.memberClub')->search($request->get('search'))->paginate($perPage);
 
@@ -273,7 +322,25 @@ class ClubesController extends Controller
         return $response;
     }
 
+    public function codeLiderJuvenil()
+    {
+        $member = MemberClub::whereHas('church',function ($q){
+            $q->whereHas('district',function ($e){
+                $e->where('local_field_id', userCampo());
+            });
+        })->whereNotNull('code_lj')->count();
+$numero = $member+1;
+        $code = "C1LJ-00001";
+        if($numero < 10) {
+            $code = "C1LJ-0000" . $numero;
+        }elseif($numero < 100){
+            $code = "C1LJ-000" . $numero;
+        }elseif($numero < 1000){
+            $code = "C1LJ-00" . $numero;
+        }
 
+        return $code;
+}
 
 
 }
