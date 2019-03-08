@@ -8,6 +8,7 @@
 
 namespace App\Entities;
 
+use App\Entities\Departaments\MemberClub;
 use App\Traits\DataViewerTraits;
 
 class Member extends Entity
@@ -34,7 +35,7 @@ class Member extends Entity
 
     use DataViewerTraits;
 
-    public static $columns = [ 'charter', 'name', 'last', 'birthdate', 'phone', 'bautizmoDate', 'cell', 'email' ];
+    public static $columns = ['charter', 'name', 'last', 'birthdate', 'phone', 'bautizmoDate', 'cell', 'email'];
 
 
     public function incomes()
@@ -45,7 +46,7 @@ class Member extends Entity
 
     public function nameComplete()
     {
-        return $this->name.'  '.$this->last;
+        return $this->name . '  ' . $this->last;
     }
 
 
@@ -57,7 +58,13 @@ class Member extends Entity
     public function church()
     {
         return $this->belongsTo(Church::class);
-}
+    }
+
+    public function memberClub()
+    {
+        return $this->hasMany(MemberClub::class);
+    }
+
     public function weeklyIncomes()
     {
         return $this->hasMany(WeeklyIncome::getClass());
@@ -73,7 +80,7 @@ class Member extends Entity
     public function localIncomesAccounts()
     {
         return $this->belongsToMany(LocalFieldIncomeAccount::getClass(),
-            'local_field_incomes','church_l_f_income_account')->withPivot('envelope_number', 'balance', 'status');
+            'local_field_incomes', 'church_l_f_income_account')->withPivot('envelope_number', 'balance', 'status');
     }
 
 
@@ -81,51 +88,53 @@ class Member extends Entity
     {
         return $this->hasMany(LocalFieldIncome::getClass());
     }
+
     public static function listsLabel()
     {
-        $members = self::where('church_id',userChurch()->id)->get();
+        $members = self::where('church_id', userChurch()->id)->get();
         $lists = [];
-        foreach ($members AS $member)
-        {
-            array_push($lists, ['label' =>  $member->name.' '.$member->last, 'value' => $member->id]);
+        foreach ($members AS $member) {
+            array_push($lists, ['label' => $member->name . ' ' . $member->last, 'value' => $member->id]);
         }
 
         return $lists;
     }
+
     public static function listsLabelCampo()
     {
-        if(userCampo()) {
+        if (userCampo()) {
             $members = self::whereHas('church', function ($q) {
                 $q->whereHas('district', function ($r) {
                     $r->where('local_field_id', userCampo());
                 });
             })->get();
-        }else {
+        } else {
             $members = self::whereHas('church', function ($q) {
                 $q->whereHas('district', function ($r) {
-                    $r->whereHas('localField',function ($e) {
+                    $r->whereHas('localField', function ($e) {
                         $e->where('union_id', userUnion());
                     });
                 });
             })->get();
         }
         $lists = [];
-        foreach ($members AS $member)
-        {
-            array_push($lists, ['label' =>  $member->name.' '.$member->last, 'value' => $member->id]);
+        foreach ($members AS $member) {
+            array_push($lists, ['label' => $member->name . ' ' . $member->last, 'value' => $member->id]);
         }
 
         return $lists;
     }
-    public function scopeSearch($query, $search){
-        if(trim($search) != ""){
-            $query->where("name","LIKE","%$search%")
-                ->orWhere("last","LIKE","%$search%")
-                ->orWhere("bautizmoDate","LIKE","%$search%")
-                ->orWhere("birthdate","LIKE","%$search%")
-                ->orWhere("phone","LIKE","%$search%")
-                ->orWhere("email","LIKE","%$search%")
-                ->orWhere("charter","LIKE","%$search%");
+
+    public function scopeSearch($query, $search)
+    {
+        if (trim($search) != "") {
+            $query->where("name", "LIKE", "%$search%")
+                ->orWhere("last", "LIKE", "%$search%")
+                ->orWhere("bautizmoDate", "LIKE", "%$search%")
+                ->orWhere("birthdate", "LIKE", "%$search%")
+                ->orWhere("phone", "LIKE", "%$search%")
+                ->orWhere("email", "LIKE", "%$search%")
+                ->orWhere("charter", "LIKE", "%$search%");
         }
 
     }

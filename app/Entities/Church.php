@@ -8,11 +8,14 @@
 
 namespace App\Entities;
 
+use App\Entities\Departaments\MemberClub;
+use App\Traits\DataViewerTraits;
+
 class Church extends Entity
 {
 
     protected $fillable = [ 'name', 'address','phone', 'longitud', 'latitud', 'district_id','url','email','user_id' ];
-
+    use DataViewerTraits;
 
     public function getRules()
     {
@@ -28,6 +31,14 @@ class Church extends Entity
     public function district()
     {
         return $this->belongsTo(District::class);
+    }
+    public function members()
+    {
+        return $this->hasMany(Member::class);
+    }
+   public function memberClub()
+    {
+        return $this->hasMany(MemberClub::class);
     }
     public static function listsLabel()
     {
@@ -62,5 +73,13 @@ class Church extends Entity
         }
 
         return $lists;
+    }
+
+    public function scopeSearch($query, $search){
+        if(trim($search) != ""){
+            $query->where("name","LIKE","%$search%")
+                ->orWhere("phone","LIKE","%$search%");
+        }
+
     }
 }

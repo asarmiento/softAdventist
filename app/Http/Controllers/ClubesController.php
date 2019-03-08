@@ -9,6 +9,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Entities\Church;
 use App\Entities\Departaments\Club;
 use App\Entities\Departaments\ClubCard;
 use App\Entities\Departaments\ClubDirector;
@@ -61,6 +62,10 @@ class ClubesController extends Controller
     public function registerCards()
     {
         return view('clubes.registerCards');
+    }
+     public function registerCardsAventureros()
+    {
+        return view('clubes.registerCardsAventureros');
     }
     public function registerCardsGMLJ()
     {
@@ -166,6 +171,61 @@ class ClubesController extends Controller
         return response()->json(['success' => false, "message" => $memberClub->errors], 401);
     }
 
+    public function storeMemberCardAventureros(Request $request)
+    {
+        $data = $request->all();
+        $member = $data['member'];
+        $IdMember = Member::find($member['value']);
+
+        $church = $IdMember->church_id;
+        $codeGm = null;
+        $codeLj= null;
+        $dir=NULL;
+        if(MemberClub::where('member_id',$member['value'])->count()>0) {
+            MemberClub::where('member_id',$member['value'])->update(['church_id' => $church]);
+            $id = $member['value'];
+        }else{
+            $memberClub = new MemberClub();
+            $memberClub->member_id = $member['value'];
+            $memberClub->date = Carbon::now()->toDateString();
+            $memberClub->code_gm = $codeGm;
+            $memberClub->code_lj = $codeLj;
+            $memberClub->status = false;
+            $memberClub->club_director_id = $dir;
+            $memberClub->church_id = $church;
+            $memberClub->user_id = Auth::user()->id;
+            $memberClub->save();
+            $id= $memberClub->id;
+        }
+
+        if($id) {
+
+            if($data['cardA']) {
+                MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 7]);
+            }
+            if($data['cardC']) {
+                MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 8]);
+            }
+            if($data['cardE']) {
+                MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 9]);
+            }
+            if($data['cardO']) {
+                MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 10]);
+            }
+            if($data['cardV']) {
+                MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 11]);
+            }
+            if($data['cardG']) {
+                MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 12]);
+            }
+
+            $memberClub = [];
+            return response()->json(['success' => true, "miembros" => $memberClub], 200);
+        }
+
+        return response()->json(['success' => false, "message" => $memberClub->errors], 401);
+    }
+
     /**
      * @param Request $request
      * @return array
@@ -180,18 +240,23 @@ class ClubesController extends Controller
         if(userChurch()) {
             $model = MemberClub::with('club')->
             where('church_id', userChurch()->id)->searchPaginateAndOrder($perPage, $request->get('search'));
-        }else{
-            $model = MemberClub::with('club')->whereHas('church',function ($q){
-                $q->whereHas('district',function ($e){
-                    $e->where('local_field_id', userCampo());
-                });
-            })->searchPaginateAndOrder($perPage, $request->get('search'));
-        }
-        $model->map(function ($e){
+            $campo = false;
+
+            $model->map(function ($e){
                 $member = Member::find($e->member_id);
                 $e->member = $member->name.' '.$member->last;
                 $e->church = $member->church->name;
-        });
+            });
+
+        }else{
+
+            $model = Church::with('members.memberClub.club')->whereHas('district',function ($e){
+                $e->where('local_field_id', userCampo());
+            })->whereHas('members.memberClub')->search($request->get('search'))->paginate($perPage);
+
+            $campo = true;
+        }
+
 
 
         $array = $this->myPages($model);
@@ -202,7 +267,8 @@ class ClubesController extends Controller
         $response = [
             'model' => $model,
             'columns' => $columns,
-            'my_pages' => $array
+            'my_pages' => $array,
+            'campo' => $campo
         ];
         return $response;
     }

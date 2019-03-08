@@ -114,7 +114,9 @@ Route::group(['prefix' => 'softadventist', 'middleware' => 'auth'], function () 
     Route::get('registrar-directores-de-clubes', 'ClubesController@registerClubDirector')->name('register-club-director');
     Route::post('store-directores-de-clubes', 'ClubesController@storeDirector');
     Route::post('save-miembros-card-club', 'ClubesController@storeMemberCard');
+    Route::post('save-miembros-card-club-aventureros', 'ClubesController@storeMemberCardAventureros');
     Route::get('registrar-tarjetas-a-jovenes', 'ClubesController@registerCards')->name('register-card-ja');
+    Route::get('registrar-tarjetas-a-aventureros', 'ClubesController@registerCardsAventureros')->name('register-card-aventurero');
     Route::get('registrar-tarjetas-a-jovenes-guia-lider', 'ClubesController@registerCardsGMLJ')->name('register-card-gm-lj');
     Route::get('registrar-especialidades-a-jovenes', 'ClubesController@registerSpecialties')->name('register-specialties-ja');
     /**

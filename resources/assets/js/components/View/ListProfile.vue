@@ -5,7 +5,70 @@
         <div class="col-md-12 ">
             <h1></h1>
         </div>
-        <div class="col-sm-4 col-md-3" v-for="items in datos.data">
+        <div v-if="campo" class="panel-group accordion" id="demo-acc-mix">
+            <div class="panel panel-success " v-for="(items, index) in datos.data">
+
+                <!--Accordion title-->
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-parent="#accordion" data-toggle="collapse" :href="items.url">{{items.name}}</a>
+                    </h4>
+                </div>
+
+                <!--Accordion content-->
+                <div class="panel-collapse collapse in" :id="items.url">
+                    <div class="panel-body">
+                        <div  class="col-sm-4 col-md-3" v-for="itemes in items.member">
+
+
+                            <!-- Contact Widget -->
+                            <!---------------------------------->
+                            <div class="panel pos-rel">
+                                <div class="pad-all text-center">
+
+                                    <div class="widget-control">
+                                        <a href="#" class="add-tooltip btn btn-trans" data-original-title="Favorite">
+                                            <span class="favorite-color text-lg"><i class="demo-psi-star"></i></span>
+
+                                        </a>
+                                        <a href="#" class="add-tooltip btn btn-trans">
+
+                                        </a>
+                                        <div class="btn-group dropdown">
+                                            <a href="#" class="dropdown-toggle btn btn-trans" data-toggle="dropdown"
+                                               aria-expanded="false">
+                                                <i class="pci-ver-dots"></i></a>
+                                            <ul  class="dropdown-menu dropdown-menu-right" style="">
+                                                <li><a href="#"><i class="icon-lg icon-fw demo-pli-recycling"></i> Remove</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <a href="#">
+                                        <img alt="Profile Picture" class="img-lg img-circle mar-ver" src="/img/profile-photos/2.png">
+                                        <p class="text-lg text-semibold mar-no text-main">{{(items.member)}}</p>
+                                        <p class="text-sm">Iglesia: {{items.church}}</p>
+                                        <p class="text-sm"><a href="/softadventist/perfile-clubes">Lista de Especialidades</a></p>
+                                    </a>
+                                    <div class="pad-top btn-groups" v-if="items.club">
+                                        <a href="#" v-for="card in items.club" class="btn btn-icon  icon-lg add-tooltip"
+                                           data-container="body">
+                                            <img :src="urlButton(card)" width="50" height="50">
+                                        </a>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!---------------------------------->
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div v-else class="col-sm-4 col-md-3" v-for="items in datos.data">
 
 
             <!-- Contact Widget -->
@@ -16,24 +79,18 @@
                     <div class="widget-control">
                         <a href="#" class="add-tooltip btn btn-trans" data-original-title="Favorite">
                             <span class="favorite-color text-lg"><i class="demo-psi-star"></i></span>
-                            Guia Mayor
+
                         </a>
                         <a href="#" class="add-tooltip btn btn-trans">
-                            Código: C1MG1514
+
                         </a>
                         <div class="btn-group dropdown">
                             <a href="#" class="dropdown-toggle btn btn-trans" data-toggle="dropdown"
                                aria-expanded="false">
                                 <i class="pci-ver-dots"></i></a>
-                            <ul class="dropdown-menu dropdown-menu-right" style="">
-                                <li><a href="#"><i class="icon-lg icon-fw demo-psi-pen-5"></i> Edit</a></li>
+                            <ul  class="dropdown-menu dropdown-menu-right" style="">
                                 <li><a href="#"><i class="icon-lg icon-fw demo-pli-recycling"></i> Remove</a></li>
-                                <li class="divider"></li>
-                                <li><a href="#"><i class="icon-lg icon-fw demo-pli-mail"></i> Send a Message</a></li>
-                                <li><a href="#"><i class="icon-lg icon-fw demo-pli-calendar-4"></i> View Details</a>
-                                </li>
-                                <li><a href="#"><i class="icon-lg icon-fw demo-pli-lock-user"></i> Lock</a></li>
-                            </ul>
+                           </ul>
                         </div>
                     </div>
 
@@ -86,6 +143,7 @@
                 columns: [],
                 typeAll: true,
                 typeStyle: true,
+                campo: false,
 
             }
         },
@@ -95,6 +153,7 @@
             this.$http.get("/softadventist/data-member-tarjetas").then((response) => {
                 self.datos = response.data.model;
 
+                self.campo = response.data.campo;
                // self.my_pages = response.data.my_pages;
                // self.columns = response.data.columns;
             });

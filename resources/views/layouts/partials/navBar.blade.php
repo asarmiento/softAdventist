@@ -117,15 +117,21 @@
                                             </li>
                                         </ul>
                                     @else
-                                        @if((currentUser()->whereUserBelong->cargo == 'director' || currentUser()->whereUserBelong->cargo == 'departamental' )&&
-                                        currentUser()->whereUserBelong->list_departament_id == 4)
+                                        @if((currentUser()->whereUserBelong->cargo == 'director' || currentUser()->whereUserBelong->cargo == 'departamental' )
+                                        )
                                             <ul class="list-unstyled">
                                                 <li class="dropdown-header">Departamento de Jovenes</li>
                                                 <li><a href="{{route('list-ja')}}">Lista de jovenes</a></li>
                                                 <li><a href="{{route('register-club-director')}}">Registro de
                                                         Directores</a></li>
+                                                @if(currentUser()->whereUserBelong->list_departament_id == 4 || currentUser()->whereUserBelong->list_departament_id == 7 || userCampo())
                                                 <li><a href="{{route('register-card-ja')}}">Registrar Tarjetas a
-                                                        jovenes</a></li>
+                                                        Conquistadores</a></li>
+                                                @endif
+                                                @if(currentUser()->whereUserBelong->list_departament_id == 5 || userCampo())
+                                                <li><a href="{{route('register-card-aventurero')}}">Registrar Tarjetas a
+                                                        Aventureros</a></li>
+                                                @endif
                                                 @if(userCampo())
                                                 <li><a href="{{route('register-card-gm-lj')}}">Registrar de Guia Mayor-Lider Juvenitl</a></li>
                                                 @endif

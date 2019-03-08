@@ -13,7 +13,7 @@ class Assistance extends Entity
 {
     protected $table = 'assists_members_and_visitor';
     
-    protected $fillable = [ 'date', 'time', 'liturgia', 'member_id', 'visitor_id', 'user_id','pray_request','church_id'];
+    protected $fillable = [ 'date', 'time', 'liturgia', 'member_id', 'visitor_id', 'user_id','pray_request'];
 
 
     public function member()
