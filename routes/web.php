@@ -108,6 +108,7 @@ Route::group(['prefix' => 'softadventist', 'middleware' => 'auth'], function () 
     Route::get('lista-perfiles-clubes', 'ClubesController@listProfile')->name('list-ja');
     Route::get('perfile-clubes', 'ClubesController@profile')->name('profile');
     Route::get('lista-director-select', 'ClubesController@listDirector');
+    Route::get('data-directores', 'ClubesController@dataDirectores');
     Route::get('lista-club-select', 'ClubesController@listClubes');
     Route::get('lista-tarjetas-select', 'ClubesController@listClubCard');
     Route::get('data-member-tarjetas', 'ClubesController@getDataMemberClub');
@@ -121,6 +122,7 @@ Route::group(['prefix' => 'softadventist', 'middleware' => 'auth'], function () 
     Route::get('registrar-tarjetas-a-jovenes-guia-lider', 'ClubesController@registerCardsGMLJ')->name('register-card-gm-lj');
     Route::get('registrar-especialidades-a-jovenes', 'ClubesController@registerSpecialties')->name('register-specialties-ja');
     Route::get('code-liderjuvenil', 'ClubesController@codeLiderJuvenil');
+    Route::get('datos-user-connet', 'UserController@userData');
     /**
      * Departamentos
      */

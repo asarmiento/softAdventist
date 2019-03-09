@@ -89383,9 +89383,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 address: '',
                 phone: '',
                 email: ''
-            }
+            },
+            user: ''
 
         };
+    },
+    created: function created() {
+
+        var self = this;
+        this.$http.get("/softadventist/datos-user-connet").then(function (response) {
+            self.user = response.data;
+        });
     },
 
     methods: {
@@ -89451,276 +89459,275 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("div", { staticClass: "row" }, [
+    _c("div", { staticClass: "tab-base" }, [
+      _c("div", [
+        _c("h1", [
+          _vm._v(_vm._s(_vm.user.name) + " " + _vm._s(_vm.user.last_name))
+        ])
+      ]),
+      _vm._v(" "),
+      _vm._m(0),
+      _vm._v(" "),
+      _vm._m(1)
+    ])
+  ])
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "tab-base" }, [
-        _c("div", [_c("h1", [_vm._v("Brenda Fuller")])]),
-        _vm._v(" "),
-        _c("ul", { staticClass: "nav nav-tabs" }, [
-          _c("li", { staticClass: "active" }, [
-            _c(
-              "a",
-              { attrs: { "data-toggle": "tab", href: "#demo-lft-tab-1" } },
-              [_vm._v("Aventurero ")]
-            )
+    return _c("ul", { staticClass: "nav nav-tabs" }, [
+      _c("li", { staticClass: "active" }, [
+        _c("a", { attrs: { "data-toggle": "tab", href: "#demo-lft-tab-1" } }, [
+          _vm._v("Aventurero ")
+        ])
+      ]),
+      _vm._v(" "),
+      _c("li", [
+        _c("a", { attrs: { "data-toggle": "tab", href: "#demo-lft-tab-2" } }, [
+          _vm._v("Conquistadores "),
+          _c("span", { staticClass: "badge badge-purple" }, [_vm._v("3")])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("li", [
+        _c("a", { attrs: { "data-toggle": "tab", href: "#demo-lft-tab-3" } }, [
+          _vm._v("Guias Mayores")
+        ])
+      ]),
+      _vm._v(" "),
+      _c("li", [
+        _c("a", { attrs: { "data-toggle": "tab", href: "#demo-lft-tab-4" } }, [
+          _vm._v("Lider Juvenil")
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "tab-content" }, [
+      _c(
+        "div",
+        {
+          staticClass: "tab-pane fade active in",
+          attrs: { id: "demo-lft-tab-1" }
+        },
+        [
+          _c("p", { staticClass: "text-main text-semibold" }, [
+            _vm._v("Aventurero")
           ]),
           _vm._v(" "),
-          _c("li", [
-            _c(
-              "a",
-              { attrs: { "data-toggle": "tab", href: "#demo-lft-tab-2" } },
-              [
-                _vm._v("Conquistadores "),
-                _c("span", { staticClass: "badge badge-purple" }, [_vm._v("3")])
-              ]
-            )
+          _c("p", [_vm._v("No tiene Registros")])
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "tab-pane fade", attrs: { id: "demo-lft-tab-2" } },
+        [
+          _c("p", { staticClass: "text-main text-semibold" }, [
+            _vm._v("Especialidades Obtenidas")
           ]),
           _vm._v(" "),
-          _c("li", [
-            _c(
-              "a",
-              { attrs: { "data-toggle": "tab", href: "#demo-lft-tab-3" } },
-              [_vm._v("Guias Mayores")]
-            )
-          ]),
-          _vm._v(" "),
-          _c("li", [
-            _c(
-              "a",
-              { attrs: { "data-toggle": "tab", href: "#demo-lft-tab-4" } },
-              [_vm._v("Lider Juvenil")]
-            )
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "tab-content" }, [
-          _c(
-            "div",
-            {
-              staticClass: "tab-pane fade active in",
-              attrs: { id: "demo-lft-tab-1" }
-            },
-            [
-              _c("p", { staticClass: "text-main text-semibold" }, [
-                _vm._v("Aventurero")
+          _c("div", { staticClass: "panel" }, [
+            _c("div", { staticClass: "panel-body demo-liquid-fixed" }, [
+              _c("div", { staticClass: "fixed-fluid" }, [
+                _c(
+                  "div",
+                  {
+                    staticClass: "fixed-sm-250 pull-sm-left",
+                    staticStyle: { "text-align": "center" }
+                  },
+                  [
+                    _c("strong", { staticClass: "text-uppercase" }, [
+                      _c("img", {
+                        attrs: {
+                          src: "/img/especialidades/apicultura.gif",
+                          width: "120",
+                          height: "100"
+                        }
+                      })
+                    ]),
+                    _c("br")
+                  ]
+                ),
+                _vm._v(" "),
+                _c("div", { staticClass: "fluid" }, [
+                  _c("ul", [
+                    _c("li", [
+                      _c("strong", { staticClass: "text-uppercase" }, [
+                        _vm._v("Especialidad : ")
+                      ]),
+                      _vm._v(" Apicultura")
+                    ]),
+                    _vm._v(" "),
+                    _c("li", [
+                      _c("strong", { staticClass: "text-uppercase" }, [
+                        _vm._v("Fecha Finalización: ")
+                      ]),
+                      _vm._v(" 2001-09-25")
+                    ]),
+                    _vm._v(" "),
+                    _c("li", [
+                      _c("strong", { staticClass: "text-uppercase" }, [
+                        _vm._v("Instructor: ")
+                      ]),
+                      _vm._v(" Carlos Alvarado ")
+                    ]),
+                    _vm._v(" "),
+                    _c("li", [
+                      _c("strong", { staticClass: "text-uppercase" }, [
+                        _vm._v("Iglesia: ")
+                      ]),
+                      _vm._v(" Central San Jose ")
+                    ])
+                  ])
+                ])
               ]),
               _vm._v(" "),
-              _c("p", [_vm._v("No tiene Registros")])
-            ]
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "tab-pane fade", attrs: { id: "demo-lft-tab-2" } },
-            [
-              _c("p", { staticClass: "text-main text-semibold" }, [
-                _vm._v("Especialidades Obtenidas")
+              _c("hr"),
+              _vm._v(" "),
+              _c("div", { staticClass: "fixed-fluid" }, [
+                _c(
+                  "div",
+                  {
+                    staticClass: "fixed-sm-250 pull-sm-left",
+                    staticStyle: { "text-align": "center" }
+                  },
+                  [
+                    _c("strong", { staticClass: "text-uppercase" }, [
+                      _c("img", {
+                        attrs: {
+                          src: "/img/especialidades/administración.png",
+                          width: "120",
+                          height: "100"
+                        }
+                      })
+                    ]),
+                    _c("br")
+                  ]
+                ),
+                _vm._v(" "),
+                _c("div", { staticClass: "fluid" }, [
+                  _c("ul", [
+                    _c("li", [
+                      _c("strong", { staticClass: "text-uppercase" }, [
+                        _vm._v("Especialidad : ")
+                      ]),
+                      _vm._v(" Administración")
+                    ]),
+                    _vm._v(" "),
+                    _c("li", [
+                      _c("strong", { staticClass: "text-uppercase" }, [
+                        _vm._v("Fecha Finalización: ")
+                      ]),
+                      _vm._v(" 1998-09-25")
+                    ]),
+                    _vm._v(" "),
+                    _c("li", [
+                      _c("strong", { staticClass: "text-uppercase" }, [
+                        _vm._v("Instructor: ")
+                      ]),
+                      _vm._v(" Glenn Mora ")
+                    ]),
+                    _vm._v(" "),
+                    _c("li", [
+                      _c("strong", { staticClass: "text-uppercase" }, [
+                        _vm._v("Iglesia: ")
+                      ]),
+                      _vm._v(" Hatillo ")
+                    ])
+                  ])
+                ])
               ]),
               _vm._v(" "),
-              _c("div", { staticClass: "panel" }, [
-                _c("div", { staticClass: "panel-body demo-liquid-fixed" }, [
-                  _c("div", { staticClass: "fixed-fluid" }, [
-                    _c(
-                      "div",
-                      {
-                        staticClass: "fixed-sm-250 pull-sm-left",
-                        staticStyle: { "text-align": "center" }
-                      },
-                      [
-                        _c("strong", { staticClass: "text-uppercase" }, [
-                          _c("img", {
-                            attrs: {
-                              src: "/img/especialidades/apicultura.gif",
-                              width: "120",
-                              height: "100"
-                            }
-                          })
-                        ]),
-                        _c("br")
-                      ]
-                    ),
+              _c("hr"),
+              _vm._v(" "),
+              _c("div", { staticClass: "fixed-fluid" }, [
+                _c(
+                  "div",
+                  {
+                    staticClass: "fixed-sm-250 pull-sm-left",
+                    staticStyle: { "text-align": "center" }
+                  },
+                  [
+                    _c("strong", { staticClass: "text-uppercase" }, [
+                      _c("img", {
+                        attrs: {
+                          src: "/img/especialidades/internet-ay-honor_orig.png",
+                          width: "120",
+                          height: "100"
+                        }
+                      })
+                    ]),
+                    _c("br")
+                  ]
+                ),
+                _vm._v(" "),
+                _c("div", { staticClass: "fluid" }, [
+                  _c("ul", [
+                    _c("li", [
+                      _c("strong", { staticClass: "text-uppercase" }, [
+                        _vm._v("Especialidad : ")
+                      ]),
+                      _vm._v(" Internet")
+                    ]),
                     _vm._v(" "),
-                    _c("div", { staticClass: "fluid" }, [
-                      _c("ul", [
-                        _c("li", [
-                          _c("strong", { staticClass: "text-uppercase" }, [
-                            _vm._v("Especialidad : ")
-                          ]),
-                          _vm._v(" Apicultura")
-                        ]),
-                        _vm._v(" "),
-                        _c("li", [
-                          _c("strong", { staticClass: "text-uppercase" }, [
-                            _vm._v("Fecha Finalización: ")
-                          ]),
-                          _vm._v(" 2001-09-25")
-                        ]),
-                        _vm._v(" "),
-                        _c("li", [
-                          _c("strong", { staticClass: "text-uppercase" }, [
-                            _vm._v("Instructor: ")
-                          ]),
-                          _vm._v(" Carlos Alvarado ")
-                        ]),
-                        _vm._v(" "),
-                        _c("li", [
-                          _c("strong", { staticClass: "text-uppercase" }, [
-                            _vm._v("Iglesia: ")
-                          ]),
-                          _vm._v(" Central San Jose ")
-                        ])
-                      ])
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("hr"),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "fixed-fluid" }, [
-                    _c(
-                      "div",
-                      {
-                        staticClass: "fixed-sm-250 pull-sm-left",
-                        staticStyle: { "text-align": "center" }
-                      },
-                      [
-                        _c("strong", { staticClass: "text-uppercase" }, [
-                          _c("img", {
-                            attrs: {
-                              src: "/img/especialidades/administración.png",
-                              width: "120",
-                              height: "100"
-                            }
-                          })
-                        ]),
-                        _c("br")
-                      ]
-                    ),
+                    _c("li", [
+                      _c("strong", { staticClass: "text-uppercase" }, [
+                        _vm._v("Fecha Finalización: ")
+                      ]),
+                      _vm._v(" 2009-10-25")
+                    ]),
                     _vm._v(" "),
-                    _c("div", { staticClass: "fluid" }, [
-                      _c("ul", [
-                        _c("li", [
-                          _c("strong", { staticClass: "text-uppercase" }, [
-                            _vm._v("Especialidad : ")
-                          ]),
-                          _vm._v(" Administración")
-                        ]),
-                        _vm._v(" "),
-                        _c("li", [
-                          _c("strong", { staticClass: "text-uppercase" }, [
-                            _vm._v("Fecha Finalización: ")
-                          ]),
-                          _vm._v(" 1998-09-25")
-                        ]),
-                        _vm._v(" "),
-                        _c("li", [
-                          _c("strong", { staticClass: "text-uppercase" }, [
-                            _vm._v("Instructor: ")
-                          ]),
-                          _vm._v(" Glenn Mora ")
-                        ]),
-                        _vm._v(" "),
-                        _c("li", [
-                          _c("strong", { staticClass: "text-uppercase" }, [
-                            _vm._v("Iglesia: ")
-                          ]),
-                          _vm._v(" Hatillo ")
-                        ])
-                      ])
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("hr"),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "fixed-fluid" }, [
-                    _c(
-                      "div",
-                      {
-                        staticClass: "fixed-sm-250 pull-sm-left",
-                        staticStyle: { "text-align": "center" }
-                      },
-                      [
-                        _c("strong", { staticClass: "text-uppercase" }, [
-                          _c("img", {
-                            attrs: {
-                              src:
-                                "/img/especialidades/internet-ay-honor_orig.png",
-                              width: "120",
-                              height: "100"
-                            }
-                          })
-                        ]),
-                        _c("br")
-                      ]
-                    ),
+                    _c("li", [
+                      _c("strong", { staticClass: "text-uppercase" }, [
+                        _vm._v("Instructor: ")
+                      ]),
+                      _vm._v(" Edy Echenique ")
+                    ]),
                     _vm._v(" "),
-                    _c("div", { staticClass: "fluid" }, [
-                      _c("ul", [
-                        _c("li", [
-                          _c("strong", { staticClass: "text-uppercase" }, [
-                            _vm._v("Especialidad : ")
-                          ]),
-                          _vm._v(" Internet")
-                        ]),
-                        _vm._v(" "),
-                        _c("li", [
-                          _c("strong", { staticClass: "text-uppercase" }, [
-                            _vm._v("Fecha Finalización: ")
-                          ]),
-                          _vm._v(" 2009-10-25")
-                        ]),
-                        _vm._v(" "),
-                        _c("li", [
-                          _c("strong", { staticClass: "text-uppercase" }, [
-                            _vm._v("Instructor: ")
-                          ]),
-                          _vm._v(" Edy Echenique ")
-                        ]),
-                        _vm._v(" "),
-                        _c("li", [
-                          _c("strong", { staticClass: "text-uppercase" }, [
-                            _vm._v("Iglesia: ")
-                          ]),
-                          _vm._v(" UNADECA ")
-                        ])
-                      ])
+                    _c("li", [
+                      _c("strong", { staticClass: "text-uppercase" }, [
+                        _vm._v("Iglesia: ")
+                      ]),
+                      _vm._v(" UNADECA ")
                     ])
                   ])
                 ])
               ])
-            ]
-          ),
+            ])
+          ])
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "tab-pane fade", attrs: { id: "demo-lft-tab-3" } },
+        [
+          _c("p", { staticClass: "text-main text-semibold" }, [
+            _vm._v("Guias Mayores")
+          ]),
           _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "tab-pane fade", attrs: { id: "demo-lft-tab-3" } },
-            [
-              _c("p", { staticClass: "text-main text-semibold" }, [
-                _vm._v("Guias Mayores")
-              ]),
-              _vm._v(" "),
-              _c("p", [_vm._v("No Tiene Registros")])
-            ]
-          ),
+          _c("p", [_vm._v("No Tiene Registros")])
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "tab-pane fade", attrs: { id: "demo-lft-tab-4" } },
+        [
+          _c("p", { staticClass: "text-main text-semibold" }, [
+            _vm._v("Lider Juvenil")
+          ]),
           _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "tab-pane fade", attrs: { id: "demo-lft-tab-4" } },
-            [
-              _c("p", { staticClass: "text-main text-semibold" }, [
-                _vm._v("Lider Juvenil")
-              ]),
-              _vm._v(" "),
-              _c("p", [_vm._v("No Tiene Registros")])
-            ]
-          )
-        ])
-      ])
+          _c("p", [_vm._v("No Tiene Registros")])
+        ]
+      )
     ])
   }
 ]

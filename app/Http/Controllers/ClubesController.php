@@ -15,6 +15,7 @@ use App\Entities\Departaments\ClubCard;
 use App\Entities\Departaments\ClubDirector;
 use App\Entities\Departaments\MemberClub;
 use App\Entities\Departaments\MemberClubByClubCard;
+use App\Entities\LocalFields\LocalField;
 use App\Entities\Member;
 use App\Traits\DataViewerTraits;
 use App\Traits\ListInformMembersTraits;
@@ -63,10 +64,12 @@ class ClubesController extends Controller
     {
         return view('clubes.registerCards');
     }
-     public function registerCardsAventureros()
+
+    public function registerCardsAventureros()
     {
         return view('clubes.registerCardsAventureros');
     }
+
     public function registerCardsGMLJ()
     {
         return view('clubes.registerCardsCampo');
@@ -92,6 +95,7 @@ class ClubesController extends Controller
     {
         return ClubCard::listsLabel();
     }
+
     /**
      * @return array
      */
@@ -114,8 +118,8 @@ class ClubesController extends Controller
             'church_id' => $church['value'],
             'user_id' => Auth::user()->id
         ]);
-        $directors = ClubDirector::with('member','club','church')->where('year',Carbon::now()->year)->get();
-        return response()->json(['success' => true,"directors"=>$directors], 200);
+        $directors = ClubDirector::with('member', 'club', 'church')->where('year', Carbon::now()->year)->get();
+        return response()->json(['success' => true, "directors" => $directors], 200);
     }
 
     public function storeMemberCard(Request $request)
@@ -124,12 +128,12 @@ class ClubesController extends Controller
         $member = $data['member'];
         $church = userChurch()->id;
         $codeGm = null;
-        $codeLj= null;
-        $dir=NULL;
-        if(MemberClub::where('member_id',$member['value'])->count()>0) {
-            MemberClub::where('member_id',$member['value'])->update(['church_id' => $church]);
+        $codeLj = null;
+        $dir = NULL;
+        if (MemberClub::where('member_id', $member['value'])->count() > 0) {
+            MemberClub::where('member_id', $member['value'])->update(['church_id' => $church]);
             $id = $member['value'];
-        }else{
+        } else {
             $memberClub = new MemberClub();
             $memberClub->member_id = $member['value'];
             $memberClub->date = Carbon::now()->toDateString();
@@ -140,27 +144,27 @@ class ClubesController extends Controller
             $memberClub->church_id = $church;
             $memberClub->user_id = Auth::user()->id;
             $memberClub->save();
-            $id= $memberClub->id;
+            $id = $memberClub->id;
         }
 
-        if($id) {
+        if ($id) {
 
-            if($data['cardA']) {
+            if ($data['cardA']) {
                 MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 1]);
             }
-            if($data['cardC']) {
+            if ($data['cardC']) {
                 MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 2]);
             }
-            if($data['cardE']) {
+            if ($data['cardE']) {
                 MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 3]);
             }
-            if($data['cardO']) {
+            if ($data['cardO']) {
                 MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 4]);
             }
-            if($data['cardV']) {
+            if ($data['cardV']) {
                 MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 5]);
             }
-            if($data['cardG']) {
+            if ($data['cardG']) {
                 MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 6]);
             }
 
@@ -179,12 +183,12 @@ class ClubesController extends Controller
 
         $church = $IdMember->church_id;
         $codeGm = null;
-        $codeLj= null;
-        $dir=NULL;
-        if(MemberClub::where('member_id',$member['value'])->count()>0) {
-            MemberClub::where('member_id',$member['value'])->update(['church_id' => $church]);
+        $codeLj = null;
+        $dir = NULL;
+        if (MemberClub::where('member_id', $member['value'])->count() > 0) {
+            MemberClub::where('member_id', $member['value'])->update(['church_id' => $church]);
             $id = $member['value'];
-        }else{
+        } else {
             $memberClub = new MemberClub();
             $memberClub->member_id = $member['value'];
             $memberClub->date = Carbon::now()->toDateString();
@@ -195,27 +199,27 @@ class ClubesController extends Controller
             $memberClub->church_id = $church;
             $memberClub->user_id = Auth::user()->id;
             $memberClub->save();
-            $id= $memberClub->id;
+            $id = $memberClub->id;
         }
 
-        if($id) {
+        if ($id) {
 
-            if($data['cardA']) {
+            if ($data['cardA']) {
                 MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 7]);
             }
-            if($data['cardC']) {
+            if ($data['cardC']) {
                 MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 8]);
             }
-            if($data['cardE']) {
+            if ($data['cardE']) {
                 MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 9]);
             }
-            if($data['cardO']) {
+            if ($data['cardO']) {
                 MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 10]);
             }
-            if($data['cardV']) {
+            if ($data['cardV']) {
                 MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 11]);
             }
-            if($data['cardG']) {
+            if ($data['cardG']) {
                 MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 12]);
             }
 
@@ -233,19 +237,19 @@ class ClubesController extends Controller
         $IdMember = Member::find($member['value']);
 
         $church = $IdMember->church_id;
-        $codeGm =null;
-        $codeLj= null;
-        if($data['cardC']){
+        $codeGm = null;
+        $codeLj = null;
+        if ($data['cardC']) {
             $codeLj = $data['codelj'];
         }
-        if($data['cardA']){
+        if ($data['cardA']) {
             $codeGm = $data['codeGm'];
         }
-        $dir=NULL;
-        if(MemberClub::where('member_id',$member['value'])->count()>0) {
-            MemberClub::where('member_id',$member['value'])->update(['church_id' => $church]);
+        $dir = NULL;
+        if (MemberClub::where('member_id', $member['value'])->count() > 0) {
+            MemberClub::where('member_id', $member['value'])->update(['church_id' => $church]);
             $id = $member['value'];
-        }else{
+        } else {
             $memberClub = new MemberClub();
             $memberClub->member_id = $member['value'];
             $memberClub->date = Carbon::now()->toDateString();
@@ -256,15 +260,15 @@ class ClubesController extends Controller
             $memberClub->church_id = $church;
             $memberClub->user_id = Auth::user()->id;
             $memberClub->save();
-            $id= $memberClub->id;
+            $id = $memberClub->id;
         }
 
-        if($id) {
+        if ($id) {
 
-            if($data['cardA']) {
+            if ($data['cardA']) {
                 MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 13]);
             }
-            if($data['cardC']) {
+            if ($data['cardC']) {
                 MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 14]);
             }
 
@@ -286,20 +290,20 @@ class ClubesController extends Controller
             $perPage = $request->perPage;
         }
 
-        if(userChurch()) {
+        if (userChurch()) {
             $model = MemberClub::with('club')->
             where('church_id', userChurch()->id)->searchPaginateAndOrder($perPage, $request->get('search'));
             $campo = false;
 
-            $model->map(function ($e){
+            $model->map(function ($e) {
                 $member = Member::find($e->member_id);
-                $e->member = $member->name.' '.$member->last;
+                $e->member = $member->name . ' ' . $member->last;
                 $e->church = $member->church->name;
             });
 
-        }else{
+        } else {
 
-            $model = Church::with('membersC.memberClub.club')->whereHas('district',function ($e){
+            $model = Church::with('membersC.memberClub.club')->whereHas('district', function ($e) {
                 $e->where('local_field_id', userCampo());
             })->whereHas('members.memberClub')->search($request->get('search'))->paginate($perPage);
 
@@ -307,6 +311,35 @@ class ClubesController extends Controller
         }
 
 
+        $array = $this->myPages($model);
+
+        $columns = [];
+        $model['per_page'] = $perPage;
+
+        $response = [
+            'model' => $model,
+            'columns' => $columns,
+            'my_pages' => $array,
+            'campo' => $campo
+        ];
+        return $response;
+    }
+public function dataDirectores(Request $request)
+    {
+        $perPage = 10;
+        if ($request->has('perPage')) {
+            $perPage = $request->perPage;
+        }
+
+
+
+            $model = LocalField::with('whereUserBelongs.user','whereUserBelongs.church','whereUserBelongs.listDeparmaent')
+        ->search($request->get('search'))->paginate($perPage);
+
+            $campo = true;
+
+        echo json_encode($model);
+        die;
 
         $array = $this->myPages($model);
 
@@ -324,23 +357,23 @@ class ClubesController extends Controller
 
     public function codeLiderJuvenil()
     {
-        $member = MemberClub::whereHas('church',function ($q){
-            $q->whereHas('district',function ($e){
+        $member = MemberClub::whereHas('church', function ($q) {
+            $q->whereHas('district', function ($e) {
                 $e->where('local_field_id', userCampo());
             });
         })->whereNotNull('code_lj')->count();
-$numero = $member+1;
+        $numero = $member + 1;
         $code = "C1LJ-00001";
-        if($numero < 10) {
+        if ($numero < 10) {
             $code = "C1LJ-0000" . $numero;
-        }elseif($numero < 100){
+        } elseif ($numero < 100) {
             $code = "C1LJ-000" . $numero;
-        }elseif($numero < 1000){
+        } elseif ($numero < 1000) {
             $code = "C1LJ-00" . $numero;
         }
 
         return $code;
-}
+    }
 
 
 }

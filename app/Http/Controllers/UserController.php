@@ -39,4 +39,9 @@ class UserController extends Controller
         }
 
     }
+
+    public function userData()
+    {
+        return currentUser();
+    }
 }

@@ -13,6 +13,7 @@ use App\Entities\Church;
 use App\Entities\Departaments\ListDepartament;
 use App\Entities\Entity;
 use App\Entities\Union;
+use App\Entities\User;
 
 /**
  * Class WhereUserBelong
@@ -38,6 +39,11 @@ class WhereUserBelong extends Entity
     public function union()
     {
         return $this->belongsTo(Union::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function listDeparmaent()

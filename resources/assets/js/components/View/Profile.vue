@@ -3,7 +3,7 @@
     <!---------------------------------->
     <div class="row">
     <div class="tab-base">
-            <div><h1>Brenda Fuller</h1></div>
+            <div><h1>{{user.name}} {{user.last_name}}</h1></div>
         <!--Nav Tabs-->
         <ul class="nav nav-tabs">
             <li class="active">
@@ -106,9 +106,19 @@
                          phone: '',
                          email: '',
                      },
+                     user:''
 
                  }
             },
+        created() {
+
+            var self = this;
+            this.$http.get("/softadventist/datos-user-connet").then((response) => {
+                self.user = response.data;
+
+
+            });
+        },
         methods: {
             send: function (event) {
                 axios.post('/softadventist/save-visitor', this.data)
