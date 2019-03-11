@@ -31,7 +31,7 @@ class UserController extends Controller
             $data['type_user'] = $data['type_user']['value'];
         }
         $data['avatar'] = "";
-        $data['password'] = bcrypt($data['name']);
+        $data['password'] = bcrypt(123456);
         $user = new User();
         $user->fill($data);
         if($user->save()){
