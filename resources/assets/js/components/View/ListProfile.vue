@@ -54,6 +54,7 @@
                                            data-container="body">
                                             <img v-for="buttonT in card.club" :src="urlButton(buttonT)" width="50" height="50">
                                         </a>
+                                        <i>Código:</i>
 
                                     </div>
                                 </div>

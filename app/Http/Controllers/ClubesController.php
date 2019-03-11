@@ -240,10 +240,19 @@ class ClubesController extends Controller
         $codeGm = null;
         $codeLj = null;
         if ($data['cardC']) {
-            $codeLj = $data['codelj'];
+            $protocol = substr($data['codelj'],-5);
+            $conse = substr($data['codelj'],5);
+            $letra = substr($conse,1);
+            $last = Member::find($member['value']);
+            $num = strlen($last);
+            $codeLj = $protocol.substr($last,-($num-1)).$letra;
         }
         if ($data['cardA']) {
-            $codeGm = $data['codeGm'];
+            if($data['notCodeGm']) {
+                $codeGm = $data['codeGm'];
+            }else{
+                $codeGm = $data['codeGm'];
+            }
         }
         $dir = NULL;
         if (MemberClub::where('member_id', $member['value'])->count() > 0) {
