@@ -240,17 +240,18 @@ class ClubesController extends Controller
         $codeGm = null;
         $codeLj = null;
         if ($data['cardC']) {
-            $protocol = substr($data['codelj'],-5);
-            $conse = substr($data['codelj'],5);
-            $letra = substr($conse,1);
-            $last = Member::find($member['value']);
-            $num = strlen($last);
-            $codeLj = $protocol.substr($last,-($num-1)).$letra;
+            $codeLj =$data['codelj'];
         }
         if ($data['cardA']) {
-            if($data['notCodeGm']) {
-                $codeGm = $data['codeGm'];
-            }else{
+            if ($data['notCodeGm']) {
+                $protocol = substr($data['codeGm'], -5);
+                $conse = substr($data['codeGm'], 5);
+                $letra = substr($conse, 1);
+                $last = Member::find($member['value']);
+                $num = strlen($last);
+                $codeGm = $protocol . substr($last, -($num - 1)) . $letra;
+
+            } else {
                 $codeGm = $data['codeGm'];
             }
         }
@@ -333,7 +334,8 @@ class ClubesController extends Controller
         ];
         return $response;
     }
-public function dataDirectores(Request $request)
+
+    public function dataDirectores(Request $request)
     {
         $perPage = 10;
         if ($request->has('perPage')) {
@@ -341,11 +343,10 @@ public function dataDirectores(Request $request)
         }
 
 
+        $model = LocalField::with('whereUserBelongs.user', 'whereUserBelongs.church', 'whereUserBelongs.listDeparmaent')
+            ->search($request->get('search'))->paginate($perPage);
 
-            $model = LocalField::with('whereUserBelongs.user','whereUserBelongs.church','whereUserBelongs.listDeparmaent')
-        ->search($request->get('search'))->paginate($perPage);
-
-            $campo = true;
+        $campo = true;
 
         echo json_encode($model);
         die;

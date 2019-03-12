@@ -78604,6 +78604,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 
@@ -78619,6 +78625,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 cardA: false,
                 dateC: '',
                 cardC: false,
+                notCodeGm: false,
                 codeGm: '',
                 codelj: ''
             },
@@ -78829,6 +78836,54 @@ var render = function() {
                           return
                         }
                         _vm.$set(_vm.data, "codeGm", $event.target.value)
+                      }
+                    }
+                  })
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "panel-default " }, [
+                _c("label", [_vm._v("No tiene Código Guia Mayor")]),
+                _vm._v(" "),
+                _c("div", { staticClass: "input-group" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.data.notCodeGm,
+                        expression: "data.notCodeGm"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: { type: "checkbox" },
+                    domProps: {
+                      checked: Array.isArray(_vm.data.notCodeGm)
+                        ? _vm._i(_vm.data.notCodeGm, null) > -1
+                        : _vm.data.notCodeGm
+                    },
+                    on: {
+                      change: function($event) {
+                        var $$a = _vm.data.notCodeGm,
+                          $$el = $event.target,
+                          $$c = $$el.checked ? true : false
+                        if (Array.isArray($$a)) {
+                          var $$v = null,
+                            $$i = _vm._i($$a, $$v)
+                          if ($$el.checked) {
+                            $$i < 0 &&
+                              _vm.$set(_vm.data, "notCodeGm", $$a.concat([$$v]))
+                          } else {
+                            $$i > -1 &&
+                              _vm.$set(
+                                _vm.data,
+                                "notCodeGm",
+                                $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                              )
+                          }
+                        } else {
+                          _vm.$set(_vm.data, "notCodeGm", $$c)
+                        }
                       }
                     }
                   })
@@ -88768,6 +88823,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 
 
@@ -88957,15 +89015,39 @@ var render = function() {
                                             "data-container": "body"
                                           }
                                         },
-                                        _vm._l(card.club, function(buttonT) {
-                                          return _c("img", {
-                                            attrs: {
-                                              src: _vm.urlButton(buttonT),
-                                              width: "50",
-                                              height: "50"
-                                            }
-                                          })
-                                        })
+                                        [
+                                          _vm._l(card.club, function(buttonT) {
+                                            return _c("img", {
+                                              attrs: {
+                                                src: _vm.urlButton(buttonT),
+                                                width: "50",
+                                                height: "50"
+                                              }
+                                            })
+                                          }),
+                                          _vm._v(" "),
+                                          _c("br"),
+                                          card.code_gm
+                                            ? _c("i", [
+                                                _vm._v(
+                                                  "Código Guia: " +
+                                                    _vm._s(card.code_gm)
+                                                )
+                                              ])
+                                            : _vm._e(),
+                                          _vm._v(" "),
+                                          _c("br"),
+                                          _vm._v(" "),
+                                          card.code_lj
+                                            ? _c("i", [
+                                                _vm._v(
+                                                  "Código Lider: " +
+                                                    _vm._s(card.code_lj)
+                                                )
+                                              ])
+                                            : _vm._e()
+                                        ],
+                                        2
                                       )
                                     })
                                   )

@@ -53,8 +53,10 @@
                                         <a href="#" v-for="card in itemes.member_club" class="btn btn-icon  icon-lg add-tooltip"
                                            data-container="body">
                                             <img v-for="buttonT in card.club" :src="urlButton(buttonT)" width="50" height="50">
+                                        </br><i v-if="card.code_gm"  >Código Guia: {{card.code_gm}}</i>
+                                            </br>    <i v-if="card.code_lj" >Código Lider: {{card.code_lj}}</i>
                                         </a>
-                                        <i>Código:</i>
+
 
                                     </div>
                                 </div>

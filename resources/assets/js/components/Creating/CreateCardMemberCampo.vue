@@ -19,19 +19,19 @@
                     </div>
                     <div class=" col-lg-6 col-md-6 col-xs-12 ">
                         <div class="panel-default ">
+                            <label>No tiene Código Guia Mayor</label>
+                            <div class="input-group">
+                                <input v-model="data.notCodeGm" type="checkbox" />
+                            </div>
+                        </div>
+                        <div class="panel-default ">
                             <label>Código Guia Mayor</label>
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-archive"></i></span>
                                 <input v-model="data.codeGm" class="form-control">
                             </div>
                         </div>
-                        <div class="panel-default ">
-                            <label>No tiene Código Guia Mayor</label>
-                            <div class="input-group">
-                                <span class="input-group-addon"><i class="fa fa-archive"></i></span>
-                                <input v-model="data.notCodeGm" type="checkbox" class="form-control">
-                            </div>
-                        </div>
+
                     </div>
                     <div class=" col-lg-6 col-md-6 col-xs-12 ">
                         <div class="panel-default ">
