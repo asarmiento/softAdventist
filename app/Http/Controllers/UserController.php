@@ -37,11 +37,28 @@ class UserController extends Controller
         if($user->save()){
             return response()->json(['success'=>true],200);
         }
-
+        return response()->json(['success'=>false, 'message'=>$user->errors],401);
     }
 
     public function userData()
     {
         return currentUser();
+    }
+
+    public function updateClaveUser()
+    {
+        return view('auth.updateClaveUser');
+    }
+
+    public function update(Request $request)
+    {
+        $data = $request->all();
+        if(empty($data['password'])){
+            return response()->json(['success'=>true,'message'=>'No se permite Contraseña en Blanco'],401);
+        }
+        if(User::where('id',$data['usuario']['value'])->update(['password'=>bcrypt($data['password'])])){
+            return response()->json(['success'=>true],200);
+        }
+        return response()->json(['success'=>false],401);
     }
 }

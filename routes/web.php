@@ -244,7 +244,7 @@ Route::group(['prefix' => 'softadventist', 'middleware' => 'auth'], function () 
     Route::get('lista-miembros11', ['uses' => 'MemberController@index', 'as' => 'change-status']);
     Route::get('lista-miembro3s', ['uses' => 'MemberController@index', 'as' => 'create-cta-ing']);
     Route::get('lista-miembro4s', ['uses' => 'MemberController@index', 'as' => 'list-cta-gto']);
-    Route::get('lista-miembro6s', ['uses' => 'MemberController@index', 'as' => 'list-info-week']);
+    Route::get('actualizar-clave-de-usuario', 'UserController@updateClaveUser')->name('editar-clave-user');
     //Reportes
     Route::get('reporte-semanal/{token}', ['uses' => 'ReportPdfController@infoSemanal', 'as' => 'reportWeekly']);
     Route::get('reporte-semanal-email/{token}', ['uses' => 'ReportPdfController@infoSemanalEmail', 'as' => 'reportWeeklyEmail']);
@@ -255,6 +255,7 @@ Route::group(['prefix' => 'softadventist', 'middleware' => 'auth'], function () 
      * Secretaria
      */
     Route::post('store-usuarios', 'UserController@store');
+    Route::post('update-usuarios', 'UserController@update');
     Route::get('crear/usuarios', 'UserController@create')->name('createUser');
     Route::get('lista-user-select', 'UserController@labelSelect');
     Route::get('lista-churchs-select', 'Church\ChurchController@listsSelect');

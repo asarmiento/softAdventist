@@ -202,38 +202,29 @@
                             this.data.email='';
                         }
                     })
-                .catch(function (error) {
-                    if (error.response) {
-                        let data = error.response.data;
-                        if(error.response.status === 422)
-                        {
-                            for(var index in data)
-                            {
-                                var messages = '';
-                                data[index].forEach( function(item){ messages += item + ' '});
-                                self.errors[index] = messages;
+                    .catch(function (error) {
+                        if (error.response) {
+                            let data = error.response.data;
+                            if (error.response.status === 422) {
+                                for (var index in data) {
+                                    var messages = '';
+                                    data[index].forEach(function (item) {
+                                        messages += item + ' '
+                                    });
+                                    self.errors[index] = messages;
+                                }
+                                Swal('!Ooop',error.response.data.message,'error');
+                            } else if (error.response.status === 401) {
+                                Swal('!Ooop',error.response.data.message,'error');
+                            } else if (error.response.status === 500) {
+                                Swal('!Ooop',error.response.data.message,'error');
                             }
-                        }else if(error.response.status === 401){
-                            self.errors.response.invalid = true;
-                            self.errors.response.msg = data.msg.message;
-                        }else if(error.response.status === 500)
-                        {
-                            console.log(data);
-                            for(var index in data)
-                            {
-                                var messages = '';
-                                data[index].forEach( function(item){ messages += item + ' '});
-                                self.errors[index] = messages;
-                            }
+                        } else if (error.request) {
+                            Swal('!Ooop',error.response.data.message,'error');
+                        } else {
+                            Swal('!Ooop',error.response.data.message,'error');
                         }
-                    } else if (error.request) {
-                        console.log(error.request);
-                        alert("Error empty");
-                    } else {
-                        console.log('Error', error.message);
-                        alert("Error");
-                    }
-                });
+                    });
             }
         },
 

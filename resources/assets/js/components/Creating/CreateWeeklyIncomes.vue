@@ -230,6 +230,7 @@
     import vSelect from "vue-select";
     import {Confirm} from '@lassehaslev/vue-confirm';
     import numeral from 'numeral';
+    import Swal from 'sweetalert2'
 
     export default {
         props: [
@@ -239,7 +240,7 @@
             'account_incomes',
             'account_local_fields',
         ],
-        components: {vSelect},
+        components: {vSelect,Swal},
         data() {
             return {
                 data: {
@@ -359,25 +360,16 @@
                                 });
                                 self.errors[index] = messages;
                             }
+                            Swal('!Ooop',error.response.data.message,'error');
                         } else if (error.response.status === 401) {
-                            self.errors.response.invalid = true;
-                            self.errors.response.msg = data.msg.message;
+                            Swal('!Ooop',error.response.data.message,'error');
                         } else if (error.response.status === 500) {
-                            console.log(data);
-                            for (var index in data) {
-                                var messages = '';
-                                data[index].forEach(function (item) {
-                                    messages += item + ' '
-                                });
-                                self.errors[index] = messages;
-                            }
+                            Swal('!Ooop',error.response.data.message,'error');
                         }
                     } else if (error.request) {
-                        console.log(error.request);
-                        alert("Error empty");
+                        Swal('!Ooop',error.response.data.message,'error');
                     } else {
-                        console.log('Error', error.message);
-                        alert("Error");
+                        Swal('!Ooop',error.response.data.message,'error');
                     }
                 });
             },

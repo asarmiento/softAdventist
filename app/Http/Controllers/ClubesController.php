@@ -240,29 +240,44 @@ class ClubesController extends Controller
         $codeGm = null;
         $codeLj = null;
         if ($data['cardC']) {
-            $codeLj =$data['codelj'];
+
+                $last = Member::find($member['value']);
+                $explode = explode('-',$data['codelj']);
+                $protocol = $explode[0];
+                $conse = $explode[1];
+                $letra = substr($conse, 1);
+                $num = strlen($last->last);
+
+            $codeLj = $protocol.'-' . ucfirst(substr($last->last, -($num ),1)) . $letra;
+
+
         }
+        $type_gm=false;
         if ($data['cardA']) {
             if ($data['notCodeGm']) {
-                $protocol = substr($data['codeGm'], -5);
-                $conse = substr($data['codeGm'], 5);
-                $letra = substr($conse, 1);
-                $last = Member::find($member['value']);
-                $num = strlen($last);
-                $codeGm = $protocol . substr($last, -($num - 1)) . $letra;
-
+                $type_gm = true;
+                $codeGm = $this->codeGuiaMayor();
             } else {
+                $type_gm=false;
                 $codeGm = $data['codeGm'];
             }
         }
         $dir = NULL;
+
         if (MemberClub::where('member_id', $member['value'])->count() > 0) {
-            MemberClub::where('member_id', $member['value'])->update(['church_id' => $church]);
+            MemberClub::where('member_id', $member['value'])
+                ->update([
+                    'church_id' => $church,
+                'type_gm' => $type_gm,
+                'code_gm' => $codeGm,
+                'code_lj' => $codeLj,
+                    ]);
             $id = $member['value'];
         } else {
             $memberClub = new MemberClub();
             $memberClub->member_id = $member['value'];
             $memberClub->date = Carbon::now()->toDateString();
+            $memberClub->type_gm = $type_gm;
             $memberClub->code_gm = $codeGm;
             $memberClub->code_lj = $codeLj;
             $memberClub->status = false;
@@ -380,6 +395,28 @@ class ClubesController extends Controller
             $code = "C1LJ-000" . $numero;
         } elseif ($numero < 1000) {
             $code = "C1LJ-00" . $numero;
+        }
+
+        return $code;
+    }
+    public function codeGuiaMayor()
+    {
+        $member = MemberClub::whereHas('church', function ($q) {
+            $q->whereHas('district', function ($e) {
+                $e->where('local_field_id', userCampo());
+            });
+        })->whereNotNull('code_gm')->where('type_gm',true)->max('code_gm');
+
+       $count  = MemberClub::whereHas('church', function ($q) {
+        $q->whereHas('district', function ($e) {
+            $e->where('local_field_id', userCampo());
+        });
+    })->whereNotNull('code_gm')->where('type_gm',true)->count();
+        $code = "C1GM-1617";
+
+        if ($count > 0) {
+            $numero = explode('-',$member);
+            $code = "C1GM-" . (int)($numero[1]+1);
         }
 
         return $code;

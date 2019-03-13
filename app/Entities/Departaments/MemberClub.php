@@ -18,7 +18,7 @@ class MemberClub extends Entity
 {
     protected $table='members_in_clubs';
 
-    protected $fillable = ['code_gm', 'code_lj', 'date', 'status', 'member_id', 'club_director_id', 'church_id', 'user_id'];
+    protected $fillable = ['code_gm', 'code_lj','type_gm', 'date', 'status', 'member_id', 'club_director_id', 'church_id', 'user_id'];
 
     use DataViewerTraits;
 

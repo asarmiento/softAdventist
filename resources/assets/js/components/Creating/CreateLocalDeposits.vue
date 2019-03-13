@@ -40,10 +40,10 @@
                     </div>
                     <div class=" col-lg-3 col-md-3  " :class="{'has-feedback has-error':errors.bank_id.length > 0}">
                         <div class="panel-default ">
-                            <label for="data.bank_id">Cuenta Bancaria</label>
+                            <label for="bank_id">Cuenta Bancaria</label>
                             <div class="input-group ">
                                 <span class="input-group-addon"><i class="fa fa-bank"></i></span>
-                                <v-select v-model="data.bank_id" :options="all_banks"></v-select>
+                                <v-select id="bank_id" v-model="data.bank_id" :options="all_banks"></v-select>
                             </div>
                             <small class="help-block">{{errors.bank_id}}</small>
                         </div>
@@ -168,10 +168,11 @@
     import vSelect from "vue-select";
     import myDatepicker  from "vue-datepicker";
     import {Confirm} from '@lassehaslev/vue-confirm';
+    import Swal from 'sweetalert2'
 
     export default {
         props: ['title', 'url', 'banks'],
-        components: {vSelect, myDatepicker},
+        components: {vSelect, myDatepicker,Swal},
         data () {
             return {
                 data: {
@@ -233,7 +234,7 @@
                         this.all_depositos.splice(index, 1);
                     }).catch(function (error) {
                     if (error.response) {
-                        let data = error.response.campo;
+                        let data = error.response.data;
                         if (error.response.status === 422) {
                             for (var index in data) {
                                 var messages = '';
@@ -242,25 +243,16 @@
                                 });
                                 self.errors[index] = messages;
                             }
+                            Swal('!Ooop',error.response.data.message,'error');
                         } else if (error.response.status === 401) {
-                            self.errors.response.invalid = true;
-                            self.errors.response.msg = data.msg.message;
+                            Swal('!Ooop',error.response.data.message,'error');
                         } else if (error.response.status === 500) {
-                            console.log(data);
-                            for (var index in data) {
-                                var messages = '';
-                                data[index].forEach(function (item) {
-                                    messages += item + ' '
-                                });
-                                self.errors[index] = messages;
-                            }
+                            Swal('!Ooop',error.response.data.message,'error');
                         }
                     } else if (error.request) {
-                        console.log(error.request);
-                        alert("Error empty");
+                        Swal('!Ooop',error.response.data.message,'error');
                     } else {
-                        console.log('Error', error.message);
-                        alert("Error");
+                        Swal('!Ooop',error.response.data.message,'error');
                     }
                 });
             },
@@ -301,25 +293,25 @@
                         }
                     }).catch(function (error) {
                     if (error.response) {
-
                         let data = error.response.data;
                         if (error.response.status === 422) {
-                            self.$alert({
-                                title: 'Error al Intentar guardar!!!',
-                                message: error.response.data.message
-                            });
+                            for (var index in data) {
+                                var messages = '';
+                                data[index].forEach(function (item) {
+                                    messages += item + ' '
+                                });
+                                self.errors[index] = messages;
+                            }
+                            Swal('!Ooop',error.response.data.message,'error');
                         } else if (error.response.status === 401) {
-                            self.errors.response.invalid = true;
-                            self.errors.response.msg = data.msg.message;
-
+                            Swal('!Ooop',error.response.data.message,'error');
+                        } else if (error.response.status === 500) {
+                            Swal('!Ooop',error.response.data.message,'error');
                         }
-
                     } else if (error.request) {
-                        console.log(error.request);
-                        alert("Error empty");
+                        Swal('!Ooop',error.response.data.message,'error');
                     } else {
-                        console.log('Error', error.message);
-                        alert("Error");
+                        Swal('!Ooop',error.response.data.message,'error');
                     }
                 });
             }

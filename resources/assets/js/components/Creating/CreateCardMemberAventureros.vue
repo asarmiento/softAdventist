@@ -261,25 +261,16 @@
                                     });
                                     self.errors[index] = messages;
                                 }
+                                Swal('!Ooop',error.response.data.message,'error');
                             } else if (error.response.status === 401) {
-                                self.errors.response.invalid = true;
-                                self.errors.response.msg = data.msg.message;
+                                Swal('!Ooop',error.response.data.message,'error');
                             } else if (error.response.status === 500) {
-                                console.log(data);
-                                for (var index in data) {
-                                    var messages = '';
-                                    data[index].forEach(function (item) {
-                                        messages += item + ' '
-                                    });
-                                    self.errors[index] = messages;
-                                }
+                                Swal('!Ooop',error.response.data.message,'error');
                             }
                         } else if (error.request) {
-                            console.log(error.request);
-                            alert("Error empty");
+                            Swal('!Ooop',error.response.data.message,'error');
                         } else {
-                            console.log('Error', error.message);
-                            alert("Error");
+                            Swal('!Ooop',error.response.data.message,'error');
                         }
                     });
             }

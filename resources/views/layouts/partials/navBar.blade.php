@@ -134,6 +134,7 @@
                                                 @endif
                                                 @if(userCampo())
                                                 <li><a href="{{route('register-card-gm-lj')}}">Registrar de Guia Mayor-Lider Juvenitl</a></li>
+                                                <li><a href="{{route('editar-clave-user')}}">Cambio de Contraseña a Usuarios</a></li>
                                                 @endif
                                                 <li><a href="{{route('register-specialties-ja')}}">Registrar
                                                         Especialidades a jovenes</a></li>
