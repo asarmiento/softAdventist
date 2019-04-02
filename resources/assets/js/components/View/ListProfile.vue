@@ -169,7 +169,7 @@
             },
             urlButton(card) {
 
-                return "/img/Botones/" + card.name + ".gif";
+                return "/img/Botones/" + card.url_card;
             },
             nameComplate(member) {
                 return member;

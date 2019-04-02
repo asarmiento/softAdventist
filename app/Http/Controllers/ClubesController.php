@@ -126,10 +126,14 @@ class ClubesController extends Controller
     {
         $data = $request->all();
         $member = $data['member'];
-        $church = userChurch()->id;
+        $IdMember = Member::find($member['value']);
+
+        $church = $IdMember->church_id;
+        $member = $data['member'];
         $codeGm = null;
         $codeLj = null;
         $dir = NULL;
+        $type_gm=false;
         if (MemberClub::where('member_id', $member['value'])->count() > 0) {
             MemberClub::where('member_id', $member['value'])->update(['church_id' => $church]);
             $id = $member['value'];
@@ -141,6 +145,7 @@ class ClubesController extends Controller
             $memberClub->code_lj = $codeLj;
             $memberClub->status = false;
             $memberClub->club_director_id = $dir;
+            $memberClub->type_gm = $type_gm;
             $memberClub->church_id = $church;
             $memberClub->user_id = Auth::user()->id;
             $memberClub->save();
