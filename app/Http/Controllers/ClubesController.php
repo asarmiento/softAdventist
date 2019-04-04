@@ -315,7 +315,7 @@ class ClubesController extends Controller
      */
     public function getDataMemberClub(Request $request)
     {
-        $perPage = 10;
+        $perPage = 50;
         if ($request->has('perPage')) {
             $perPage = $request->perPage;
         }
@@ -368,8 +368,7 @@ class ClubesController extends Controller
 
         $campo = true;
 
-        echo json_encode($model);
-        die;
+
 
         $array = $this->myPages($model);
 
