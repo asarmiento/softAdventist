@@ -72,6 +72,12 @@ Route::get('paises', ['uses' => 'CountryController@index', 'as' => 'country']);
 Route::get('list-localfields-all', ['uses' => 'LocalField\LocalFieldController@index', 'as' => 'union']);
 Route::get('list-unions-country/{token}', ['uses' => 'UnionController@index', 'as' => 'country']);
 Route::post('save-church-public', ['uses' => 'Church\ChurchController@store', 'as' => 'save-church-public']);
+/**
+ * Publicas rutas
+ */
+
+Route::get('data-member-tarjetas-public', 'PublicController@getDataMemberClubPublic');
+Route::get('lista-conquistadores-y-guias-mayores', 'PublicController@memberPublic');
 
 Route::group(['prefix' => 'softadventist', 'middleware' => 'auth'], function () {
 

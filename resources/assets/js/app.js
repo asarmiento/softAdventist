@@ -65,6 +65,7 @@ Vue.component('listsInternalControls', require('./components/Lists/ListsInternal
 Vue.component('listsDepartaments', require('./components/Lists/ListsDepartaments.vue'));
 Vue.component('listsCheckExpenses', require('./components/Lists/ListsCheckExpenses.vue'));
 Vue.component('listsProfile', require('./components/View/ListProfile.vue'));
+Vue.component('listsProfilePublic', require('./components/View/ListProfilePublic.vue'));
 Vue.component('viewProfile', require('./components/View/Profile.vue'));
 /**
  * Otros fromularios

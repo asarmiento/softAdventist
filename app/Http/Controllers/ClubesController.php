@@ -355,6 +355,9 @@ class ClubesController extends Controller
         return $response;
     }
 
+
+
+
     public function dataDirectores(Request $request)
     {
         $perPage = 10;
