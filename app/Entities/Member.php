@@ -30,6 +30,7 @@ class Member extends Entity
         'email',
         'church_id',
         'token',
+        'blood_type',
         'user_id'
     ];
 

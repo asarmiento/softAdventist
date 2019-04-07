@@ -79,6 +79,24 @@
                             </div>
                         </div>
                     </div>
+                        <div class=" col-lg-6 col-md-6 col-xs-12  ">
+                        <div class="panel-default ">
+                            <div class="input-group  col-md-4">
+                                <label style="color:#9c9d2f; font-size: 16px">Certificación Guia Mayor</label>
+                                <input type="checkbox" v-model="data.cardO">
+                                <img src="/img/Botones/cetificacion_guia_mayor.jpg" class="responsive " width="30" height="30" >
+                            </div>
+                            <label>Fecha de Certificación</label>
+                            <div class="input-group  col-md-3">
+                                <span class="input-group-addon"><i class="fa fa-calendar-o"></i></span>
+                                <input type="date" v-model="data.dateO" class="form-control">
+                            </div>
+                            <div class="input-group cguiaMayor  col-md-3">
+                                <label for="cguiaMayor">Adjunte su tarjeta de Certificación Guia Mayor </label>
+                                <input type="file" id="cguiaMayor">
+                            </div>
+                        </div>
+                    </div>
 
                         </div>
                     </div>
@@ -108,6 +126,8 @@
                     cardA: false,
                     dateC: '',
                     cardC: false,
+                    dateO: '',
+                    cardO: false,
                     notCodeGm: false,
                     codeGm: '',
                     codelj: '',

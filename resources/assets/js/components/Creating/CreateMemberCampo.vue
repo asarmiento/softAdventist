@@ -108,6 +108,14 @@
                                 </div>
                             </div>
                         </div>
+                        <div class=" col-lg-3 col-md-3 ">
+                            <div class="panel-default material">
+                                <label>Tipo de Sangre </label>
+                                <div class="input-group" >
+                                    <span class="input-group-addon"><i class="fa fa-send"></i></span>
+                                    <input type="text" v-model="data.blood_type" class="form-control" maxlength="3" > </div>
+                            </div>
+                        </div>
                         <div class=" col-lg-6 col-md-6 ">
                             <div class="panel-default ">
                                 <label>Iglesia <strong style="color: red" >*</strong></label>
@@ -149,6 +157,7 @@
                          phone: '',
                          type: '',
                          cell: '',
+                         blood_type: '',
                          email: '',
                          church: '',
                      },
@@ -197,6 +206,7 @@
                             this.data.address= '';
                             this.data.civil_status= '';
                             this.data.phone= '';
+                            this.data.blood_type= '';
                             this.data.cell= '';
                             this.data.type= '';
                             this.data.email='';

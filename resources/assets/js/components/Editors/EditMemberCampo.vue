@@ -90,6 +90,15 @@
                                 </div>
                             </div>
                         </div>
+                        <div class=" col-lg-6 col-md-6 ">
+                            <div class="panel-default ">
+                                <label>Iglesia <strong style="color: red" >*</strong></label>
+                                <div class="input-group" >
+                                    <span class="input-group-addon"><i class="fa fa-send"></i></span>
+                                    <v-select type="text" v-model="data.church" :options="churches" class="form-control" ></v-select>
+                                </div>
+                            </div>
+                        </div>
                         <div class=" col-lg-3 col-md-3 ">
                             <div class="panel-default material">
                                 <label>Tipo de Sangre </label>
@@ -139,8 +148,9 @@
                          civil_status: '',
                          phone: '',
                          cell: '',
-                         blood_type: '',
                          email: '',
+                         blood_type: '',
+                         church: '',
                          id: '',
                          church_id: '',
                      },
@@ -152,11 +162,15 @@
                          {"label":'Union Libre',"value":'Union Libre'},
 
                      ],
-
+                     churches:[],
                  }
             },
         created(){
-                console.log(this.member);
+            this.$http.get('/softadventist/lista-churchs-select-campos').then((response) => {
+                this.churches = response.data;
+
+            });
+                console.log(this.churches);
 
                 this.data.charter = this.member.charter;
                 this.data.id = this.member.id;
@@ -166,10 +180,10 @@
                 this.data.birthdate = this.member.birthdate;
                 this.data.address = this.member.address;
                 this.data.phone = this.member.phone;
-                this.data.blood_type = this.member.blood_type;
                 this.data.cell = this.member.cell;
+                this.data.blood_type = this.member.blood_type;
                 this.data.user_id = this.member.user_id;
-                this.data.church_id = this.member.church_id;
+                this.data.church = this.member.church_id;
                 this.data.email = this.member.email;
                 this.data.civil_status = {"label":this.member.civil_status,"value":this.member.civil_status};
         },

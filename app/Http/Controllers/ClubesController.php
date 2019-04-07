@@ -172,6 +172,12 @@ class ClubesController extends Controller
             if ($data['cardG']) {
                 MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 6]);
             }
+if ($data['cardMP']) {
+                MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 17]);
+            }
+if ($data['cardMO']) {
+                MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 18]);
+            }
 
             $memberClub = [];
             return response()->json(['success' => true, "miembros" => $memberClub], 200);
@@ -300,6 +306,9 @@ class ClubesController extends Controller
             }
             if ($data['cardC']) {
                 MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 14]);
+            }
+            if ($data['cardO']) {
+                MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 16]);
             }
 
             $memberClub = [];

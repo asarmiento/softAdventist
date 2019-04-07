@@ -109,7 +109,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class=" col-lg-12 col-md-12 col-xs-12  ">
+                        <div class=" col-lg-12 col-md-12 col-xs-12  ">
                         <div class="panel-default col-md-4  col-xs-12 ">
                             <div class="input-group">
                                 <label style="color:#0f023f; font-size: 16px; ">Tarjeta de Guia</label>
@@ -159,8 +159,108 @@
                             </div>
                         </div>
                     </div>
+                        <div class=" col-lg-12 col-md-12 col-xs-12  ">
+                            <div class="panel-default col-md-4  col-xs-12 ">
+                                <div class="input-group">
+                                    <label style="color:#0f023f; font-size: 16px; ">Tarjeta de Medalla de Plata</label>
+                                    <input type="checkbox" v-model="data.cardMP">
+                                    <img src="/img/Botones/medallon_de_plata.jpeg" class="responsive " width="30" height="30" >
+                                </div>
+                                <label>Fecha de Investidura</label>
+                                <div class="input-group col-md-3  col-xs-12">
+                                    <span class="input-group-addon"><i class="fa fa-calendar-o"></i></span>
+                                    <input type="date" v-model="data.dateMP" class="form-control">
+                                </div>
+                                <div class="input-group  col-md-3  col-xs-12">
+                                    <label for="MP">Adjunte su tarjeta de Medalla de Plata </label>
+                                    <input type="file" id="MP"  name="items" >
+                                </div>
+                            </div>
+                            <div id="dz-previews">
+                                <div  class="pad-top bord-top dz-image-preview">
+                                    <div class="media" v-if="itemsNames">
+                                        <div class="media-body">
+                                            <!--This is used as the file preview template-->
+                                            <div class="media-block">
+                                                <div class="media-body">
+                                                    <p class="text-main text-bold mar-no text-overflow" data-dz-name="">
+                                                        {{itemsNames}}</p>
+                                                    <span class="dz-error text-danger text-sm"
+                                                          data-dz-errormessage=""></span>
+                                                    <p class="text-sm" data-dz-size=""><strong>{{itemsSizes}}</strong>
+                                                    </p>
+                                                    <div id="dz-total-progress" style="opacity:50">
+                                                        <div class="progress progress-xs active" role="progressbar"
+                                                             aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                                                            <div class="progress-bar progress-bar-success"
+                                                                 style="width:15%;"
+                                                                 data-dz-uploadprogress=""></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="media-right">
+                                            <button data-dz-remove="" @click="removeItems"
+                                                    class="btn btn-xs btn-danger dz-cancel">
+                                                <i class="demo-pli-cross"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class=" col-lg-12 col-md-12 col-xs-12  ">
+                            <div class="panel-default col-md-4  col-xs-12 ">
+                                <div class="input-group">
+                                    <label style="color:#0f023f; font-size: 16px; ">Tarjeta de Medalla de Oro</label>
+                                    <input type="checkbox" v-model="data.cardMO">
+                                    <img src="/img/Botones/medallon_de_oro.jpeg" class="responsive " width="30" height="30" >
+                                </div>
+                                <label>Fecha de Investidura</label>
+                                <div class="input-group col-md-3  col-xs-12">
+                                    <span class="input-group-addon"><i class="fa fa-calendar-o"></i></span>
+                                    <input type="date" v-model="data.dateMO" class="form-control">
+                                </div>
+                                <div class="input-group  col-md-3  col-xs-12">
+                                    <label for="guia">Adjunte su tarjeta de Medalla de Oro </label>
+                                    <input type="file" id="MO"  name="items" >
+                                </div>
+                            </div>
+                            <div id="dz-previews">
+                                <div id="" class="pad-top bord-top dz-image-preview">
+                                    <div class="media" v-if="itemsNames">
+                                        <div class="media-body">
+                                            <!--This is used as the file preview template-->
+                                            <div class="media-block">
+                                                <div class="media-body">
+                                                    <p class="text-main text-bold mar-no text-overflow" data-dz-name="">
+                                                        {{itemsNames}}</p>
+                                                    <span class="dz-error text-danger text-sm"
+                                                          data-dz-errormessage=""></span>
+                                                    <p class="text-sm" data-dz-size=""><strong>{{itemsSizes}}</strong>
+                                                    </p>
+                                                    <div id="dz-total-progress" style="opacity:50">
+                                                        <div class="progress progress-xs active" role="progressbar"
+                                                             aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                                                            <div class="progress-bar progress-bar-success"
+                                                                 style="width:15%;"
+                                                                 data-dz-uploadprogress=""></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="media-right">
+                                            <button data-dz-remove="" @click="removeItems"
+                                                    class="btn btn-xs btn-danger dz-cancel">
+                                                <i class="demo-pli-cross"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-                </div>
+                    </div>
                 </div>
                 <div class="col-lg-12 col-md-12  text-center">
                     <div class="btn">
@@ -195,6 +295,10 @@
                     cardV: false,
                     dateG: '',
                     cardG: false,
+                    dateMP: '',
+                    cardMP: false,
+                    dateMO: '',
+                    cardMO: false,
                 },
                 txtSearch: '',
                 counts: ['5', '10', '20', '50'],

@@ -78,6 +78,7 @@
                                 <div class="input-group" >
                                     <span class="input-group-addon"><i class="fa fa-send"></i></span>
                                     <input type="text" v-model="data.email" class="form-control" >
+
                                 </div>
                             </div>
                         </div>
@@ -97,6 +98,14 @@
                                     <span class="input-group-addon"><i class="fa fa-send"></i></span>
                                     <v-select type="text" v-model="data.type" :options="types" class="form-control" ></v-select>
                                 </div>
+                            </div>
+                        </div>
+                        <div class=" col-lg-3 col-md-3 ">
+                            <div class="panel-default material">
+                                <label>Tipo de Sangre </label>
+                                <div class="input-group" >
+                                    <span class="input-group-addon"><i class="fa fa-send"></i></span>
+                                    <input type="text" v-model="data.blood_type" class="form-control" maxlength="3" > </div>
                             </div>
                         </div>
                         <div class=" col-lg-3 col-md-3 ">
@@ -137,6 +146,7 @@
                          birthdate: '',
                          address: '',
                          civil_status: '',
+                         blood_type: '',
                          phone: '',
                          type: '',
                          cell: '',
@@ -177,6 +187,7 @@
                             this.data.address= '';
                             this.data.civil_status= '';
                             this.data.phone= '';
+                            this.data.blood_type= '';
                             this.data.cell= '';
                             this.data.type= '';
                             this.data.email='';

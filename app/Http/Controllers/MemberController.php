@@ -162,7 +162,11 @@ class MemberController extends Controller
         if (is_array($data['civil_status'])) {
             $data['civil_status'] = $data['civil_status']['value'];
         }
-
+        if (is_numeric($data['church'])) {
+            $data['church_id'] = $data['church'];
+        } else {
+            $data['church_id'] = $data['church']['value'];
+        }
         $member = Member::find($data['id']);
         $member->fill($data);
         if ($member->save()):

@@ -49,6 +49,7 @@ Vue.component('createClubDirector', require('./components/Creating/CreateClubDir
  */
 
 Vue.component('editMember', require('./components/Editors/EditMember.vue'));
+Vue.component('editMemberCampo', require('./components/Editors/EditMemberCampo.vue'));
 Vue.component('editClaveUser', require('./components/Editors/EditClaveUser.vue'));
 Vue.component('editorsDepartament', require('./components/Editors/EditorDepartament.vue'));
 /**
