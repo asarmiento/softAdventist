@@ -2,16 +2,16 @@
 
     <!---------------------------------->
     <div class="row">
-        <div class="col-md-12 ">
-            <h1>Lista de Pastores</h1>
+        <div class="col-md-12 panel panel-content ">
+            <h1>Lista de Pastores y Personal Administrativo</h1>
         </div>
-        <div v-if="campo" class="panel-group accordion" id="demo-acc-mix">
+        <div v-if="campo" class="panel-group " id="demo-acc-mix">
             <div class="panel panel-success " v-for="(items, index) in datos.data">
 
                 <!--Accordion title-->
-                <div class="panel-heading">
+                <div class="panel">
                     <h4 class="panel-title">
-                        <a data-parent="#accordion" data-toggle="collapse" :href="items.url">{{items.name}}</a>
+                        <a data-parent="" data-toggle="collapse" :href="items.url">{{items.name}}</a>
                     </h4>
                 </div>
                 <!--Accordion content-->

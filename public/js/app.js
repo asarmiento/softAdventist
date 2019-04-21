@@ -91659,19 +91659,16 @@ var render = function() {
       _vm.campo
         ? _c(
             "div",
-            {
-              staticClass: "panel-group accordion",
-              attrs: { id: "demo-acc-mix" }
-            },
+            { staticClass: "panel-group ", attrs: { id: "demo-acc-mix" } },
             _vm._l(_vm.datos.data, function(items, index) {
               return _c("div", { staticClass: "panel panel-success " }, [
-                _c("div", { staticClass: "panel-heading" }, [
+                _c("div", { staticClass: "panel" }, [
                   _c("h4", { staticClass: "panel-title" }, [
                     _c(
                       "a",
                       {
                         attrs: {
-                          "data-parent": "#accordion",
+                          "data-parent": "",
                           "data-toggle": "collapse",
                           href: items.url
                         }
@@ -91853,8 +91850,8 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-md-12 " }, [
-      _c("h1", [_vm._v("Lista de Pastores")])
+    return _c("div", { staticClass: "col-md-12 panel panel-content " }, [
+      _c("h1", [_vm._v("Lista de Pastores y Personal Administrativo")])
     ])
   },
   function() {
