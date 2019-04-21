@@ -112,12 +112,14 @@ Route::group(['prefix' => 'softadventist', 'middleware' => 'auth'], function () 
      * clubes
      */
     Route::get('lista-perfiles-clubes', 'ClubesController@listProfile')->name('list-ja');
+    Route::get('lista-perfiles-pastores', 'ClubesController@listProfilePastor')->name('list-ja-pastor');
     Route::get('perfile-clubes', 'ClubesController@profile')->name('profile');
     Route::get('lista-director-select', 'ClubesController@listDirector');
     Route::get('data-directores', 'ClubesController@dataDirectores');
     Route::get('lista-club-select', 'ClubesController@listClubes');
     Route::get('lista-tarjetas-select', 'ClubesController@listClubCard');
     Route::get('data-member-tarjetas', 'ClubesController@getDataMemberClub');
+    Route::get('data-pastores-tarjetas', 'ClubesController@getDataPastoresClub');
     Route::get('registrar-directores-de-clubes', 'ClubesController@registerClubDirector')->name('register-club-director');
     Route::post('store-directores-de-clubes', 'ClubesController@storeDirector');
     Route::post('save-miembros-card-club', 'ClubesController@storeMemberCard');
@@ -127,6 +129,7 @@ Route::group(['prefix' => 'softadventist', 'middleware' => 'auth'], function () 
     Route::get('registrar-tarjetas-a-aventureros', 'ClubesController@registerCardsAventureros')->name('register-card-aventurero');
     Route::get('registrar-tarjetas-a-jovenes-guia-lider', 'ClubesController@registerCardsGMLJ')->name('register-card-gm-lj');
     Route::get('registrar-especialidades-a-jovenes', 'ClubesController@registerSpecialties')->name('register-specialties-ja');
+    Route::get('registrar-especialidades', 'ClubesController@registerNewSpecialties')->name('register-specialidades-ja');
     Route::get('code-liderjuvenil', 'ClubesController@codeLiderJuvenil');
     Route::get('datos-user-connet', 'UserController@userData');
     /**

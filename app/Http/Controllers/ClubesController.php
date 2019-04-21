@@ -41,6 +41,11 @@ class ClubesController extends Controller
         return view('clubes.ListProfile');
     }
 
+    public function listProfilePastor()
+    {
+        return view('clubes.ListProfilePastor');
+    }
+
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -81,6 +86,11 @@ class ClubesController extends Controller
     public function registerSpecialties()
     {
         return view('clubes.registerSpecialties');
+    }
+
+    public function registerNewSpecialties()
+    {
+        return view('clubes.registerEspecialidades');
     }
 
     /**
@@ -133,10 +143,11 @@ class ClubesController extends Controller
         $codeGm = null;
         $codeLj = null;
         $dir = NULL;
-        $type_gm=false;
+        $type_gm = false;
         if (MemberClub::where('member_id', $member['value'])->count() > 0) {
             MemberClub::where('member_id', $member['value'])->update(['church_id' => $church]);
-            $id = $member['value'];
+            $memberClub = MemberClub::where('member_id', $member['value'])->first();
+            $id = $memberClub->id;
         } else {
             $memberClub = new MemberClub();
             $memberClub->member_id = $member['value'];
@@ -155,31 +166,47 @@ class ClubesController extends Controller
         if ($id) {
 
             if ($data['cardA']) {
-                MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 1]);
+                if (!MemberClubByClubCard::where('member_club_id', $id)->where('club_card_id', 1)->first()) {
+                    MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 1]);
+                }
             }
             if ($data['cardC']) {
-                MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 2]);
+                if (!MemberClubByClubCard::where('member_club_id', $id)->where('club_card_id', 2)->first()) {
+                    MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 2]);
+                }
             }
             if ($data['cardE']) {
-                MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 3]);
+                if (!MemberClubByClubCard::where('member_club_id', $id)->where('club_card_id', 3)->first()) {
+                    MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 3]);
+                }
             }
             if ($data['cardO']) {
-                MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 4]);
+                if (!MemberClubByClubCard::where('member_club_id', $id)->where('club_card_id', 4)->first()) {
+                    MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 4]);
+                }
             }
             if ($data['cardV']) {
-                MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 5]);
+                if (!MemberClubByClubCard::where('member_club_id', $id)->where('club_card_id', 5)->first()) {
+                    MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 5]);
+                }
             }
             if ($data['cardG']) {
-                MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 6]);
+                if (!MemberClubByClubCard::where('member_club_id', $id)->where('club_card_id', 6)->first()) {
+                    MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 6]);
+                }
             }
-if ($data['cardMP']) {
-                MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 17]);
+            if ($data['cardMP']) {
+                if (!MemberClubByClubCard::where('member_club_id', $id)->where('club_card_id', 17)->first()) {
+                    MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 17]);
+                }
             }
-if ($data['cardMO']) {
-                MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 18]);
+            if ($data['cardMO']) {
+                if (!MemberClubByClubCard::where('member_club_id', $id)->where('club_card_id', 18)->first()) {
+                    MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 18]);
+                }
             }
 
-            $memberClub = [];
+            //$memberClub = [];
             return response()->json(['success' => true, "miembros" => $memberClub], 200);
         }
 
@@ -198,7 +225,8 @@ if ($data['cardMO']) {
         $dir = NULL;
         if (MemberClub::where('member_id', $member['value'])->count() > 0) {
             MemberClub::where('member_id', $member['value'])->update(['church_id' => $church]);
-            $id = $member['value'];
+            $memberClub = MemberClub::where('member_id', $member['value'])->first();
+            $id = $memberClub->id;
         } else {
             $memberClub = new MemberClub();
             $memberClub->member_id = $member['value'];
@@ -216,25 +244,37 @@ if ($data['cardMO']) {
         if ($id) {
 
             if ($data['cardA']) {
-                MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 7]);
+                if (!MemberClubByClubCard::where('member_club_id', $id)->where('club_card_id', 7)->first()) {
+                    MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 7]);
+                }
             }
             if ($data['cardC']) {
-                MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 8]);
+                if (!MemberClubByClubCard::where('member_club_id', $id)->where('club_card_id', 8)->first()) {
+                    MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 8]);
+                }
             }
             if ($data['cardE']) {
-                MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 9]);
+                if (!MemberClubByClubCard::where('member_club_id', $id)->where('club_card_id', 9)->first()) {
+                    MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 9]);
+                }
             }
             if ($data['cardO']) {
-                MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 10]);
+                if (!MemberClubByClubCard::where('member_club_id', $id)->where('club_card_id', 10)->first()) {
+                    MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 10]);
+                }
             }
             if ($data['cardV']) {
-                MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 11]);
+                if (!MemberClubByClubCard::where('member_club_id', $id)->where('club_card_id', 11)->first()) {
+                    MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 11]);
+                }
             }
             if ($data['cardG']) {
-                MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 12]);
+                if (!MemberClubByClubCard::where('member_club_id', $id)->where('club_card_id', 12)->first()) {
+                    MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 12]);
+                }
             }
 
-            $memberClub = [];
+            //$memberClub = [];
             return response()->json(['success' => true, "miembros" => $memberClub], 200);
         }
 
@@ -252,24 +292,24 @@ if ($data['cardMO']) {
         $codeLj = null;
         if ($data['cardC']) {
 
-                $last = Member::find($member['value']);
-                $explode = explode('-',$data['codelj']);
-                $protocol = $explode[0];
-                $conse = $explode[1];
-                $letra = substr($conse, 1);
-                $num = strlen($last->last);
+            $last = Member::find($member['value']);
+            $explode = explode('-', $data['codelj']);
+            $protocol = $explode[0];
+            $conse = $explode[1];
+            $letra = substr($conse, 1);
+            $num = strlen($last->last);
 
-            $codeLj = $protocol.'-' . ucfirst(substr($last->last, -($num ),1)) . $letra;
+            $codeLj = $protocol . '-' . ucfirst(substr($last->last, -($num), 1)) . $letra;
 
 
         }
-        $type_gm=false;
+        $type_gm = false;
         if ($data['cardA']) {
             if ($data['notCodeGm']) {
                 $type_gm = true;
                 $codeGm = $this->codeGuiaMayor();
             } else {
-                $type_gm=false;
+                $type_gm = false;
                 $codeGm = $data['codeGm'];
             }
         }
@@ -279,11 +319,14 @@ if ($data['cardMO']) {
             MemberClub::where('member_id', $member['value'])
                 ->update([
                     'church_id' => $church,
-                'type_gm' => $type_gm,
-                'code_gm' => $codeGm,
-                'code_lj' => $codeLj,
-                    ]);
-            $id = $member['value'];
+                    'type_gm' => $type_gm,
+                    'code_gm' => $codeGm,
+                    'code_lj' => $codeLj,
+                ]);
+
+
+            $memberClub = MemberClub::where('member_id', $member['value'])->first();
+            $id = $memberClub->id;
         } else {
             $memberClub = new MemberClub();
             $memberClub->member_id = $member['value'];
@@ -299,21 +342,32 @@ if ($data['cardMO']) {
             $id = $memberClub->id;
         }
 
-        if ($id) {
 
-            if ($data['cardA']) {
+        if ($data['cardA']) {
+
+            if (!MemberClubByClubCard::where('member_club_id', $id)->where('club_card_id', 13)->first()) {
                 MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 13]);
             }
-            if ($data['cardC']) {
-                MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 14]);
-            }
-            if ($data['cardO']) {
-                MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 16]);
-            }
 
-            $memberClub = [];
-            return response()->json(['success' => true, "miembros" => $memberClub], 200);
         }
+        if ($data['cardC']) {
+            if (!MemberClubByClubCard::where('member_club_id', $id)->where('club_card_id', 14)->first()) {
+
+                MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 14]);
+
+            }
+        }
+        if ($data['cardO']) {
+            if (!MemberClubByClubCard::where('member_club_id', $id)->where('club_card_id', 16)->first()) {
+
+                MemberClubByClubCard::create(['member_club_id' => $id, 'club_card_id' => 16]);
+
+            }
+        }
+
+        // $memberClub = [];
+        return response()->json(['success' => true, "miembros" => $memberClub], 200);
+
 
         return response()->json(['success' => false, "message" => $memberClub->errors], 401);
     }
@@ -330,7 +384,53 @@ if ($data['cardMO']) {
         }
 
         if (userChurch()) {
-            $model = MemberClub::with('club')->
+            $model = MemberClub::with('club')->whereHas('church',function ($w){
+                $w->where('id','<>',124);
+            })->
+            where('church_id', userChurch()->id)->searchPaginateAndOrder($perPage, $request->get('search'));
+            $campo = false;
+
+            $model->map(function ($e) {
+                $member = Member::find($e->member_id);
+                $e->member = $member->name . ' ' . $member->last;
+                $e->church = $member->church->name;
+            });
+
+        } else {
+
+            $model = Church::with('membersC.memberClub.club')->whereHas('district', function ($e) {
+                $e->where('local_field_id', userCampo());
+            })->whereHas('members.memberClub')->search($request->get('search'))->paginate($perPage);
+
+            $campo = true;
+        }
+
+
+        $array = $this->myPages($model);
+
+        $columns = [];
+        $model['per_page'] = $perPage;
+
+        $response = [
+            'model' => $model,
+            'columns' => $columns,
+            'my_pages' => $array,
+            'campo' => $campo
+        ];
+        return $response;
+    }
+
+    public function getDataPastoresClub(Request $request)
+    {
+        $perPage = 50;
+        if ($request->has('perPage')) {
+            $perPage = $request->perPage;
+        }
+
+        if (userChurch()) {
+            $model = MemberClub::with('club')->whereHas('church',function ($w){
+                $w->where('id',124);
+            })->
             where('church_id', userChurch()->id)->searchPaginateAndOrder($perPage, $request->get('search'));
             $campo = false;
 
@@ -365,8 +465,6 @@ if ($data['cardMO']) {
     }
 
 
-
-
     public function dataDirectores(Request $request)
     {
         $perPage = 10;
@@ -379,7 +477,6 @@ if ($data['cardMO']) {
             ->search($request->get('search'))->paginate($perPage);
 
         $campo = true;
-
 
 
         $array = $this->myPages($model);
@@ -415,24 +512,25 @@ if ($data['cardMO']) {
 
         return $code;
     }
+
     public function codeGuiaMayor()
     {
         $member = MemberClub::whereHas('church', function ($q) {
             $q->whereHas('district', function ($e) {
                 $e->where('local_field_id', userCampo());
             });
-        })->whereNotNull('code_gm')->where('type_gm',true)->max('code_gm');
+        })->whereNotNull('code_gm')->where('type_gm', true)->max('code_gm');
 
-       $count  = MemberClub::whereHas('church', function ($q) {
-        $q->whereHas('district', function ($e) {
-            $e->where('local_field_id', userCampo());
-        });
-    })->whereNotNull('code_gm')->where('type_gm',true)->count();
+        $count = MemberClub::whereHas('church', function ($q) {
+            $q->whereHas('district', function ($e) {
+                $e->where('local_field_id', userCampo());
+            });
+        })->whereNotNull('code_gm')->where('type_gm', true)->count();
         $code = "C1GM-1617";
 
         if ($count > 0) {
-            $numero = explode('-',$member);
-            $code = "C1GM-" . (int)($numero[1]+1);
+            $numero = explode('-', $member);
+            $code = "C1GM-" . (int)($numero[1] + 1);
         }
 
         return $code;
