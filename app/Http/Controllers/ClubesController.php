@@ -400,7 +400,7 @@ class ClubesController extends Controller
 
             $model = Church::with('membersC.memberClub.club')->whereHas('district', function ($e) {
                 $e->where('local_field_id', userCampo());
-            })->whereHas('members.memberClub')->search($request->get('search'))->paginate($perPage);
+            })->whereHas('members.memberClub')->where('id','<>',124)->search($request->get('search'))->paginate($perPage);
 
             $campo = true;
         }
@@ -444,7 +444,7 @@ class ClubesController extends Controller
 
             $model = Church::with('membersC.memberClub.club')->whereHas('district', function ($e) {
                 $e->where('local_field_id', userCampo());
-            })->whereHas('members.memberClub')->search($request->get('search'))->paginate($perPage);
+            })->whereHas('members.memberClub')->where('id',124)->search($request->get('search'))->paginate($perPage);
 
             $campo = true;
         }
