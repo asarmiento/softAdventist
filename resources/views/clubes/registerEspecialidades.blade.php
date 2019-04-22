@@ -2,7 +2,7 @@
 
 @section('content')
 <div id="app">
-    <create-card-member></create-card-member>
+    <create-card-especialidades></create-card-especialidades>
 </div>
 @endsection
 @section('scripts')

@@ -15,6 +15,8 @@ use App\Entities\Departaments\ClubCard;
 use App\Entities\Departaments\ClubDirector;
 use App\Entities\Departaments\MemberClub;
 use App\Entities\Departaments\MemberClubByClubCard;
+use App\Entities\Departaments\MemberSpeciality;
+use App\Entities\Departaments\Specialties;
 use App\Entities\LocalFields\LocalField;
 use App\Entities\Member;
 use App\Traits\DataViewerTraits;
@@ -104,6 +106,16 @@ class ClubesController extends Controller
     public function listClubCard()
     {
         return ClubCard::listsLabel();
+    }
+
+    public function listSpecialties()
+    {
+        return Specialties::listsLabel();
+    }
+
+    public function listInstructores()
+    {
+        return MemberClub::listsInstructorLabel();
     }
 
     /**
@@ -372,6 +384,47 @@ class ClubesController extends Controller
         return response()->json(['success' => false, "message" => $memberClub->errors], 401);
     }
 
+    public function storeSpeciality(Request $request)
+    {
+        $data = $request->all();
+        if(!isset($data['member'])){
+            return response()->json(['success' => false, "message" => 'El miembro es Obligatorio'], 401);
+        }
+        if(!isset($data['specialty'])){
+            return response()->json(['success' => false, "message" => 'La Especialidad es Obligatorio'], 401);
+        }
+        $member = Member::find($data['member']['value']);
+        if(!isset($data['member_in_club'])){
+            $instructor = NULL;
+        }else{
+            $instructor = $data['member_in_club']['value'];
+        }
+
+        if(!isset($data['other_instructor'])){
+            $otherInstructor = NULL;
+        }else{
+            $otherInstructor = $data['other_instructor'];
+        }
+         if(MemberSpeciality::where('member_id',$member->id)->where('specialty_id',$data['specialty']['value'])->count()>0){
+            MemberSpeciality::where('member_id',$member->id)
+                ->where('specialty_id',$data['specialty']['value'])
+                ->update(['member_in_club_id'=>$instructor,
+                    'other_instructor'=>$otherInstructor,'date'=>$data['date']]);
+             return response()->json(['success' => true, "miembros" => 'Se Actualizo con Exito'], 200);
+        }else{
+            MemberSpeciality::create(['member_in_club_id'=>$instructor,
+                    'other_instructor'=>$otherInstructor,'date'=>$data['date'],
+                    'specialty_id'=>$data['specialty']['value'],
+                    'member_id'=>$member->id,'church_id'=>$member->church_id,
+                'user_id'=>Auth::user()->id,
+                'status'=>true]);
+             return response()->json(['success' => true, "miembros" => 'Se registro con Exito'], 200);
+        }
+
+        return response()->json(['success' => false, "message" => 'No se pudo Registrar '], 401);
+
+
+    }
     /**
      * @param Request $request
      * @return array
@@ -384,8 +437,8 @@ class ClubesController extends Controller
         }
 
         if (userChurch()) {
-            $model = MemberClub::with('club')->whereHas('church',function ($w){
-                $w->where('id','<>',124);
+            $model = MemberClub::with('club')->whereHas('church', function ($w) {
+                $w->where('id', '<>', 124);
             })->
             where('church_id', userChurch()->id)->searchPaginateAndOrder($perPage, $request->get('search'));
             $campo = false;
@@ -400,7 +453,7 @@ class ClubesController extends Controller
 
             $model = Church::with('membersC.memberClub.club')->whereHas('district', function ($e) {
                 $e->where('local_field_id', userCampo());
-            })->whereHas('members.memberClub')->where('id','<>',124)->search($request->get('search'))->paginate($perPage);
+            })->whereHas('members.memberClub')->where('id', '<>', 124)->search($request->get('search'))->paginate($perPage);
 
             $campo = true;
         }
@@ -428,8 +481,8 @@ class ClubesController extends Controller
         }
 
         if (userChurch()) {
-            $model = MemberClub::with('club')->whereHas('church',function ($w){
-                $w->where('id',124);
+            $model = MemberClub::with('club')->whereHas('church', function ($w) {
+                $w->where('id', 124);
             })->
             where('church_id', userChurch()->id)->searchPaginateAndOrder($perPage, $request->get('search'));
             $campo = false;
@@ -444,7 +497,7 @@ class ClubesController extends Controller
 
             $model = Church::with('membersC.memberClub.club')->whereHas('district', function ($e) {
                 $e->where('local_field_id', userCampo());
-            })->whereHas('members.memberClub')->where('id',124)->search($request->get('search'))->paginate($perPage);
+            })->whereHas('members.memberClub')->where('id', 124)->search($request->get('search'))->paginate($perPage);
 
             $campo = true;
         }
@@ -534,6 +587,11 @@ class ClubesController extends Controller
         }
 
         return $code;
+    }
+
+    public function listFiles()
+    {
+        return view('clubes.registerEspecialidades');
     }
 
 

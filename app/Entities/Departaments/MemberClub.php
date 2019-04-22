@@ -27,6 +27,11 @@ class MemberClub extends Entity
         return $this->belongsTo(Member::class,'member_id','id')->select('name','last');
     }
 
+    public function member_group()
+    {
+        return $this->belongsTo(Member::class,'member_id','id')->select('name','last');
+    }
+
     public function club()
     {
         return $this->belongsToMany(ClubCard::class,'member_club_by_club_cards');
@@ -45,6 +50,19 @@ class MemberClub extends Entity
         foreach ($directors AS $director)
         {
             array_push($lists, ['label' =>  $director->member->name.' '.$director->member->last, 'value' => $director->id]);
+        }
+
+        return $lists;
+    }
+    public static function listsInstructorLabel()
+    {
+        $directors = MemberClub::whereNotNull('code_gm')->get();
+
+        $lists = [];
+        foreach ($directors AS $director)
+        {
+            $member = Member::find($director->member_id);
+            array_push($lists, ['label' => ' Código: '.$director->code_gm.' || '.  $member->name.' '.$member->last , 'value' => $director->id]);
         }
 
         return $lists;

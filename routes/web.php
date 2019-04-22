@@ -125,12 +125,16 @@ Route::group(['prefix' => 'softadventist', 'middleware' => 'auth'], function () 
     Route::post('save-miembros-card-club', 'ClubesController@storeMemberCard');
     Route::post('save-miembros-card-club-aventureros', 'ClubesController@storeMemberCardAventureros');
     Route::post('save-miembros-card-club-guia', 'ClubesController@storeMemberCardGuiaLider');
+    Route::post('save-especiality-member', 'ClubesController@storeSpeciality');
     Route::get('registrar-tarjetas-a-jovenes', 'ClubesController@registerCards')->name('register-card-ja');
     Route::get('registrar-tarjetas-a-aventureros', 'ClubesController@registerCardsAventureros')->name('register-card-aventurero');
     Route::get('registrar-tarjetas-a-jovenes-guia-lider', 'ClubesController@registerCardsGMLJ')->name('register-card-gm-lj');
     Route::get('registrar-especialidades-a-jovenes', 'ClubesController@registerSpecialties')->name('register-specialties-ja');
     Route::get('registrar-especialidades', 'ClubesController@registerNewSpecialties')->name('register-specialidades-ja');
     Route::get('code-liderjuvenil', 'ClubesController@codeLiderJuvenil');
+    Route::get('lista-de-imagenes', 'ClubesController@listFiles');
+    Route::get('lista-de-especialidades-select', 'ClubesController@listSpecialties');
+    Route::get('lista-de-instructores-select', 'ClubesController@listInstructores');
     Route::get('datos-user-connet', 'UserController@userData');
     /**
      * Departamentos

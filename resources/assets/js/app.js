@@ -44,6 +44,7 @@ Vue.component('createCardMember', require('./components/Creating/CreateCardMembe
 Vue.component('createCardMemberAventureros', require('./components/Creating/CreateCardMemberAventureros.vue'));
 Vue.component('createCardMemberCampo', require('./components/Creating/CreateCardMemberCampo.vue'));
 Vue.component('createClubDirector', require('./components/Creating/CreateClubDirector.vue'));
+Vue.component('createCardEspecialidades', require('./components/Creating/CreateCardEspecialidades.vue'));
 /**
  * Editores de tablas
  */
