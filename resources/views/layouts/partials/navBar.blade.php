@@ -127,10 +127,12 @@
                                                 @if(currentUser()->whereUserBelong->list_departament_id == 4 || currentUser()->whereUserBelong->list_departament_id == 7 || userCampo())
                                                 <li><a href="{{route('register-card-ja')}}">Registrar Tarjetas a
                                                         Conquistadores</a></li>
+                                                    <li><a href="{{route('register-specialidades-ja')}}">Registrar Especialidades</a></li>
                                                 @endif
                                                 @if(currentUser()->whereUserBelong->list_departament_id == 5 || userCampo())
                                                 <li><a href="{{route('register-card-aventurero')}}">Registrar Tarjetas a
                                                         Aventureros</a></li>
+                                                    <li><a href="{{route('register-specialidades-ja')}}">Registrar Especialidades</a></li>
                                                 @endif
                                                 @if(userCampo())
                                                     <li><a href="{{route('list-ja-pastor')}}">Lista de Pastores</a></li>
@@ -138,8 +140,7 @@
                                                 <li><a href="{{route('editar-clave-user')}}">Cambio de Contraseña a Usuarios</a></li>
                                                 <li><a href="{{route('register-specialidades-ja')}}">Registrar Especialidades</a></li>
                                                 @endif
-                                                <li><a href="{{route('register-specialties-ja')}}">Registrar
-                                                        Especialidades a jovenes</a></li>
+
                                             </ul>
                                         @endif
                                     @endif
