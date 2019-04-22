@@ -9,7 +9,7 @@
             <div class="panel panel-success " v-for="(items, index) in datos.data">
 
                 <!--Accordion title-->
-                <div class="panel-heading">
+                <div class="panel">
                     <h4 class="panel-title">
                         <a data-parent="#accordion" data-toggle="collapse" :href="items.url">{{items.name}}</a>
                     </h4>
@@ -47,7 +47,7 @@
                                     <a href="#">
                                         <img alt="Profile Picture" class="img-lg img-circle mar-ver" src="/img/profile-photos/2.png">
                                         <p class="text-lg text-semibold mar-no text-main">{{(itemes.name)}} {{(itemes.last)}}</p>
-                                        <p class="text-sm"><a href="/softadventist/perfile-clubes">Lista de Especialidades</a></p>
+                                        <p class="text-sm"><a :href="routeSpecial(itemes.id)">Lista de Especialidades</a></p>
                                     </a>
                                     <div class="pad-top btn-groups" v-if="itemes.member_club">
                                         <a href="#" v-for="card in itemes.member_club" class="btn btn-icon  icon-lg add-tooltip"
@@ -170,6 +170,10 @@
             urlButton(card) {
 
                 return "/img/Botones/" + card.url_card;
+            },
+            routeSpecial(id) {
+
+                return "/softadventist/perfile-especialidades/" + id;
             },
             nameComplate(member) {
                 return member;

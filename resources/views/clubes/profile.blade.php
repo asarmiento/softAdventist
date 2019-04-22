@@ -2,7 +2,7 @@
 
 @section('content')
 <div id="app">
-    <view-profile></view-profile>
+    <view-profile specialities="{{json_encode($specialities)}}" member="{{json_encode($member)}}"></view-profile>
 </div>
 @endsection
 @section('scripts')

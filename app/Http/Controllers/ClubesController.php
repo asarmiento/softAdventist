@@ -53,9 +53,17 @@ class ClubesController extends Controller
      */
     public function profile()
     {
+
         return view('clubes.profile');
     }
 
+    public function profileSpecialty($id)
+    {
+        $specialities = MemberSpeciality::with('specialityData','church','instructor')->where('member_id',$id)->get();
+        $member = Member::find($id);
+        return view('clubes.profile',compact('specialities','member'));
+
+    }
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */

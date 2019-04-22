@@ -114,6 +114,7 @@ Route::group(['prefix' => 'softadventist', 'middleware' => 'auth'], function () 
     Route::get('lista-perfiles-clubes', 'ClubesController@listProfile')->name('list-ja');
     Route::get('lista-perfiles-pastores', 'ClubesController@listProfilePastor')->name('list-ja-pastor');
     Route::get('perfile-clubes', 'ClubesController@profile')->name('profile');
+    Route::get('perfile-especialidades/{id}', 'ClubesController@profileSpecialty');
     Route::get('lista-director-select', 'ClubesController@listDirector');
     Route::get('data-directores', 'ClubesController@dataDirectores');
     Route::get('lista-club-select', 'ClubesController@listClubes');

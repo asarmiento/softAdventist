@@ -62,7 +62,7 @@ class MemberClub extends Entity
         foreach ($directors AS $director)
         {
             $member = Member::find($director->member_id);
-            array_push($lists, ['label' => ' Código: '.$director->code_gm.' || '.  $member->name.' '.$member->last , 'value' => $director->id]);
+            array_push($lists, ['label' => ' Código: '.$director->code_gm.' || '.  $member->name.' '.$member->last , 'value' => $member->id]);
         }
 
         return $lists;

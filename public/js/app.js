@@ -91504,6 +91504,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             return "/img/Botones/" + card.url_card;
         },
+        routeSpecial: function routeSpecial(id) {
+
+            return "/softadventist/perfile-especialidades/" + id;
+        },
         nameComplate: function nameComplate(member) {
             return member;
         },
@@ -91571,7 +91575,7 @@ var render = function() {
             },
             _vm._l(_vm.datos.data, function(items, index) {
               return _c("div", { staticClass: "panel panel-success " }, [
-                _c("div", { staticClass: "panel-heading" }, [
+                _c("div", { staticClass: "panel" }, [
                   _c("h4", { staticClass: "panel-title" }, [
                     _c(
                       "a",
@@ -91627,7 +91631,17 @@ var render = function() {
                                   ]
                                 ),
                                 _vm._v(" "),
-                                _vm._m(2, true)
+                                _c("p", { staticClass: "text-sm" }, [
+                                  _c(
+                                    "a",
+                                    {
+                                      attrs: {
+                                        href: _vm.routeSpecial(itemes.id)
+                                      }
+                                    },
+                                    [_vm._v("Lista de Especialidades")]
+                                  )
+                                ])
                               ]),
                               _vm._v(" "),
                               itemes.member_club
@@ -91696,7 +91710,7 @@ var render = function() {
             return _c("div", { staticClass: "col-sm-4 col-md-3" }, [
               _c("div", { staticClass: "panel pos-rel" }, [
                 _c("div", { staticClass: "pad-all text-center" }, [
-                  _vm._m(3, true),
+                  _vm._m(2, true),
                   _vm._v(" "),
                   _c("a", { attrs: { href: "#" } }, [
                     _c("img", {
@@ -91717,7 +91731,7 @@ var render = function() {
                       _vm._v("Iglesia: " + _vm._s(items.church))
                     ]),
                     _vm._v(" "),
-                    _vm._m(4, true)
+                    _vm._m(3, true)
                   ]),
                   _vm._v(" "),
                   items.club
@@ -91804,16 +91818,6 @@ var staticRenderFns = [
             ])
           ])
         ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("p", { staticClass: "text-sm" }, [
-      _c("a", { attrs: { href: "/softadventist/perfile-clubes" } }, [
-        _vm._v("Lista de Especialidades")
       ])
     ])
   },
@@ -93709,26 +93713,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+    props: ['specialities', 'member'],
     components: { vSelect: __WEBPACK_IMPORTED_MODULE_0_vue_select___default.a, myDatepicker: __WEBPACK_IMPORTED_MODULE_2_vue_datepicker___default.a, Swal: __WEBPACK_IMPORTED_MODULE_1_sweetalert2___default.a },
     data: function data() {
         return {
@@ -93746,12 +93737,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     created: function created() {
 
         var self = this;
+        // this.specialty = JSON.parse(this.specialities);
+        console.log('prueba' + this.specialities);
         this.$http.get("/softadventist/datos-user-connet").then(function (response) {
             self.user = response.data;
         });
     },
 
+    computed: {
+        speciality: function speciality() {
+            return JSON.parse(this.specialities);
+        },
+        member_data: function member_data() {
+            return JSON.parse(this.member);
+        }
+    },
     methods: {
+        urlImg: function urlImg(Sp) {
+            return "/img/especialidades/Conquistadores/" + Sp.url_img;
+        },
         send: function send(event) {
             var _this = this;
 
@@ -93818,13 +93822,149 @@ var render = function() {
     _c("div", { staticClass: "tab-base" }, [
       _c("div", [
         _c("h1", [
-          _vm._v(_vm._s(_vm.user.name) + " " + _vm._s(_vm.user.last_name))
+          _vm._v(
+            _vm._s(_vm.member_data.name) + " " + _vm._s(_vm.member_data.last)
+          )
         ])
       ]),
       _vm._v(" "),
-      _vm._m(0),
+      _c("ul", { staticClass: "nav nav-tabs" }, [
+        _vm._m(0),
+        _vm._v(" "),
+        _c("li", [
+          _c(
+            "a",
+            { attrs: { "data-toggle": "tab", href: "#demo-lft-tab-2" } },
+            [
+              _vm._v("Conquistadores "),
+              _c("span", { staticClass: "badge badge-purple" }, [
+                _vm._v(_vm._s(_vm.speciality.length))
+              ])
+            ]
+          )
+        ]),
+        _vm._v(" "),
+        _vm._m(1),
+        _vm._v(" "),
+        _vm._m(2)
+      ]),
       _vm._v(" "),
-      _vm._m(1)
+      _c("div", { staticClass: "tab-content" }, [
+        _vm._m(3),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "tab-pane fade", attrs: { id: "demo-lft-tab-2" } },
+          [
+            _c("p", { staticClass: "text-main text-semibold" }, [
+              _vm._v("Especialidades Obtenidas")
+            ]),
+            _vm._v(" "),
+            _vm.speciality.length > 0
+              ? _c("div", { staticClass: "panel" }, [
+                  _c(
+                    "div",
+                    { staticClass: "panel-body demo-liquid-fixed" },
+                    _vm._l(_vm.speciality, function(special) {
+                      return _c("div", { staticClass: "fixed-fluid" }, [
+                        _c(
+                          "div",
+                          {
+                            staticClass: "fixed-sm-250 pull-sm-left",
+                            staticStyle: { "text-align": "center" }
+                          },
+                          [
+                            _c("strong", { staticClass: "text-uppercase" }, [
+                              _c("img", {
+                                attrs: {
+                                  src: _vm.urlImg(special.speciality_data),
+                                  width: "120",
+                                  height: "120"
+                                }
+                              })
+                            ]),
+                            _c("br")
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "fluid" }, [
+                          _c("ul", [
+                            _c("li", [
+                              _c("strong", { staticClass: "text-uppercase" }, [
+                                _vm._v("Especialidad : ")
+                              ]),
+                              _vm._v(
+                                "\n                                        " +
+                                  _vm._s(special.speciality_data.name) +
+                                  "\n                                    "
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("li", [
+                              _c("strong", { staticClass: "text-uppercase" }, [
+                                _vm._v("Fecha Finalización: ")
+                              ]),
+                              _vm._v(
+                                " " +
+                                  _vm._s(special.date) +
+                                  "\n                                    "
+                              )
+                            ]),
+                            _vm._v(" "),
+                            special.instructor
+                              ? _c("li", [
+                                  _c(
+                                    "strong",
+                                    { staticClass: "text-uppercase" },
+                                    [_vm._v("Instructor: ")]
+                                  ),
+                                  _vm._v(
+                                    " " +
+                                      _vm._s(special.instructor.name) +
+                                      "\n                                        " +
+                                      _vm._s(special.instructor.last) +
+                                      "\n                                    "
+                                  )
+                                ])
+                              : _c("li", [
+                                  _c(
+                                    "strong",
+                                    { staticClass: "text-uppercase" },
+                                    [_vm._v("Instructor: ")]
+                                  ),
+                                  _vm._v(
+                                    "\n                                        " +
+                                      _vm._s(special.other_instructor) +
+                                      "\n                                    "
+                                  )
+                                ]),
+                            _vm._v(" "),
+                            _c("li", [
+                              _c("strong", { staticClass: "text-uppercase" }, [
+                                _vm._v("Iglesia: ")
+                              ]),
+                              _vm._v(
+                                " " +
+                                  _vm._s(special.church.name) +
+                                  "\n                                    "
+                              )
+                            ])
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("hr")
+                      ])
+                    })
+                  )
+                ])
+              : _vm._e()
+          ]
+        ),
+        _vm._v(" "),
+        _vm._m(4),
+        _vm._v(" "),
+        _vm._m(5)
+      ])
     ])
   ])
 }
@@ -93833,30 +93973,9 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("ul", { staticClass: "nav nav-tabs" }, [
-      _c("li", { staticClass: "active" }, [
-        _c("a", { attrs: { "data-toggle": "tab", href: "#demo-lft-tab-1" } }, [
-          _vm._v("Aventurero ")
-        ])
-      ]),
-      _vm._v(" "),
-      _c("li", [
-        _c("a", { attrs: { "data-toggle": "tab", href: "#demo-lft-tab-2" } }, [
-          _vm._v("Conquistadores "),
-          _c("span", { staticClass: "badge badge-purple" }, [_vm._v("3")])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("li", [
-        _c("a", { attrs: { "data-toggle": "tab", href: "#demo-lft-tab-3" } }, [
-          _vm._v("Guias Mayores")
-        ])
-      ]),
-      _vm._v(" "),
-      _c("li", [
-        _c("a", { attrs: { "data-toggle": "tab", href: "#demo-lft-tab-4" } }, [
-          _vm._v("Lider Juvenil")
-        ])
+    return _c("li", { staticClass: "active" }, [
+      _c("a", { attrs: { "data-toggle": "tab", href: "#demo-lft-tab-1" } }, [
+        _vm._v("Aventurero ")
       ])
     ])
   },
@@ -93864,226 +93983,72 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "tab-content" }, [
-      _c(
-        "div",
-        {
-          staticClass: "tab-pane fade active in",
-          attrs: { id: "demo-lft-tab-1" }
-        },
-        [
-          _c("p", { staticClass: "text-main text-semibold" }, [
-            _vm._v("Aventurero")
-          ]),
-          _vm._v(" "),
-          _c("p", [_vm._v("No tiene Registros")])
-        ]
-      ),
-      _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "tab-pane fade", attrs: { id: "demo-lft-tab-2" } },
-        [
-          _c("p", { staticClass: "text-main text-semibold" }, [
-            _vm._v("Especialidades Obtenidas")
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "panel" }, [
-            _c("div", { staticClass: "panel-body demo-liquid-fixed" }, [
-              _c("div", { staticClass: "fixed-fluid" }, [
-                _c(
-                  "div",
-                  {
-                    staticClass: "fixed-sm-250 pull-sm-left",
-                    staticStyle: { "text-align": "center" }
-                  },
-                  [
-                    _c("strong", { staticClass: "text-uppercase" }, [
-                      _c("img", {
-                        attrs: {
-                          src: "/img/especialidades/apicultura.gif",
-                          width: "120",
-                          height: "100"
-                        }
-                      })
-                    ]),
-                    _c("br")
-                  ]
-                ),
-                _vm._v(" "),
-                _c("div", { staticClass: "fluid" }, [
-                  _c("ul", [
-                    _c("li", [
-                      _c("strong", { staticClass: "text-uppercase" }, [
-                        _vm._v("Especialidad : ")
-                      ]),
-                      _vm._v(" Apicultura")
-                    ]),
-                    _vm._v(" "),
-                    _c("li", [
-                      _c("strong", { staticClass: "text-uppercase" }, [
-                        _vm._v("Fecha Finalización: ")
-                      ]),
-                      _vm._v(" 2001-09-25")
-                    ]),
-                    _vm._v(" "),
-                    _c("li", [
-                      _c("strong", { staticClass: "text-uppercase" }, [
-                        _vm._v("Instructor: ")
-                      ]),
-                      _vm._v(" Carlos Alvarado ")
-                    ]),
-                    _vm._v(" "),
-                    _c("li", [
-                      _c("strong", { staticClass: "text-uppercase" }, [
-                        _vm._v("Iglesia: ")
-                      ]),
-                      _vm._v(" Central San Jose ")
-                    ])
-                  ])
-                ])
-              ]),
-              _vm._v(" "),
-              _c("hr"),
-              _vm._v(" "),
-              _c("div", { staticClass: "fixed-fluid" }, [
-                _c(
-                  "div",
-                  {
-                    staticClass: "fixed-sm-250 pull-sm-left",
-                    staticStyle: { "text-align": "center" }
-                  },
-                  [
-                    _c("strong", { staticClass: "text-uppercase" }, [
-                      _c("img", {
-                        attrs: {
-                          src: "/img/especialidades/administración.png",
-                          width: "120",
-                          height: "100"
-                        }
-                      })
-                    ]),
-                    _c("br")
-                  ]
-                ),
-                _vm._v(" "),
-                _c("div", { staticClass: "fluid" }, [
-                  _c("ul", [
-                    _c("li", [
-                      _c("strong", { staticClass: "text-uppercase" }, [
-                        _vm._v("Especialidad : ")
-                      ]),
-                      _vm._v(" Administración")
-                    ]),
-                    _vm._v(" "),
-                    _c("li", [
-                      _c("strong", { staticClass: "text-uppercase" }, [
-                        _vm._v("Fecha Finalización: ")
-                      ]),
-                      _vm._v(" 1998-09-25")
-                    ]),
-                    _vm._v(" "),
-                    _c("li", [
-                      _c("strong", { staticClass: "text-uppercase" }, [
-                        _vm._v("Instructor: ")
-                      ]),
-                      _vm._v(" Glenn Mora ")
-                    ]),
-                    _vm._v(" "),
-                    _c("li", [
-                      _c("strong", { staticClass: "text-uppercase" }, [
-                        _vm._v("Iglesia: ")
-                      ]),
-                      _vm._v(" Hatillo ")
-                    ])
-                  ])
-                ])
-              ]),
-              _vm._v(" "),
-              _c("hr"),
-              _vm._v(" "),
-              _c("div", { staticClass: "fixed-fluid" }, [
-                _c(
-                  "div",
-                  {
-                    staticClass: "fixed-sm-250 pull-sm-left",
-                    staticStyle: { "text-align": "center" }
-                  },
-                  [
-                    _c("strong", { staticClass: "text-uppercase" }, [
-                      _c("img", {
-                        attrs: {
-                          src: "/img/especialidades/internet-ay-honor_orig.png",
-                          width: "120",
-                          height: "100"
-                        }
-                      })
-                    ]),
-                    _c("br")
-                  ]
-                ),
-                _vm._v(" "),
-                _c("div", { staticClass: "fluid" }, [
-                  _c("ul", [
-                    _c("li", [
-                      _c("strong", { staticClass: "text-uppercase" }, [
-                        _vm._v("Especialidad : ")
-                      ]),
-                      _vm._v(" Internet")
-                    ]),
-                    _vm._v(" "),
-                    _c("li", [
-                      _c("strong", { staticClass: "text-uppercase" }, [
-                        _vm._v("Fecha Finalización: ")
-                      ]),
-                      _vm._v(" 2009-10-25")
-                    ]),
-                    _vm._v(" "),
-                    _c("li", [
-                      _c("strong", { staticClass: "text-uppercase" }, [
-                        _vm._v("Instructor: ")
-                      ]),
-                      _vm._v(" Edy Echenique ")
-                    ]),
-                    _vm._v(" "),
-                    _c("li", [
-                      _c("strong", { staticClass: "text-uppercase" }, [
-                        _vm._v("Iglesia: ")
-                      ]),
-                      _vm._v(" UNADECA ")
-                    ])
-                  ])
-                ])
-              ])
-            ])
-          ])
-        ]
-      ),
-      _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "tab-pane fade", attrs: { id: "demo-lft-tab-3" } },
-        [
-          _c("p", { staticClass: "text-main text-semibold" }, [
-            _vm._v("Guias Mayores")
-          ]),
-          _vm._v(" "),
-          _c("p", [_vm._v("No Tiene Registros")])
-        ]
-      ),
-      _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "tab-pane fade", attrs: { id: "demo-lft-tab-4" } },
-        [
-          _c("p", { staticClass: "text-main text-semibold" }, [
-            _vm._v("Lider Juvenil")
-          ]),
-          _vm._v(" "),
-          _c("p", [_vm._v("No Tiene Registros")])
-        ]
-      )
+    return _c("li", [
+      _c("a", { attrs: { "data-toggle": "tab", href: "#demo-lft-tab-3" } }, [
+        _vm._v("Guias Mayores")
+      ])
     ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("li", [
+      _c("a", { attrs: { "data-toggle": "tab", href: "#demo-lft-tab-4" } }, [
+        _vm._v("Lider Juvenil")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      {
+        staticClass: "tab-pane fade active in",
+        attrs: { id: "demo-lft-tab-1" }
+      },
+      [
+        _c("p", { staticClass: "text-main text-semibold" }, [
+          _vm._v("Aventurero")
+        ]),
+        _vm._v(" "),
+        _c("p", [_vm._v("No tiene Registros")])
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      { staticClass: "tab-pane fade", attrs: { id: "demo-lft-tab-3" } },
+      [
+        _c("p", { staticClass: "text-main text-semibold" }, [
+          _vm._v("Guias Mayores")
+        ]),
+        _vm._v(" "),
+        _c("p", [_vm._v("No Tiene Registros")])
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      { staticClass: "tab-pane fade", attrs: { id: "demo-lft-tab-4" } },
+      [
+        _c("p", { staticClass: "text-main text-semibold" }, [
+          _vm._v("Lider Juvenil")
+        ]),
+        _vm._v(" "),
+        _c("p", [_vm._v("No Tiene Registros")])
+      ]
+    )
   }
 ]
 render._withStripped = true
