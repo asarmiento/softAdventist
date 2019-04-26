@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Entities\InternalControl;
-use App\Entities\LocalFieldIncome;
-use App\Entities\WeeklyIncome;
 use App\Repositories\CheckExpenseRepository;
 use App\Repositories\CheckRepository;
 use App\Repositories\IncomeAccountRepository;
@@ -12,9 +10,7 @@ use App\Repositories\LocalFieldIncomeAccountRepository;
 use App\Repositories\LocalFieldIncomeRepository;
 use App\Repositories\WeeklyincomeRepository;
 use App\Traits\ListInformMembersTraits;
-use Carbon\Carbon;
 use Codedge\Fpdf\Facades\Fpdf;
-use Illuminate\Http\Request;
 
 class ReportPdfController extends Controller
 {
@@ -58,11 +54,11 @@ class ReportPdfController extends Controller
      * ReportPdfController constructor.
      *
      * @param LocalFieldIncomeAccountRepository $localFieldIncomeAccountRepository
-     * @param IncomeAccountRepository           $incomeAccountRepository
-     * @param WeeklyincomeRepository            $weeklyincomeRepository
-     * @param LocalFieldIncomeRepository        $localFieldIncomeRepository
-     * @param CheckRepository                   $checkRepository
-     * @param CheckExpenseRepository            $checkExpenseRepository
+     * @param IncomeAccountRepository $incomeAccountRepository
+     * @param WeeklyincomeRepository $weeklyincomeRepository
+     * @param LocalFieldIncomeRepository $localFieldIncomeRepository
+     * @param CheckRepository $checkRepository
+     * @param CheckExpenseRepository $checkExpenseRepository
      */
     public function __construct(
         LocalFieldIncomeAccountRepository $localFieldIncomeAccountRepository,
@@ -71,7 +67,8 @@ class ReportPdfController extends Controller
         LocalFieldIncomeRepository $localFieldIncomeRepository,
         CheckRepository $checkRepository,
         CheckExpenseRepository $checkExpenseRepository
-    ) {
+    )
+    {
 
         $this->localFieldIncomeAccountRepository = $localFieldIncomeAccountRepository;
         $this->incomeAccountRepository = $incomeAccountRepository;
@@ -113,12 +110,12 @@ class ReportPdfController extends Controller
         $pdf .= Fpdf::Cell(0, 7, utf8_decode('Iglesia Adventista del Séptimo Día de Quepos'), 0, 1, 'C');
         $pdf .= Fpdf::Cell(0, 7, utf8_decode('Informe de Gastos'), 0, 1, 'C');
         if ($data[0]->check_id):
-            $pdf .= Fpdf::Cell(0, 7, utf8_decode('Cheque # '.$check->number), 0, 1, 'C');
-            $pdf .= Fpdf::Cell(0, 7, utf8_decode('Elaborado  '.$check->date), 0, 1, 'C');
+            $pdf .= Fpdf::Cell(0, 7, utf8_decode('Cheque # ' . $check->number), 0, 1, 'C');
+            $pdf .= Fpdf::Cell(0, 7, utf8_decode('Elaborado  ' . $check->date), 0, 1, 'C');
             $pdf .= Fpdf::Ln();
             $pdf .= Fpdf::SetFont('Arial', 'B', 14);
-            $pdf .= Fpdf::Cell(100, 7, utf8_decode('Beneficiario: '.$check->name), 0, 0, 'L');
-            $pdf .= Fpdf::Cell(90, 7, utf8_decode('Valor:  '.number_format($check->balance, 2)), 0, 1, 'R');
+            $pdf .= Fpdf::Cell(100, 7, utf8_decode('Beneficiario: ' . $check->name), 0, 0, 'L');
+            $pdf .= Fpdf::Cell(90, 7, utf8_decode('Valor:  ' . number_format($check->balance, 2)), 0, 1, 'R');
         endif;
         $pdf .= Fpdf::Ln();
         $pdf .= Fpdf::SetFont('Arial', 'B', 12);
@@ -246,10 +243,10 @@ class ReportPdfController extends Controller
             $this->sacr();
             Fpdf::Output('Informe-Semanal: ' . $date . '.pdf', 'D');
             exit;
-        }catch (\Exception $e){
-            echo json_encode($e->getLine().'- '.$e->getCode().'- '.$e->getMessage().' - '.$e->getTraceAsString());
+        } catch (\Exception $e) {
+            echo json_encode($e->getLine() . '- ' . $e->getCode() . '- ' . $e->getMessage() . ' - ' . $e->getTraceAsString());
             die;
-            \Log::error($e->getLine().'- '.$e->getCode().'- '.$e->getMessage().' - '.$e->getTraceAsString());
+            \Log::error($e->getLine() . '- ' . $e->getCode() . '- ' . $e->getMessage() . ' - ' . $e->getTraceAsString());
             abort(402);
 
         }
@@ -287,8 +284,8 @@ class ReportPdfController extends Controller
         $pdf .= Fpdf::Cell(0, 7, utf8_decode('Control Semanal de Diezmos y Ofrendas'), 0, 1, 'C');
         $pdf .= Fpdf::SetFont('Arial', '', 12);
         $pdf .= Fpdf::Setx(5);
-        $pdf .= Fpdf::Cell(0, 7,
-            'Iglesia: '.userChurch()->name.'                                                            Fecha:  '.$internal->saturday, 0, 1, 'L');
+        $pdf .= Fpdf::Cell(80, 7, 'Iglesia: ' . userChurch()->name, 0, 0, 'L');
+        $pdf .= Fpdf::Cell(30, 7, 'Fecha:  ' . $internal->saturday, 0, 1, 'L');
 
         return $pdf;
     }
@@ -316,34 +313,34 @@ class ReportPdfController extends Controller
         $pdf = Fpdf::SetFont('Arial', '', 8);
         $pdf .= Fpdf::Cell(45, 5, utf8_decode('DIEZMOS'), 0, 0, 'L');
         $tithes = $this->typeInEnvelopeSumLFI($envelopes, 'diez');
-        $pdf .= Fpdf::Cell(30, 5, utf8_decode('¢ ').number_format($tithes, 2), 0, 1, 'L');
+        $pdf .= Fpdf::Cell(30, 5, utf8_decode('¢ ') . number_format($tithes, 2), 0, 1, 'L');
         $offren = $this->typeInEnvelopeSumLFI($envelopes, 'offren');
         $pdf .= Fpdf::Cell(45, 5, utf8_decode('20% MUNDIAL'), 0, 0, 'L');
-        $pdf .= Fpdf::Cell(30, 5, utf8_decode('¢ ').number_format($offren / 2, 2), 0, 1, 'L');
+        $pdf .= Fpdf::Cell(30, 5, utf8_decode('¢ ') . number_format($offren / 2, 2), 0, 1, 'L');
         $pdf .= Fpdf::Cell(45, 5, utf8_decode('20% DESARROLLO'), 0, 0, 'L');
-        $pdf .= Fpdf::Cell(30, 5, utf8_decode('¢ ').number_format($offren / 2, 2), 0, 1, 'L');
+        $pdf .= Fpdf::Cell(30, 5, utf8_decode('¢ ') . number_format($offren / 2, 2), 0, 1, 'L');
         $localfields = $this->localFieldIncomeAccountRepository->getType('temp');
         //aqui agregamos en el array los datos de las cuentas que van para el campo local
         foreach ($localfields AS $localfieldIncome):
             $list = $this->localFieldIncomeRepository->sumInEnvelope($envelopes, $localfieldIncome->id);
             if ($list > 0):
                 $pdf .= Fpdf::Cell(45, 5, utf8_decode(strtoupper($localfieldIncome->name)), 0, 0, 'L');
-                $pdf .= Fpdf::Cell(30, 5, utf8_decode('¢ ').number_format($list, 2), 0, 1, 'L');
+                $pdf .= Fpdf::Cell(30, 5, utf8_decode('¢ ') . number_format($list, 2), 0, 1, 'L');
             endif;
         endforeach;
         $campoLocal = $this->localFieldIncomeRepository->sumInInfo($envelopes);
         $pdf = Fpdf::SetFont('Arial', 'B', 9);
         $pdf .= Fpdf::Cell(60, 5, utf8_decode('TOTAL ASOCIACION'), 0, 0, 'L');
-        $pdf .= Fpdf::Cell(30, 5, utf8_decode('¢ ').number_format($campoLocal, 2), 0, 1, 'L');
+        $pdf .= Fpdf::Cell(30, 5, utf8_decode('¢ ') . number_format($campoLocal, 2), 0, 1, 'L');
         $pdf .= Fpdf::ln();
         $pdf .= Fpdf::Cell(65, 5, utf8_decode('FONDOS LOCALES 60% PRESUPUESTO'), 0, 0, 'L');
         $church = $this->weeklyincomeRepository->sumInInfo($envelopes);
-        $pdf .= Fpdf::Cell(30, 5, utf8_decode('¢ ').number_format($church, 2), 0, 1, 'L');
+        $pdf .= Fpdf::Cell(30, 5, utf8_decode('¢ ') . number_format($church, 2), 0, 1, 'L');
 
         return $pdf;
     }
 
-    public function headerChurch($orientacion = 'P',$page = 'letter',$title, $date)
+    public function headerChurch($orientacion = 'P', $page = 'letter', $title, $date)
     {
         $pdf = Fpdf::AddPage($orientacion, $page);
         $pdf .= Fpdf::SetFont('Arial', 'B', 16);
@@ -357,10 +354,11 @@ class ReportPdfController extends Controller
         $pdf .= Fpdf::Cell(0, 7, utf8_decode($title), 0, 1, 'C');
         $pdf .= Fpdf::SetFont('Arial', '', 12);
         $pdf .= Fpdf::Setx(5);
-        $pdf .= Fpdf::Cell(0, 7, 'Fecha:  '.$date, 0, 1, 'C');
+        $pdf .= Fpdf::Cell(0, 7, 'Fecha:  ' . $date, 0, 1, 'C');
 
         return $pdf;
     }
+
     public function firmas($date)
     {
         //
@@ -382,7 +380,7 @@ class ReportPdfController extends Controller
         $i = 0;
         foreach ($titles as $title):$i++;
             if ($i > 5):
-                $pdf .= Fpdf::Cell(40, 7, substr(utf8_decode($title), 0, 8).' = '.utf8_decode($title), 0,1, 'L');
+                $pdf .= Fpdf::Cell(40, 7, substr(utf8_decode($title), 0, 8) . ' = ' . utf8_decode($title), 0, 1, 'L');
             endif;
         endforeach;
 
@@ -411,7 +409,7 @@ class ReportPdfController extends Controller
         // Select Arial italic 8
         $pdf .= Fpdf::SetFont('Arial', 'I', 8);
         // Print current and total page numbers
-        $pdf .= Fpdf::Cell(0, 5, utf8_decode('Página '.Fpdf::PageNo()), 0, 1, 'C');
+        $pdf .= Fpdf::Cell(0, 5, utf8_decode('Página ' . Fpdf::PageNo()), 0, 1, 'C');
         $pdf .= Fpdf::Cell(0, 5, utf8_decode('Cortesía Sistemas Amigables de Costa Rica SAOR S.A.'), 0, 0, 'C');
 
         return $pdf;
