@@ -284,7 +284,7 @@ class ReportPdfController extends Controller
         $pdf .= Fpdf::Cell(0, 7, utf8_decode('Control Semanal de Diezmos y Ofrendas'), 0, 1, 'C');
         $pdf .= Fpdf::SetFont('Arial', '', 12);
         $pdf .= Fpdf::Setx(5);
-        $pdf .= Fpdf::Cell(120, 7, 'Iglesia: ' .utf8_decode( userChurch()->name), 0, 0, 'L');
+        $pdf .= Fpdf::Cell(150, 7, 'Iglesia: ' .utf8_decode( userChurch()->name), 0, 0, 'L');
         $pdf .= Fpdf::Cell(30, 7, 'Fecha:  ' . $internal->saturday, 0, 1, 'L');
 
         return $pdf;
