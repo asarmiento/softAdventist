@@ -198,6 +198,7 @@ Route::group(['prefix' => 'softadventist', 'middleware' => 'auth'], function () 
     Route::get('lista-informes-reportados', ['uses' => 'InternalControlController@InfosReport', 'as' => 'list-reportados']);
     Route::get('lista-informes-sin-reportados', ['uses' => 'InternalControlController@InfosSinReport', 'as' => 'list-sin-reportados']);
     Route::get('lista-info-sin-deposito', ['uses' => 'InternalControlController@listInfos', 'as' => 'list-infos-sin-deposito']);
+    Route::get('lista-de-clubes-de-iglesias', ['uses' => 'ReportsPDF\ReportsClubesController@listChruchClub', 'as' => 'list-clubes-iglesia']);
 
     /**
      * Informes semanales

@@ -135,6 +135,7 @@
                                                     <li><a href="{{route('register-specialidades-ja')}}">Registrar Especialidades</a></li>
                                                 @endif
                                                 @if(userCampo())
+                                                    <li><a href="{{route('list-clubes-iglesia')}}">Lista de Impresión</a></li>
                                                     <li><a href="{{route('list-ja-pastor')}}">Lista de Pastores</a></li>
                                                     <li><a href="{{route('register-card-gm-lj')}}">Registrar de Guia Mayor-Lider Juvenitl</a></li>
                                                 <li><a href="{{route('editar-clave-user')}}">Cambio de Contraseña a Usuarios</a></li>
