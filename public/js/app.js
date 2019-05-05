@@ -56686,6 +56686,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -56706,6 +56718,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 blood_type: '',
                 phone: '',
                 type: '',
+                club: false,
                 cell: '',
                 email: '',
                 church: false
@@ -58567,10 +58580,61 @@ var render = function() {
             _vm._v(" "),
             _c("div", { staticClass: " col-lg-3 col-md-3 " }, [
               _c("div", { staticClass: "panel-default material" }, [
-                _c("label", [_vm._v("Tipo de Sangre ")]),
+                _c("label", [_vm._v("Miembro del Club?")]),
                 _vm._v(" "),
                 _c("div", { staticClass: "input-group" }, [
                   _vm._m(15),
+                  _vm._v(" "),
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.data.club,
+                          expression: "data.club"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      on: {
+                        change: function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.$set(
+                            _vm.data,
+                            "club",
+                            $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          )
+                        }
+                      }
+                    },
+                    [
+                      _c("option", { attrs: { value: "false" } }, [
+                        _vm._v("No")
+                      ]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "true" } }, [_vm._v("Si")])
+                    ]
+                  )
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: " col-lg-3 col-md-3 " }, [
+              _c("div", { staticClass: "panel-default material" }, [
+                _c("label", [_vm._v("Tipo de Sangre ")]),
+                _vm._v(" "),
+                _c("div", { staticClass: "input-group" }, [
+                  _vm._m(16),
                   _vm._v(" "),
                   _c("input", {
                     directives: [
@@ -58602,7 +58666,7 @@ var render = function() {
                 _c("label", [_vm._v("Dirección")]),
                 _vm._v(" "),
                 _c("div", { staticClass: "input-group" }, [
-                  _vm._m(16),
+                  _vm._m(17),
                   _vm._v(" "),
                   _c("input", {
                     directives: [
@@ -58761,6 +58825,14 @@ var staticRenderFns = [
     return _c("label", [
       _vm._v("Estado de Miembro "),
       _c("strong", { staticStyle: { color: "red" } }, [_vm._v("*")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "input-group-addon" }, [
+      _c("i", { staticClass: "fa fa-send" })
     ])
   },
   function() {
@@ -59039,6 +59111,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -59061,7 +59145,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 cell: '',
                 blood_type: '',
                 email: '',
-                church: ''
+                church: '',
+                club: false
             },
             civil: [{ "label": 'Casado(a)', "value": 'Casado(a)' }, { "label": 'Soltero(a)', "value": 'Soltero(a)' }, { "label": 'Divorciado(a)', "value": 'Divorciado(a)' }, { "label": 'Viudo(a)', "value": 'Viudo(a)' }, { "label": 'Union Libre', "value": 'Union Libre' }],
             types: [{ "label": 'Adventista', "value": 'Adventista' }, { "label": 'No Adventista', "value": 'No Adventista' }],
@@ -59494,10 +59579,61 @@ var render = function() {
             _vm._v(" "),
             _c("div", { staticClass: " col-lg-3 col-md-3 " }, [
               _c("div", { staticClass: "panel-default material" }, [
-                _c("label", [_vm._v("Tipo de Sangre ")]),
+                _c("label", [_vm._v("Miembro del Club?")]),
                 _vm._v(" "),
                 _c("div", { staticClass: "input-group" }, [
                   _vm._m(16),
+                  _vm._v(" "),
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.data.club,
+                          expression: "data.club"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      on: {
+                        change: function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.$set(
+                            _vm.data,
+                            "club",
+                            $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          )
+                        }
+                      }
+                    },
+                    [
+                      _c("option", { attrs: { value: "false" } }, [
+                        _vm._v("No")
+                      ]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "true" } }, [_vm._v("Si")])
+                    ]
+                  )
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: " col-lg-3 col-md-3 " }, [
+              _c("div", { staticClass: "panel-default material" }, [
+                _c("label", [_vm._v("Tipo de Sangre ")]),
+                _vm._v(" "),
+                _c("div", { staticClass: "input-group" }, [
+                  _vm._m(17),
                   _vm._v(" "),
                   _c("input", {
                     directives: [
@@ -59526,13 +59662,13 @@ var render = function() {
             _vm._v(" "),
             _c("div", { staticClass: " col-lg-6 col-md-6 " }, [
               _c("div", { staticClass: "panel-default " }, [
-                _vm._m(17),
+                _vm._m(18),
                 _vm._v(" "),
                 _c(
                   "div",
                   { staticClass: "input-group" },
                   [
-                    _vm._m(18),
+                    _vm._m(19),
                     _vm._v(" "),
                     _c("v-select", {
                       staticClass: "form-control",
@@ -59691,6 +59827,14 @@ var staticRenderFns = [
     return _c("label", [
       _vm._v("Estado de Miembro "),
       _c("strong", { staticStyle: { color: "red" } }, [_vm._v("*")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "input-group-addon" }, [
+      _c("i", { staticClass: "fa fa-send" })
     ])
   },
   function() {
@@ -81108,6 +81252,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -81130,6 +81286,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 cell: '',
                 blood_type: '',
                 email: '',
+                club: false,
                 id: '',
                 church_id: ''
             },
@@ -81153,6 +81310,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         this.data.user_id = this.member.user_id;
         this.data.church_id = this.member.church_id;
         this.data.email = this.member.email;
+        this.data.club = this.member.club;
         this.data.civil_status = { "label": this.member.civil_status, "value": this.member.civil_status };
     },
 
@@ -81513,10 +81671,61 @@ var render = function() {
             _vm._v(" "),
             _c("div", { staticClass: " col-lg-3 col-md-3 " }, [
               _c("div", { staticClass: "panel-default material" }, [
-                _c("label", [_vm._v("Tipo de Sangre ")]),
+                _c("label", [_vm._v("Miembro del Club?")]),
                 _vm._v(" "),
                 _c("div", { staticClass: "input-group" }, [
                   _vm._m(14),
+                  _vm._v(" "),
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.data.club,
+                          expression: "data.club"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      on: {
+                        change: function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.$set(
+                            _vm.data,
+                            "club",
+                            $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          )
+                        }
+                      }
+                    },
+                    [
+                      _c("option", { attrs: { value: "false" } }, [
+                        _vm._v("No")
+                      ]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "true" } }, [_vm._v("Si")])
+                    ]
+                  )
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: " col-lg-3 col-md-3 " }, [
+              _c("div", { staticClass: "panel-default material" }, [
+                _c("label", [_vm._v("Tipo de Sangre ")]),
+                _vm._v(" "),
+                _c("div", { staticClass: "input-group" }, [
+                  _vm._m(15),
                   _vm._v(" "),
                   _c("input", {
                     directives: [
@@ -81548,7 +81757,7 @@ var render = function() {
                 _c("label", [_vm._v("Dirección")]),
                 _vm._v(" "),
                 _c("div", { staticClass: "input-group" }, [
-                  _vm._m(15),
+                  _vm._m(16),
                   _vm._v(" "),
                   _c("input", {
                     directives: [
@@ -81699,6 +81908,14 @@ var staticRenderFns = [
     return _c("label", [
       _vm._v("Estado Civil "),
       _c("strong", { staticStyle: { color: "red" } }, [_vm._v("*")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "input-group-addon" }, [
+      _c("i", { staticClass: "fa fa-send" })
     ])
   },
   function() {
@@ -81968,6 +82185,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -81991,6 +82220,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 email: '',
                 blood_type: '',
                 church: '',
+                club: false,
                 id: '',
                 church_id: ''
             },
@@ -82018,6 +82248,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         this.data.blood_type = this.member.blood_type;
         this.data.user_id = this.member.user_id;
         this.data.church = this.member.church_id;
+        this.data.club = this.member.club;
         this.data.email = this.member.email;
         this.data.civil_status = { "label": this.member.civil_status, "value": this.member.civil_status };
     },
@@ -82406,10 +82637,61 @@ var render = function() {
             _vm._v(" "),
             _c("div", { staticClass: " col-lg-3 col-md-3 " }, [
               _c("div", { staticClass: "panel-default material" }, [
-                _c("label", [_vm._v("Tipo de Sangre ")]),
+                _c("label", [_vm._v("Miembro del Club?")]),
                 _vm._v(" "),
                 _c("div", { staticClass: "input-group" }, [
                   _vm._m(16),
+                  _vm._v(" "),
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.data.club,
+                          expression: "data.club"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      on: {
+                        change: function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.$set(
+                            _vm.data,
+                            "club",
+                            $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          )
+                        }
+                      }
+                    },
+                    [
+                      _c("option", { attrs: { value: "false" } }, [
+                        _vm._v("No")
+                      ]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "true" } }, [_vm._v("Si")])
+                    ]
+                  )
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: " col-lg-3 col-md-3 " }, [
+              _c("div", { staticClass: "panel-default material" }, [
+                _c("label", [_vm._v("Tipo de Sangre ")]),
+                _vm._v(" "),
+                _c("div", { staticClass: "input-group" }, [
+                  _vm._m(17),
                   _vm._v(" "),
                   _c("input", {
                     directives: [
@@ -82441,7 +82723,7 @@ var render = function() {
                 _c("label", [_vm._v("Dirección")]),
                 _vm._v(" "),
                 _c("div", { staticClass: "input-group" }, [
-                  _vm._m(17),
+                  _vm._m(18),
                   _vm._v(" "),
                   _c("input", {
                     directives: [
@@ -82609,6 +82891,14 @@ var staticRenderFns = [
     return _c("label", [
       _vm._v("Iglesia "),
       _c("strong", { staticStyle: { color: "red" } }, [_vm._v("*")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "input-group-addon" }, [
+      _c("i", { staticClass: "fa fa-send" })
     ])
   },
   function() {

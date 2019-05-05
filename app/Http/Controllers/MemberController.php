@@ -8,6 +8,7 @@ use App\Http\Requests\CreateMemberRequest;
 use App\Traits\DataViewerTraits;
 use App\Traits\ListInformMembersTraits;
 use Illuminate\Http\Request;
+use phpDocumentor\Reflection\Types\Boolean;
 use Validator;
 
 class MemberController extends Controller
@@ -136,6 +137,11 @@ class MemberController extends Controller
         }else{
             return $this->errores('Debe seleccionar el estado del Miembro');
         }
+        if($data['club']=="true"){
+            $data['club'] = true;
+        }else{
+            $data['club'] = false;
+        }
         $user = User::where('email', currentUser()->email)->first();
         if (!$data['church']) {
             $data['church_id'] = userChurch()->id;
@@ -167,6 +173,13 @@ class MemberController extends Controller
         } else {
             $data['church_id'] = $data['church']['value'];
         }
+        if($data['club']=="true"){
+            $data['club'] = true;
+        }else{
+            $data['club'] = false;
+        }
+
+
         $member = Member::find($data['id']);
         $member->fill($data);
         if ($member->save()):

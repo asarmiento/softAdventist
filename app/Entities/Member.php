@@ -29,6 +29,7 @@ class Member extends Entity
         'address',
         'email',
         'church_id',
+        'club',
         'token',
         'blood_type',
         'user_id'

@@ -92,6 +92,18 @@
                         </div>
                         <div class=" col-lg-3 col-md-3 ">
                             <div class="panel-default material">
+                                <label>Miembro del Club?</label>
+                                <div class="input-group" >
+                                    <span class="input-group-addon"><i class="fa fa-send"></i></span>
+                                    <select v-model="data.club"  class="form-control">
+                                        <option value="false">No</option>
+                                        <option value="true">Si</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class=" col-lg-3 col-md-3 ">
+                            <div class="panel-default material">
                                 <label>Tipo de Sangre </label>
                                 <div class="input-group" >
                                     <span class="input-group-addon"><i class="fa fa-send"></i></span>
@@ -141,6 +153,7 @@
                          cell: '',
                          blood_type: '',
                          email: '',
+                         club: false,
                          id: '',
                          church_id: '',
                      },
@@ -171,6 +184,7 @@
                 this.data.user_id = this.member.user_id;
                 this.data.church_id = this.member.church_id;
                 this.data.email = this.member.email;
+            this.data.club = this.member.club;
                 this.data.civil_status = {"label":this.member.civil_status,"value":this.member.civil_status};
         },
         computed: {
