@@ -107,8 +107,8 @@ class MemberController extends Controller
     {
         $data = $request->all();
         $data = $this->CreacionArray($data, '');
-        $user = User::where('email', $data['email'])->first();
-        if (count($user) == 0):
+        $user = User::where('email', $data['email'])->count();
+        if ($user == 0):
             if (!empty($data['email'])) {
                 $user = User::create([
                     'identification_card' => $data['charter'],
