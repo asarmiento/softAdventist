@@ -48,7 +48,7 @@
                                         <img v-if="itemes.charter" alt="Profile Picture" class="img-lg img-circle mar-ver" :src="urlProfile(itemes.charter)">
                                         <img v-else alt="Profile Picture" class="img-lg img-circle mar-ver" src="/img/profile-photos/2.png">
                                         <p class="text-lg text-semibold mar-no text-main">{{(itemes.name)}} {{(itemes.last)}}</p>
-                                        <p class="text-sm"><a :href="routeSpecial(itemes.id)">Lista de Especialidades</a></p>
+                                        <p class="text-sm"><a :href="urlSpecialite(itemes.id)">Lista de Especialidades</a></p>
                                     </a>
                                     <div class="pad-top btn-groups" v-if="itemes.member_club">
                                         <a href="#" v-for="card in itemes.member_club" class="btn btn-icon  icon-lg add-tooltip"
@@ -176,7 +176,7 @@
 
                 return "/img/Members/" + card+".JPG";
             },
-            routeSpecial(id) {
+          urlSpecialite(id) {
 
                 return "/softadventist/perfile-especialidades/" + id;
             },

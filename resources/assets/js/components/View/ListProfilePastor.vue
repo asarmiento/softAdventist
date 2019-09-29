@@ -174,7 +174,7 @@
           },
           urlSpecialite(id) {
 
-            return "perfile-especialidades/" + id;
+            return "/softadventist/perfile-especialidades/" + id;
           },
           nameComplate(member) {
                 return member;

@@ -91799,7 +91799,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             return "/img/Members/" + card + ".JPG";
         },
-        routeSpecial: function routeSpecial(id) {
+        urlSpecialite: function urlSpecialite(id) {
 
             return "/softadventist/perfile-especialidades/" + id;
         },
@@ -91939,7 +91939,7 @@ var render = function() {
                                     "a",
                                     {
                                       attrs: {
-                                        href: _vm.routeSpecial(itemes.id)
+                                        href: _vm.urlSpecialite(itemes.id)
                                       }
                                     },
                                     [_vm._v("Lista de Especialidades")]
@@ -92470,7 +92470,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         urlSpecialite: function urlSpecialite(id) {
 
-            return "perfile-especialidades/" + id;
+            return "/softadventist/perfile-especialidades/" + id;
         },
         nameComplate: function nameComplate(member) {
             return member;
