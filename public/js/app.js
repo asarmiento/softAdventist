@@ -92416,9 +92416,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
 
 
 
@@ -92470,6 +92467,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         urlProfile: function urlProfile(card) {
 
             return "/img/Members/" + card + ".JPG";
+        },
+        urlSpecialite: function urlSpecialite(id) {
+
+            return "perfile-especialidades/" + id;
         },
         nameComplate: function nameComplate(member) {
             return member;
@@ -92599,7 +92600,17 @@ var render = function() {
                                   ]
                                 ),
                                 _vm._v(" "),
-                                _vm._m(2, true)
+                                _c("p", { staticClass: "text-sm" }, [
+                                  _c(
+                                    "a",
+                                    {
+                                      attrs: {
+                                        href: _vm.urlSpecialite(itemes.id)
+                                      }
+                                    },
+                                    [_vm._v("Lista de Especialidades")]
+                                  )
+                                ])
                               ]),
                               _vm._v(" "),
                               itemes.member_club
@@ -92670,7 +92681,7 @@ var render = function() {
             return _c("div", { staticClass: "col-sm-4 col-md-3" }, [
               _c("div", { staticClass: "panel pos-rel" }, [
                 _c("div", { staticClass: "pad-all text-center" }, [
-                  _vm._m(3, true),
+                  _vm._m(2, true),
                   _vm._v(" "),
                   _c("a", { attrs: { href: "#" } }, [
                     _c("img", {
@@ -92691,7 +92702,13 @@ var render = function() {
                       _vm._v("Iglesia: " + _vm._s(items.church))
                     ]),
                     _vm._v(" "),
-                    _vm._m(4, true)
+                    _c("p", { staticClass: "text-sm" }, [
+                      _c(
+                        "a",
+                        { attrs: { href: _vm.urlSpecialite(items.id) } },
+                        [_vm._v("Lista de Especialidades")]
+                      )
+                    ])
                   ]),
                   _vm._v(" "),
                   items.club
@@ -92787,16 +92804,6 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("p", { staticClass: "text-sm" }, [
-      _c("a", { attrs: { href: "/softadventist/perfile-clubes" } }, [
-        _vm._v("Lista de Especialidades")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
     return _c("div", { staticClass: "widget-control" }, [
       _c(
         "a",
@@ -92838,16 +92845,6 @@ var staticRenderFns = [
             ])
           ])
         ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("p", { staticClass: "text-sm" }, [
-      _c("a", { attrs: { href: "/softadventist/perfile-clubes" } }, [
-        _vm._v("Lista de Especialidades")
       ])
     ])
   }
@@ -94022,13 +94019,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -94160,13 +94150,11 @@ var render = function() {
           )
         ]),
         _vm._v(" "),
-        _vm._m(1),
-        _vm._v(" "),
-        _vm._m(2)
+        _vm._m(1)
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "tab-content" }, [
-        _vm._m(3),
+        _vm._m(2),
         _vm._v(" "),
         _c(
           "div",
@@ -94277,9 +94265,7 @@ var render = function() {
           ]
         ),
         _vm._v(" "),
-        _vm._m(4),
-        _vm._v(" "),
-        _vm._m(5)
+        _vm._m(3)
       ])
     ])
   ])
@@ -94292,16 +94278,6 @@ var staticRenderFns = [
     return _c("li", { staticClass: "active" }, [
       _c("a", { attrs: { "data-toggle": "tab", href: "#demo-lft-tab-1" } }, [
         _vm._v("Aventurero ")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("li", [
-      _c("a", { attrs: { "data-toggle": "tab", href: "#demo-lft-tab-3" } }, [
-        _vm._v("Guias Mayores")
       ])
     ])
   },
@@ -94331,22 +94307,6 @@ var staticRenderFns = [
         ]),
         _vm._v(" "),
         _c("p", [_vm._v("No tiene Registros")])
-      ]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      { staticClass: "tab-pane fade", attrs: { id: "demo-lft-tab-3" } },
-      [
-        _c("p", { staticClass: "text-main text-semibold" }, [
-          _vm._v("Guias Mayores")
-        ]),
-        _vm._v(" "),
-        _c("p", [_vm._v("No Tiene Registros")])
       ]
     )
   },

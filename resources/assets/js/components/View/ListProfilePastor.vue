@@ -31,7 +31,6 @@
 
                                         </a>
                                         <a href="#" class="add-tooltip btn btn-trans">
-
                                         </a>
                                         <div class="btn-group dropdown">
                                             <a href="#" class="dropdown-toggle btn btn-trans" data-toggle="dropdown"
@@ -47,7 +46,7 @@
                                         <img v-if="itemes.charter" alt="Profile Picture" class="img-lg img-circle mar-ver" :src="urlProfile(itemes.charter)">
                                         <img v-else alt="Profile Picture" class="img-lg img-circle mar-ver" src="/img/profile-photos/2.png">
                                         <p class="text-lg text-semibold mar-no text-main">{{(itemes.name)}} {{(itemes.last)}}</p>
-                                        <p class="text-sm"><a href="/softadventist/perfile-clubes">Lista de Especialidades</a></p>
+                                        <p class="text-sm"><a :href="urlSpecialite(itemes.id)">Lista de Especialidades</a></p>
                                     </a>
                                     <div class="pad-top btn-groups" v-if="itemes.member_club">
                                         <a href="#" v-for="card in itemes.member_club" class="btn btn-icon  icon-lg add-tooltip"
@@ -56,8 +55,6 @@
                                         <br></br><i v-if="card.code_gm"  >Código Guia: {{card.code_gm}}</i>
                                             <br></br>    <i v-if="card.code_lj" >Código Lider: {{card.code_lj}}</i>
                                         </a>
-
-
                                     </div>
                                 </div>
                             </div>
@@ -100,7 +97,7 @@
                         <img alt="Profile Picture" class="img-lg img-circle mar-ver" src="/img/profile-photos/2.png">
                         <p class="text-lg text-semibold mar-no text-main">{{(items.member)}}</p>
                         <p class="text-sm">Iglesia: {{items.church}}</p>
-                        <p class="text-sm"><a href="/softadventist/perfile-clubes">Lista de Especialidades</a></p>
+                        <p class="text-sm"><a :href="urlSpecialite(items.id)">Lista de Especialidades</a></p>
                     </a>
                     <div class="pad-top btn-groups" v-if="items.club">
                         <a href="#" v-for="card in items.club" class="btn btn-icon  icon-lg add-tooltip"
@@ -174,6 +171,10 @@
           urlProfile(card) {
 
             return "/img/Members/" + card+".JPG";
+          },
+          urlSpecialite(id) {
+
+            return "perfile-especialidades/" + id;
           },
           nameComplate(member) {
                 return member;

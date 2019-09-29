@@ -13,9 +13,6 @@
                     <a data-toggle="tab" href="#demo-lft-tab-2">Conquistadores <span class="badge badge-purple">{{speciality.length}}</span></a>
                 </li>
                 <li>
-                    <a data-toggle="tab" href="#demo-lft-tab-3">Guias Mayores</a>
-                </li>
-                <li>
                     <a data-toggle="tab" href="#demo-lft-tab-4">Lider Juvenil</a>
                 </li>
             </ul>
@@ -60,10 +57,6 @@
 
                         </div>
                     </div>
-                </div>
-                <div id="demo-lft-tab-3" class="tab-pane fade">
-                    <p class="text-main text-semibold">Guias Mayores</p>
-                    <p>No Tiene Registros</p>
                 </div>
                 <div id="demo-lft-tab-4" class="tab-pane fade">
                     <p class="text-main text-semibold">Lider Juvenil</p>

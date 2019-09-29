@@ -53,8 +53,9 @@ class ClubesController extends Controller
      */
     public function profile()
     {
-
-        return view('clubes.profile');
+        $specialities = [];
+        $member = [];
+       // return view('clubes.profile',compact('specialities','member'));
     }
 
     public function profileSpecialty($id)
