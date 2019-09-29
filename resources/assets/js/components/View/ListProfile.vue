@@ -45,7 +45,8 @@
                                     </div>
 
                                     <a href="#">
-                                        <img alt="Profile Picture" class="img-lg img-circle mar-ver" src="/img/profile-photos/2.png">
+                                        <img v-if="itemes.charter" alt="Profile Picture" class="img-lg img-circle mar-ver" :src="urlProfile(itemes.charter)">
+                                        <img v-else alt="Profile Picture" class="img-lg img-circle mar-ver" src="/img/profile-photos/2.png">
                                         <p class="text-lg text-semibold mar-no text-main">{{(itemes.name)}} {{(itemes.last)}}</p>
                                         <p class="text-sm"><a :href="routeSpecial(itemes.id)">Lista de Especialidades</a></p>
                                     </a>
@@ -170,6 +171,10 @@
             urlButton(card) {
 
                 return "/img/Botones/" + card.url_card;
+            },
+            urlProfile(card) {
+
+                return "/img/Members/" + card+".JPG";
             },
             routeSpecial(id) {
 

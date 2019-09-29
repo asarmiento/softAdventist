@@ -91746,6 +91746,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 
@@ -91793,6 +91794,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         urlButton: function urlButton(card) {
 
             return "/img/Botones/" + card.url_card;
+        },
+        urlProfile: function urlProfile(card) {
+
+            return "/img/Members/" + card + ".JPG";
         },
         routeSpecial: function routeSpecial(id) {
 
@@ -91898,13 +91903,21 @@ var render = function() {
                               _vm._m(1, true),
                               _vm._v(" "),
                               _c("a", { attrs: { href: "#" } }, [
-                                _c("img", {
-                                  staticClass: "img-lg img-circle mar-ver",
-                                  attrs: {
-                                    alt: "Profile Picture",
-                                    src: "/img/profile-photos/2.png"
-                                  }
-                                }),
+                                itemes.charter
+                                  ? _c("img", {
+                                      staticClass: "img-lg img-circle mar-ver",
+                                      attrs: {
+                                        alt: "Profile Picture",
+                                        src: _vm.urlProfile(itemes.charter)
+                                      }
+                                    })
+                                  : _c("img", {
+                                      staticClass: "img-lg img-circle mar-ver",
+                                      attrs: {
+                                        alt: "Profile Picture",
+                                        src: "/img/profile-photos/2.png"
+                                      }
+                                    }),
                                 _vm._v(" "),
                                 _c(
                                   "p",
@@ -92405,6 +92418,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 
@@ -92452,6 +92466,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         urlButton: function urlButton(card) {
 
             return "/img/Botones/" + card.url_card;
+        },
+        urlProfile: function urlProfile(card) {
+
+            return "/img/Members/" + card + ".JPG";
         },
         nameComplate: function nameComplate(member) {
             return member;
@@ -92550,13 +92568,21 @@ var render = function() {
                               _vm._m(1, true),
                               _vm._v(" "),
                               _c("a", { attrs: { href: "#" } }, [
-                                _c("img", {
-                                  staticClass: "img-lg img-circle mar-ver",
-                                  attrs: {
-                                    alt: "Profile Picture",
-                                    src: "/img/profile-photos/2.png"
-                                  }
-                                }),
+                                itemes.charter
+                                  ? _c("img", {
+                                      staticClass: "img-lg img-circle mar-ver",
+                                      attrs: {
+                                        alt: "Profile Picture",
+                                        src: _vm.urlProfile(itemes.charter)
+                                      }
+                                    })
+                                  : _c("img", {
+                                      staticClass: "img-lg img-circle mar-ver",
+                                      attrs: {
+                                        alt: "Profile Picture",
+                                        src: "/img/profile-photos/2.png"
+                                      }
+                                    }),
                                 _vm._v(" "),
                                 _c(
                                   "p",
